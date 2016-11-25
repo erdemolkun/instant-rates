@@ -14,19 +14,22 @@ import retrofit2.Response;
 
 public class DolarTlKurRateProvider extends PoolingDataProvider<List<DolarTlKurRate>> implements IRateProvider {
 
-    private Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-            fetch();
-        }
-    };
     private Call lastCall;
 
     public DolarTlKurRateProvider(Callback callback) {
         super(callback);
     }
 
-    private void fetch() {
+
+    @Override
+    public void cancel() {
+        if (lastCall != null) {
+            lastCall.cancel();
+        }
+    }
+
+    @Override
+    public void run() {
         final DolarTlKurService dolarTlKurService = Api.getDolarTlKurApi().create(DolarTlKurService.class);
         Call<List<DolarTlKurRate>> call = dolarTlKurService.getValues("" + System.currentTimeMillis());
         call.enqueue(new retrofit2.Callback<List<DolarTlKurRate>>() {
@@ -49,17 +52,5 @@ public class DolarTlKurRateProvider extends PoolingDataProvider<List<DolarTlKurR
             }
         });
         lastCall = call;
-    }
-
-    @Override
-    Runnable getWork() {
-        return runnable;
-    }
-
-    @Override
-    public void cancel() {
-        if (lastCall != null) {
-            lastCall.cancel();
-        }
     }
 }

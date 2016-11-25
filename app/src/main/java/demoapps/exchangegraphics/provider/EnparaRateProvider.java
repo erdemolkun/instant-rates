@@ -14,20 +14,21 @@ import retrofit2.Response;
 
 public class EnparaRateProvider extends PoolingDataProvider<List<BuySellRate>> implements IRateProvider {
 
-    private Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-            fetch();
-        }
-    };
-
     private Call lastCall;
 
     public EnparaRateProvider(Callback callback) {
         super(callback);
     }
 
-    private void fetch() {
+
+    @Override
+    public void cancel() {
+        if (lastCall != null)
+            lastCall.cancel();
+    }
+
+    @Override
+    public void run() {
         final EnparaService enparaService = Api.getEnparaApi().create(EnparaService.class);
         Call<List<BuySellRate>> call = enparaService.getValues();
         call.enqueue(new retrofit2.Callback<List<BuySellRate>>() {
@@ -50,16 +51,5 @@ public class EnparaRateProvider extends PoolingDataProvider<List<BuySellRate>> i
             }
         });
         lastCall = call;
-    }
-
-    @Override
-    Runnable getWork() {
-        return runnable;
-    }
-
-    @Override
-    public void cancel() {
-        if (lastCall != null)
-            lastCall.cancel();
     }
 }

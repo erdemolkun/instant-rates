@@ -14,20 +14,21 @@ import retrofit2.Response;
 
 public class YorumlarRateProvider extends PoolingDataProvider<List<YorumlarRate>> implements IRateProvider {
 
-    private Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-            fetch();
-        }
-    };
-
     private Call lastCall;
 
     public YorumlarRateProvider(Callback callback) {
         super(callback);
     }
 
-    private void fetch() {
+    @Override
+    public void cancel() {
+        if (lastCall != null) {
+            lastCall.cancel();
+        }
+    }
+
+    @Override
+    public void run() {
         final YorumlarService yorumlarService = Api.getYorumlarApi().create(YorumlarService.class);
         Call<List<YorumlarRate>> call = yorumlarService.getWithType("ons");
         call.enqueue(new retrofit2.Callback<List<YorumlarRate>>() {
@@ -50,17 +51,5 @@ public class YorumlarRateProvider extends PoolingDataProvider<List<YorumlarRate>
             }
         });
         lastCall = call;
-    }
-
-    @Override
-    Runnable getWork() {
-        return runnable;
-    }
-
-    @Override
-    public void cancel() {
-        if (lastCall != null) {
-            lastCall.cancel();
-        }
     }
 }

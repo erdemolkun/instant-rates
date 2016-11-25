@@ -5,7 +5,6 @@ import java.util.List;
 import demoapps.exchangegraphics.data.BuySellRate;
 import demoapps.exchangegraphics.service.Api;
 import demoapps.exchangegraphics.service.BigparaService;
-import demoapps.exchangegraphics.service.EnparaService;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -13,14 +12,8 @@ import retrofit2.Response;
  * Created by erdemmac on 25/11/2016.
  */
 
-public class BigparaRateProvider extends PoolingDataProvider<List<BuySellRate>> implements IRateProvider {
+public class BigparaRateProvider extends PoolingDataProvider<List<BuySellRate>> implements Runnable {
 
-    private Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-            fetch();
-        }
-    };
 
     private Call lastCall;
 
@@ -28,7 +21,15 @@ public class BigparaRateProvider extends PoolingDataProvider<List<BuySellRate>> 
         super(callback);
     }
 
-    private void fetch() {
+
+    @Override
+    public void cancel() {
+        if (lastCall != null)
+            lastCall.cancel();
+    }
+
+    @Override
+    public void run() {
         final BigparaService bigparaService = Api.getBigparaApi().create(BigparaService.class);
         Call<List<BuySellRate>> call = bigparaService.getData();
         call.enqueue(new retrofit2.Callback<List<BuySellRate>>() {
@@ -51,16 +52,5 @@ public class BigparaRateProvider extends PoolingDataProvider<List<BuySellRate>> 
             }
         });
         lastCall = call;
-    }
-
-    @Override
-    Runnable getWork() {
-        return runnable;
-    }
-
-    @Override
-    public void cancel() {
-        if (lastCall!=null)
-            lastCall.cancel();
     }
 }

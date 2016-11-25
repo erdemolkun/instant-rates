@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Created by erdemmac on 25/11/2016.
  */
 
-abstract class PoolingDataProvider<T> implements IRateProvider {
+abstract class PoolingDataProvider<T> implements IRateProvider, Runnable {
 
     private static final int INTERVAL = 2000;
     private static final int INTERVAL_ON_ERROR = 5000;
@@ -34,19 +34,17 @@ abstract class PoolingDataProvider<T> implements IRateProvider {
     @Override
     public void start() {
         if (isWorking.get()) return;
-        getHandler().post(getWork());
+        getHandler().post(this);
         isWorking.set(true);
     }
 
     void fetchAgain(boolean wasError) {
-        getHandler().postDelayed(getWork(), wasError ? INTERVAL_ON_ERROR : INTERVAL);
+        getHandler().postDelayed(this, wasError ? INTERVAL_ON_ERROR : INTERVAL);
     }
 
     @Override
     public void stop() {
-        Runnable runnable = getWork();
-        if (runnable != null)
-            getHandler().removeCallbacks(runnable);
+        getHandler().removeCallbacks(this);
         cancel();
         isWorking.set(false);
     }
@@ -63,6 +61,4 @@ abstract class PoolingDataProvider<T> implements IRateProvider {
             callback.onError();
         }
     }
-
-    abstract Runnable getWork();
 }
