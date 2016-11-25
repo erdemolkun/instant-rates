@@ -17,7 +17,6 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.DefaultAxisValueFormatter;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 import java.util.List;
 import java.util.Locale;
@@ -108,7 +107,7 @@ public class RatesActivity extends AppCompatActivity {
                 = new BigparaRateProvider(new IRateProvider.Callback<List<BuySellRate>>() {
             @Override
             public void onResult(List<BuySellRate> value) {
-                addEntry(value.get(0).value_sell_real,3);
+                addEntry(value.get(0).value_sell_real, 3);
             }
 
             @Override
@@ -172,7 +171,6 @@ public class RatesActivity extends AppCompatActivity {
         LineData data = lineChart.getData();
 
 
-
         data.addDataSet(createSet(0));
         data.addDataSet(createSet(1));
         data.addDataSet(createSet(2));
@@ -186,9 +184,12 @@ public class RatesActivity extends AppCompatActivity {
     private void addEntry(float value, int chartIndex) {
 
         LineData data = lineChart.getData();
+
+
         long diffSeconds = (System.currentTimeMillis() - startMilis) / 1000;
         Entry entry = new Entry(diffSeconds, value);
         data.addEntry(entry, chartIndex);
+
         data.notifyDataChanged();
 
 
@@ -244,11 +245,9 @@ public class RatesActivity extends AppCompatActivity {
             color = Color.rgb(240, 0, 0);
         } else if (chartIndex == 1) {
             color = Color.rgb(0, 0, 240);
-        }
-        else if (chartIndex == 3) {
+        } else if (chartIndex == 3) {
             color = Color.rgb(0, 240, 0);
-        }
-        else {
+        } else {
             color = Color.rgb(60, 60, 60);
         }
 
