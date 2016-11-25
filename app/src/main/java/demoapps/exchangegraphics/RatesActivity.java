@@ -6,11 +6,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
@@ -41,7 +44,7 @@ public class RatesActivity extends AppCompatActivity {
     private List<EnparaRate> enparaRates;
     private List<YorumlarRate> yorumlarRates;
 
-    @BindView(R.id.line_chart)
+    @BindView(R.id.line_usd_chart)
     LineChart lineChart;
 
     @BindView(R.id.tv_rate_yorumlar)
@@ -76,44 +79,9 @@ public class RatesActivity extends AppCompatActivity {
         return handler;
     }
 
+    private static final int INTERVAL = 2000;
+    private static final int INTERVAL_ON_ERROR = 5000;
 
-    private void addEntry(float value, int chartIndex) {
-
-        LineData data = lineChart.getData();
-        long diffSeconds = (System.currentTimeMillis() - startMilis) / 1000;
-        Entry entry = new Entry(diffSeconds, value);
-        data.addEntry(entry, chartIndex);
-        data.notifyDataChanged();
-
-        // let the chart know it's data has changed
-        lineChart.notifyDataSetChanged();
-
-        //mChart.setVisibleYRangeMaximum(15, AxisDependency.LEFT);
-        lineChart.setVisibleXRangeMaximum(120);
-//            // this automatically refreshes the chart (calls invalidate())
-        lineChart.moveViewTo(data.getEntryCount() - 7, 50f, YAxis.AxisDependency.LEFT);
-
-    }
-
-    private LineDataSet createSet(int chartIndex) {
-
-        LineDataSet set = new LineDataSet(null, chartIndex == 0 ? "Yorumlar" : "Enpara-Buy");
-        set.setLineWidth(1f);
-        set.setCircleRadius(2f);
-        if (chartIndex == 0) {
-            set.setColor(Color.rgb(240, 99, 99));
-            set.setCircleColor(Color.rgb(240, 99, 99));
-        } else {
-            set.setColor(Color.rgb(0, 240, 0));
-            set.setCircleColor(Color.rgb(0, 240, 0));
-        }
-
-        set.setHighLightColor(Color.rgb(190, 190, 190));
-        set.setAxisDependency(YAxis.AxisDependency.LEFT);
-        set.setValueTextSize(10f);
-        set.setDrawValues(false);
-        return set;
-    }
 
     private long startMilis;
 
@@ -124,8 +92,26 @@ public class RatesActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         startMilis = System.currentTimeMillis();
-        lineChart.setDrawGridBackground(false);
+        initUsdChart();
+
+        getHandler().post(runnableYorumlar);
+        getHandler().post(runnableEnpara);
+
+        vProgress.setVisibility(View.GONE);
+
+    }
+
+    private void initUsdChart() {
         lineChart.getDescription().setEnabled(false);
+        Description description = new Description();
+//        description.setPosition(10, 10);
+        description.setTextSize(12f);
+        description.setText("Dolar-TL Grafiği");
+        description.setXOffset(8);
+        description.setYOffset(8);
+        description.setTextColor(ContextCompat.getColor(this, android.R.color.white));
+        lineChart.setDescription(description);
+        lineChart.setBackgroundColor(ContextCompat.getColor(this, android.R.color.holo_orange_light));
 
         // add an empty data object
         lineChart.setData(new LineData());
@@ -144,22 +130,93 @@ public class RatesActivity extends AppCompatActivity {
 //            }
 //
 //        });
+        lineChart.setScaleEnabled(false);
         lineChart.invalidate();
-
 
         LineData data = lineChart.getData();
 
 
         ILineDataSet set0 = createSet(0);
         ILineDataSet set1 = createSet(1);
+        ILineDataSet set2 = createSet(2);
         data.addDataSet(set0);
         data.addDataSet(set1);
+        data.addDataSet(set2);
+    }
 
-        getHandler().post(runnableYorumlar);
-        getHandler().post(runnableEnpara);
+    private void addEntry(float value, int chartIndex) {
 
-        vProgress.setVisibility(View.GONE);
+        LineData data = lineChart.getData();
+        long diffSeconds = (System.currentTimeMillis() - startMilis) / 1000;
+        Entry entry = new Entry(diffSeconds, value);
+        data.addEntry(entry, chartIndex);
+        data.notifyDataChanged();
 
+
+        // let the chart know it's data has changed
+        lineChart.notifyDataSetChanged();
+
+        //mChart.setVisibleYRangeMaximum(15, AxisDependency.LEFT);
+        lineChart.setVisibleXRangeMaximum(120);
+        lineChart.getXAxis().setDrawGridLines(false);
+        lineChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+        lineChart.getXAxis().setTextColor(ContextCompat.getColor(this, android.R.color.white));
+        lineChart.getAxisRight().setTextColor(ContextCompat.getColor(this, android.R.color.white));
+
+        lineChart.setPinchZoom(false);
+//          this automatically refreshes the chart (calls invalidate())
+        lineChart.moveViewToAnimated(data.getEntryCount() - 7, 250f, YAxis.AxisDependency.LEFT, 400);
+
+//        lineChart.getAxisRight().setAxisMinimum(lineChart.getYMin()-0.01f);
+//        lineChart.getAxisRight().setAxisMaximum(lineChart.getYMax()-0.01f);
+
+
+    }
+
+    private LineDataSet createSet(int chartIndex) {
+
+        String label = "";
+        switch (chartIndex) {
+            case 0:
+                label = "Piyasa";
+                break;
+            case 1:
+                label = "Enpara Satış";
+                break;
+            case 2:
+                label = "Enpara Alış";
+                break;
+            default:
+                label = "Unknown";
+                break;
+        }
+
+        LineDataSet set = new LineDataSet(null, label);
+        set.setDrawCircleHole(false);
+        set.setLineWidth(1f);
+        set.setCircleRadius(2f);
+        int color;
+        if (chartIndex == 0) {
+            color = Color.rgb(240, 0, 0);
+        } else if (chartIndex == 1) {
+            color = Color.rgb(0, 0, 240);
+        } else {
+            color = Color.rgb(0, 240, 0);
+        }
+
+
+        set.setCircleColor(color);
+        set.setHighLightColor(Color.rgb(0, 0, 255));
+        set.setAxisDependency(YAxis.AxisDependency.LEFT);
+        set.setColor(color);
+//        set.setDrawFilled(true);
+        set.setFillAlpha((int) (256 * 0.3f));
+        set.setFillColor(color);
+        set.setValueTextColor(color);
+        set.setValueTextSize(13f);
+        set.setDrawValues(false);
+
+        return set;
     }
 
     private void fetchRatesYorumlar() {
@@ -187,13 +244,13 @@ public class RatesActivity extends AppCompatActivity {
                         }
 
                     }
-                    tvRateYorumlar.setText(val);
-                    getHandler().postDelayed(runnableYorumlar, 2000);
+                    //tvRateYorumlar.setText(val);
+                    getHandler().postDelayed(runnableYorumlar, INTERVAL);
                     addEntry(rateUsd != null ? rateUsd.realValue : 0.0f, 0);
 
                 } else {
-                    tvRateYorumlar.setText("Exception");
-                    getHandler().postDelayed(runnableYorumlar, 5000);
+//                    tvRateYorumlar.setText("Exception");
+                    getHandler().postDelayed(runnableYorumlar, INTERVAL_ON_ERROR);
                 }
                 vProgress.setVisibility(View.INVISIBLE);
 
@@ -201,9 +258,9 @@ public class RatesActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<YorumlarRate>> call, Throwable t) {
-                getHandler().postDelayed(runnableYorumlar, 5000);
+                getHandler().postDelayed(runnableYorumlar, INTERVAL_ON_ERROR);
                 vProgress.setVisibility(View.INVISIBLE);
-                tvRateYorumlar.setText("Exception");
+//                tvRateYorumlar.setText("Exception");
             }
         });
     }
@@ -231,21 +288,22 @@ public class RatesActivity extends AppCompatActivity {
                             rateUsd = (EnparaRate) rate;
                         }
                         addEntry(rateUsd != null ? rateUsd.value_sell_real : 0.0f, 1);
+                        addEntry(rateUsd != null ? rateUsd.value_buy_real : 0.0f, 2);
                     }
-                    tvRateEnpara.setText(val);
+//                    tvRateEnpara.setText(val);
 
                 } else {
-                    getHandler().postDelayed(runnableEnpara, 5000);
-                    tvRateEnpara.setText("Exception");
+                    getHandler().postDelayed(runnableEnpara, INTERVAL_ON_ERROR);
+//                    tvRateEnpara.setText("Exception");
                 }
-                getHandler().postDelayed(runnableEnpara, 2000);
+                getHandler().postDelayed(runnableEnpara, INTERVAL);
 
             }
 
             @Override
             public void onFailure(Call<List<EnparaRate>> call, Throwable t) {
-                tvRateEnpara.setText("Exception");
-                getHandler().postDelayed(runnableEnpara, 5000);
+//                tvRateEnpara.setText("Exception");
+                getHandler().postDelayed(runnableEnpara, INTERVAL_ON_ERROR);
             }
         });
     }
