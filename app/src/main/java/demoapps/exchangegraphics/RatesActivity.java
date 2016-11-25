@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -231,90 +230,74 @@ public class RatesActivity extends AppCompatActivity {
         }
     }
 
+    final ArrayList<DataSetSelection> dataSetSelections = new ArrayList<>();
+
+    // String array for alert dialog multi choice items
+    static final String[] data_set_names = new String[]{
+            "Piyasa",
+            "Enpara",
+            "Bigpara",
+            "DolarTlKur",
+    };
+    // Boolean array for initial selected items
+    boolean[] checked_data_sets = new boolean[]{
+            false, // Piyasa
+            false, // Enpara
+            false, // Bigpara
+            false, // DolarTlKur
+
+    };
+
     @OnClick(R.id.btn_sources)
     protected void select() {
-        final ArrayList<DataSetSelection> colorList = new ArrayList<>();
-        // String array for alert dialog multi choice items
-        final String[] data_sets = new String[]{
-                "Piyasa",
-                "Enpara",
-                "Bigpara",
-                "DolarTlKur",
-        };
-        // Boolean array for initial selected items
-        final boolean[] checkedColors = new boolean[]{
-                false, // Piyasa
-                false, // Enpara
-                false, // Bigpara
-                false, // DolarTlKur
 
-        };
+
+        if (dataSetSelections.size() <= 0) {
+            // make a list to hold state of every color
+            for (int i = 0; i < data_set_names.length; i++) {
+                DataSetSelection dataSetSelection = new DataSetSelection();
+                dataSetSelection.setName(data_set_names[i]);
+                dataSetSelection.setSelected(checked_data_sets[i]);
+                dataSetSelections.add(dataSetSelection);
+            }
+        } else {
+            for (int i = 0; i < checked_data_sets.length; i++) {
+                checked_data_sets[i] = dataSetSelections.get(i).selected;
+            }
+        }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        // make a list to hold state of every color
-        for (int i = 0; i < data_sets.length; i++) {
-            DataSetSelection dataSetSelection = new DataSetSelection();
-            dataSetSelection.setName(data_sets[i]);
-            dataSetSelection.setSelected(checkedColors[i]);
-            colorList.add(dataSetSelection);
-        }
 
-        // Do something here to pass only arraylist on this both arrays ('colors' & 'checkedColors')
-        builder.setMultiChoiceItems(data_sets, checkedColors, new DialogInterface.OnMultiChoiceClickListener() {
+        // Do something here to pass only arraylist on this both arrays ('colors' & 'checked_data_sets')
+        builder.setMultiChoiceItems(data_set_names, checked_data_sets, new DialogInterface.OnMultiChoiceClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which, boolean isChecked) {
                 // set state to vo in list
-                colorList.get(which).setSelected(isChecked);
+                dataSetSelections.get(which).setSelected(isChecked);
 //                Toast.makeText(getApplicationContext(),
-//                        colorList.get(which).getName() + " " + isChecked, Toast.LENGTH_SHORT).show();
+//                        dataSetSelections.get(which).getName() + " " + isChecked, Toast.LENGTH_SHORT).show();
             }
         });
 
-        builder.setCancelable(false);
-
+        builder.setCancelable(true);
         builder.setTitle("Preferred Sources?");
-
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
-
-                // save state of selected vos
-                ArrayList<DataSetSelection> selectedList = new ArrayList<>();
-                for (int i = 0; i < colorList.size(); i++) {
-                    DataSetSelection dataSetSelection = colorList.get(i);
-                    data_sets[i] = dataSetSelection.getName();
-                    checkedColors[i] = dataSetSelection.isSelected();
-                    if (dataSetSelection.isSelected()) {
-                        selectedList.add(dataSetSelection);
-                    }
+                // save states
+                for (int i = 0; i < dataSetSelections.size(); i++) {
+                    DataSetSelection dataSetSelection = dataSetSelections.get(i);
+                    data_set_names[i] = dataSetSelection.getName();
+                    checked_data_sets[i] = dataSetSelection.isSelected();
                 }
-
-                for (int i = 0; i < selectedList.size(); i++) {
-                    // if element is last then not attach comma or attach it
-                    if (i != selectedList.size() - 1)
-                        Log.i("TAG", "Colors Selected ....\n" + selectedList.get(i).getName() + " ,");
-                    else
-                        Log.e("TAG", "Colors Selected ....\n" + selectedList.get(i).getName());
-                }
-                colorList.clear();
             }
         });
 
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // make sure to clear list that duplication dont formed here
-                colorList.clear();
-            }
-        });
-
-        builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // make sure to clear list that duplication dont formed here
-                colorList.clear();
+                
             }
         });
 
@@ -378,7 +361,6 @@ public class RatesActivity extends AppCompatActivity {
         }
 
         LineDataSet set = new LineDataSet(null, label);
-//        set.setMode(LineDataSet.Mode.CUBIC_BEZIER);
         set.setCubicIntensity(0.1f);
         set.setDrawCircleHole(false);
         set.setLineWidth(1.5f);
