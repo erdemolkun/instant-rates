@@ -9,6 +9,8 @@ public interface IRateProvider {
 
     void stop();
 
+    void cancel();
+
     interface Callback<T> {
         void onResult(T value);
 

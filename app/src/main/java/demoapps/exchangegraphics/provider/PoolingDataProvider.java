@@ -11,8 +11,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 abstract class PoolingDataProvider<T> implements IRateProvider {
 
-    static final int INTERVAL = 2000;
-    static final int INTERVAL_ON_ERROR = 5000;
+    private static final int INTERVAL = 2000;
+    private static final int INTERVAL_ON_ERROR = 5000;
 
     private Callback callback;
 
@@ -22,7 +22,7 @@ abstract class PoolingDataProvider<T> implements IRateProvider {
 
     private Handler handler;
 
-    Handler getHandler() {
+    private Handler getHandler() {
         if (handler == null) {
             handler = new Handler(Looper.getMainLooper());
         }
@@ -30,16 +30,15 @@ abstract class PoolingDataProvider<T> implements IRateProvider {
     }
 
     private AtomicBoolean isWorking = new AtomicBoolean(false);
-    private AtomicBoolean isStopped = new AtomicBoolean(false);
 
     @Override
     public void start() {
-        if (isStopped.get()) return;
         if (isWorking.get()) return;
         getHandler().post(getWork());
+        isWorking.set(true);
     }
 
-    protected void fetchAgain(boolean wasError) {
+    void fetchAgain(boolean wasError) {
         getHandler().postDelayed(getWork(), wasError ? INTERVAL_ON_ERROR : INTERVAL);
     }
 
@@ -48,14 +47,14 @@ abstract class PoolingDataProvider<T> implements IRateProvider {
         Runnable runnable = getWork();
         if (runnable != null)
             getHandler().removeCallbacks(runnable);
-
-        isStopped.set(true);
+        cancel();
+        isWorking.set(false);
     }
 
-    void notifyValue(T rates) {
-        if (isStopped.get()) return;
+    void notifyValue(T value) {
+        if (!isWorking.get()) return;
         if (callback != null) {
-            callback.onResult(rates);
+            callback.onResult(value);
         }
     }
 

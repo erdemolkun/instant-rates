@@ -20,6 +20,7 @@ public class DolarTlKurRateProvider extends PoolingDataProvider<List<DolarTlKurR
             fetch();
         }
     };
+    private Call lastCall;
 
     public DolarTlKurRateProvider(Callback callback) {
         super(callback);
@@ -47,11 +48,18 @@ public class DolarTlKurRateProvider extends PoolingDataProvider<List<DolarTlKurR
                 notifyError();
             }
         });
+        lastCall = call;
     }
-
 
     @Override
     Runnable getWork() {
         return runnable;
+    }
+
+    @Override
+    public void cancel() {
+        if (lastCall != null) {
+            lastCall.cancel();
+        }
     }
 }

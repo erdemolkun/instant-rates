@@ -21,6 +21,8 @@ public class YorumlarRateProvider extends PoolingDataProvider<List<YorumlarRate>
         }
     };
 
+    private Call lastCall;
+
     public YorumlarRateProvider(Callback callback) {
         super(callback);
     }
@@ -47,11 +49,18 @@ public class YorumlarRateProvider extends PoolingDataProvider<List<YorumlarRate>
                 notifyError();
             }
         });
+        lastCall = call;
     }
-
 
     @Override
     Runnable getWork() {
         return runnable;
+    }
+
+    @Override
+    public void cancel() {
+        if (lastCall != null) {
+            lastCall.cancel();
+        }
     }
 }

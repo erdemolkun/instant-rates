@@ -21,6 +21,8 @@ public class EnparaRateProvider extends PoolingDataProvider<List<BuySellRate>> i
         }
     };
 
+    private Call lastCall;
+
     public EnparaRateProvider(Callback callback) {
         super(callback);
     }
@@ -47,10 +49,17 @@ public class EnparaRateProvider extends PoolingDataProvider<List<BuySellRate>> i
                 notifyError();
             }
         });
+        lastCall = call;
     }
 
     @Override
     Runnable getWork() {
         return runnable;
+    }
+
+    @Override
+    public void cancel() {
+        if (lastCall != null)
+            lastCall.cancel();
     }
 }

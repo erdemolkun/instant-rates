@@ -22,6 +22,8 @@ public class BigparaRateProvider extends PoolingDataProvider<List<BuySellRate>> 
         }
     };
 
+    private Call lastCall;
+
     public BigparaRateProvider(Callback callback) {
         super(callback);
     }
@@ -48,10 +50,17 @@ public class BigparaRateProvider extends PoolingDataProvider<List<BuySellRate>> 
                 notifyError();
             }
         });
+        lastCall = call;
     }
 
     @Override
     Runnable getWork() {
         return runnable;
+    }
+
+    @Override
+    public void cancel() {
+        if (lastCall!=null)
+            lastCall.cancel();
     }
 }
