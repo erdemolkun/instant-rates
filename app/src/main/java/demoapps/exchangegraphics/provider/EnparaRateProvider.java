@@ -34,16 +34,16 @@ public class EnparaRateProvider extends PoolingDataProvider<List<BuySellRate>> i
                 if (response.isSuccessful() && response.body() != null) {
                     List<BuySellRate> rates = response.body();
                     notifyValue(rates);
-                    getHandler().postDelayed(runnable, INTERVAL);
+                    fetchAgain(false);
                 } else {
-                    getHandler().postDelayed(runnable, INTERVAL_ON_ERROR);
+                    fetchAgain(true);
                     notifyError();
                 }
             }
 
             @Override
             public void onFailure(Call<List<BuySellRate>> call, Throwable t) {
-                getHandler().postDelayed(runnable, INTERVAL_ON_ERROR);
+                fetchAgain(true);
                 notifyError();
             }
         });

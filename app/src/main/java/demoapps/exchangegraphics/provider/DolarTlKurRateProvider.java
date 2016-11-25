@@ -27,24 +27,23 @@ public class DolarTlKurRateProvider extends PoolingDataProvider<List<DolarTlKurR
 
     private void fetch() {
         final DolarTlKurService dolarTlKurService = Api.getDolarTlKurApi().create(DolarTlKurService.class);
-        Call<List<DolarTlKurRate>> call = dolarTlKurService.getValues(""+System.currentTimeMillis());
+        Call<List<DolarTlKurRate>> call = dolarTlKurService.getValues("" + System.currentTimeMillis());
         call.enqueue(new retrofit2.Callback<List<DolarTlKurRate>>() {
             @Override
             public void onResponse(Call<List<DolarTlKurRate>> call, Response<List<DolarTlKurRate>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<DolarTlKurRate> rates = response.body();
                     notifyValue(rates);
-
-                    getHandler().postDelayed(runnable, INTERVAL);
+                    fetchAgain(false);
                 } else {
-                    getHandler().postDelayed(runnable, INTERVAL_ON_ERROR);
+                    fetchAgain(true);
                     notifyError();
                 }
             }
 
             @Override
             public void onFailure(Call<List<DolarTlKurRate>> call, Throwable t) {
-                getHandler().postDelayed(runnable, INTERVAL_ON_ERROR);
+                fetchAgain(true);
                 notifyError();
             }
         });

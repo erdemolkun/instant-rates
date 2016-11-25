@@ -22,7 +22,7 @@ abstract class PoolingDataProvider<T> implements IRateProvider {
 
     private Handler handler;
 
-    protected Handler getHandler() {
+    Handler getHandler() {
         if (handler == null) {
             handler = new Handler(Looper.getMainLooper());
         }
@@ -37,6 +37,10 @@ abstract class PoolingDataProvider<T> implements IRateProvider {
         if (isStopped.get()) return;
         if (isWorking.get()) return;
         getHandler().post(getWork());
+    }
+
+    protected void fetchAgain(boolean wasError) {
+        getHandler().postDelayed(getWork(), wasError ? INTERVAL_ON_ERROR : INTERVAL);
     }
 
     @Override

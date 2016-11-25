@@ -34,17 +34,16 @@ public class YorumlarRateProvider extends PoolingDataProvider<List<YorumlarRate>
                 if (response.isSuccessful() && response.body() != null) {
                     List<YorumlarRate> rates = response.body();
                     notifyValue(rates);
-
-                    getHandler().postDelayed(runnable, INTERVAL);
+                    fetchAgain(false);
                 } else {
-                    getHandler().postDelayed(runnable, INTERVAL_ON_ERROR);
+                    fetchAgain(true);
                     notifyError();
                 }
             }
 
             @Override
             public void onFailure(Call<List<YorumlarRate>> call, Throwable t) {
-                getHandler().postDelayed(runnable, INTERVAL_ON_ERROR);
+                fetchAgain(true);
                 notifyError();
             }
         });
