@@ -130,7 +130,7 @@ public class RatesActivity extends AppCompatActivity {
         lineChart.getXAxis().setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-                return defaultXFormatter.getFormattedValue(value,axis)+".sn";
+                return defaultXFormatter.getFormattedValue(value, axis) + ".sn";
             }
 
         });
@@ -139,7 +139,7 @@ public class RatesActivity extends AppCompatActivity {
         lineChart.getAxisRight().setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-                return defaultYFormatter.getFormattedValue(value,axis)+" TL";
+                return defaultYFormatter.getFormattedValue(value, axis) + " TL";
             }
         });
         lineChart.setScaleEnabled(false);
@@ -187,7 +187,7 @@ public class RatesActivity extends AppCompatActivity {
 
     private LineDataSet createSet(int chartIndex) {
 
-        String label = "";
+        String label;
         switch (chartIndex) {
             case 0:
                 label = "Piyasa";
@@ -204,6 +204,7 @@ public class RatesActivity extends AppCompatActivity {
         }
 
         LineDataSet set = new LineDataSet(null, label);
+        set.setMode(LineDataSet.Mode.CUBIC_BEZIER);
         set.setDrawCircleHole(false);
         set.setLineWidth(1f);
         set.setCircleRadius(2f);
