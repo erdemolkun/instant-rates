@@ -3,23 +3,20 @@ package demoapps.exchangegraphics.provider;
 import android.os.Handler;
 import android.os.Looper;
 
-import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import demoapps.exchangegraphics.data.Rate;
 
 /**
  * Created by erdemmac on 25/11/2016.
  */
 
-abstract class BaseRateProvider<T extends Rate> implements IRateProvider {
+abstract class PoolingDataProvider<T> implements IRateProvider {
 
     static final int INTERVAL = 2000;
     static final int INTERVAL_ON_ERROR = 5000;
 
     private Callback callback;
 
-    BaseRateProvider(Callback callback) {
+    PoolingDataProvider(Callback<T> callback) {
         this.callback = callback;
     }
 
@@ -51,15 +48,15 @@ abstract class BaseRateProvider<T extends Rate> implements IRateProvider {
         isStopped.set(true);
     }
 
-    void notifyRates(List<T> rates) {
+    void notifyValue(T rates) {
         if (isStopped.get()) return;
         if (callback != null) {
             callback.onResult(rates);
         }
     }
 
-    void notifyError(){
-        if (callback!=null){
+    void notifyError() {
+        if (callback != null) {
             callback.onError();
         }
     }

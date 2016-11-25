@@ -12,7 +12,7 @@ import retrofit2.Response;
  * Created by erdemmac on 25/11/2016.
  */
 
-public class EnparaRateProvider extends BaseRateProvider<EnparaRate> implements IRateProvider {
+public class EnparaRateProvider extends PoolingDataProvider<List<EnparaRate>> implements IRateProvider {
 
     private Runnable runnable = new Runnable() {
         @Override
@@ -33,7 +33,7 @@ public class EnparaRateProvider extends BaseRateProvider<EnparaRate> implements 
             public void onResponse(Call<List<EnparaRate>> call, Response<List<EnparaRate>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<EnparaRate> rates = response.body();
-                    notifyRates(rates);
+                    notifyValue(rates);
                     getHandler().postDelayed(runnable, INTERVAL);
                 } else {
                     getHandler().postDelayed(runnable, INTERVAL_ON_ERROR);

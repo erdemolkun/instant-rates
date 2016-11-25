@@ -12,7 +12,7 @@ import retrofit2.Response;
  * Created by erdemmac on 25/11/2016.
  */
 
-public class YorumlarRateProvider extends BaseRateProvider<YorumlarRate> implements IRateProvider {
+public class YorumlarRateProvider extends PoolingDataProvider<List<YorumlarRate>> implements IRateProvider {
 
     private Runnable runnable = new Runnable() {
         @Override
@@ -33,7 +33,7 @@ public class YorumlarRateProvider extends BaseRateProvider<YorumlarRate> impleme
             public void onResponse(Call<List<YorumlarRate>> call, Response<List<YorumlarRate>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<YorumlarRate> rates = response.body();
-                    notifyRates(rates);
+                    notifyValue(rates);
 
                     getHandler().postDelayed(runnable, INTERVAL);
                 } else {

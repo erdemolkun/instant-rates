@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
@@ -45,12 +44,6 @@ public class RatesActivity extends AppCompatActivity {
     @BindView(R.id.line_usd_chart)
     LineChart lineChart;
 
-    @BindView(R.id.tv_rate_yorumlar)
-    TextView tvRateYorumlar;
-
-    @BindView(R.id.tv_rate_enpara)
-    TextView tvRateEnpara;
-
     @BindView(R.id.v_progress_wheel)
     View vProgress;
 
@@ -69,23 +62,18 @@ public class RatesActivity extends AppCompatActivity {
 
         vProgress.setVisibility(View.GONE);
 
-        enparaRateProvider = new EnparaRateProvider(new IRateProvider.Callback<EnparaRate>() {
+        enparaRateProvider = new EnparaRateProvider(new IRateProvider.Callback<List<EnparaRate>>() {
             @Override
             public void onResult(List<EnparaRate> rates) {
                 enparaRates = rates;
                 EnparaRate rateUsd = null;
-                String val = "";
                 for (Rate rate : rates) {
-                    if (rate.rateType == Rate.RateTypes.USD || rate.rateType == Rate.RateTypes.EUR) {
-                        val += rate.toString();
-                    }
                     if (rate.rateType == Rate.RateTypes.USD) {
                         rateUsd = (EnparaRate) rate;
                     }
                     addEntry(rateUsd != null ? rateUsd.value_sell_real : 0.0f, 1);
                     addEntry(rateUsd != null ? rateUsd.value_buy_real : 0.0f, 2);
                 }
-//                    tvRateEnpara.setText(val);
             }
 
             @Override
@@ -94,22 +82,17 @@ public class RatesActivity extends AppCompatActivity {
             }
         });
 
-        yorumlarRateProvider = new YorumlarRateProvider(new IRateProvider.Callback<YorumlarRate>() {
+        yorumlarRateProvider = new YorumlarRateProvider(new IRateProvider.Callback<List<YorumlarRate>>() {
             @Override
             public void onResult(List<YorumlarRate> rates) {
                 yorumlarRates = rates;
                 YorumlarRate rateUsd = null;
-                String val = "";
                 for (Rate rate : rates) {
-                    if (rate.rateType == Rate.RateTypes.USD || rate.rateType == Rate.RateTypes.EUR) {
-                        val += rate.toString() + "\n";
-                    }
                     if (rate.rateType == Rate.RateTypes.USD) {
                         rateUsd = (YorumlarRate) rate;
                     }
 
                 }
-                //tvRateYorumlar.setText(val);
                 addEntry(rateUsd != null ? rateUsd.realValue : 0.0f, 0);
             }
 
@@ -208,7 +191,6 @@ public class RatesActivity extends AppCompatActivity {
 
 //        lineChart.getAxisRight().setAxisMinimum(lineChart.getYMin()-0.01f);
 //        lineChart.getAxisRight().setAxisMaximum(lineChart.getYMax()-0.01f);
-
 
     }
 
