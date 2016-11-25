@@ -12,6 +12,7 @@
             android:layout_marginTop="18dp"
             android:textSize="14sp"
             android:layout_marginBottom="16dp"
+            android:visibility="gone"
             android:textColor="@color/colorPrimary"
             android:id="@+id/tv_rate_yorumlar"
             android:layout_height="wrap_content"/>
@@ -21,6 +22,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="18dp"
             android:textSize="14sp"
+            android:visibility="gone"
             android:layout_marginBottom="16dp"
             android:textColor="@color/colorPrimary"
             android:id="@+id/tv_rate_enpara"
@@ -29,6 +31,7 @@
     <demoapps.exchangegraphics.ui.ProgressWheel
             android:id="@+id/v_progress_wheel"
             android:layout_width="32dp"
+            android:visibility="gone"
             android:layout_height="32dp"
             android:layout_gravity="center_horizontal"
             android:background="@null"
@@ -44,6 +47,7 @@
     <TextView
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="12dp"
+            android:layout_marginTop="12dp"
             android:textSize="14sp"
             android:textColor="@color/colorPrimary"
             android:text="Dolar-TL Grafiği"
@@ -53,7 +57,7 @@
     <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/line_usd_chart"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="240dp"
             />
 
 </LinearLayout>

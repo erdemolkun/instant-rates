@@ -1,10 +1,7 @@
 package demoapps.exchangegraphics;
 
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -24,18 +21,16 @@ import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import demoapps.exchangegraphics.data.EnparaRate;
 import demoapps.exchangegraphics.data.Rate;
 import demoapps.exchangegraphics.data.YorumlarRate;
-import demoapps.exchangegraphics.service.Api;
-import demoapps.exchangegraphics.service.EnparaService;
-import demoapps.exchangegraphics.service.YorumlarService;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import demoapps.exchangegraphics.provider.EnparaRateProvider;
+import demoapps.exchangegraphics.provider.IRateProvider;
+import demoapps.exchangegraphics.provider.YorumlarRateProvider;
 
 /**
  * Created by erdemmac on 24/11/2016.
@@ -59,34 +54,9 @@ public class RatesActivity extends AppCompatActivity {
     @BindView(R.id.v_progress_wheel)
     View vProgress;
 
-    private Runnable runnableYorumlar = new Runnable() {
-        @Override
-        public void run() {
-            fetchRatesYorumlar();
-        }
-    };
-
-    private Runnable runnableEnpara = new Runnable() {
-        @Override
-        public void run() {
-            fetchEnparaRates();
-        }
-    };
-
-    private Handler handler;
-
-    private Handler getHandler() {
-        if (handler == null) {
-            handler = new Handler(Looper.getMainLooper());
-        }
-        return handler;
-    }
-
-    private static final int INTERVAL = 2000;
-    private static final int INTERVAL_ON_ERROR = 5000;
-
 
     private long startMilis;
+    IRateProvider enparaRateProvider, yorumlarRateProvider;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -97,10 +67,59 @@ public class RatesActivity extends AppCompatActivity {
         startMilis = System.currentTimeMillis();
         initUsdChart();
 
-        getHandler().post(runnableYorumlar);
-        getHandler().post(runnableEnpara);
-
         vProgress.setVisibility(View.GONE);
+
+        enparaRateProvider = new EnparaRateProvider(new IRateProvider.Callback<EnparaRate>() {
+            @Override
+            public void onResult(List<EnparaRate> rates) {
+                enparaRates = rates;
+                EnparaRate rateUsd = null;
+                String val = "";
+                for (Rate rate : rates) {
+                    if (rate.rateType == Rate.RateTypes.USD || rate.rateType == Rate.RateTypes.EUR) {
+                        val += rate.toString();
+                    }
+                    if (rate.rateType == Rate.RateTypes.USD) {
+                        rateUsd = (EnparaRate) rate;
+                    }
+                    addEntry(rateUsd != null ? rateUsd.value_sell_real : 0.0f, 1);
+                    addEntry(rateUsd != null ? rateUsd.value_buy_real : 0.0f, 2);
+                }
+//                    tvRateEnpara.setText(val);
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        });
+
+        yorumlarRateProvider = new YorumlarRateProvider(new IRateProvider.Callback<YorumlarRate>() {
+            @Override
+            public void onResult(List<YorumlarRate> rates) {
+                yorumlarRates = rates;
+                YorumlarRate rateUsd = null;
+                String val = "";
+                for (Rate rate : rates) {
+                    if (rate.rateType == Rate.RateTypes.USD || rate.rateType == Rate.RateTypes.EUR) {
+                        val += rate.toString() + "\n";
+                    }
+                    if (rate.rateType == Rate.RateTypes.USD) {
+                        rateUsd = (YorumlarRate) rate;
+                    }
+
+                }
+                //tvRateYorumlar.setText(val);
+                addEntry(rateUsd != null ? rateUsd.realValue : 0.0f, 0);
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        });
+        enparaRateProvider.start();
+        yorumlarRateProvider.start();
 
     }
 
@@ -130,7 +149,11 @@ public class RatesActivity extends AppCompatActivity {
         lineChart.getXAxis().setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-                return defaultXFormatter.getFormattedValue(value, axis) + ".sn";
+                int time = (int) value;
+                int minutes = time / (60);
+                int seconds = (time) % 60;
+                String str = String.format("%d:%02d", minutes, seconds, Locale.ENGLISH);
+                return str;
             }
 
         });
@@ -154,6 +177,10 @@ public class RatesActivity extends AppCompatActivity {
         data.addDataSet(set0);
         data.addDataSet(set1);
         data.addDataSet(set2);
+
+        lineChart.setExtraBottomOffset(12);
+        lineChart.setExtraTopOffset(12);
+        lineChart.setPinchZoom(false);
     }
 
     private void addEntry(float value, int chartIndex) {
@@ -170,14 +197,14 @@ public class RatesActivity extends AppCompatActivity {
 
         //mChart.setVisibleYRangeMaximum(15, AxisDependency.LEFT);
         lineChart.setVisibleXRangeMaximum(120);
+
         lineChart.getXAxis().setDrawGridLines(false);
         lineChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
         lineChart.getXAxis().setTextColor(ContextCompat.getColor(this, android.R.color.white));
         lineChart.getAxisRight().setTextColor(ContextCompat.getColor(this, android.R.color.white));
 
-        lineChart.setPinchZoom(false);
 //          this automatically refreshes the chart (calls invalidate())
-        lineChart.moveViewToAnimated(data.getEntryCount() - 7, 250f, YAxis.AxisDependency.LEFT, 400);
+        lineChart.moveViewToX(data.getEntryCount());
 
 //        lineChart.getAxisRight().setAxisMinimum(lineChart.getYMin()-0.01f);
 //        lineChart.getAxisRight().setAxisMaximum(lineChart.getYMax()-0.01f);
@@ -204,10 +231,12 @@ public class RatesActivity extends AppCompatActivity {
         }
 
         LineDataSet set = new LineDataSet(null, label);
-        set.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+//        set.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+        set.setCubicIntensity(0.1f);
         set.setDrawCircleHole(false);
-        set.setLineWidth(1f);
+        set.setLineWidth(1.5f);
         set.setCircleRadius(2f);
+        set.setDrawCircles(true);
         int color;
         if (chartIndex == 0) {
             color = Color.rgb(240, 0, 0);
@@ -226,106 +255,16 @@ public class RatesActivity extends AppCompatActivity {
         set.setFillAlpha((int) (256 * 0.3f));
         set.setFillColor(color);
         set.setValueTextColor(color);
-        set.setValueTextSize(13f);
+        set.setValueTextSize(16f);
         set.setDrawValues(false);
-
         return set;
-    }
-
-    private void fetchRatesYorumlar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            if (isDestroyed()) return;
-        }
-        if (isFinishing()) return;
-        //vProgress.setVisibility(View.VISIBLE);
-        YorumlarService yorumlarService = Api.getYorumlarApi().create(YorumlarService.class);
-        Call<List<YorumlarRate>> call = yorumlarService.getWithType("ons");
-        call.enqueue(new Callback<List<YorumlarRate>>() {
-            @Override
-            public void onResponse(Call<List<YorumlarRate>> call, Response<List<YorumlarRate>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    List<YorumlarRate> rates = response.body();
-                    yorumlarRates = rates;
-                    YorumlarRate rateUsd = null;
-                    String val = "";
-                    for (Rate rate : rates) {
-                        if (rate.rateType == Rate.RateTypes.USD || rate.rateType == Rate.RateTypes.EUR) {
-                            val += rate.toString() + "\n";
-                        }
-                        if (rate.rateType == Rate.RateTypes.USD) {
-                            rateUsd = (YorumlarRate) rate;
-                        }
-
-                    }
-                    //tvRateYorumlar.setText(val);
-                    getHandler().postDelayed(runnableYorumlar, INTERVAL);
-                    addEntry(rateUsd != null ? rateUsd.realValue : 0.0f, 0);
-
-                } else {
-//                    tvRateYorumlar.setText("Exception");
-                    getHandler().postDelayed(runnableYorumlar, INTERVAL_ON_ERROR);
-                }
-                vProgress.setVisibility(View.INVISIBLE);
-
-            }
-
-            @Override
-            public void onFailure(Call<List<YorumlarRate>> call, Throwable t) {
-                getHandler().postDelayed(runnableYorumlar, INTERVAL_ON_ERROR);
-                vProgress.setVisibility(View.INVISIBLE);
-//                tvRateYorumlar.setText("Exception");
-            }
-        });
-    }
-
-    private void fetchEnparaRates() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            if (isDestroyed()) return;
-        }
-        if (isFinishing()) return;
-        final EnparaService enparaService = Api.getEnparaApi().create(EnparaService.class);
-        Call<List<EnparaRate>> call = enparaService.getValues();
-        call.enqueue(new Callback<List<EnparaRate>>() {
-            @Override
-            public void onResponse(Call<List<EnparaRate>> call, Response<List<EnparaRate>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    List<EnparaRate> rates = response.body();
-                    enparaRates = rates;
-                    EnparaRate rateUsd = null;
-                    String val = "";
-                    for (Rate rate : rates) {
-                        if (rate.rateType == Rate.RateTypes.USD || rate.rateType == Rate.RateTypes.EUR) {
-                            val += rate.toString();
-                        }
-                        if (rate.rateType == Rate.RateTypes.USD) {
-                            rateUsd = (EnparaRate) rate;
-                        }
-                        addEntry(rateUsd != null ? rateUsd.value_sell_real : 0.0f, 1);
-                        addEntry(rateUsd != null ? rateUsd.value_buy_real : 0.0f, 2);
-                    }
-//                    tvRateEnpara.setText(val);
-
-                } else {
-                    getHandler().postDelayed(runnableEnpara, INTERVAL_ON_ERROR);
-//                    tvRateEnpara.setText("Exception");
-                }
-                getHandler().postDelayed(runnableEnpara, INTERVAL);
-
-            }
-
-            @Override
-            public void onFailure(Call<List<EnparaRate>> call, Throwable t) {
-//                tvRateEnpara.setText("Exception");
-                getHandler().postDelayed(runnableEnpara, INTERVAL_ON_ERROR);
-            }
-        });
     }
 
 
     @Override
     protected void onDestroy() {
-        getHandler().removeCallbacks(runnableYorumlar);
-        getHandler().removeCallbacks(runnableEnpara);
+        enparaRateProvider.stop();
+        yorumlarRateProvider.stop();
         super.onDestroy();
     }
 
