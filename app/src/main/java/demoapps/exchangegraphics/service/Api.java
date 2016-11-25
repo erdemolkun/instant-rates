@@ -1,5 +1,6 @@
 package demoapps.exchangegraphics.service;
 
+import demoapps.exchangegraphics.BigparaConverter;
 import demoapps.exchangegraphics.EnparaConverter;
 import demoapps.exchangegraphics.YorumlarAjaxConverter;
 import okhttp3.OkHttpClient;
@@ -15,6 +16,7 @@ public class Api {
     private static Retrofit yorumlarApi;
     private static Retrofit enparaApi;
     private static Retrofit bloombergApi;
+    private static Retrofit bigparaApi;
 
 
     public static Retrofit getYorumlarApi() {
@@ -36,6 +38,16 @@ public class Api {
                     .build();
         }
         return enparaApi;
+    }
+
+    public static Retrofit getBigparaApi() {
+        if (bigparaApi == null) {
+            bigparaApi = new Retrofit.Builder()
+                    .baseUrl("http://www.bigpara.com/")
+                    .addConverterFactory(new BigparaConverter.Factory())
+                    .build();
+        }
+        return bigparaApi;
     }
 
     public static Retrofit getBloombergApi() {

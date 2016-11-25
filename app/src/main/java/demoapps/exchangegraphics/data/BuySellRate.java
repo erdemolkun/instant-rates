@@ -4,7 +4,7 @@ package demoapps.exchangegraphics.data;
  * Created by erdemmac on 24/11/2016.
  */
 
-public class EnparaRate extends Rate {
+public class BuySellRate extends Rate {
     public Float value_sell_real, value_buy_real;
     public String value_sell, value_buy;
 

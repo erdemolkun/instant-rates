@@ -4,6 +4,7 @@ import java.util.List;
 
 import demoapps.exchangegraphics.data.BuySellRate;
 import demoapps.exchangegraphics.service.Api;
+import demoapps.exchangegraphics.service.BigparaService;
 import demoapps.exchangegraphics.service.EnparaService;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -12,7 +13,7 @@ import retrofit2.Response;
  * Created by erdemmac on 25/11/2016.
  */
 
-public class EnparaRateProvider extends PoolingDataProvider<List<BuySellRate>> implements IRateProvider {
+public class BigparaRateProvider extends PoolingDataProvider<List<BuySellRate>> implements IRateProvider {
 
     private Runnable runnable = new Runnable() {
         @Override
@@ -21,13 +22,13 @@ public class EnparaRateProvider extends PoolingDataProvider<List<BuySellRate>> i
         }
     };
 
-    public EnparaRateProvider(Callback callback) {
+    public BigparaRateProvider(Callback callback) {
         super(callback);
     }
 
     private void fetch() {
-        final EnparaService enparaService = Api.getEnparaApi().create(EnparaService.class);
-        Call<List<BuySellRate>> call = enparaService.getValues();
+        final BigparaService bigparaService = Api.getBigparaApi().create(BigparaService.class);
+        Call<List<BuySellRate>> call = bigparaService.getData();
         call.enqueue(new retrofit2.Callback<List<BuySellRate>>() {
             @Override
             public void onResponse(Call<List<BuySellRate>> call, Response<List<BuySellRate>> response) {

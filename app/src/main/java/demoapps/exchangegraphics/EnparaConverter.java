@@ -12,7 +12,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import demoapps.exchangegraphics.data.EnparaRate;
+import demoapps.exchangegraphics.data.BuySellRate;
 import demoapps.exchangegraphics.data.Rate;
 import okhttp3.ResponseBody;
 import retrofit2.Converter;
@@ -62,9 +62,9 @@ public class EnparaConverter implements Converter<ResponseBody, List<Rate>> {
         return rates;
     }
 
-    private static EnparaRate parseRate(Element element) {
+    private static BuySellRate parseRate(Element element) {
         final Elements divElements = element.select("div");
-        EnparaRate rate = new EnparaRate();
+        BuySellRate rate = new BuySellRate();
         for (int i = 0; i < divElements.size(); i++) {
             Element innerElement = divElements.get(i);
             Node childNode = innerElement.childNodes().get(0);

@@ -24,9 +24,10 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import demoapps.exchangegraphics.data.EnparaRate;
+import demoapps.exchangegraphics.data.BuySellRate;
 import demoapps.exchangegraphics.data.Rate;
 import demoapps.exchangegraphics.data.YorumlarRate;
+import demoapps.exchangegraphics.provider.BigparaRateProvider;
 import demoapps.exchangegraphics.provider.EnparaRateProvider;
 import demoapps.exchangegraphics.provider.IRateProvider;
 import demoapps.exchangegraphics.provider.YorumlarRateProvider;
@@ -38,7 +39,7 @@ import demoapps.exchangegraphics.provider.YorumlarRateProvider;
 public class RatesActivity extends AppCompatActivity {
 
 
-    private List<EnparaRate> enparaRates;
+    private List<BuySellRate> enparaRates;
     private List<YorumlarRate> yorumlarRates;
 
     @BindView(R.id.line_usd_chart)
@@ -49,7 +50,7 @@ public class RatesActivity extends AppCompatActivity {
 
 
     private long startMilis;
-    IRateProvider enparaRateProvider, yorumlarRateProvider;
+    IRateProvider enparaRateProvider, yorumlarRateProvider, bigparaRateProvider;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,14 +63,14 @@ public class RatesActivity extends AppCompatActivity {
 
         vProgress.setVisibility(View.GONE);
 
-        enparaRateProvider = new EnparaRateProvider(new IRateProvider.Callback<List<EnparaRate>>() {
+        enparaRateProvider = new EnparaRateProvider(new IRateProvider.Callback<List<BuySellRate>>() {
             @Override
-            public void onResult(List<EnparaRate> rates) {
+            public void onResult(List<BuySellRate> rates) {
                 enparaRates = rates;
-                EnparaRate rateUsd = null;
+                BuySellRate rateUsd = null;
                 for (Rate rate : rates) {
                     if (rate.rateType == Rate.RateTypes.USD) {
-                        rateUsd = (EnparaRate) rate;
+                        rateUsd = (BuySellRate) rate;
                     }
                     addEntry(rateUsd != null ? rateUsd.value_sell_real : 0.0f, 1);
                     addEntry(rateUsd != null ? rateUsd.value_buy_real : 0.0f, 2);
@@ -101,8 +102,25 @@ public class RatesActivity extends AppCompatActivity {
 
             }
         });
+
+
+        bigparaRateProvider
+                = new BigparaRateProvider(new IRateProvider.Callback<List<BuySellRate>>() {
+            @Override
+            public void onResult(List<BuySellRate> value) {
+                addEntry(value.get(0).value_sell_real,3);
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        });
+
+
         enparaRateProvider.start();
         yorumlarRateProvider.start();
+        bigparaRateProvider.start();
 
     }
 
@@ -154,12 +172,11 @@ public class RatesActivity extends AppCompatActivity {
         LineData data = lineChart.getData();
 
 
-        ILineDataSet set0 = createSet(0);
-        ILineDataSet set1 = createSet(1);
-        ILineDataSet set2 = createSet(2);
-        data.addDataSet(set0);
-        data.addDataSet(set1);
-        data.addDataSet(set2);
+
+        data.addDataSet(createSet(0));
+        data.addDataSet(createSet(1));
+        data.addDataSet(createSet(2));
+        data.addDataSet(createSet(3));
 
         lineChart.setExtraBottomOffset(12);
         lineChart.setExtraTopOffset(12);
@@ -207,6 +224,9 @@ public class RatesActivity extends AppCompatActivity {
             case 2:
                 label = "Enpara Alış";
                 break;
+            case 3:
+                label = "Bigpara";
+                break;
             default:
                 label = "Unknown";
                 break;
@@ -224,8 +244,12 @@ public class RatesActivity extends AppCompatActivity {
             color = Color.rgb(240, 0, 0);
         } else if (chartIndex == 1) {
             color = Color.rgb(0, 0, 240);
-        } else {
+        }
+        else if (chartIndex == 3) {
             color = Color.rgb(0, 240, 0);
+        }
+        else {
+            color = Color.rgb(60, 60, 60);
         }
 
 
