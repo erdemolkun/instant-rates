@@ -1,8 +1,9 @@
 package demoapps.exchangegraphics.service;
 
-import demoapps.exchangegraphics.BigparaConverter;
-import demoapps.exchangegraphics.EnparaConverter;
-import demoapps.exchangegraphics.YorumlarAjaxConverter;
+import demoapps.exchangegraphics.converters.BigparaConverter;
+import demoapps.exchangegraphics.converters.DolarTlKurAjaxConverter;
+import demoapps.exchangegraphics.converters.EnparaConverter;
+import demoapps.exchangegraphics.converters.YorumlarAjaxConverter;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -17,6 +18,7 @@ public class Api {
     private static Retrofit enparaApi;
     private static Retrofit bloombergApi;
     private static Retrofit bigparaApi;
+    private static Retrofit dolarTlKurApi;
 
 
     public static Retrofit getYorumlarApi() {
@@ -48,6 +50,16 @@ public class Api {
                     .build();
         }
         return bigparaApi;
+    }
+
+    public static Retrofit getDolarTlKurApi() {
+        if (dolarTlKurApi == null) {
+            dolarTlKurApi = new Retrofit.Builder()
+                    .baseUrl("http://dolar.tlkur.com/")
+                    .addConverterFactory(new DolarTlKurAjaxConverter.Factory())
+                    .build();
+        }
+        return dolarTlKurApi;
     }
 
     public static Retrofit getBloombergApi() {

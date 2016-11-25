@@ -6,21 +6,21 @@ import android.text.TextUtils;
  * Created by erdemmac on 24/11/2016.
  */
 
-public class YorumlarRate extends Rate implements IRate {
+public class DolarTlKurRate extends Rate implements IRate {
 
-    public String time;
+
     @Override
     public int toRateType() {
         if (TextUtils.isEmpty(type)) return RateTypes.UNKNOWN;
         int rateType = RateTypes.UNKNOWN;
         switch (type) {
-            case "dolar_guncelle":
+            case "USDTRY":
                 return RateTypes.USD;
-            case "euro_guncelle":
+            case "EURTRY":
                 return RateTypes.EUR;
-            case "parite_guncelle":
+            case "EURUSD":
                 return RateTypes.EUR_USD;
-            case "ons_guncelle":
+            case "XAUUSD":
                 return RateTypes.ONS;
         }
         return rateType;
@@ -35,7 +35,7 @@ public class YorumlarRate extends Rate implements IRate {
 
     @Override
     public String toString() {
-        return type.split("_")[0] + " -> : " + realValue + " : Time -> " + time.replace("\'", "");
+        return type.split("_")[0] + " -> : " + realValue;
     }
 
 }

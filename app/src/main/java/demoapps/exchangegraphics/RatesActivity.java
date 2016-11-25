@@ -24,9 +24,11 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import demoapps.exchangegraphics.data.BuySellRate;
+import demoapps.exchangegraphics.data.DolarTlKurRate;
 import demoapps.exchangegraphics.data.Rate;
 import demoapps.exchangegraphics.data.YorumlarRate;
 import demoapps.exchangegraphics.provider.BigparaRateProvider;
+import demoapps.exchangegraphics.provider.DolarTlKurRateProvider;
 import demoapps.exchangegraphics.provider.EnparaRateProvider;
 import demoapps.exchangegraphics.provider.IRateProvider;
 import demoapps.exchangegraphics.provider.YorumlarRateProvider;
@@ -49,7 +51,7 @@ public class RatesActivity extends AppCompatActivity {
 
 
     private long startMilis;
-    IRateProvider enparaRateProvider, yorumlarRateProvider, bigparaRateProvider;
+    IRateProvider enparaRateProvider, yorumlarRateProvider, bigparaRateProvider, dolarTlKurRateProvider;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -116,10 +118,30 @@ public class RatesActivity extends AppCompatActivity {
             }
         });
 
+        dolarTlKurRateProvider = new DolarTlKurRateProvider(new IRateProvider.Callback<List<DolarTlKurRate>>() {
+            @Override
+            public void onResult(List<DolarTlKurRate> rates) {
+                DolarTlKurRate rateUsd = null;
+                for (Rate rate : rates) {
+                    if (rate.rateType == Rate.RateTypes.USD) {
+                        rateUsd = (DolarTlKurRate) rate;
+                    }
+
+                }
+                addEntry(rateUsd != null ? rateUsd.realValue : 0.0f, 4);
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        });
+
 
         enparaRateProvider.start();
         yorumlarRateProvider.start();
         bigparaRateProvider.start();
+        dolarTlKurRateProvider.start();
 
     }
 
@@ -175,6 +197,7 @@ public class RatesActivity extends AppCompatActivity {
         data.addDataSet(createSet(1));
         data.addDataSet(createSet(2));
         data.addDataSet(createSet(3));
+        data.addDataSet(createSet(4));
 
         lineChart.setExtraBottomOffset(12);
         lineChart.setExtraTopOffset(12);
@@ -228,6 +251,9 @@ public class RatesActivity extends AppCompatActivity {
             case 3:
                 label = "Bigpara";
                 break;
+            case 4:
+                label = "Dolar TL Kur";
+                break;
             default:
                 label = "Unknown";
                 break;
@@ -247,6 +273,8 @@ public class RatesActivity extends AppCompatActivity {
             color = Color.rgb(0, 0, 240);
         } else if (chartIndex == 3) {
             color = Color.rgb(0, 240, 0);
+        } else if (chartIndex == 4) {
+            color = Color.rgb(120, 120, 40);
         } else {
             color = Color.rgb(60, 60, 60);
         }

@@ -1,4 +1,4 @@
-package demoapps.exchangegraphics;
+package demoapps.exchangegraphics.converters;
 
 
 import org.jsoup.Jsoup;

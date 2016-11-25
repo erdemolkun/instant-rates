@@ -15,7 +15,6 @@ public abstract class Rate implements IRate {
     public float realValue;
     public String type;
     public String value;
-    public String time;
 
     public boolean isValidDiffTime(Rate rate) {
         return Math.abs(rate.fetchMilis - fetchMilis) < 5000;
