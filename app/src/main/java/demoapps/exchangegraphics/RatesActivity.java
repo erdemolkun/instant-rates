@@ -12,12 +12,15 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.DefaultAxisValueFormatter;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 import java.util.List;
@@ -102,7 +105,7 @@ public class RatesActivity extends AppCompatActivity {
     }
 
     private void initUsdChart() {
-        lineChart.getDescription().setEnabled(false);
+
         Description description = new Description();
 //        description.setPosition(10, 10);
         description.setTextSize(12f);
@@ -110,7 +113,8 @@ public class RatesActivity extends AppCompatActivity {
         description.setXOffset(8);
         description.setYOffset(8);
         description.setTextColor(ContextCompat.getColor(this, android.R.color.white));
-        lineChart.setDescription(description);
+        //lineChart.setDescription(description);
+        lineChart.getDescription().setEnabled(false);
         lineChart.setBackgroundColor(ContextCompat.getColor(this, android.R.color.holo_orange_light));
 
         // add an empty data object
@@ -122,14 +126,22 @@ public class RatesActivity extends AppCompatActivity {
 //        lineChart.getAxisRight().setAxisMaximum(3.48f);
 //        lineChart.getAxisRight().setAxisMinimum(3.42f);
         lineChart.getAxisLeft().setEnabled(false);
-//        lineChart.getXAxis().setValueFormatter(new IAxisValueFormatter() {
-//            @Override
-//            public String getFormattedValue(float value, AxisBase axis) {
-//
-//                return value + "";
-//            }
-//
-//        });
+        final IAxisValueFormatter defaultXFormatter = lineChart.getXAxis().getValueFormatter();
+        lineChart.getXAxis().setValueFormatter(new IAxisValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, AxisBase axis) {
+                return defaultXFormatter.getFormattedValue(value,axis)+".sn";
+            }
+
+        });
+
+        final IAxisValueFormatter defaultYFormatter = new DefaultAxisValueFormatter(3);
+        lineChart.getAxisRight().setValueFormatter(new IAxisValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, AxisBase axis) {
+                return defaultYFormatter.getFormattedValue(value,axis)+" TL";
+            }
+        });
         lineChart.setScaleEnabled(false);
         lineChart.invalidate();
 
