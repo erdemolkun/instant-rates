@@ -52,22 +52,13 @@ public class RatesActivity extends AppCompatActivity {
 
     private long startMilis;
     ArrayList<IRateProvider> providers = new ArrayList<>();
+    ArrayList<DataSource> dataSources = new ArrayList<>();
 
-
-    // String array for alert dialog multi choice items
     static final String[] data_set_names = new String[]{
-            "Piyasa",
+            "Yorumlar.Altin.in",
             "Enpara",
             "Bigpara",
-            "DolarTlKur",
-    };
-    // Boolean array for initial selected items
-    boolean[] checked_data_sources = new boolean[]{
-            true, // Piyasa
-            true, // Enpara
-            true, // Bigpara
-            true, // DolarTlKur
-
+            "dolar.tlkur.com",
     };
 
     @Override
@@ -89,7 +80,6 @@ public class RatesActivity extends AppCompatActivity {
                     if (rate.rateType == Rate.RateTypes.USD) {
                         rateUsd = (YorumlarRate) rate;
                     }
-
                 }
                 addEntry(rateUsd != null ? rateUsd.realValue : 0.0f, 0);
             }
@@ -136,7 +126,7 @@ public class RatesActivity extends AppCompatActivity {
     private void initDataSourceSelections() {
         for (int i = 0; i < data_set_names.length; i++) {
             DataSource dataSource = new DataSource(data_set_names[i]);
-            dataSource.setSelected(checked_data_sources[i]);
+            dataSource.setEnabled(true); // TODO: 26/11/2016 make persistent
             dataSource.setiRateProvider(providers.get(i));
             dataSources.add(dataSource);
         }
@@ -144,16 +134,14 @@ public class RatesActivity extends AppCompatActivity {
 
     private void refreshSources() {
         for (DataSource dataSource : dataSources) {
-            IRateProvider iRateProvider = dataSource.getiRateProvider();
-            if (dataSource.isSelected()) {
+            IRateProvider iRateProvider = dataSource.getRateProvider();
+            if (dataSource.isEnabled()) {
                 iRateProvider.start();
             } else {
                 iRateProvider.stop();
             }
         }
     }
-
-    final ArrayList<DataSource> dataSources = new ArrayList<>();
 
     private void initUsdChart() {
 
@@ -183,17 +171,16 @@ public class RatesActivity extends AppCompatActivity {
                 int time = (int) value;
                 int minutes = time / (60);
                 int seconds = (time) % 60;
-                String str = String.format("%d:%02d", minutes, seconds, Locale.ENGLISH);
-                return str;
+                return String.format(Locale.ENGLISH, "%d:%02d", minutes, seconds);
             }
 
         });
 
-        final IAxisValueFormatter defaultYFormatter = new DefaultAxisValueFormatter(3);
+        final IAxisValueFormatter axisValueFormatter = new DefaultAxisValueFormatter(3);
         lineChart.getAxisRight().setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-                return defaultYFormatter.getFormattedValue(value, axis) + " TL";
+                return axisValueFormatter.getFormattedValue(value, axis) + " TL";
             }
         });
         lineChart.setScaleEnabled(false);
@@ -202,11 +189,11 @@ public class RatesActivity extends AppCompatActivity {
         LineData data = lineChart.getData();
 
 
-        data.addDataSet(createSet(0));
-        data.addDataSet(createSet(1));
-        data.addDataSet(createSet(2));
-        data.addDataSet(createSet(3));
-        data.addDataSet(createSet(4));
+        data.addDataSet(createDataSet(0));
+        data.addDataSet(createDataSet(1));
+        data.addDataSet(createDataSet(2));
+        data.addDataSet(createDataSet(3));
+        data.addDataSet(createDataSet(4));
 
         lineChart.setExtraBottomOffset(12);
         lineChart.setExtraTopOffset(12);
@@ -230,33 +217,37 @@ public class RatesActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    // Boolean array for initial enabled items
+    boolean[] temp_data_source_states;
+
     private void selectSources() {
-        for (int i = 0; i < checked_data_sources.length; i++) {
-            checked_data_sources[i] = dataSources.get(i).isSelected();
+        temp_data_source_states = new boolean[dataSources.size()];
+        for (int i = 0; i < temp_data_source_states.length; i++) {
+            temp_data_source_states[i] = dataSources.get(i).isEnabled();
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        builder.setMultiChoiceItems(data_set_names, checked_data_sources, new DialogInterface.OnMultiChoiceClickListener() {
+        builder.setMultiChoiceItems(data_set_names, temp_data_source_states, new DialogInterface.OnMultiChoiceClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                checked_data_sources[which] = isChecked;
+                temp_data_source_states[which] = isChecked;
             }
         });
 
         builder.setCancelable(true);
-        builder.setTitle("Select Sources");
-        builder.setPositiveButton("Apply", new DialogInterface.OnClickListener() {
+        builder.setTitle(R.string.select_sources);
+        builder.setPositiveButton(R.string.apply, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 for (int i = 0; i < dataSources.size(); i++) {
-                    dataSources.get(i).setSelected(checked_data_sources[i]);
+                    dataSources.get(i).setEnabled(temp_data_source_states[i]);
                 }
                 refreshSources();
             }
         });
 
-        builder.setNegativeButton("Dismiss", null);
+        builder.setNegativeButton(R.string.dismiss, null);
 
         AlertDialog dialog = builder.create();
         dialog.show();
@@ -292,12 +283,12 @@ public class RatesActivity extends AppCompatActivity {
 
     }
 
-    private LineDataSet createSet(int chartIndex) {
+    private LineDataSet createDataSet(int chartIndex) {
 
         String label;
         switch (chartIndex) {
             case 0:
-                label = "Piyasa";
+                label = "yorumlar.altin.in";
                 break;
             case 1:
                 label = "Enpara Satış";
@@ -309,7 +300,7 @@ public class RatesActivity extends AppCompatActivity {
                 label = "Bigpara";
                 break;
             case 4:
-                label = "Dolar TL Kur";
+                label = "dolar.tlkur.com";
                 break;
             default:
                 label = "Unknown";
@@ -324,20 +315,20 @@ public class RatesActivity extends AppCompatActivity {
         set.setDrawCircles(true);
         int color;
         if (chartIndex == 0) {
-            color = Color.rgb(240, 0, 0);
+            color = Color.rgb(179, 138, 44);
         } else if (chartIndex == 1) {
-            color = Color.rgb(0, 0, 240);
+            color = Color.rgb(169, 85, 156);
+        } else if (chartIndex == 2) {
+            color = Color.rgb(169, 85, 156);
         } else if (chartIndex == 3) {
-            color = Color.rgb(0, 240, 0);
-        } else if (chartIndex == 4) {
-            color = Color.rgb(120, 120, 40);
+            color = Color.rgb(252, 131, 36);
         } else {
-            color = Color.rgb(60, 60, 60);
+            color = Color.rgb(120, 120, 40);
         }
 
 
         set.setCircleColor(color);
-        set.setHighLightColor(Color.rgb(0, 0, 255));
+        set.setHighLightColor(Color.rgb(155, 155, 155));
         set.setAxisDependency(YAxis.AxisDependency.LEFT);
         set.setColor(color);
 //        set.setDrawFilled(true);
@@ -352,12 +343,17 @@ public class RatesActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        for (IRateProvider iRateProvider : providers) {
-            iRateProvider.stop();
+        if (providers != null) {
+            for (IRateProvider iRateProvider : providers) {
+                iRateProvider.stop();
+            }
         }
         super.onDestroy();
     }
 
+    /***
+     * Adapter class for {@link demoapps.exchangegraphics.provider.IRateProvider.Callback}
+     */
     static class ProviderCallbackAdapter<T> implements IRateProvider.Callback<T> {
         @Override
         public void onResult(T value) {
@@ -373,7 +369,7 @@ public class RatesActivity extends AppCompatActivity {
     static class DataSource {
         private IRateProvider iRateProvider;
         private String name;
-        private boolean selected;
+        private boolean enabled;
 
         public DataSource(String name) {
             this.name = name;
@@ -383,19 +379,19 @@ public class RatesActivity extends AppCompatActivity {
             return name;
         }
 
-        public boolean isSelected() {
-            return selected;
+        public boolean isEnabled() {
+            return enabled;
         }
 
-        public void setSelected(boolean selected) {
-            this.selected = selected;
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
         }
 
         public void setiRateProvider(IRateProvider iRateProvider) {
             this.iRateProvider = iRateProvider;
         }
 
-        public IRateProvider getiRateProvider() {
+        public IRateProvider getRateProvider() {
             return iRateProvider;
         }
     }
