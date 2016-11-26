@@ -135,18 +135,17 @@ public class RatesActivity extends AppCompatActivity {
 
     private void initDataSourceSelections() {
         for (int i = 0; i < data_set_names.length; i++) {
-            DataSetSelection dataSetSelection = new DataSetSelection();
-            dataSetSelection.setName(data_set_names[i]);
-            dataSetSelection.setSelected(checked_data_sets[i]);
-            dataSetSelection.setiRateProvider(providers.get(i));
-            dataSetSelections.add(dataSetSelection);
+            DataSource dataSource = new DataSource(data_set_names[i]);
+            dataSource.setSelected(checked_data_sets[i]);
+            dataSource.setiRateProvider(providers.get(i));
+            dataSources.add(dataSource);
         }
     }
 
     private void refreshSources() {
-        for (DataSetSelection dataSetSelection : dataSetSelections) {
-            IRateProvider iRateProvider = dataSetSelection.getiRateProvider();
-            if (dataSetSelection.isSelected()) {
+        for (DataSource dataSource : dataSources) {
+            IRateProvider iRateProvider = dataSource.getiRateProvider();
+            if (dataSource.isSelected()) {
                 iRateProvider.start();
             } else {
                 iRateProvider.stop();
@@ -154,7 +153,7 @@ public class RatesActivity extends AppCompatActivity {
         }
     }
 
-    final ArrayList<DataSetSelection> dataSetSelections = new ArrayList<>();
+    final ArrayList<DataSource> dataSources = new ArrayList<>();
 
     private void initUsdChart() {
 
@@ -234,31 +233,17 @@ public class RatesActivity extends AppCompatActivity {
 
     private void selectSources() {
 
-        if (dataSetSelections.size() <= 0) {
-            // make a list to hold state of every color
-            for (int i = 0; i < data_set_names.length; i++) {
-                DataSetSelection dataSetSelection = new DataSetSelection();
-                dataSetSelection.setName(data_set_names[i]);
-                dataSetSelection.setSelected(checked_data_sets[i]);
-                dataSetSelections.add(dataSetSelection);
-            }
-        } else {
-            for (int i = 0; i < checked_data_sets.length; i++) {
-                checked_data_sets[i] = dataSetSelections.get(i).selected;
-            }
+        for (int i = 0; i < checked_data_sets.length; i++) {
+            checked_data_sets[i] = dataSources.get(i).selected;
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
 
         // Do something here to pass only arraylist on this both arrays ('colors' & 'checked_data_sets')
         builder.setMultiChoiceItems(data_set_names, checked_data_sets, new DialogInterface.OnMultiChoiceClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                // set state to vo in list
-                dataSetSelections.get(which).setSelected(isChecked);
-//                Toast.makeText(getApplicationContext(),
-//                        dataSetSelections.get(which).getName() + " " + isChecked, Toast.LENGTH_SHORT).show();
+                dataSources.get(which).setSelected(isChecked);
             }
         });
 
@@ -267,22 +252,11 @@ public class RatesActivity extends AppCompatActivity {
         builder.setPositiveButton("Apply", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // save states
-                for (int i = 0; i < dataSetSelections.size(); i++) {
-                    DataSetSelection dataSetSelection = dataSetSelections.get(i);
-                    data_set_names[i] = dataSetSelection.getName();
-                    checked_data_sets[i] = dataSetSelection.isSelected();
-                }
                 refreshSources();
             }
         });
 
-        builder.setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-            }
-        });
+        builder.setNegativeButton("Dismiss", null);
 
         AlertDialog dialog = builder.create();
         dialog.show();
@@ -396,17 +370,17 @@ public class RatesActivity extends AppCompatActivity {
         }
     }
 
-    static class DataSetSelection {
+    static class DataSource {
         private IRateProvider iRateProvider;
         private String name;
         private boolean selected;
 
-        public String getName() {
-            return name;
+        public DataSource(String name) {
+            this.name = name;
         }
 
-        public void setName(String name) {
-            this.name = name;
+        public String getName() {
+            return name;
         }
 
         public boolean isSelected() {
