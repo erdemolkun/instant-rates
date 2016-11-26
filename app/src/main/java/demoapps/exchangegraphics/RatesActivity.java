@@ -43,20 +43,31 @@ import demoapps.exchangegraphics.provider.YorumlarRateProvider;
 
 public class RatesActivity extends AppCompatActivity {
 
-
-    private List<BuySellRate> enparaRates;
-    private List<YorumlarRate> yorumlarRates;
-
     @BindView(R.id.line_usd_chart)
     LineChart lineChart;
 
     @BindView(R.id.v_progress_wheel)
     View vProgress;
 
-
     private long startMilis;
-    IRateProvider enparaRateProvider, yorumlarRateProvider, bigparaRateProvider, dolarTlKurRateProvider;
+    ArrayList<IRateProvider> providers = new ArrayList<>();
 
+
+    // String array for alert dialog multi choice items
+    static final String[] data_set_names = new String[]{
+            "Piyasa",
+            "Enpara",
+            "Bigpara",
+            "DolarTlKur",
+    };
+    // Boolean array for initial selected items
+    boolean[] checked_data_sets = new boolean[]{
+            true, // Piyasa
+            true, // Enpara
+            true, // Bigpara
+            true, // DolarTlKur
+
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -69,30 +80,9 @@ public class RatesActivity extends AppCompatActivity {
 
         vProgress.setVisibility(View.GONE);
 
-        enparaRateProvider = new EnparaRateProvider(new IRateProvider.Callback<List<BuySellRate>>() {
-            @Override
-            public void onResult(List<BuySellRate> rates) {
-                enparaRates = rates;
-                BuySellRate rateUsd = null;
-                for (Rate rate : rates) {
-                    if (rate.rateType == Rate.RateTypes.USD) {
-                        rateUsd = (BuySellRate) rate;
-                    }
-                    addEntry(rateUsd != null ? rateUsd.value_sell_real : 0.0f, 1);
-                    addEntry(rateUsd != null ? rateUsd.value_buy_real : 0.0f, 2);
-                }
-            }
-
-            @Override
-            public void onError() {
-
-            }
-        });
-
-        yorumlarRateProvider = new YorumlarRateProvider(new IRateProvider.Callback<List<YorumlarRate>>() {
+        providers.add(new YorumlarRateProvider(new ProviderCallbackAdapter<List<YorumlarRate>>() {
             @Override
             public void onResult(List<YorumlarRate> rates) {
-                yorumlarRates = rates;
                 YorumlarRate rateUsd = null;
                 for (Rate rate : rates) {
                     if (rate.rateType == Rate.RateTypes.USD) {
@@ -102,28 +92,30 @@ public class RatesActivity extends AppCompatActivity {
                 }
                 addEntry(rateUsd != null ? rateUsd.realValue : 0.0f, 0);
             }
-
+        }));
+        providers.add(new EnparaRateProvider(new ProviderCallbackAdapter<List<BuySellRate>>() {
             @Override
-            public void onError() {
-
+            public void onResult(List<BuySellRate> rates) {
+                BuySellRate rateUsd = null;
+                for (Rate rate : rates) {
+                    if (rate.rateType == Rate.RateTypes.USD) {
+                        rateUsd = (BuySellRate) rate;
+                    }
+                    addEntry(rateUsd != null ? rateUsd.value_sell_real : 0.0f, 1);
+                    addEntry(rateUsd != null ? rateUsd.value_buy_real : 0.0f, 2);
+                }
             }
-        });
+        }));
 
+        providers.add(
+                new BigparaRateProvider(new ProviderCallbackAdapter<List<BuySellRate>>() {
+                    @Override
+                    public void onResult(List<BuySellRate> value) {
+                        addEntry(value.get(0).value_sell_real, 3);
+                    }
+                }));
 
-        bigparaRateProvider
-                = new BigparaRateProvider(new IRateProvider.Callback<List<BuySellRate>>() {
-            @Override
-            public void onResult(List<BuySellRate> value) {
-                addEntry(value.get(0).value_sell_real, 3);
-            }
-
-            @Override
-            public void onError() {
-
-            }
-        });
-
-        dolarTlKurRateProvider = new DolarTlKurRateProvider(new IRateProvider.Callback<List<DolarTlKurRate>>() {
+        providers.add(new DolarTlKurRateProvider(new ProviderCallbackAdapter<List<DolarTlKurRate>>() {
             @Override
             public void onResult(List<DolarTlKurRate> rates) {
                 DolarTlKurRate rateUsd = null;
@@ -135,25 +127,37 @@ public class RatesActivity extends AppCompatActivity {
                 }
                 addEntry(rateUsd != null ? rateUsd.realValue : 0.0f, 4);
             }
-
-            @Override
-            public void onError() {
-
-            }
-        });
-
-
-        enparaRateProvider.start();
-        yorumlarRateProvider.start();
-        bigparaRateProvider.start();
-        dolarTlKurRateProvider.start();
-
+        }));
+        initDataSourceSelections();
+        refreshSources();
     }
+
+    private void initDataSourceSelections() {
+        for (int i = 0; i < data_set_names.length; i++) {
+            DataSetSelection dataSetSelection = new DataSetSelection();
+            dataSetSelection.setName(data_set_names[i]);
+            dataSetSelection.setSelected(checked_data_sets[i]);
+            dataSetSelection.setiRateProvider(providers.get(i));
+            dataSetSelections.add(dataSetSelection);
+        }
+    }
+
+    private void refreshSources() {
+        for (DataSetSelection dataSetSelection : dataSetSelections) {
+            IRateProvider iRateProvider = dataSetSelection.getiRateProvider();
+            if (dataSetSelection.isSelected()) {
+                iRateProvider.start();
+            } else {
+                iRateProvider.stop();
+            }
+        }
+    }
+
+    final ArrayList<DataSetSelection> dataSetSelections = new ArrayList<>();
 
     private void initUsdChart() {
 
         Description description = new Description();
-//        description.setPosition(10, 10);
         description.setTextSize(12f);
         description.setText("Dolar-TL Grafiği");
         description.setXOffset(8);
@@ -209,44 +213,6 @@ public class RatesActivity extends AppCompatActivity {
         lineChart.setPinchZoom(false);
     }
 
-    static class DataSetSelection {
-        private String name;
-        private boolean selected;
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public boolean isSelected() {
-            return selected;
-        }
-
-        public void setSelected(boolean selected) {
-            this.selected = selected;
-        }
-    }
-
-    final ArrayList<DataSetSelection> dataSetSelections = new ArrayList<>();
-
-    // String array for alert dialog multi choice items
-    static final String[] data_set_names = new String[]{
-            "Piyasa",
-            "Enpara",
-            "Bigpara",
-            "DolarTlKur",
-    };
-    // Boolean array for initial selected items
-    boolean[] checked_data_sets = new boolean[]{
-            false, // Piyasa
-            false, // Enpara
-            false, // Bigpara
-            false, // DolarTlKur
-
-    };
 
     @OnClick(R.id.btn_sources)
     protected void select() {
@@ -291,13 +257,14 @@ public class RatesActivity extends AppCompatActivity {
                     data_set_names[i] = dataSetSelection.getName();
                     checked_data_sets[i] = dataSetSelection.isSelected();
                 }
+                refreshSources();
             }
         });
 
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                
+
             }
         });
 
@@ -308,7 +275,6 @@ public class RatesActivity extends AppCompatActivity {
     private void addEntry(float value, int chartIndex) {
 
         LineData data = lineChart.getData();
-
 
         long diffSeconds = (System.currentTimeMillis() - startMilis) / 1000;
         Entry entry = new Entry(diffSeconds, value);
@@ -396,9 +362,52 @@ public class RatesActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        enparaRateProvider.stop();
-        yorumlarRateProvider.stop();
+        for (IRateProvider iRateProvider : providers) {
+            iRateProvider.stop();
+        }
         super.onDestroy();
+    }
+
+    static class ProviderCallbackAdapter<T> implements IRateProvider.Callback<T> {
+        @Override
+        public void onResult(T value) {
+
+        }
+
+        @Override
+        public void onError() {
+
+        }
+    }
+
+    static class DataSetSelection {
+        private IRateProvider iRateProvider;
+        private String name;
+        private boolean selected;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public boolean isSelected() {
+            return selected;
+        }
+
+        public void setSelected(boolean selected) {
+            this.selected = selected;
+        }
+
+        public void setiRateProvider(IRateProvider iRateProvider) {
+            this.iRateProvider = iRateProvider;
+        }
+
+        public IRateProvider getiRateProvider() {
+            return iRateProvider;
+        }
     }
 
 
