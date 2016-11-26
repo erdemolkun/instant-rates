@@ -62,7 +62,7 @@ public class RatesActivity extends AppCompatActivity {
             "DolarTlKur",
     };
     // Boolean array for initial selected items
-    boolean[] checked_data_sets = new boolean[]{
+    boolean[] checked_data_sources = new boolean[]{
             true, // Piyasa
             true, // Enpara
             true, // Bigpara
@@ -136,7 +136,7 @@ public class RatesActivity extends AppCompatActivity {
     private void initDataSourceSelections() {
         for (int i = 0; i < data_set_names.length; i++) {
             DataSource dataSource = new DataSource(data_set_names[i]);
-            dataSource.setSelected(checked_data_sets[i]);
+            dataSource.setSelected(checked_data_sources[i]);
             dataSource.setiRateProvider(providers.get(i));
             dataSources.add(dataSource);
         }
@@ -230,20 +230,17 @@ public class RatesActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
     private void selectSources() {
-
-        for (int i = 0; i < checked_data_sets.length; i++) {
-            checked_data_sets[i] = dataSources.get(i).selected;
+        for (int i = 0; i < checked_data_sources.length; i++) {
+            checked_data_sources[i] = dataSources.get(i).isSelected();
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        // Do something here to pass only arraylist on this both arrays ('colors' & 'checked_data_sets')
-        builder.setMultiChoiceItems(data_set_names, checked_data_sets, new DialogInterface.OnMultiChoiceClickListener() {
+        builder.setMultiChoiceItems(data_set_names, checked_data_sources, new DialogInterface.OnMultiChoiceClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                dataSources.get(which).setSelected(isChecked);
+                checked_data_sources[which] = isChecked;
             }
         });
 
@@ -252,6 +249,9 @@ public class RatesActivity extends AppCompatActivity {
         builder.setPositiveButton("Apply", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                for (int i = 0; i < dataSources.size(); i++) {
+                    dataSources.get(i).setSelected(checked_data_sources[i]);
+                }
                 refreshSources();
             }
         });
