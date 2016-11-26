@@ -7,6 +7,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -26,7 +28,6 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import demoapps.exchangegraphics.data.BuySellRate;
 import demoapps.exchangegraphics.data.DolarTlKurRate;
 import demoapps.exchangegraphics.data.Rate;
@@ -213,10 +214,25 @@ public class RatesActivity extends AppCompatActivity {
         lineChart.setPinchZoom(false);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_rates, menu);
+        return true;
+    }
 
-    @OnClick(R.id.btn_sources)
-    protected void select() {
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.item_sources) {
+            selectSources();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    private void selectSources() {
 
         if (dataSetSelections.size() <= 0) {
             // make a list to hold state of every color
@@ -247,8 +263,8 @@ public class RatesActivity extends AppCompatActivity {
         });
 
         builder.setCancelable(true);
-        builder.setTitle("Preferred Sources?");
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        builder.setTitle("Select Sources");
+        builder.setPositiveButton("Apply", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // save states
@@ -261,7 +277,7 @@ public class RatesActivity extends AppCompatActivity {
             }
         });
 
-        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 

@@ -38,10 +38,5 @@
             android:layout_height="240dp"
             />
 
-    <Button
-            android:id="@+id/btn_sources"
-            android:layout_width="wrap_content"
-            android:text="Select Sources"
-            android:layout_height="wrap_content"/>
 
 </LinearLayout>
