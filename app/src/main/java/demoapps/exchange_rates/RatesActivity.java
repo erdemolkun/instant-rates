@@ -21,8 +21,12 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.DefaultAxisValueFormatter;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.interfaces.datasets.IDataSet;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -53,6 +57,7 @@ public class RatesActivity extends AppCompatActivity {
     private long startMilis;
     ArrayList<IRateProvider> providers = new ArrayList<>();
     ArrayList<DataSource> dataSources = new ArrayList<>();
+    SimpleDateFormat hourFormatter = new SimpleDateFormat("hh:mm:ss",Locale.ENGLISH);
 
     static final String[] data_set_names = new String[]{
             "Yorumlar.Altin.in",
@@ -158,20 +163,25 @@ public class RatesActivity extends AppCompatActivity {
         // add an empty data object
         lineChart.setData(new LineData());
 //        mChart.getXAxis().setDrawLabels(false);
-//        mChart.getXAxis().setDrawGridLines(false);
+        lineChart.getXAxis().setDrawGridLines(true);
 
         lineChart.getXAxis().setLabelCount(6);
 //        lineChart.getAxisRight().setAxisMaximum(3.48f);
 //        lineChart.getAxisRight().setAxisMinimum(3.42f);
         lineChart.getAxisLeft().setEnabled(false);
-        final IAxisValueFormatter defaultXFormatter = lineChart.getXAxis().getValueFormatter();
         lineChart.getXAxis().setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
+                Calendar calendar = Calendar.getInstance();
+
                 int time = (int) value;
-                int minutes = time / (60);
-                int seconds = (time) % 60;
-                return String.format(Locale.ENGLISH, "%d:%02d", minutes, seconds);
+                calendar.add(Calendar.SECOND, time);
+                Date date = calendar.getTime();
+
+//                int minutes = time / (60);
+//                int seconds = (time) % 60;
+                //return time > 0 ? String.format(Locale.ENGLISH, "%d:%02d", minutes, seconds) : "";
+                return time > 0 ? hourFormatter.format(date) : "";
             }
 
         });
@@ -253,24 +263,27 @@ public class RatesActivity extends AppCompatActivity {
         dialog.show();
     }
 
+    private static final int MAX_SECONDS = 240; // 4 mins
+    private static final int VISIBLE_SECONDS = 60; // 1 mins
+
     private void addEntry(float value, int chartIndex) {
-
         LineData data = lineChart.getData();
+        int diffSeconds = (int) (((System.currentTimeMillis() - startMilis) / 1000));
 
-        long diffSeconds = (System.currentTimeMillis() - startMilis) / 1000;
         Entry entry = new Entry(diffSeconds, value);
         data.addEntry(entry, chartIndex);
-
         data.notifyDataChanged();
-
+        IDataSet dataSet = data.getDataSetByIndex(chartIndex);
+        if (Math.abs(dataSet.getXMin() - dataSet.getXMax()) > MAX_SECONDS && dataSet.getEntryCount() > MAX_SECONDS / 2) {
+            dataSet.removeEntry(0);
+        }
 
         // let the chart know it's data has changed
         lineChart.notifyDataSetChanged();
 
         //mChart.setVisibleYRangeMaximum(15, AxisDependency.LEFT);
-        lineChart.setVisibleXRangeMaximum(120);
+        lineChart.setVisibleXRangeMaximum(VISIBLE_SECONDS);
 
-        lineChart.getXAxis().setDrawGridLines(false);
         lineChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
         lineChart.getXAxis().setTextColor(ContextCompat.getColor(this, android.R.color.white));
         lineChart.getAxisRight().setTextColor(ContextCompat.getColor(this, android.R.color.white));
