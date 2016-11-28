@@ -12,9 +12,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 abstract class BasePoolingDataProvider<T> implements IPollingSource, Runnable {
 
     private static final int INTERVAL = 4000;
-    private static final int INTERVAL_ON_ERROR = 6000;
+    private static final int INTERVAL_ON_ERROR = 3000;
 
     private Callback callback;
+
+    private int error_count = 0;
+    private int success_count = 0;
 
     BasePoolingDataProvider(Callback<T> callback) {
         this.callback = callback;
@@ -39,7 +42,15 @@ abstract class BasePoolingDataProvider<T> implements IPollingSource, Runnable {
     }
 
     void fetchAgain(boolean wasError) {
-        getHandler().postDelayed(this, wasError ? INTERVAL_ON_ERROR : INTERVAL);
+        int interval = INTERVAL;
+        if (wasError) {
+            /**
+             * Calculate error interval in logarithmic.
+             * */
+            float ratio = (float) (error_count / (success_count <= 0 ? 1 : success_count) * 1.0);
+            interval = (int) (INTERVAL_ON_ERROR + Math.log10(ratio) * INTERVAL_ON_ERROR);
+        }
+        getHandler().postDelayed(this, interval);
     }
 
     @Override
@@ -50,6 +61,7 @@ abstract class BasePoolingDataProvider<T> implements IPollingSource, Runnable {
     }
 
     void notifyValue(T value) {
+        success_count++;
         if (!isWorking.get()) return;
         if (callback != null) {
             callback.onResult(value);
@@ -57,6 +69,7 @@ abstract class BasePoolingDataProvider<T> implements IPollingSource, Runnable {
     }
 
     void notifyError() {
+        error_count++;
         if (callback != null) {
             callback.onError();
         }

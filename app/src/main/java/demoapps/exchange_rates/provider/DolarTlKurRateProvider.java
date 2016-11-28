@@ -40,15 +40,15 @@ public class DolarTlKurRateProvider extends BasePoolingDataProvider<List<DolarTl
                     notifyValue(rates);
                     fetchAgain(false);
                 } else {
-                    fetchAgain(true);
                     notifyError();
+                    fetchAgain(true);
                 }
             }
 
             @Override
             public void onFailure(Call<List<DolarTlKurRate>> call, Throwable t) {
-                fetchAgain(true);
                 notifyError();
+                fetchAgain(true);
             }
         });
         lastCall = call;

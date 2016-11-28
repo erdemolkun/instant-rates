@@ -19,6 +19,6 @@ public interface YorumlarService {
             "Content-Type:text/html; Charset=iso-8859-9"
     })
     @GET("guncel.asp")
-    Call<List<YorumlarRate>> getWithType(@Query("ajax") String type);
+    Call<List<YorumlarRate>> rates(@Query("ajax") String type);
 
 }

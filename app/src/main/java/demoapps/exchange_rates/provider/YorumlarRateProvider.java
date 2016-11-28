@@ -30,7 +30,7 @@ public class YorumlarRateProvider extends BasePoolingDataProvider<List<YorumlarR
     @Override
     public void run() {
         final YorumlarService yorumlarService = Api.getYorumlarApi().create(YorumlarService.class);
-        Call<List<YorumlarRate>> call = yorumlarService.getWithType("ons");
+        Call<List<YorumlarRate>> call = yorumlarService.rates("ons");
         call.enqueue(new retrofit2.Callback<List<YorumlarRate>>() {
             @Override
             public void onResponse(Call<List<YorumlarRate>> call, Response<List<YorumlarRate>> response) {
@@ -39,15 +39,15 @@ public class YorumlarRateProvider extends BasePoolingDataProvider<List<YorumlarR
                     notifyValue(rates);
                     fetchAgain(false);
                 } else {
-                    fetchAgain(true);
                     notifyError();
+                    fetchAgain(true);
                 }
             }
 
             @Override
             public void onFailure(Call<List<YorumlarRate>> call, Throwable t) {
-                fetchAgain(true);
                 notifyError();
+                fetchAgain(true);
             }
         });
         lastCall = call;

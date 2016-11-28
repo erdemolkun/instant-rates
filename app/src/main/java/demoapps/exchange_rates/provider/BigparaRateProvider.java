@@ -40,15 +40,15 @@ public class BigparaRateProvider extends BasePoolingDataProvider<List<BuySellRat
                     notifyValue(rates);
                     fetchAgain(false);
                 } else {
-                    fetchAgain(true);
                     notifyError();
+                    fetchAgain(true);
                 }
             }
 
             @Override
             public void onFailure(Call<List<BuySellRate>> call, Throwable t) {
-                fetchAgain(true);
                 notifyError();
+                fetchAgain(true);
             }
         });
         lastCall = call;

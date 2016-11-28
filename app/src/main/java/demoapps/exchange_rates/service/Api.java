@@ -1,5 +1,7 @@
 package demoapps.exchange_rates.service;
 
+import java.util.concurrent.TimeUnit;
+
 import demoapps.exchange_rates.converters.BigparaConverter;
 import demoapps.exchange_rates.converters.DolarTlKurAjaxConverter;
 import demoapps.exchange_rates.converters.EnparaConverter;
@@ -23,7 +25,12 @@ public class Api {
 
     public static Retrofit getYorumlarApi() {
         if (yorumlarApi == null) {
+            final OkHttpClient client = new OkHttpClient.Builder()
+                    .connectTimeout(8, TimeUnit.SECONDS)
+                    .readTimeout(8, TimeUnit.SECONDS)
+                    .build();
             yorumlarApi = new Retrofit.Builder()
+                    .client(client)
                     .baseUrl("https://yorumlar.altin.in/")
                     .addConverterFactory(new YorumlarAjaxConverter.Factory())
                     .build();
