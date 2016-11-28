@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Created by erdemmac on 25/11/2016.
  */
 
-abstract class PoolingDataProvider<T> implements IRateProvider, Runnable {
+abstract class PoolingDataProvider<T> implements IPollingSource, Runnable {
 
     private static final int INTERVAL = 4000;
     private static final int INTERVAL_ON_ERROR = 6000;

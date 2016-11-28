@@ -40,7 +40,7 @@ import demoapps.exchange_rates.data.YorumlarRate;
 import demoapps.exchange_rates.provider.BigparaRateProvider;
 import demoapps.exchange_rates.provider.DolarTlKurRateProvider;
 import demoapps.exchange_rates.provider.EnparaRateProvider;
-import demoapps.exchange_rates.provider.IRateProvider;
+import demoapps.exchange_rates.provider.IPollingSource;
 import demoapps.exchange_rates.provider.YorumlarRateProvider;
 
 /**
@@ -56,7 +56,7 @@ public class RatesActivity extends AppCompatActivity {
     View vProgress;
 
     private long startMilis;
-    ArrayList<IRateProvider> providers = new ArrayList<>();
+    ArrayList<IPollingSource> providers = new ArrayList<>();
     ArrayList<DataSource> dataSources = new ArrayList<>();
     SimpleDateFormat hourFormatter = new SimpleDateFormat("hh:mm:ss", Locale.ENGLISH);
 
@@ -187,20 +187,20 @@ public class RatesActivity extends AppCompatActivity {
         dataSources.add(dataSource2);
         dataSources.add(dataSource3);
 
-        dataSource0.setiRateProvider(getInstance(providers, YorumlarRateProvider.class));
-        dataSource1.setiRateProvider(getInstance(providers, EnparaRateProvider.class));
-        dataSource2.setiRateProvider(getInstance(providers, BigparaRateProvider.class));
-        dataSource3.setiRateProvider(getInstance(providers, DolarTlKurRateProvider.class));
+        dataSource0.setiPollingSource(getInstance(providers, YorumlarRateProvider.class));
+        dataSource1.setiPollingSource(getInstance(providers, EnparaRateProvider.class));
+        dataSource2.setiPollingSource(getInstance(providers, BigparaRateProvider.class));
+        dataSource3.setiPollingSource(getInstance(providers, DolarTlKurRateProvider.class));
         updateSourceStates();
     }
 
     private void refreshSources() {
         for (DataSource dataSource : dataSources) {
-            IRateProvider iRateProvider = dataSource.getRateProvider();
+            IPollingSource iPollingSource = dataSource.getRateProvider();
             if (dataSource.isEnabled()) {
-                iRateProvider.start();
+                iPollingSource.start();
             } else {
-                iRateProvider.stop();
+                iPollingSource.stop();
             }
         }
     }
@@ -417,17 +417,17 @@ public class RatesActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         if (providers != null) {
-            for (IRateProvider iRateProvider : providers) {
-                iRateProvider.stop();
+            for (IPollingSource iPollingSource : providers) {
+                iPollingSource.stop();
             }
         }
         super.onDestroy();
     }
 
     /***
-     * Adapter class for {@link demoapps.exchange_rates.provider.IRateProvider.Callback}
+     * Adapter class for {@link IPollingSource.Callback}
      */
-    static class ProviderCallbackAdapter<T> implements IRateProvider.Callback<T> {
+    static class ProviderCallbackAdapter<T> implements IPollingSource.Callback<T> {
         @Override
         public void onResult(T value) {
 
@@ -440,7 +440,7 @@ public class RatesActivity extends AppCompatActivity {
     }
 
     static class DataSource {
-        private IRateProvider iRateProvider;
+        private IPollingSource iPollingSource;
         private String name;
         private boolean enabled;
         private int sourceType;
@@ -466,12 +466,12 @@ public class RatesActivity extends AppCompatActivity {
             this.enabled = enabled;
         }
 
-        public void setiRateProvider(IRateProvider iRateProvider) {
-            this.iRateProvider = iRateProvider;
+        public void setiPollingSource(IPollingSource iPollingSource) {
+            this.iPollingSource = iPollingSource;
         }
 
-        public IRateProvider getRateProvider() {
-            return iRateProvider;
+        public IPollingSource getRateProvider() {
+            return iPollingSource;
         }
     }
 
