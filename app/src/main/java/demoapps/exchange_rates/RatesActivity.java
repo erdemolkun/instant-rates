@@ -335,7 +335,9 @@ public class RatesActivity extends AppCompatActivity {
                     for (int i = 0; i < lineChart.getData().getDataSetCount(); i++) {
                         IDataSet iDataSet = lineChart.getData().getDataSetByIndex(i);
                         iDataSet.clear();
+
                     }
+                    lineChart.getXAxis().removeAllLimitLines();
                     lineChart.invalidate();
                     lineChart.notifyDataSetChanged();
                     startMilis = System.currentTimeMillis();
@@ -420,7 +422,10 @@ public class RatesActivity extends AppCompatActivity {
         lineChart.getAxisRight().setTextColor(ContextCompat.getColor(this, android.R.color.white));
 
 //          this automatically refreshes the chart (calls invalidate())
-        lineChart.moveViewToX(newX);
+        if (lineChart.getXAxis().getAxisMaximum()<newX) {
+            lineChart.moveViewToX(newX);
+        }
+
     }
 
     private LineDataSet createDataSet(int chartIndex) {
@@ -455,15 +460,15 @@ public class RatesActivity extends AppCompatActivity {
         set.setDrawCircles(true);
         int color;
         if (chartIndex == 0) {
-            color = ContextCompat.getColor(this,R.color.colorYorumlar);
+            color = ContextCompat.getColor(this, R.color.colorYorumlar);
         } else if (chartIndex == 1) {
-            color = ContextCompat.getColor(this,R.color.colorEnpara);
+            color = ContextCompat.getColor(this, R.color.colorEnpara);
         } else if (chartIndex == 2) {
-            color = ContextCompat.getColor(this,R.color.colorEnpara);
+            color = ContextCompat.getColor(this, R.color.colorEnpara);
         } else if (chartIndex == 3) {
-            color = ContextCompat.getColor(this,R.color.colorDolarTlKur);
+            color = ContextCompat.getColor(this, R.color.colorDolarTlKur);
         } else {
-            color = ContextCompat.getColor(this,R.color.colorBigPara);
+            color = ContextCompat.getColor(this, R.color.colorBigPara);
         }
 
 
