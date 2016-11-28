@@ -11,7 +11,7 @@ public interface IPollingSource {
 
     void cancel();
 
-    interface Callback<T> {
+    interface SourceCallback<T> {
         void onResult(T value);
 
         void onError();

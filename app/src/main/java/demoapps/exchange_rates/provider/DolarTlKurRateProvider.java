@@ -16,10 +16,9 @@ public class DolarTlKurRateProvider extends BasePoolingDataProvider<List<DolarTl
 
     private Call lastCall;
 
-    public DolarTlKurRateProvider(Callback callback) {
+    public DolarTlKurRateProvider(SourceCallback<List<DolarTlKurRate>> callback) {
         super(callback);
     }
-
 
     @Override
     public void cancel() {

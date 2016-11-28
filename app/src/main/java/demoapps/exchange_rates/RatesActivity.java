@@ -90,7 +90,7 @@ public class RatesActivity extends AppCompatActivity {
 
         vProgress.setVisibility(View.GONE);
 
-        providers.add(new YorumlarRateProvider(new ProviderCallbackAdapter<List<YorumlarRate>>() {
+        providers.add(new YorumlarRateProvider(new ProviderSourceCallbackAdapter<List<YorumlarRate>>() {
             @Override
             public void onResult(List<YorumlarRate> rates) {
                 YorumlarRate rateUsd = null;
@@ -102,7 +102,7 @@ public class RatesActivity extends AppCompatActivity {
                 addEntry(rateUsd != null ? rateUsd.realValue : 0.0f, 0);
             }
         }));
-        providers.add(new EnparaRateProvider(new ProviderCallbackAdapter<List<BuySellRate>>() {
+        providers.add(new EnparaRateProvider(new ProviderSourceCallbackAdapter<List<BuySellRate>>() {
             @Override
             public void onResult(List<BuySellRate> rates) {
                 BuySellRate rateUsd = null;
@@ -117,14 +117,14 @@ public class RatesActivity extends AppCompatActivity {
         }));
 
         providers.add(
-                new BigparaRateProvider(new ProviderCallbackAdapter<List<BuySellRate>>() {
+                new BigparaRateProvider(new ProviderSourceCallbackAdapter<List<BuySellRate>>() {
                     @Override
                     public void onResult(List<BuySellRate> value) {
                         addEntry(value.get(0).value_sell_real, 3);
                     }
                 }));
 
-        providers.add(new DolarTlKurRateProvider(new ProviderCallbackAdapter<List<DolarTlKurRate>>() {
+        providers.add(new DolarTlKurRateProvider(new ProviderSourceCallbackAdapter<List<DolarTlKurRate>>() {
             @Override
             public void onResult(List<DolarTlKurRate> rates) {
                 DolarTlKurRate rateUsd = null;
@@ -425,9 +425,9 @@ public class RatesActivity extends AppCompatActivity {
     }
 
     /***
-     * Adapter class for {@link IPollingSource.Callback}
+     * Adapter class for {@link IPollingSource.SourceCallback}
      */
-    static class ProviderCallbackAdapter<T> implements IPollingSource.Callback<T> {
+    static class ProviderSourceCallbackAdapter<T> implements IPollingSource.SourceCallback<T> {
         @Override
         public void onResult(T value) {
 

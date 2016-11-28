@@ -14,13 +14,12 @@ import retrofit2.Response;
 
 public class EnparaRateProvider extends BasePoolingDataProvider<List<BuySellRate>> implements IPollingSource {
 
-    private Call lastCall;
+    private Call<List<BuySellRate>> lastCall;
 
-    public EnparaRateProvider(Callback callback) {
+    public EnparaRateProvider(SourceCallback<List<BuySellRate>> callback) {
         super(callback);
     }
-
-
+    
     @Override
     public void cancel() {
         if (lastCall != null)

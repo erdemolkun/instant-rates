@@ -14,13 +14,11 @@ import retrofit2.Response;
 
 public class BigparaRateProvider extends BasePoolingDataProvider<List<BuySellRate>> implements Runnable {
 
+    private Call<List<BuySellRate>> lastCall;
 
-    private Call lastCall;
-
-    public BigparaRateProvider(Callback callback) {
+    public BigparaRateProvider(SourceCallback<List<BuySellRate>> callback) {
         super(callback);
     }
-
 
     @Override
     public void cancel() {

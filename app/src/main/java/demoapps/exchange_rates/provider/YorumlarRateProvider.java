@@ -14,9 +14,9 @@ import retrofit2.Response;
 
 public class YorumlarRateProvider extends BasePoolingDataProvider<List<YorumlarRate>> implements IPollingSource {
 
-    private Call lastCall;
+    private Call<List<YorumlarRate>> lastCall;
 
-    public YorumlarRateProvider(Callback callback) {
+    public YorumlarRateProvider(SourceCallback<List<YorumlarRate>> callback) {
         super(callback);
     }
 

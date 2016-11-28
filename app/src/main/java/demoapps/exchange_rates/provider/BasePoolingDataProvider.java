@@ -14,12 +14,12 @@ abstract class BasePoolingDataProvider<T> implements IPollingSource, Runnable {
     private static final int INTERVAL = 4000;
     private static final int INTERVAL_ON_ERROR = 3000;
 
-    private Callback callback;
+    private SourceCallback<T> callback;
 
     private int error_count = 0;
     private int success_count = 0;
 
-    BasePoolingDataProvider(Callback<T> callback) {
+    BasePoolingDataProvider(SourceCallback<T> callback) {
         this.callback = callback;
     }
 
