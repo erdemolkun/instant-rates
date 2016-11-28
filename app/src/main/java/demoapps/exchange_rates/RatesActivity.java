@@ -59,6 +59,8 @@ public class RatesActivity extends AppCompatActivity {
     ArrayList<DataSource> dataSources = new ArrayList<>();
     SimpleDateFormat hourFormatter = new SimpleDateFormat("hh:mm:ss",Locale.ENGLISH);
 
+    private static float threshold_error_usd_try = 0.2f;
+
     static final String[] data_set_names = new String[]{
             "Yorumlar.Altin.in",
             "Enpara",
@@ -267,6 +269,7 @@ public class RatesActivity extends AppCompatActivity {
     private static final int VISIBLE_SECONDS = 60; // 1 mins
 
     private void addEntry(float value, int chartIndex) {
+        if (threshold_error_usd_try>value)return;
         LineData data = lineChart.getData();
         int diffSeconds = (int) (((System.currentTimeMillis() - startMilis) / 1000));
 
