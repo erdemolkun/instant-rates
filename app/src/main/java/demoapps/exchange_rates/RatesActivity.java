@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
-import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.components.XAxis;
@@ -222,15 +221,15 @@ public class RatesActivity extends AppCompatActivity {
 
     private void initUsdChart() {
 
-        Description description = new Description();
-        description.setTextSize(12f);
-        description.setText("Dolar-TL Grafiği");
-        description.setXOffset(8);
-        description.setYOffset(8);
-        description.setTextColor(ContextCompat.getColor(this, android.R.color.white));
+//        Description description = new Description();
+//        description.setTextSize(12f);
+//        description.setText("Dolar-TL Grafiği");
+//        description.setXOffset(8);
+//        description.setYOffset(8);
+//        description.setTextColor(ContextCompat.getColor(this, android.R.color.white));
         //lineChart.setDescription(description);
         lineChart.getDescription().setEnabled(false);
-        lineChart.setBackgroundColor(ContextCompat.getColor(this, android.R.color.holo_orange_light));
+        lineChart.setBackgroundColor(ContextCompat.getColor(this, R.color.colorGraph));
 
         // add an empty data object
         lineChart.setData(new LineData());
@@ -280,7 +279,7 @@ public class RatesActivity extends AppCompatActivity {
 
         Legend legend = lineChart.getLegend();
         legend.setTextSize(14);
-        legend.setTextColor(Color.rgb(66, 66, 66));
+        legend.setTextColor(Color.rgb(22, 22, 22));
         legend.setYOffset(6);
         legend.setForm(Legend.LegendForm.CIRCLE);
         legend.setFormSize(10);
