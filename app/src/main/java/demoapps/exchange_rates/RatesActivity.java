@@ -38,14 +38,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import demoapps.exchange_rates.data.BuySellRate;
 import demoapps.exchange_rates.data.DolarTlKurRate;
-import demoapps.exchange_rates.data.GarantiRate;
 import demoapps.exchange_rates.data.Rate;
+import demoapps.exchange_rates.data.YapıKrediRate;
 import demoapps.exchange_rates.data.YorumlarRate;
 import demoapps.exchange_rates.provider.BigparaRateProvider;
 import demoapps.exchange_rates.provider.DolarTlKurRateProvider;
 import demoapps.exchange_rates.provider.EnparaRateProvider;
-import demoapps.exchange_rates.provider.GarantiRateProvider;
 import demoapps.exchange_rates.provider.IPollingSource;
+import demoapps.exchange_rates.provider.YapıKrediRateProvider;
 import demoapps.exchange_rates.provider.YorumlarRateProvider;
 import demoapps.exchange_rates.util.ViewUtils;
 
@@ -144,13 +144,13 @@ public class RatesActivity extends AppCompatActivity {
             }
         }));
 
-        GarantiRateProvider garantiRateProvider = new GarantiRateProvider(new ProviderSourceCallbackAdapter<List<GarantiRate>>() {
+        YapıKrediRateProvider yapıKrediRateProvider = new YapıKrediRateProvider(new ProviderSourceCallbackAdapter<List<YapıKrediRate>>() {
             @Override
-            public void onResult(List<GarantiRate> value) {
+            public void onResult(List<YapıKrediRate> value) {
                 super.onResult(value);
             }
         });
-        garantiRateProvider.start();
+        yapıKrediRateProvider.start();
 
         initDataSourceSelections();
         refreshSources();
