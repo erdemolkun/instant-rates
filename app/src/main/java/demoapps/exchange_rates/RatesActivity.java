@@ -276,9 +276,9 @@ public class RatesActivity extends AppCompatActivity {
         legend.setXEntrySpace(8);
 
         lineChart.setHighlightPerTapEnabled(true);
-        CustomMarkerView customMarkerView=new CustomMarkerView(this, R.layout.view_marker);
+        CustomMarkerView customMarkerView = new CustomMarkerView(this, R.layout.view_marker);
         // define an offset to change the original position of the marker
-        customMarkerView.setOffset(ViewUtils.dpToPx(4), -customMarkerView.getMeasuredHeight()- ViewUtils.dpToPx(4));
+        customMarkerView.setOffset(ViewUtils.dpToPx(4), -customMarkerView.getMeasuredHeight() - ViewUtils.dpToPx(4));
         lineChart.setMarker(customMarkerView);
     }
 
@@ -363,9 +363,9 @@ public class RatesActivity extends AppCompatActivity {
     private void addEntry(float value, int chartIndex) {
         if (threshold_error_usd_try > value) return;
         LineData data = lineChart.getData();
-        int diffSeconds = (int) (((System.currentTimeMillis() - startMilis) / 1000));
+        int newX = (int) (((System.currentTimeMillis() - startMilis) / 1000));
 
-        Entry entry = new Entry(diffSeconds, value);
+        Entry entry = new Entry(newX, value);
         data.addEntry(entry, chartIndex);
         data.notifyDataChanged();
         IDataSet dataSet = data.getDataSetByIndex(chartIndex);
@@ -384,8 +384,7 @@ public class RatesActivity extends AppCompatActivity {
         lineChart.getAxisRight().setTextColor(ContextCompat.getColor(this, android.R.color.white));
 
 //          this automatically refreshes the chart (calls invalidate())
-        lineChart.moveViewToX(data.getEntryCount());
-
+        lineChart.moveViewToX(newX);
     }
 
     private LineDataSet createDataSet(int chartIndex) {
