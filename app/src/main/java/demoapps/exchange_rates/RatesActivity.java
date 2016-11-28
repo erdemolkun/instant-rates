@@ -15,6 +15,7 @@ import android.view.View;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
@@ -26,8 +27,6 @@ import com.github.mikephil.charting.interfaces.datasets.IDataSet;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -229,16 +228,15 @@ public class RatesActivity extends AppCompatActivity {
         lineChart.getXAxis().setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-                Calendar calendar = Calendar.getInstance();
-
+//                Calendar calendar = Calendar.getInstance();
                 int time = (int) value;
-                calendar.add(Calendar.SECOND, time);
-                Date date = calendar.getTime();
+//                calendar.add(Calendar.SECOND, time);
+//                Date date = calendar.getTime();
 
-//                int minutes = time / (60);
-//                int seconds = (time) % 60;
-                //return time > 0 ? String.format(Locale.ENGLISH, "%d:%02d", minutes, seconds) : "";
-                return time > 0 ? hourFormatter.format(date) : "";
+                int minutes = time / (60);
+                int seconds = (time) % 60;
+                return time > 0 ? String.format(Locale.ENGLISH, "%d:%02d", minutes, seconds) : "";
+//                return time > 0 ? hourFormatter.format(date) : "";
             }
 
         });
@@ -263,6 +261,15 @@ public class RatesActivity extends AppCompatActivity {
         data.addDataSet(createDataSet(2));
         data.addDataSet(createDataSet(3));
         data.addDataSet(createDataSet(4));
+
+        Legend legend = lineChart.getLegend();
+        legend.setTextSize(14);
+        legend.setTextColor(Color.rgb(66, 66, 66));
+        legend.setYOffset(6);
+        legend.setForm(Legend.LegendForm.CIRCLE);
+        legend.setFormSize(10);
+        legend.setXEntrySpace(8);
+
     }
 
     @Override
@@ -323,7 +330,7 @@ public class RatesActivity extends AppCompatActivity {
     }
 
     private static final int MAX_SECONDS = 240; // 4 mins
-    private static final int VISIBLE_SECONDS = 60; // 1 mins
+    private static final int VISIBLE_SECONDS = 120; // 2 mins
 
     private void addEntry(float value, int chartIndex) {
         if (threshold_error_usd_try > value) return;
@@ -350,9 +357,6 @@ public class RatesActivity extends AppCompatActivity {
 
 //          this automatically refreshes the chart (calls invalidate())
         lineChart.moveViewToX(data.getEntryCount());
-
-//        lineChart.getAxisRight().setAxisMinimum(lineChart.getYMin()-0.01f);
-//        lineChart.getAxisRight().setAxisMaximum(lineChart.getYMax()-0.01f);
 
     }
 
