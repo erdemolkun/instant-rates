@@ -141,6 +141,15 @@ public class RatesActivity extends AppCompatActivity {
                 addEntry(rateUsd != null ? rateUsd.realValue : 0.0f, 4);
             }
         }));
+
+//        GarantiRateProvider garantiRateProvider = new GarantiRateProvider(new ProviderSourceCallbackAdapter<List<GarantiRate>>() {
+//            @Override
+//            public void onResult(List<GarantiRate> value) {
+//                super.onResult(value);
+//            }
+//        });
+//        garantiRateProvider.start();
+
         initDataSourceSelections();
         refreshSources();
     }

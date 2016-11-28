@@ -5,6 +5,7 @@ import java.util.concurrent.TimeUnit;
 import demoapps.exchange_rates.converters.BigparaConverter;
 import demoapps.exchange_rates.converters.DolarTlKurAjaxConverter;
 import demoapps.exchange_rates.converters.EnparaConverter;
+import demoapps.exchange_rates.converters.GarantiConverter;
 import demoapps.exchange_rates.converters.YorumlarAjaxConverter;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
@@ -21,6 +22,7 @@ public class Api {
     private static Retrofit bloombergApi;
     private static Retrofit bigparaApi;
     private static Retrofit dolarTlKurApi;
+    private static Retrofit garantiApi;
 
 
     public static Retrofit getYorumlarApi() {
@@ -67,6 +69,16 @@ public class Api {
                     .build();
         }
         return dolarTlKurApi;
+    }
+
+    public static Retrofit getGarantiApi() {
+        if (garantiApi == null) {
+            garantiApi = new Retrofit.Builder()
+                    .baseUrl("https://www.garanti.com.tr/")
+                    .addConverterFactory(new GarantiConverter.Factory())
+                    .build();
+        }
+        return garantiApi;
     }
 
     public static Retrofit getBloombergApi() {
