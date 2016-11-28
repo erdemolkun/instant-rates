@@ -48,7 +48,7 @@ abstract class BasePoolingDataProvider<T> implements IPollingSource, Runnable {
              * Calculate error interval in logarithmic.
              * */
             float ratio = (float) (error_count / (success_count <= 0 ? 1 : success_count) * 1.0);
-            interval = (int) (INTERVAL_ON_ERROR + Math.log10(ratio) * INTERVAL_ON_ERROR);
+            interval = (int) (INTERVAL_ON_ERROR + Math.log(ratio) * INTERVAL_ON_ERROR);
         }
         getHandler().postDelayed(this, interval);
     }
