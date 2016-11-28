@@ -155,8 +155,8 @@ public class RatesActivity extends AppCompatActivity {
                             dataSource.setEnabled(true);
                         }
                     }
+                } catch (Exception ignored) {
                 }
-                catch (Exception ignored){}
             }
         } else {
             for (DataSource dataSource : dataSources) {
@@ -170,7 +170,7 @@ public class RatesActivity extends AppCompatActivity {
         for (int i = 0; i < dataSources.size(); i++) {
             DataSource dataSource = dataSources.get(i);
             if (dataSource.isEnabled()) {
-                sources += dataSource.getSourceType() + (i - 1 == dataSources.size() ? "" : ";");
+                sources += dataSource.getSourceType() + ";";
             }
         }
         Prefs.saveSources(getApplicationContext(), sources);

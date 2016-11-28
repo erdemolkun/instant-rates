@@ -11,8 +11,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 abstract class PoolingDataProvider<T> implements IRateProvider, Runnable {
 
-    private static final int INTERVAL = 2000;
-    private static final int INTERVAL_ON_ERROR = 5000;
+    private static final int INTERVAL = 4000;
+    private static final int INTERVAL_ON_ERROR = 6000;
 
     private Callback callback;
 
