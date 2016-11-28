@@ -321,8 +321,34 @@ public class RatesActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.item_sources) {
+        if (id == R.id.menu_item_sources) {
             selectSources();
+            return true;
+        } else if (id == R.id.menu_item_refresh) {
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setCancelable(true);
+            builder.setTitle(R.string.refresh);
+            builder.setMessage("Sure to refresh. All data will be cleared.");
+            builder.setPositiveButton(R.string.sure, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    for (int i = 0; i < lineChart.getData().getDataSetCount(); i++) {
+                        IDataSet iDataSet = lineChart.getData().getDataSetByIndex(i);
+                        iDataSet.clear();
+                    }
+                    lineChart.invalidate();
+                    lineChart.notifyDataSetChanged();
+                    startMilis = System.currentTimeMillis();
+                    lineChart.moveViewToX(0);
+                }
+            });
+
+            builder.setNegativeButton(R.string.dismiss, null);
+            AlertDialog dialog = builder.create();
+            dialog.show();
+
+
             return true;
         }
         return super.onOptionsItemSelected(item);
