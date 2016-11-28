@@ -12,7 +12,7 @@ import retrofit2.Response;
  * Created by erdemmac on 25/11/2016.
  */
 
-public class YorumlarRateProvider extends PoolingDataProvider<List<YorumlarRate>> implements IPollingSource {
+public class YorumlarRateProvider extends BasePoolingDataProvider<List<YorumlarRate>> implements IPollingSource {
 
     private Call lastCall;
 

@@ -12,7 +12,7 @@ import retrofit2.Response;
  * Created by erdemmac on 25/11/2016.
  */
 
-public class DolarTlKurRateProvider extends PoolingDataProvider<List<DolarTlKurRate>> implements IPollingSource {
+public class DolarTlKurRateProvider extends BasePoolingDataProvider<List<DolarTlKurRate>> implements IPollingSource {
 
     private Call lastCall;
 

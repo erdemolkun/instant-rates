@@ -12,7 +12,7 @@ import retrofit2.Response;
  * Created by erdemmac on 25/11/2016.
  */
 
-public class BigparaRateProvider extends PoolingDataProvider<List<BuySellRate>> implements Runnable {
+public class BigparaRateProvider extends BasePoolingDataProvider<List<BuySellRate>> implements Runnable {
 
 
     private Call lastCall;

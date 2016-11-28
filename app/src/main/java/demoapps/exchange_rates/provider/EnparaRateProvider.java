@@ -12,7 +12,7 @@ import retrofit2.Response;
  * Created by erdemmac on 25/11/2016.
  */
 
-public class EnparaRateProvider extends PoolingDataProvider<List<BuySellRate>> implements IPollingSource {
+public class EnparaRateProvider extends BasePoolingDataProvider<List<BuySellRate>> implements IPollingSource {
 
     private Call lastCall;
 
