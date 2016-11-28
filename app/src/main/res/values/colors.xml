@@ -5,4 +5,9 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="colorGraph">#616161</color>
+    <color name="colorEnpara">#a9559a</color><!--169, 85, 156-->
+    <color name="colorYorumlar">#f1c15a</color>
+    <color name="colorDolarTlKur">#76ff03</color>
+    <color name="colorBigPara">#f57c00</color>
+
 </resources>

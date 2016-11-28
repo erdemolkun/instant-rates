@@ -455,15 +455,15 @@ public class RatesActivity extends AppCompatActivity {
         set.setDrawCircles(true);
         int color;
         if (chartIndex == 0) {
-            color = Color.rgb(179, 138, 44);
+            color = ContextCompat.getColor(this,R.color.colorYorumlar);
         } else if (chartIndex == 1) {
-            color = Color.rgb(169, 85, 156);
+            color = ContextCompat.getColor(this,R.color.colorEnpara);
         } else if (chartIndex == 2) {
-            color = Color.rgb(169, 85, 156);
+            color = ContextCompat.getColor(this,R.color.colorEnpara);
         } else if (chartIndex == 3) {
-            color = Color.rgb(252, 131, 36);
+            color = ContextCompat.getColor(this,R.color.colorDolarTlKur);
         } else {
-            color = Color.rgb(120, 120, 40);
+            color = ContextCompat.getColor(this,R.color.colorBigPara);
         }
 
 
