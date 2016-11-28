@@ -1,5 +1,6 @@
 package demoapps.exchange_rates;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -11,11 +12,13 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
@@ -23,6 +26,7 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.DefaultAxisValueFormatter;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.IDataSet;
 
 import java.text.SimpleDateFormat;
@@ -41,6 +45,7 @@ import demoapps.exchange_rates.provider.DolarTlKurRateProvider;
 import demoapps.exchange_rates.provider.EnparaRateProvider;
 import demoapps.exchange_rates.provider.IPollingSource;
 import demoapps.exchange_rates.provider.YorumlarRateProvider;
+import demoapps.exchange_rates.util.ViewUtils;
 
 /**
  * Created by erdemmac on 24/11/2016.
@@ -269,6 +274,29 @@ public class RatesActivity extends AppCompatActivity {
         legend.setForm(Legend.LegendForm.CIRCLE);
         legend.setFormSize(10);
         legend.setXEntrySpace(8);
+
+        lineChart.setHighlightPerTapEnabled(true);
+        CustomMarkerView customMarkerView=new CustomMarkerView(this, R.layout.view_marker);
+        // define an offset to change the original position of the marker
+        customMarkerView.setOffset(ViewUtils.dpToPx(4), -customMarkerView.getMeasuredHeight()- ViewUtils.dpToPx(4));
+        lineChart.setMarker(customMarkerView);
+    }
+
+    public static class CustomMarkerView extends MarkerView {
+
+        private TextView tvMarker;
+
+        public CustomMarkerView(Context context, int layoutResource) {
+            super(context, layoutResource);
+            tvMarker = (TextView) findViewById(R.id.tv_marker);
+        }
+
+        // callbacks everytime the MarkerView is redrawn, can be used to update the
+        // content (user-interface)
+        @Override
+        public void refreshContent(Entry e, Highlight highlight) {
+            tvMarker.setText("" + e.getY()); // set the entry-value as the display text
+        }
 
     }
 
