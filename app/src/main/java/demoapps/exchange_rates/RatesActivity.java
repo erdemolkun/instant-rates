@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -57,16 +58,26 @@ public class RatesActivity extends AppCompatActivity {
     private long startMilis;
     ArrayList<IRateProvider> providers = new ArrayList<>();
     ArrayList<DataSource> dataSources = new ArrayList<>();
-    SimpleDateFormat hourFormatter = new SimpleDateFormat("hh:mm:ss",Locale.ENGLISH);
+    SimpleDateFormat hourFormatter = new SimpleDateFormat("hh:mm:ss", Locale.ENGLISH);
 
     private static float threshold_error_usd_try = 0.2f;
 
-    static final String[] data_set_names = new String[]{
-            "Yorumlar.Altin.in",
-            "Enpara",
-            "Bigpara",
-            "dolar.tlkur.com",
-    };
+//    static final String[] data_set_names = new String[]{
+//            "Yorumlar.Altin.in",
+//            "Enpara",
+//            "Bigpara",
+//            "dolar.tlkur.com",
+//    };
+
+
+    public static <E> E getInstance(List<E> list, Class clazz) {
+        for (E e : list) {
+            if (clazz.isInstance(e)) {
+                return e;
+            }
+        }
+        return null;
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -130,13 +141,57 @@ public class RatesActivity extends AppCompatActivity {
         refreshSources();
     }
 
-    private void initDataSourceSelections() {
-        for (int i = 0; i < data_set_names.length; i++) {
-            DataSource dataSource = new DataSource(data_set_names[i]);
-            dataSource.setEnabled(true); // TODO: 26/11/2016 make persistent
-            dataSource.setiRateProvider(providers.get(i));
-            dataSources.add(dataSource);
+    private void updateSourceStates() {
+        String sources = Prefs.getSources(this);
+        if (!TextUtils.isEmpty(sources)) {
+            String[] splits = sources.split(";");
+            for (String str : splits) {
+                if (TextUtils.isEmpty(str)) continue;
+                int sourceType;
+                try {
+                    sourceType = Integer.parseInt(str);
+                    for (DataSource dataSource : dataSources) {
+                        if (dataSource.getSourceType() == sourceType) {
+                            dataSource.setEnabled(true);
+                        }
+                    }
+                }
+                catch (Exception ignored){}
+            }
+        } else {
+            for (DataSource dataSource : dataSources) {
+                dataSource.setEnabled(true);
+            }
         }
+    }
+
+    private void saveSources(List<DataSource> dataSources) {
+        String sources = "";
+        for (int i = 0; i < dataSources.size(); i++) {
+            DataSource dataSource = dataSources.get(i);
+            if (dataSource.isEnabled()) {
+                sources += dataSource.getSourceType() + (i - 1 == dataSources.size() ? "" : ";");
+            }
+        }
+        Prefs.saveSources(getApplicationContext(), sources);
+    }
+
+    private void initDataSourceSelections() {
+        DataSource dataSource0 = new DataSource("Yorumlar", SourceType.YORUMLAR);
+        DataSource dataSource1 = new DataSource("Enpara", SourceType.ENPARA);
+        DataSource dataSource2 = new DataSource("Bigpara", SourceType.BIGPARA);
+        DataSource dataSource3 = new DataSource("TlKur", SourceType.TLKUR);
+
+        dataSources.add(dataSource0);
+        dataSources.add(dataSource1);
+        dataSources.add(dataSource2);
+        dataSources.add(dataSource3);
+
+        dataSource0.setiRateProvider(getInstance(providers, YorumlarRateProvider.class));
+        dataSource1.setiRateProvider(getInstance(providers, EnparaRateProvider.class));
+        dataSource2.setiRateProvider(getInstance(providers, BigparaRateProvider.class));
+        dataSource3.setiRateProvider(getInstance(providers, DolarTlKurRateProvider.class));
+        updateSourceStates();
     }
 
     private void refreshSources() {
@@ -198,18 +253,16 @@ public class RatesActivity extends AppCompatActivity {
         lineChart.setScaleEnabled(false);
         lineChart.invalidate();
 
+        lineChart.setExtraBottomOffset(12);
+        lineChart.setExtraTopOffset(12);
+        lineChart.setPinchZoom(false);
+
         LineData data = lineChart.getData();
-
-
         data.addDataSet(createDataSet(0));
         data.addDataSet(createDataSet(1));
         data.addDataSet(createDataSet(2));
         data.addDataSet(createDataSet(3));
         data.addDataSet(createDataSet(4));
-
-        lineChart.setExtraBottomOffset(12);
-        lineChart.setExtraTopOffset(12);
-        lineChart.setPinchZoom(false);
     }
 
     @Override
@@ -237,7 +290,10 @@ public class RatesActivity extends AppCompatActivity {
         for (int i = 0; i < temp_data_source_states.length; i++) {
             temp_data_source_states[i] = dataSources.get(i).isEnabled();
         }
-
+        String[] data_set_names = new String[dataSources.size()];
+        for (int i = 0; i < dataSources.size(); i++) {
+            data_set_names[i] = dataSources.get(i).getName();
+        }
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         builder.setMultiChoiceItems(data_set_names, temp_data_source_states, new DialogInterface.OnMultiChoiceClickListener() {
@@ -256,6 +312,7 @@ public class RatesActivity extends AppCompatActivity {
                     dataSources.get(i).setEnabled(temp_data_source_states[i]);
                 }
                 refreshSources();
+                saveSources(dataSources);
             }
         });
 
@@ -269,7 +326,7 @@ public class RatesActivity extends AppCompatActivity {
     private static final int VISIBLE_SECONDS = 60; // 1 mins
 
     private void addEntry(float value, int chartIndex) {
-        if (threshold_error_usd_try>value)return;
+        if (threshold_error_usd_try > value) return;
         LineData data = lineChart.getData();
         int diffSeconds = (int) (((System.currentTimeMillis() - startMilis) / 1000));
 
@@ -386,9 +443,15 @@ public class RatesActivity extends AppCompatActivity {
         private IRateProvider iRateProvider;
         private String name;
         private boolean enabled;
+        private int sourceType;
 
-        public DataSource(String name) {
+        public DataSource(String name, int sourceType) {
             this.name = name;
+            this.sourceType = sourceType;
+        }
+
+        public int getSourceType() {
+            return sourceType;
         }
 
         public String getName() {
@@ -412,7 +475,12 @@ public class RatesActivity extends AppCompatActivity {
         }
     }
 
-
+    interface SourceType {
+        int YORUMLAR = 1;
+        int ENPARA = 2;
+        int BIGPARA = 3;
+        int TLKUR = 4;
+    }
 }
 
 
