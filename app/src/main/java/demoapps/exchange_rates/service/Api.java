@@ -28,8 +28,8 @@ public class Api {
     public static Retrofit getYorumlarApi() {
         if (yorumlarApi == null) {
             final OkHttpClient client = new OkHttpClient.Builder()
-                    .connectTimeout(8, TimeUnit.SECONDS)
-                    .readTimeout(8, TimeUnit.SECONDS)
+                    .connectTimeout(12, TimeUnit.SECONDS)
+                    .readTimeout(12, TimeUnit.SECONDS)
                     .build();
             yorumlarApi = new Retrofit.Builder()
                     .client(client)
