@@ -48,18 +48,17 @@ public class GarantiConverter implements Converter<ResponseBody, List<Rate>> {
         ArrayList<Rate> rates = new ArrayList<>();
         String responseBody = value != null ? value.string() : null;
 
-        ArrayList<Element> elements = Jsoup.parse(responseBody, HOST).select(".rightSideContainer").select(".newBoxContainer.marketBox").
-                select(".piyasalar.alpha").select(".core").select("#tab10").select("tbody").select("tr");
+        ArrayList<Element> elements = Jsoup.parse(responseBody, HOST).select(".rightSideContainer").select("#tab10").select("tbody").select("tr");
 
         for (Element element : elements) {
 
             GarantiRate rate = new GarantiRate();
             rate.value = element.child(2).text();
             rate.type = element.child(0).text();
+            rate.rateType = rate.toRateType();
             rate.setRealValues();
             rates.add(rate);
         }
-
 
         return rates;
     }

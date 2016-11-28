@@ -8,8 +8,6 @@ import android.text.TextUtils;
 
 public class GarantiRate extends Rate implements IRate {
 
-    public String time;
-
     @Override
     public int toRateType() {
         if (TextUtils.isEmpty(type)) return RateTypes.UNKNOWN;
@@ -30,7 +28,7 @@ public class GarantiRate extends Rate implements IRate {
 
     @Override
     public String toString() {
-        return type.split("_")[0] + " -> : " + realValue + " : Time -> " + time.replace("\'", "");
+        return type.split("_")[0] + " -> : " + realValue;
     }
 
 }

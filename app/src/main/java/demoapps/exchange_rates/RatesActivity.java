@@ -38,11 +38,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import demoapps.exchange_rates.data.BuySellRate;
 import demoapps.exchange_rates.data.DolarTlKurRate;
+import demoapps.exchange_rates.data.GarantiRate;
 import demoapps.exchange_rates.data.Rate;
 import demoapps.exchange_rates.data.YorumlarRate;
 import demoapps.exchange_rates.provider.BigparaRateProvider;
 import demoapps.exchange_rates.provider.DolarTlKurRateProvider;
 import demoapps.exchange_rates.provider.EnparaRateProvider;
+import demoapps.exchange_rates.provider.GarantiRateProvider;
 import demoapps.exchange_rates.provider.IPollingSource;
 import demoapps.exchange_rates.provider.YorumlarRateProvider;
 import demoapps.exchange_rates.util.ViewUtils;
@@ -142,13 +144,13 @@ public class RatesActivity extends AppCompatActivity {
             }
         }));
 
-//        GarantiRateProvider garantiRateProvider = new GarantiRateProvider(new ProviderSourceCallbackAdapter<List<GarantiRate>>() {
-//            @Override
-//            public void onResult(List<GarantiRate> value) {
-//                super.onResult(value);
-//            }
-//        });
-//        garantiRateProvider.start();
+        GarantiRateProvider garantiRateProvider = new GarantiRateProvider(new ProviderSourceCallbackAdapter<List<GarantiRate>>() {
+            @Override
+            public void onResult(List<GarantiRate> value) {
+                super.onResult(value);
+            }
+        });
+        garantiRateProvider.start();
 
         initDataSourceSelections();
         refreshSources();
