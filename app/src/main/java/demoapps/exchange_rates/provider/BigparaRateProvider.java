@@ -28,6 +28,7 @@ public class BigparaRateProvider extends BasePoolingDataProvider<List<BuySellRat
 
     @Override
     public void run() {
+        super.run();
         final BigparaService bigparaService = Api.getBigparaApi().create(BigparaService.class);
         Call<List<BuySellRate>> call = bigparaService.getData();
         call.enqueue(new retrofit2.Callback<List<BuySellRate>>() {

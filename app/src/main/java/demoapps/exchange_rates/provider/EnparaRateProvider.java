@@ -19,7 +19,7 @@ public class EnparaRateProvider extends BasePoolingDataProvider<List<BuySellRate
     public EnparaRateProvider(SourceCallback<List<BuySellRate>> callback) {
         super(callback);
     }
-    
+
     @Override
     public void cancel() {
         if (lastCall != null)
@@ -28,6 +28,7 @@ public class EnparaRateProvider extends BasePoolingDataProvider<List<BuySellRate
 
     @Override
     public void run() {
+        super.run();
         final EnparaService enparaService = Api.getEnparaApi().create(EnparaService.class);
         Call<List<BuySellRate>> call = enparaService.getValues();
         call.enqueue(new retrofit2.Callback<List<BuySellRate>>() {

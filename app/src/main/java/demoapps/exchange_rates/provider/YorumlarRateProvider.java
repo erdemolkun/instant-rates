@@ -29,6 +29,7 @@ public class YorumlarRateProvider extends BasePoolingDataProvider<List<YorumlarR
 
     @Override
     public void run() {
+        super.run();
         final YorumlarService yorumlarService = Api.getYorumlarApi().create(YorumlarService.class);
         Call<List<YorumlarRate>> call = yorumlarService.rates("ons");
         call.enqueue(new retrofit2.Callback<List<YorumlarRate>>() {
