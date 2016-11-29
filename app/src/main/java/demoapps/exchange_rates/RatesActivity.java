@@ -421,8 +421,7 @@ public class RatesActivity extends AppCompatActivity {
         lineChart.getXAxis().setTextColor(ContextCompat.getColor(this, android.R.color.white));
         lineChart.getAxisRight().setTextColor(ContextCompat.getColor(this, android.R.color.white));
 
-//          this automatically refreshes the chart (calls invalidate())
-        if (lineChart.getXAxis().getAxisMaximum()<newX) {
+        if (lineChart.getXAxis().getAxisMaximum() <= newX) {
             lineChart.moveViewToX(newX);
         }
 
