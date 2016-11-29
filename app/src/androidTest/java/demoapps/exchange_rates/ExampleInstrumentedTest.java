@@ -1,4 +1,4 @@
-package demoapps.exchange_rates;
+package dynoapps.exchange_rates;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("demoapps.exchange_rates", appContext.getPackageName());
+        assertEquals("dynoapps.exchange_rates", appContext.getPackageName());
     }
 }

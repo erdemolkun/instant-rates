@@ -1,4 +1,4 @@
-package demoapps.exchange_rates;
+package dynoapps.exchange_rates;
 
 import org.junit.Test;
 
