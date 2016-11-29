@@ -35,7 +35,7 @@
     <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/line_usd_chart"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/chart_height_landscape"
+            android:layout_height="@dimen/chart_height"
             />
 
 
