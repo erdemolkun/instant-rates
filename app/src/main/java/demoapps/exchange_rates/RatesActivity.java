@@ -424,8 +424,10 @@ public class RatesActivity extends AppCompatActivity {
         lineChart.setVisibleXRangeMaximum(VISIBLE_SECONDS);
 
 
-        if (lineChart.getXAxis().getAxisMaximum() <= newX || lineChart.getVisibleXRange() < newX) {
+        if (lineChart.getXAxis().getAxisMaximum() <= newX) {
             lineChart.moveViewToX(newX);
+        } else if (lineChart.getVisibleXRange() < newX) {
+            lineChart.moveViewToX(newX + lineChart.getVisibleXRange());
         } else {
             lineChart.invalidate();
         }
