@@ -405,8 +405,8 @@ public class RatesActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    private static final int MAX_SECONDS = 60; // 4 mins
-    private static final int VISIBLE_SECONDS = 30; // 2 mins
+    private static final int MAX_SECONDS = 240; // 4 mins
+    private static final int VISIBLE_SECONDS = 120; // 2 mins
 
     private void addEntry(float value, int chartIndex) {
         if (threshold_error_usd_try > value) return;
