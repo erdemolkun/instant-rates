@@ -19,9 +19,48 @@ buildscript {
 
 }
 
+// set flag whether we are on a build server
+def isCi = "true".equals(System.getenv("CI"))
+
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.1"
+    signingConfigs {
+        debug {
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+            storeFile file("${project.rootDir}/keystores/debug.keystore")
+            storePassword 'android'
+        }
+        release {
+            if (isCi) {
+                storeFile rootProject.file("keystores/release.jks")
+                storePassword = System.getenv("RELEASE_STORE_PASSWORD")
+                keyAlias = System.getenv("RELEASE_ALIAS")
+                keyPassword = System.getenv("RELEASE_PASSWORD")
+            } else {
+                def Properties propsSigning = new Properties()
+                def signingPropsFile = rootProject.file('release.signing.properties')
+                if (signingPropsFile.canRead()) {
+                    propsSigning.load(new FileInputStream(signingPropsFile))
+                    if (propsSigning != null &&
+                            propsSigning.containsKey('STORE_FILE') &&
+                            propsSigning.containsKey('STORE_PASSWORD') &&
+                            propsSigning.containsKey('KEY_ALIAS') &&
+                            propsSigning.containsKey('KEY_PASSWORD')) {
+                        storeFile = file(propsSigning['STORE_FILE'])
+                        storePassword = propsSigning['STORE_PASSWORD']
+                        keyAlias = propsSigning['KEY_ALIAS']
+                        keyPassword = propsSigning['KEY_PASSWORD']
+                    } else {
+                        println 'release.signing.properties file found but some entries are missing'
+                    }
+                } else {
+                    println 'release.signing.properties file is missing'
+                }
+            }
+        }
+    }
     defaultConfig {
         applicationId "dynoapps.exchange_rates"
         minSdkVersion 16
@@ -31,9 +70,18 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
-        release {
+        debug {
+            signingConfig signingConfigs.debug
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        release {
+            proguardFile 'proguard-appcompat-v7.pro'
+            proguardFile 'proguard-android-java.pro'
+            proguardFile 'proguard-square-retrofit2.pro'
+            proguardFile 'proguard-rules.pro'
+            proguardFile 'proguard-project-app.pro'
+            signingConfig signingConfigs.release
+            minifyEnabled true;
         }
     }
 }
