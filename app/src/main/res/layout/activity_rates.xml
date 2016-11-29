@@ -28,14 +28,14 @@
             android:layout_marginTop="12dp"
             android:textSize="14sp"
             android:textColor="@color/colorPrimary"
-            android:text="Dolar-TL Grafiği"
+            android:text="@string/dolar_tl_graph"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
     <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/line_usd_chart"
             android:layout_width="match_parent"
-            android:layout_height="288dp"
+            android:layout_height="@dimen/chart_height_landscape"
             />
 
 
