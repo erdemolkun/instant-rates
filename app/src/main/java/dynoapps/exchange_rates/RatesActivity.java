@@ -295,6 +295,8 @@ public class RatesActivity extends AppCompatActivity {
         lineChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
         lineChart.getXAxis().setTextColor(white);
         lineChart.getAxisRight().setTextColor(white);
+
+        lineChart.getXAxis().resetAxisMaximum();
     }
 
     @SuppressLint("ViewConstructor")
@@ -344,6 +346,8 @@ public class RatesActivity extends AppCompatActivity {
 
                     }
                     lineChart.getXAxis().removeAllLimitLines();
+                    lineChart.getXAxis().setAxisMaximum(VISIBLE_SECONDS);
+                    lineChart.getXAxis().setAxisMinimum(0f);
                     lineChart.invalidate();
                     lineChart.notifyDataSetChanged();
                     startMilis = System.currentTimeMillis();
@@ -401,8 +405,8 @@ public class RatesActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    private static final int MAX_SECONDS = 240; // 4 mins
-    private static final int VISIBLE_SECONDS = 120; // 2 mins
+    private static final int MAX_SECONDS = 60; // 4 mins
+    private static final int VISIBLE_SECONDS = 30; // 2 mins
 
     private void addEntry(float value, int chartIndex) {
         if (threshold_error_usd_try > value) return;
@@ -422,7 +426,6 @@ public class RatesActivity extends AppCompatActivity {
 
         //mChart.setVisibleYRangeMaximum(15, AxisDependency.LEFT);
         lineChart.setVisibleXRangeMaximum(VISIBLE_SECONDS);
-
 
         if (lineChart.getXAxis().getAxisMaximum() <= newX) {
             lineChart.moveViewToX(newX);
