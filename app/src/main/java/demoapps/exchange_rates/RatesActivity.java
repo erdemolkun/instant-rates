@@ -64,7 +64,7 @@ public class RatesActivity extends AppCompatActivity {
     ArrayList<IPollingSource> providers = new ArrayList<>();
     ArrayList<DataSource> dataSources = new ArrayList<>();
     SimpleDateFormat hourFormatter = new SimpleDateFormat("hh:mm:ss", Locale.ENGLISH);
-    private int white = ContextCompat.getColor(this, android.R.color.white);
+    private int white;
 
     private static float threshold_error_usd_try = 0.2f;
 
@@ -90,7 +90,7 @@ public class RatesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rates);
         ButterKnife.bind(this);
-
+        white=ContextCompat.getColor(getApplicationContext(), android.R.color.white);
         startMilis = System.currentTimeMillis();
         initUsdChart();
 
@@ -421,8 +421,10 @@ public class RatesActivity extends AppCompatActivity {
         lineChart.getXAxis().setTextColor(white);
         lineChart.getAxisRight().setTextColor(white);
 
-        if (lineChart.getXAxis().getAxisMaximum() <= newX) {
+        if (lineChart.getXAxis().getAxisMaximum() <= newX || lineChart.getVisibleXRange()<newX) {
             lineChart.moveViewToX(newX);
+        } else {
+            lineChart.invalidate();
         }
 
     }
