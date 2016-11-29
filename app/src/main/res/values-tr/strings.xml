@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Döviz Kurları</string>
+    <string name="dismiss">Kapat</string>
+    <string name="apply">Uygula</string>
+    <string name="select_sources">Kaynakları Seç</string>
+    <string name="refresh">Yenile</string>
+    <string name="sources">Kaynaklar</string>
+    <string name="sure">Eminim</string>
+    <string name="dolar_tl_graph">Dolar-TL Grafiği</string>
+</resources>

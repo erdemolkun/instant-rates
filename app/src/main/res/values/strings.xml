@@ -1,10 +1,10 @@
 <resources>
-    <string name="app_name">Exchange Graphics</string>
+    <string name="app_name">Exchange Rates</string>
     <string name="dismiss">Dismiss</string>
     <string name="apply">Apply</string>
     <string name="select_sources">Select Sources</string>
     <string name="refresh">Refresh</string>
     <string name="sources">Sources</string>
     <string name="sure">Sure</string>
-    <string name="dolar_tl_graph">Dolar-TL Grafiği</string>
+    <string name="dolar_tl_graph">Dolar-TL Graph</string>
 </resources>
