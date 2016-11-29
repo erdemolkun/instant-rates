@@ -7,4 +7,5 @@
     <string name="sources">Sources</string>
     <string name="sure">Sure</string>
     <string name="dolar_tl_graph">Dolar-TL Graph</string>
+    <string name="clear_sure_message">Sure to refresh. All data will be cleared.</string>
 </resources>

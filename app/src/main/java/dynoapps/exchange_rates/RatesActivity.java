@@ -296,7 +296,6 @@ public class RatesActivity extends AppCompatActivity {
         lineChart.getXAxis().setTextColor(white);
         lineChart.getAxisRight().setTextColor(white);
 
-        lineChart.getXAxis().resetAxisMaximum();
     }
 
     @SuppressLint("ViewConstructor")
@@ -336,7 +335,7 @@ public class RatesActivity extends AppCompatActivity {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setCancelable(true);
             builder.setTitle(R.string.refresh);
-            builder.setMessage("Sure to refresh. All data will be cleared.");
+            builder.setMessage(R.string.clear_sure_message);
             builder.setPositiveButton(R.string.sure, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -345,9 +344,7 @@ public class RatesActivity extends AppCompatActivity {
                         iDataSet.clear();
 
                     }
-                    lineChart.getXAxis().removeAllLimitLines();
-                    lineChart.getXAxis().setAxisMaximum(VISIBLE_SECONDS);
-                    lineChart.getXAxis().setAxisMinimum(0f);
+                    lineChart.getXAxis().resetAxisMaximum();
                     lineChart.invalidate();
                     lineChart.notifyDataSetChanged();
                     startMilis = System.currentTimeMillis();

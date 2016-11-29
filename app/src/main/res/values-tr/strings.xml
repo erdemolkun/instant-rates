@@ -7,4 +7,5 @@
     <string name="sources">Kaynaklar</string>
     <string name="sure">Eminim</string>
     <string name="dolar_tl_graph">Dolar-TL Grafiği</string>
+    <string name="clear_sure_message">Yenilemek istediğinize emin misiniz ? Varolan veriler silinecek.</string>
 </resources>
