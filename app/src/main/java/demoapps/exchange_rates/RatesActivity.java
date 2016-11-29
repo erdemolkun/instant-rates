@@ -64,6 +64,7 @@ public class RatesActivity extends AppCompatActivity {
     ArrayList<IPollingSource> providers = new ArrayList<>();
     ArrayList<DataSource> dataSources = new ArrayList<>();
     SimpleDateFormat hourFormatter = new SimpleDateFormat("hh:mm:ss", Locale.ENGLISH);
+    private int white = ContextCompat.getColor(this, android.R.color.white);
 
     private static float threshold_error_usd_try = 0.2f;
 
@@ -279,7 +280,7 @@ public class RatesActivity extends AppCompatActivity {
 
         Legend legend = lineChart.getLegend();
         legend.setTextSize(14);
-        legend.setTextColor(Color.rgb(22, 22, 22));
+        legend.setTextColor(white);
         legend.setYOffset(6);
         legend.setForm(Legend.LegendForm.CIRCLE);
         legend.setFormSize(10);
@@ -287,7 +288,6 @@ public class RatesActivity extends AppCompatActivity {
 
         lineChart.setHighlightPerTapEnabled(true);
         CustomMarkerView customMarkerView = new CustomMarkerView(this, R.layout.view_marker);
-        // define an offset to change the original position of the marker
         customMarkerView.setOffset(ViewUtils.dpToPx(4), -customMarkerView.getMeasuredHeight() - ViewUtils.dpToPx(4));
         lineChart.setMarker(customMarkerView);
     }
@@ -418,8 +418,8 @@ public class RatesActivity extends AppCompatActivity {
         lineChart.setVisibleXRangeMaximum(VISIBLE_SECONDS);
 
         lineChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
-        lineChart.getXAxis().setTextColor(ContextCompat.getColor(this, android.R.color.white));
-        lineChart.getAxisRight().setTextColor(ContextCompat.getColor(this, android.R.color.white));
+        lineChart.getXAxis().setTextColor(white);
+        lineChart.getAxisRight().setTextColor(white);
 
         if (lineChart.getXAxis().getAxisMaximum() <= newX) {
             lineChart.moveViewToX(newX);
