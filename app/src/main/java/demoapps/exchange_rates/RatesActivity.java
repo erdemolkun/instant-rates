@@ -1,5 +1,6 @@
 package demoapps.exchange_rates;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
@@ -90,7 +91,7 @@ public class RatesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rates);
         ButterKnife.bind(this);
-        white=ContextCompat.getColor(getApplicationContext(), android.R.color.white);
+        white = ContextCompat.getColor(getApplicationContext(), android.R.color.white);
         startMilis = System.currentTimeMillis();
         initUsdChart();
 
@@ -290,9 +291,14 @@ public class RatesActivity extends AppCompatActivity {
         CustomMarkerView customMarkerView = new CustomMarkerView(this, R.layout.view_marker);
         customMarkerView.setOffset(ViewUtils.dpToPx(4), -customMarkerView.getMeasuredHeight() - ViewUtils.dpToPx(4));
         lineChart.setMarker(customMarkerView);
+
+        lineChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+        lineChart.getXAxis().setTextColor(white);
+        lineChart.getAxisRight().setTextColor(white);
     }
 
-    public static class CustomMarkerView extends MarkerView {
+    @SuppressLint("ViewConstructor")
+    static class CustomMarkerView extends MarkerView {
 
         private TextView tvMarker;
 
@@ -417,16 +423,12 @@ public class RatesActivity extends AppCompatActivity {
         //mChart.setVisibleYRangeMaximum(15, AxisDependency.LEFT);
         lineChart.setVisibleXRangeMaximum(VISIBLE_SECONDS);
 
-        lineChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
-        lineChart.getXAxis().setTextColor(white);
-        lineChart.getAxisRight().setTextColor(white);
 
-        if (lineChart.getXAxis().getAxisMaximum() <= newX || lineChart.getVisibleXRange()<newX) {
+        if (lineChart.getXAxis().getAxisMaximum() <= newX || lineChart.getVisibleXRange() < newX) {
             lineChart.moveViewToX(newX);
         } else {
             lineChart.invalidate();
         }
-
     }
 
     private LineDataSet createDataSet(int chartIndex) {
