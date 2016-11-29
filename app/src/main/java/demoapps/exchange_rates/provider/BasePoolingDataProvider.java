@@ -12,8 +12,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 abstract class BasePoolingDataProvider<T> implements IPollingSource, Runnable {
 
-    private static final int INTERVAL = 4000;
-    private static final int INTERVAL_ON_ERROR = 3000;
+    private static final int INTERVAL = 3000;
+    private static final int INTERVAL_ON_ERROR = 4000;
 
     private SourceCallback<T> callback;
 
