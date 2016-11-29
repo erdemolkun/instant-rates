@@ -49,7 +49,6 @@ public class YapıKrediRateProvider extends BasePoolingDataProvider<List<YapıKr
                     .timeout(6000)
                     .userAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.98 Safari/537.36")
                     .get();
-            doc.select("#currencyResultContent").select("tr").get(0).select("td");
             Elements elements = doc.select("#currencyResultContent").select("tr");
             ArrayList<YapıKrediRate> rates = new ArrayList<>();
             if (elements != null) {
