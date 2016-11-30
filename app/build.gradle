@@ -80,6 +80,7 @@ android {
             proguardFile 'proguard-square-retrofit2.pro'
             proguardFile 'proguard-rules.pro'
             proguardFile 'proguard-project-app.pro'
+            proguardFile 'proguard-support-design.pro'
             signingConfig signingConfigs.release
             minifyEnabled true;
         }

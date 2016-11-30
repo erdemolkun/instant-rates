@@ -61,3 +61,9 @@
 -keepattributes EnclosingMethod
 
 -keep class org.ocpsoft.prettytime.i18n.**
+
+-keep public class org.jsoup.** {
+public *;
+}
+
+-keeppackagenames org.jsoup.nodes
