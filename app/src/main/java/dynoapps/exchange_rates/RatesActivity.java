@@ -280,12 +280,12 @@ public class RatesActivity extends AppCompatActivity {
         data.addDataSet(createDataSet(4));
 
         Legend legend = lineChart.getLegend();
-        legend.setTextSize(14);
+        legend.setTextSize(13);
         legend.setTextColor(white);
         legend.setYOffset(6);
         legend.setForm(Legend.LegendForm.CIRCLE);
-        legend.setFormSize(10);
-        legend.setXEntrySpace(8);
+        legend.setWordWrapEnabled(true);
+        legend.setXEntrySpace(10);
 
         lineChart.setHighlightPerTapEnabled(true);
         CustomMarkerView customMarkerView = new CustomMarkerView(this, R.layout.view_marker);
