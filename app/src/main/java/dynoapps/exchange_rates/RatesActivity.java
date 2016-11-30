@@ -31,6 +31,8 @@ import com.github.mikephil.charting.interfaces.datasets.IDataSet;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -56,7 +58,7 @@ import dynoapps.exchange_rates.util.ViewUtils;
 public class RatesActivity extends AppCompatActivity {
 
     @BindView(R.id.line_usd_chart)
-    LineChart lineChart;
+    LineChart usdLineChart;
 
     @BindView(R.id.v_progress_wheel)
     View vProgress;
@@ -67,15 +69,7 @@ public class RatesActivity extends AppCompatActivity {
     SimpleDateFormat hourFormatter = new SimpleDateFormat("hh:mm:ss", Locale.ENGLISH);
     private int white;
 
-    private static float threshold_error_usd_try = 0.2f;
-
-//    static final String[] data_set_names = new String[]{
-//            "Yorumlar.Altin.in",
-//            "Enpara",
-//            "Bigpara",
-//            "dolar.tlkur.com",
-//    };
-
+    private static final float threshold_error_usd_try = 0.2f;
 
     public static <E> E getInstance(List<E> list, Class clazz) {
         for (E e : list) {
@@ -229,57 +223,57 @@ public class RatesActivity extends AppCompatActivity {
 //        description.setXOffset(8);
 //        description.setYOffset(8);
 //        description.setTextColor(ContextCompat.getColor(this, android.R.color.white));
-        //lineChart.setDescription(description);
-        lineChart.getDescription().setEnabled(false);
-        lineChart.setBackgroundColor(ContextCompat.getColor(this, R.color.colorGraph));
+        //usdLineChart.setDescription(description);
+        usdLineChart.getDescription().setEnabled(false);
+        usdLineChart.setBackgroundColor(ContextCompat.getColor(this, R.color.colorGraph));
 
         // add an empty data object
-        lineChart.setData(new LineData());
+        usdLineChart.setData(new LineData());
 //        mChart.getXAxis().setDrawLabels(false);
-        lineChart.getXAxis().setDrawGridLines(true);
+        usdLineChart.getXAxis().setDrawGridLines(true);
 
-        lineChart.getXAxis().setLabelCount(6);
-//        lineChart.getAxisRight().setAxisMaximum(3.48f);
-//        lineChart.getAxisRight().setAxisMinimum(3.42f);
-        lineChart.getAxisLeft().setEnabled(false);
-        lineChart.getXAxis().setValueFormatter(new IAxisValueFormatter() {
+        usdLineChart.getXAxis().setLabelCount(6);
+//        usdLineChart.getAxisRight().setAxisMaximum(3.48f);
+//        usdLineChart.getAxisRight().setAxisMinimum(3.42f);
+        usdLineChart.getAxisLeft().setEnabled(false);
+        usdLineChart.getXAxis().setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-//                Calendar calendar = Calendar.getInstance();
+                Calendar calendar = Calendar.getInstance();
                 int time = (int) value;
-//                calendar.add(Calendar.SECOND, time);
-//                Date date = calendar.getTime();
+                calendar.add(Calendar.SECOND, time);
+                Date date = calendar.getTime();
 
                 int minutes = time / (60);
                 int seconds = (time) % 60;
-                return time > 0 ? String.format(Locale.ENGLISH, "%d:%02d", minutes, seconds) : "";
-//                return time > 0 ? hourFormatter.format(date) : "";
+//                return time > 0 ? String.format(Locale.ENGLISH, "%d:%02d", minutes, seconds) : "";
+                return time > 0 ? hourFormatter.format(date) : "";
             }
 
         });
 
         final IAxisValueFormatter axisValueFormatter = new DefaultAxisValueFormatter(3);
-        lineChart.getAxisRight().setValueFormatter(new IAxisValueFormatter() {
+        usdLineChart.getAxisRight().setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
                 return axisValueFormatter.getFormattedValue(value, axis) + " TL";
             }
         });
-        lineChart.setScaleEnabled(false);
-        lineChart.invalidate();
+        usdLineChart.setScaleEnabled(false);
+        usdLineChart.invalidate();
 
-        lineChart.setExtraBottomOffset(12);
-        lineChart.setExtraTopOffset(12);
-        lineChart.setPinchZoom(false);
+        usdLineChart.setExtraBottomOffset(12);
+        usdLineChart.setExtraTopOffset(12);
+        usdLineChart.setPinchZoom(false);
 
-        LineData data = lineChart.getData();
+        LineData data = usdLineChart.getData();
         data.addDataSet(createDataSet(0));
         data.addDataSet(createDataSet(1));
         data.addDataSet(createDataSet(2));
         data.addDataSet(createDataSet(3));
         data.addDataSet(createDataSet(4));
 
-        Legend legend = lineChart.getLegend();
+        Legend legend = usdLineChart.getLegend();
         legend.setTextSize(13);
         legend.setTextColor(white);
         legend.setYOffset(6);
@@ -287,14 +281,14 @@ public class RatesActivity extends AppCompatActivity {
         legend.setWordWrapEnabled(true);
         legend.setXEntrySpace(10);
 
-        lineChart.setHighlightPerTapEnabled(true);
+        usdLineChart.setHighlightPerTapEnabled(true);
         CustomMarkerView customMarkerView = new CustomMarkerView(this, R.layout.view_marker);
         customMarkerView.setOffset(ViewUtils.dpToPx(4), -customMarkerView.getMeasuredHeight() - ViewUtils.dpToPx(4));
-        lineChart.setMarker(customMarkerView);
+        usdLineChart.setMarker(customMarkerView);
 
-        lineChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
-        lineChart.getXAxis().setTextColor(white);
-        lineChart.getAxisRight().setTextColor(white);
+        usdLineChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+        usdLineChart.getXAxis().setTextColor(white);
+        usdLineChart.getAxisRight().setTextColor(white);
 
     }
 
@@ -339,16 +333,16 @@ public class RatesActivity extends AppCompatActivity {
             builder.setPositiveButton(R.string.sure, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    for (int i = 0; i < lineChart.getData().getDataSetCount(); i++) {
-                        IDataSet iDataSet = lineChart.getData().getDataSetByIndex(i);
+                    for (int i = 0; i < usdLineChart.getData().getDataSetCount(); i++) {
+                        IDataSet iDataSet = usdLineChart.getData().getDataSetByIndex(i);
                         iDataSet.clear();
 
                     }
-                    lineChart.getXAxis().resetAxisMaximum();
-                    lineChart.invalidate();
-                    lineChart.notifyDataSetChanged();
+                    usdLineChart.getXAxis().resetAxisMaximum();
+                    usdLineChart.invalidate();
+                    usdLineChart.notifyDataSetChanged();
                     startMilis = System.currentTimeMillis();
-                    lineChart.moveViewToX(0);
+                    usdLineChart.moveViewToX(0);
                 }
             });
 
@@ -407,7 +401,7 @@ public class RatesActivity extends AppCompatActivity {
 
     private void addEntry(float value, int chartIndex) {
         if (threshold_error_usd_try > value) return;
-        LineData data = lineChart.getData();
+        LineData data = usdLineChart.getData();
         int newX = (int) (((System.currentTimeMillis() - startMilis) / 1000));
 
         Entry entry = new Entry(newX, value);
@@ -419,17 +413,17 @@ public class RatesActivity extends AppCompatActivity {
         }
 
         // let the chart know it's data has changed
-        lineChart.notifyDataSetChanged();
+        usdLineChart.notifyDataSetChanged();
 
         //mChart.setVisibleYRangeMaximum(15, AxisDependency.LEFT);
-        lineChart.setVisibleXRangeMaximum(VISIBLE_SECONDS);
+        usdLineChart.setVisibleXRangeMaximum(VISIBLE_SECONDS);
 
-        if (lineChart.getXAxis().getAxisMaximum() <= newX) {
-            lineChart.moveViewToX(newX);
-        } else if (lineChart.getVisibleXRange() < newX) {
-            lineChart.moveViewToX(newX + lineChart.getVisibleXRange());
+        if (usdLineChart.getXAxis().getAxisMaximum() <= newX) {
+            usdLineChart.moveViewToX(newX);
+        } else if (usdLineChart.getVisibleXRange() < newX) {
+            usdLineChart.moveViewToX(newX + usdLineChart.getVisibleXRange());
         } else {
-            lineChart.invalidate();
+            usdLineChart.invalidate();
         }
     }
 
