@@ -30,7 +30,7 @@ public class EnparaRateProvider extends BasePoolingDataProvider<List<BuySellRate
     public void run() {
         super.run();
         final EnparaService enparaService = Api.getEnparaApi().create(EnparaService.class);
-        Call<List<BuySellRate>> call = enparaService.getValues();
+        Call<List<BuySellRate>> call = enparaService.rates();
         call.enqueue(new retrofit2.Callback<List<BuySellRate>>() {
             @Override
             public void onResponse(Call<List<BuySellRate>> call, Response<List<BuySellRate>> response) {

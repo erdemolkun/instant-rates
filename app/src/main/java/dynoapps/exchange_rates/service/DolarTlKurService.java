@@ -19,6 +19,6 @@ public interface DolarTlKurService {
             "Content-Type:text/html"
     })
     @GET("/refresh/header/viewHeader.php")
-    Call<List<DolarTlKurRate>> getValues(@Query("_") String time);
+    Call<List<DolarTlKurRate>> rates(@Query("_") String time);
 
 }

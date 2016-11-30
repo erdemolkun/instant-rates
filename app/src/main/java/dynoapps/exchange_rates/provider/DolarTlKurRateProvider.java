@@ -31,7 +31,7 @@ public class DolarTlKurRateProvider extends BasePoolingDataProvider<List<DolarTl
     public void run() {
         super.run();
         final DolarTlKurService dolarTlKurService = Api.getDolarTlKurApi().create(DolarTlKurService.class);
-        Call<List<DolarTlKurRate>> call = dolarTlKurService.getValues("" + System.currentTimeMillis());
+        Call<List<DolarTlKurRate>> call = dolarTlKurService.rates("" + System.currentTimeMillis());
         call.enqueue(new retrofit2.Callback<List<DolarTlKurRate>>() {
             @Override
             public void onResponse(Call<List<DolarTlKurRate>> call, Response<List<DolarTlKurRate>> response) {

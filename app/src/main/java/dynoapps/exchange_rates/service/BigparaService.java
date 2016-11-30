@@ -16,5 +16,5 @@ public interface BigparaService {
             "Content-Type:text/html; charset=utf-8"
     })
     @GET("doviz/dolar/")
-    Call<List<BuySellRate>> getData();
+    Call<List<BuySellRate>> rates();
 }

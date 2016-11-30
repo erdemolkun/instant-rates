@@ -17,6 +17,6 @@ public interface EnparaService {
             "Content-Type:text/html; charset=utf-8"
     })
     @GET("doviz-kur-bilgileri/doviz-altin-kurlari.aspx")
-    Call<List<BuySellRate>> getValues();
+    Call<List<BuySellRate>> rates();
 
 }
