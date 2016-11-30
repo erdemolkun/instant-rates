@@ -71,10 +71,12 @@ android {
     }
     buildTypes {
         debug {
+            versionNameSuffix ' Debug'
+            applicationIdSuffix '.debug'
             signingConfig signingConfigs.debug
             minifyEnabled false
         }
-        release {
+        prod {
             proguardFile 'proguard-appcompat-v7.pro'
             proguardFile 'proguard-android-java.pro'
             proguardFile 'proguard-square-retrofit2.pro'
