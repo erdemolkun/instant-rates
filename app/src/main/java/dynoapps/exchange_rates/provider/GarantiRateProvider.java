@@ -17,7 +17,7 @@ import retrofit2.Call;
  * Created by erdemmac on 25/11/2016.
  */
 
-public class GarantiRateProvider extends BasePoolingDataProvider<List<GarantiRate>> implements IPollingSource {
+public class GarantiRateProvider extends BasePoolingDataProvider<List<GarantiRate>> {
 
     private Call<List<GarantiRate>> lastCall;
     ExecutorService executorService;

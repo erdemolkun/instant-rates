@@ -43,6 +43,7 @@ import dynoapps.exchange_rates.data.DolarTlKurRate;
 import dynoapps.exchange_rates.data.Rate;
 import dynoapps.exchange_rates.data.YapıKrediRate;
 import dynoapps.exchange_rates.data.YorumlarRate;
+import dynoapps.exchange_rates.provider.BasePoolingDataProvider;
 import dynoapps.exchange_rates.provider.BigparaRateProvider;
 import dynoapps.exchange_rates.provider.DolarTlKurRateProvider;
 import dynoapps.exchange_rates.provider.EnparaRateProvider;
@@ -64,7 +65,7 @@ public class RatesActivity extends AppCompatActivity {
     View vProgress;
 
     private long startMilis;
-    ArrayList<IPollingSource> providers = new ArrayList<>();
+    ArrayList<BasePoolingDataProvider> providers = new ArrayList<>();
     ArrayList<DataSource> dataSources = new ArrayList<>();
     SimpleDateFormat hourFormatter = new SimpleDateFormat("hh:mm:ss", Locale.ENGLISH);
     private int white;

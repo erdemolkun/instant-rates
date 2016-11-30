@@ -16,9 +16,9 @@ import dynoapps.exchange_rates.data.YapıKrediRate;
  * Created by erdemmac on 25/11/2016.
  */
 
-public class YapıKrediRateProvider extends BasePoolingDataProvider<List<YapıKrediRate>> implements IPollingSource {
+public class YapıKrediRateProvider extends BasePoolingDataProvider<List<YapıKrediRate>> {
 
-    ExecutorService executorService;
+    private ExecutorService executorService;
 
     public YapıKrediRateProvider(SourceCallback<List<YapıKrediRate>> callback) {
         super(callback);
