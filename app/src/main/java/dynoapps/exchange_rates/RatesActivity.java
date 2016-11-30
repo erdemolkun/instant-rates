@@ -396,7 +396,6 @@ public class RatesActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    private static final int MAX_SECONDS = 240; // 4 mins
     private static final int VISIBLE_SECONDS = 120; // 2 mins
 
     private void addEntry(float value, int chartIndex) {
@@ -408,7 +407,7 @@ public class RatesActivity extends AppCompatActivity {
         data.addEntry(entry, chartIndex);
         data.notifyDataChanged();
         IDataSet dataSet = data.getDataSetByIndex(chartIndex);
-        if (Math.abs(dataSet.getXMin() - dataSet.getXMax()) > MAX_SECONDS && dataSet.getEntryCount() > MAX_SECONDS / 2) {
+        if (Math.abs(dataSet.getXMin() - dataSet.getXMax()) > VISIBLE_SECONDS * 2 && dataSet.getEntryCount() > VISIBLE_SECONDS) {
             dataSet.removeEntry(0);
         }
 
