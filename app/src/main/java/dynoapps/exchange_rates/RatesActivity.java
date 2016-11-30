@@ -140,13 +140,21 @@ public class RatesActivity extends AppCompatActivity {
             }
         }));
 
-        YapıKrediRateProvider yapıKrediRateProvider = new YapıKrediRateProvider(new ProviderSourceCallbackAdapter<List<YapıKrediRate>>() {
+
+        providers.add(new YapıKrediRateProvider(new ProviderSourceCallbackAdapter<List<YapıKrediRate>>() {
             @Override
-            public void onResult(List<YapıKrediRate> value) {
-                super.onResult(value);
+            public void onResult(List<YapıKrediRate> rates) {
+                YapıKrediRate rateUsd = null;
+                for (Rate rate : rates) {
+                    if (rate.rateType == Rate.RateTypes.USD) {
+                        rateUsd = (YapıKrediRate) rate;
+                    }
+
+                }
+                addEntry(rateUsd != null ? rateUsd.value_sell_real : 0.0f, 5);
             }
-        });
-        yapıKrediRateProvider.start();
+        }));
+
 
         initDataSourceSelections();
         refreshSources();
@@ -192,16 +200,20 @@ public class RatesActivity extends AppCompatActivity {
         DataSource dataSource1 = new DataSource("Enpara", SourceType.ENPARA);
         DataSource dataSource2 = new DataSource("Bigpara", SourceType.BIGPARA);
         DataSource dataSource3 = new DataSource("TlKur", SourceType.TLKUR);
+        DataSource dataSource4 = new DataSource("Yapı Kredi", SourceType.YAPIKREDI);
 
         dataSources.add(dataSource0);
         dataSources.add(dataSource1);
         dataSources.add(dataSource2);
         dataSources.add(dataSource3);
+        dataSources.add(dataSource4);
 
-        dataSource0.setiPollingSource(getInstance(providers, YorumlarRateProvider.class));
-        dataSource1.setiPollingSource(getInstance(providers, EnparaRateProvider.class));
-        dataSource2.setiPollingSource(getInstance(providers, BigparaRateProvider.class));
-        dataSource3.setiPollingSource(getInstance(providers, DolarTlKurRateProvider.class));
+        dataSource0.setPollingSource(getInstance(providers, YorumlarRateProvider.class));
+        dataSource1.setPollingSource(getInstance(providers, EnparaRateProvider.class));
+        dataSource2.setPollingSource(getInstance(providers, BigparaRateProvider.class));
+        dataSource3.setPollingSource(getInstance(providers, DolarTlKurRateProvider.class));
+        dataSource4.setPollingSource(getInstance(providers, YapıKrediRateProvider.class));
+
         updateSourceStates();
     }
 
@@ -273,6 +285,7 @@ public class RatesActivity extends AppCompatActivity {
         data.addDataSet(createDataSet(2));
         data.addDataSet(createDataSet(3));
         data.addDataSet(createDataSet(4));
+        data.addDataSet(createDataSet(5));
 
         Legend legend = usdLineChart.getLegend();
         legend.setTextSize(13);
@@ -446,6 +459,9 @@ public class RatesActivity extends AppCompatActivity {
             case 4:
                 label = "dolar.tlkur.com";
                 break;
+            case 5:
+                label = "Yapı Kredi";
+                break;
             default:
                 label = "Unknown";
                 break;
@@ -465,7 +481,11 @@ public class RatesActivity extends AppCompatActivity {
         } else if (chartIndex == 2) {
             color = ContextCompat.getColor(this, R.color.colorEnpara);
         } else if (chartIndex == 3) {
+            color = ContextCompat.getColor(this, R.color.colorBigPara);
+        } else if (chartIndex == 4) {
             color = ContextCompat.getColor(this, R.color.colorDolarTlKur);
+        } else if (chartIndex == 5) {
+            color = ContextCompat.getColor(this, R.color.colorYaıKredi);
         } else {
             color = ContextCompat.getColor(this, R.color.colorBigPara);
         }
@@ -537,7 +557,7 @@ public class RatesActivity extends AppCompatActivity {
             this.enabled = enabled;
         }
 
-        public void setiPollingSource(IPollingSource iPollingSource) {
+        public void setPollingSource(IPollingSource iPollingSource) {
             this.iPollingSource = iPollingSource;
         }
 
@@ -551,6 +571,7 @@ public class RatesActivity extends AppCompatActivity {
         int ENPARA = 2;
         int BIGPARA = 3;
         int TLKUR = 4;
+        int YAPIKREDI = 5;
     }
 }
 

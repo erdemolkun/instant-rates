@@ -52,15 +52,22 @@ public class YapıKrediRateProvider extends BasePoolingDataProvider<List<YapıKr
             Elements elements = doc.select("#currencyResultContent").select("tr");
             ArrayList<YapıKrediRate> rates = new ArrayList<>();
             if (elements != null) {
-                for (Element element : elements) {
-                    Elements innerElements = element.select("td");
-                    YapıKrediRate rate = new YapıKrediRate();
-                    rate.value_sell = innerElements.get(2).text();
-                    rate.value_buy = innerElements.get(3).text();
-                    rate.type = innerElements.get(0).text();
-                    rate.rateType = rate.toRateType();
-                    rate.setRealValues();
-                    rates.add(rate);
+                try {
+                    for (Element element : elements) {
+                        Elements innerElements = element.select("td");
+                        YapıKrediRate rate = new YapıKrediRate();
+                        if (innerElements.size()>3) {
+                            rate.value_sell = innerElements.get(2).text();
+                            rate.value_buy = innerElements.get(3).text();
+                            rate.type = innerElements.get(0).text();
+                            rate.rateType = rate.toRateType();
+                            rate.setRealValues();
+                            rates.add(rate);
+                        }
+                    }
+                }
+                catch (Exception ignored){
+
                 }
             }
             notifyValue(rates);
