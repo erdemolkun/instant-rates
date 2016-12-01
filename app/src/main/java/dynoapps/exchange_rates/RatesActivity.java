@@ -51,6 +51,7 @@ import dynoapps.exchange_rates.provider.EnparaRateProvider;
 import dynoapps.exchange_rates.provider.IPollingSource;
 import dynoapps.exchange_rates.provider.YapıKrediRateProvider;
 import dynoapps.exchange_rates.provider.YorumlarRateProvider;
+import dynoapps.exchange_rates.util.CollectionUtils;
 import dynoapps.exchange_rates.util.ViewUtils;
 
 /**
@@ -68,19 +69,10 @@ public class RatesActivity extends AppCompatActivity {
     private long startMilis;
     ArrayList<BasePoolingDataProvider> providers = new ArrayList<>();
     ArrayList<RateDataSource> rateDataSources = new ArrayList<>();
-    SimpleDateFormat hourFormatter = new SimpleDateFormat("hh:mm:ss", Locale.ENGLISH);
+    SimpleDateFormat hourFormatter = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
     private int white;
 
     private static final float threshold_error_usd_try = 0.2f;
-
-    public static <E> E getInstance(List<E> list, Class clazz) {
-        for (E e : list) {
-            if (clazz.isInstance(e)) {
-                return e;
-            }
-        }
-        return null;
-    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -209,11 +201,11 @@ public class RatesActivity extends AppCompatActivity {
         rateDataSources.add(rateDataSource3);
         rateDataSources.add(rateDataSource4);
 
-        rateDataSource0.setPollingSource(getInstance(providers, YorumlarRateProvider.class));
-        rateDataSource1.setPollingSource(getInstance(providers, EnparaRateProvider.class));
-        rateDataSource2.setPollingSource(getInstance(providers, BigparaRateProvider.class));
-        rateDataSource3.setPollingSource(getInstance(providers, DolarTlKurRateProvider.class));
-        rateDataSource4.setPollingSource(getInstance(providers, YapıKrediRateProvider.class));
+        rateDataSource0.setPollingSource(CollectionUtils.getInstance(providers, YorumlarRateProvider.class));
+        rateDataSource1.setPollingSource(CollectionUtils.getInstance(providers, EnparaRateProvider.class));
+        rateDataSource2.setPollingSource(CollectionUtils.getInstance(providers, BigparaRateProvider.class));
+        rateDataSource3.setPollingSource(CollectionUtils.getInstance(providers, DolarTlKurRateProvider.class));
+        rateDataSource4.setPollingSource(CollectionUtils.getInstance(providers, YapıKrediRateProvider.class));
 
         updateSourceStates();
     }
@@ -230,14 +222,13 @@ public class RatesActivity extends AppCompatActivity {
     }
 
     private void initUsdChart() {
-
 //        Description description = new Description();
 //        description.setTextSize(12f);
 //        description.setText("Dolar-TL Grafiği");
 //        description.setXOffset(8);
 //        description.setYOffset(8);
 //        description.setTextColor(ContextCompat.getColor(this, android.R.color.white));
-        //usdLineChart.setDescription(description);
+//        usdLineChart.setDescription(description);
         usdLineChart.getDescription().setEnabled(false);
         usdLineChart.setBackgroundColor(ContextCompat.getColor(this, R.color.colorGraph));
 
@@ -258,9 +249,6 @@ public class RatesActivity extends AppCompatActivity {
                 calendar.add(Calendar.SECOND, time);
                 Date date = calendar.getTime();
 
-                int minutes = time / (60);
-                int seconds = (time) % 60;
-//                return time > 0 ? String.format(Locale.ENGLISH, "%d:%02d", minutes, seconds) : "";
                 return time > 0 ? hourFormatter.format(date) : "";
             }
 
