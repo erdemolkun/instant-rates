@@ -1,7 +1,7 @@
 package dynoapps.exchange_rates.service;
 
 
-import dynoapps.exchange_rates.data.DynamicDataResponse;
+import dynoapps.exchange_rates.model.DynamicDataResponse;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;

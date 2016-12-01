@@ -1,10 +1,10 @@
-package dynoapps.exchange_rates.data;
+package dynoapps.exchange_rates.model;
 
 /**
  * Created by erdemmac on 24/11/2016.
  */
 
-public class EnparaRate extends BuySellRate {
+public class YapıKrediRate extends BuySellRate {
     @Override
     public int toRateType() {
         int rateType = RateTypes.UNKNOWN;

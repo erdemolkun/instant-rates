@@ -38,11 +38,12 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import dynoapps.exchange_rates.data.BuySellRate;
-import dynoapps.exchange_rates.data.DolarTlKurRate;
-import dynoapps.exchange_rates.data.Rate;
-import dynoapps.exchange_rates.data.YapıKrediRate;
-import dynoapps.exchange_rates.data.YorumlarRate;
+import dynoapps.exchange_rates.data.RateDataSource;
+import dynoapps.exchange_rates.model.BaseRate;
+import dynoapps.exchange_rates.model.BuySellRate;
+import dynoapps.exchange_rates.model.DolarTlKurRate;
+import dynoapps.exchange_rates.model.YapıKrediRate;
+import dynoapps.exchange_rates.model.YorumlarRate;
 import dynoapps.exchange_rates.provider.BasePoolingDataProvider;
 import dynoapps.exchange_rates.provider.BigparaRateProvider;
 import dynoapps.exchange_rates.provider.DolarTlKurRateProvider;
@@ -66,7 +67,7 @@ public class RatesActivity extends AppCompatActivity {
 
     private long startMilis;
     ArrayList<BasePoolingDataProvider> providers = new ArrayList<>();
-    ArrayList<DataSource> dataSources = new ArrayList<>();
+    ArrayList<RateDataSource> rateDataSources = new ArrayList<>();
     SimpleDateFormat hourFormatter = new SimpleDateFormat("hh:mm:ss", Locale.ENGLISH);
     private int white;
 
@@ -96,8 +97,8 @@ public class RatesActivity extends AppCompatActivity {
             @Override
             public void onResult(List<YorumlarRate> rates) {
                 YorumlarRate rateUsd = null;
-                for (Rate rate : rates) {
-                    if (rate.rateType == Rate.RateTypes.USD) {
+                for (BaseRate rate : rates) {
+                    if (rate.rateType == BaseRate.RateTypes.USD) {
                         rateUsd = (YorumlarRate) rate;
                     }
                 }
@@ -108,8 +109,8 @@ public class RatesActivity extends AppCompatActivity {
             @Override
             public void onResult(List<BuySellRate> rates) {
                 BuySellRate rateUsd = null;
-                for (Rate rate : rates) {
-                    if (rate.rateType == Rate.RateTypes.USD) {
+                for (BaseRate rate : rates) {
+                    if (rate.rateType == BaseRate.RateTypes.USD) {
                         rateUsd = (BuySellRate) rate;
                     }
                     addEntry(rateUsd != null ? rateUsd.value_sell_real : 0.0f, 1);
@@ -130,8 +131,8 @@ public class RatesActivity extends AppCompatActivity {
             @Override
             public void onResult(List<DolarTlKurRate> rates) {
                 DolarTlKurRate rateUsd = null;
-                for (Rate rate : rates) {
-                    if (rate.rateType == Rate.RateTypes.USD) {
+                for (BaseRate rate : rates) {
+                    if (rate.rateType == BaseRate.RateTypes.USD) {
                         rateUsd = (DolarTlKurRate) rate;
                     }
 
@@ -145,8 +146,8 @@ public class RatesActivity extends AppCompatActivity {
             @Override
             public void onResult(List<YapıKrediRate> rates) {
                 YapıKrediRate rateUsd = null;
-                for (Rate rate : rates) {
-                    if (rate.rateType == Rate.RateTypes.USD) {
+                for (BaseRate rate : rates) {
+                    if (rate.rateType == BaseRate.RateTypes.USD) {
                         rateUsd = (YapıKrediRate) rate;
                     }
 
@@ -169,58 +170,58 @@ public class RatesActivity extends AppCompatActivity {
                 int sourceType;
                 try {
                     sourceType = Integer.parseInt(str);
-                    for (DataSource dataSource : dataSources) {
-                        if (dataSource.getSourceType() == sourceType) {
-                            dataSource.setEnabled(true);
+                    for (RateDataSource rateDataSource : rateDataSources) {
+                        if (rateDataSource.getSourceType() == sourceType) {
+                            rateDataSource.setEnabled(true);
                         }
                     }
                 } catch (Exception ignored) {
                 }
             }
         } else {
-            for (DataSource dataSource : dataSources) {
-                dataSource.setEnabled(true);
+            for (RateDataSource rateDataSource : rateDataSources) {
+                rateDataSource.setEnabled(true);
             }
         }
     }
 
-    private void saveSources(List<DataSource> dataSources) {
+    private void saveSources(List<RateDataSource> rateDataSources) {
         String sources = "";
-        for (int i = 0; i < dataSources.size(); i++) {
-            DataSource dataSource = dataSources.get(i);
-            if (dataSource.isEnabled()) {
-                sources += dataSource.getSourceType() + ";";
+        for (int i = 0; i < rateDataSources.size(); i++) {
+            RateDataSource rateDataSource = rateDataSources.get(i);
+            if (rateDataSource.isEnabled()) {
+                sources += rateDataSource.getSourceType() + ";";
             }
         }
         Prefs.saveSources(getApplicationContext(), sources);
     }
 
     private void initDataSourceSelections() {
-        DataSource dataSource0 = new DataSource("Yorumlar", SourceType.YORUMLAR);
-        DataSource dataSource1 = new DataSource("Enpara", SourceType.ENPARA);
-        DataSource dataSource2 = new DataSource("Bigpara", SourceType.BIGPARA);
-        DataSource dataSource3 = new DataSource("TlKur", SourceType.TLKUR);
-        DataSource dataSource4 = new DataSource("Yapı Kredi", SourceType.YAPIKREDI);
+        RateDataSource rateDataSource0 = new RateDataSource("Yorumlar", RateDataSource.Type.YORUMLAR);
+        RateDataSource rateDataSource1 = new RateDataSource("Enpara", RateDataSource.Type.ENPARA);
+        RateDataSource rateDataSource2 = new RateDataSource("Bigpara", RateDataSource.Type.BIGPARA);
+        RateDataSource rateDataSource3 = new RateDataSource("TlKur", RateDataSource.Type.TLKUR);
+        RateDataSource rateDataSource4 = new RateDataSource("Yapı Kredi", RateDataSource.Type.YAPIKREDI);
 
-        dataSources.add(dataSource0);
-        dataSources.add(dataSource1);
-        dataSources.add(dataSource2);
-        dataSources.add(dataSource3);
-        dataSources.add(dataSource4);
+        rateDataSources.add(rateDataSource0);
+        rateDataSources.add(rateDataSource1);
+        rateDataSources.add(rateDataSource2);
+        rateDataSources.add(rateDataSource3);
+        rateDataSources.add(rateDataSource4);
 
-        dataSource0.setPollingSource(getInstance(providers, YorumlarRateProvider.class));
-        dataSource1.setPollingSource(getInstance(providers, EnparaRateProvider.class));
-        dataSource2.setPollingSource(getInstance(providers, BigparaRateProvider.class));
-        dataSource3.setPollingSource(getInstance(providers, DolarTlKurRateProvider.class));
-        dataSource4.setPollingSource(getInstance(providers, YapıKrediRateProvider.class));
+        rateDataSource0.setPollingSource(getInstance(providers, YorumlarRateProvider.class));
+        rateDataSource1.setPollingSource(getInstance(providers, EnparaRateProvider.class));
+        rateDataSource2.setPollingSource(getInstance(providers, BigparaRateProvider.class));
+        rateDataSource3.setPollingSource(getInstance(providers, DolarTlKurRateProvider.class));
+        rateDataSource4.setPollingSource(getInstance(providers, YapıKrediRateProvider.class));
 
         updateSourceStates();
     }
 
     private void refreshSources() {
-        for (DataSource dataSource : dataSources) {
-            IPollingSource iPollingSource = dataSource.getRateProvider();
-            if (dataSource.isEnabled()) {
+        for (RateDataSource rateDataSource : rateDataSources) {
+            IPollingSource iPollingSource = rateDataSource.getPollingSource();
+            if (rateDataSource.isEnabled()) {
                 iPollingSource.start();
             } else {
                 iPollingSource.stop();
@@ -374,13 +375,13 @@ public class RatesActivity extends AppCompatActivity {
     boolean[] temp_data_source_states;
 
     private void selectSources() {
-        temp_data_source_states = new boolean[dataSources.size()];
+        temp_data_source_states = new boolean[rateDataSources.size()];
         for (int i = 0; i < temp_data_source_states.length; i++) {
-            temp_data_source_states[i] = dataSources.get(i).isEnabled();
+            temp_data_source_states[i] = rateDataSources.get(i).isEnabled();
         }
-        String[] data_set_names = new String[dataSources.size()];
-        for (int i = 0; i < dataSources.size(); i++) {
-            data_set_names[i] = dataSources.get(i).getName();
+        String[] data_set_names = new String[rateDataSources.size()];
+        for (int i = 0; i < rateDataSources.size(); i++) {
+            data_set_names[i] = rateDataSources.get(i).getName();
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -396,11 +397,11 @@ public class RatesActivity extends AppCompatActivity {
         builder.setPositiveButton(R.string.apply, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                for (int i = 0; i < dataSources.size(); i++) {
-                    dataSources.get(i).setEnabled(temp_data_source_states[i]);
+                for (int i = 0; i < rateDataSources.size(); i++) {
+                    rateDataSources.get(i).setEnabled(temp_data_source_states[i]);
                 }
                 refreshSources();
-                saveSources(dataSources);
+                saveSources(rateDataSources);
             }
         });
 
@@ -530,49 +531,6 @@ public class RatesActivity extends AppCompatActivity {
         }
     }
 
-    static class DataSource {
-        private IPollingSource iPollingSource;
-        private String name;
-        private boolean enabled;
-        private int sourceType;
-
-        public DataSource(String name, int sourceType) {
-            this.name = name;
-            this.sourceType = sourceType;
-        }
-
-        public int getSourceType() {
-            return sourceType;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public boolean isEnabled() {
-            return enabled;
-        }
-
-        public void setEnabled(boolean enabled) {
-            this.enabled = enabled;
-        }
-
-        public void setPollingSource(IPollingSource iPollingSource) {
-            this.iPollingSource = iPollingSource;
-        }
-
-        public IPollingSource getRateProvider() {
-            return iPollingSource;
-        }
-    }
-
-    interface SourceType {
-        int YORUMLAR = 1;
-        int ENPARA = 2;
-        int BIGPARA = 3;
-        int TLKUR = 4;
-        int YAPIKREDI = 5;
-    }
 }
 
 

@@ -3,7 +3,7 @@ package dynoapps.exchange_rates.service;
 
 import java.util.List;
 
-import dynoapps.exchange_rates.data.DolarTlKurRate;
+import dynoapps.exchange_rates.model.DolarTlKurRate;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;

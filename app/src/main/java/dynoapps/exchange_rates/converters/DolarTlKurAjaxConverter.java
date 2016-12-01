@@ -8,8 +8,8 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import dynoapps.exchange_rates.data.DolarTlKurRate;
-import dynoapps.exchange_rates.data.Rate;
+import dynoapps.exchange_rates.model.DolarTlKurRate;
+import dynoapps.exchange_rates.model.BaseRate;
 import okhttp3.ResponseBody;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
@@ -18,7 +18,7 @@ import retrofit2.Retrofit;
  * Created by erdemmac on 24/11/2016.
  */
 
-public class DolarTlKurAjaxConverter implements Converter<ResponseBody, List<Rate>> {
+public class DolarTlKurAjaxConverter implements Converter<ResponseBody, List<BaseRate>> {
 
     /**
      * Factory for creating converter. We only care about decoding responses.
@@ -47,9 +47,9 @@ public class DolarTlKurAjaxConverter implements Converter<ResponseBody, List<Rat
      * </p>
      **/
     @Override
-    public List<Rate> convert(ResponseBody value) throws IOException {
+    public List<BaseRate> convert(ResponseBody value) throws IOException {
 
-        ArrayList<Rate> rates = new ArrayList<>();
+        ArrayList<BaseRate> rates = new ArrayList<>();
         String responseBody = value != null ? value.string() : null;
         if (!TextUtils.isEmpty(responseBody)) {
             String[] splitsMoney = responseBody.split("\n");

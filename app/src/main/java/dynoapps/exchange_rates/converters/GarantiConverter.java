@@ -9,8 +9,8 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import dynoapps.exchange_rates.data.GarantiRate;
-import dynoapps.exchange_rates.data.Rate;
+import dynoapps.exchange_rates.model.GarantiRate;
+import dynoapps.exchange_rates.model.BaseRate;
 import okhttp3.ResponseBody;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
@@ -19,7 +19,7 @@ import retrofit2.Retrofit;
  * Created by erdemmac on 24/11/2016.
  */
 
-public class GarantiConverter implements Converter<ResponseBody, List<Rate>> {
+public class GarantiConverter implements Converter<ResponseBody, List<BaseRate>> {
 
     /**
      * Factory for creating converter. We only care about decoding responses.
@@ -43,9 +43,9 @@ public class GarantiConverter implements Converter<ResponseBody, List<Rate>> {
     static final GarantiConverter INSTANCE = new GarantiConverter();
 
     @Override
-    public List<Rate> convert(ResponseBody value) throws IOException {
+    public List<BaseRate> convert(ResponseBody value) throws IOException {
 
-        ArrayList<Rate> rates = new ArrayList<>();
+        ArrayList<BaseRate> rates = new ArrayList<>();
         String responseBody = value != null ? value.string() : null;
 
         ArrayList<Element> elements = Jsoup.parse(responseBody, HOST).select(".rightSideContainer").select("#tab10").select("tbody").select("tr");

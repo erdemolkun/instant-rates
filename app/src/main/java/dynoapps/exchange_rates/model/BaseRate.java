@@ -1,12 +1,12 @@
-package dynoapps.exchange_rates.data;
+package dynoapps.exchange_rates.model;
 
 /**
  * Created by erdemmac on 24/11/2016.
  */
 
-public abstract class Rate implements IRate {
+public abstract class BaseRate implements IConvertable {
 
-    Rate() {
+    BaseRate() {
         fetchMilis = System.currentTimeMillis();
     }
 
@@ -16,7 +16,7 @@ public abstract class Rate implements IRate {
     public String type;
     public String value;
 
-    public boolean isValidDiffTime(Rate rate) {
+    public boolean isValidDiffTime(BaseRate rate) {
         return Math.abs(rate.fetchMilis - fetchMilis) < 5000;
     }
 

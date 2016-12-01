@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import dynoapps.exchange_rates.data.GarantiRate;
+import dynoapps.exchange_rates.model.GarantiRate;
 import retrofit2.Call;
 
 /**

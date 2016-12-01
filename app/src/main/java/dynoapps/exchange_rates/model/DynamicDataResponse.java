@@ -1,4 +1,4 @@
-package dynoapps.exchange_rates.data;
+package dynoapps.exchange_rates.model;
 
 import com.google.gson.annotations.SerializedName;
 

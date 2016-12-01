@@ -1,4 +1,4 @@
-package dynoapps.exchange_rates.data;
+package dynoapps.exchange_rates.model;
 
 import android.text.TextUtils;
 
@@ -6,7 +6,7 @@ import android.text.TextUtils;
  * Created by erdemmac on 24/11/2016.
  */
 
-public class YorumlarRate extends Rate implements IRate {
+public class YorumlarRate extends BaseRate implements IConvertable {
 
     public String time;
     @Override
