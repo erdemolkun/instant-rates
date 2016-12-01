@@ -102,6 +102,7 @@ dependencies {
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'org.jsoup:jsoup:1.10.1'
     compile 'com.github.PhilJay:MPAndroidChart:v3.0.1'
+    compile 'com.github.orhanobut:logger:1.12'
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
     testCompile 'junit:junit:4.12'
 }
