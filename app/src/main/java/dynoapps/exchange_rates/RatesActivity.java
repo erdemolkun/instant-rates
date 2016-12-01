@@ -60,6 +60,9 @@ import dynoapps.exchange_rates.util.ViewUtils;
 
 public class RatesActivity extends AppCompatActivity {
 
+    private static final int VISIBLE_CHART_SECONDS = 120; // 2 mins
+    private static final float THRESHOLD_ERROR_USD_TRY = 0.2f;
+
     @BindView(R.id.line_usd_chart)
     LineChart usdLineChart;
 
@@ -71,8 +74,6 @@ public class RatesActivity extends AppCompatActivity {
     ArrayList<RateDataSource> rateDataSources = new ArrayList<>();
     SimpleDateFormat hourFormatter = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
     private int white;
-
-    private static final float threshold_error_usd_try = 0.2f;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -399,10 +400,8 @@ public class RatesActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    private static final int VISIBLE_SECONDS = 120; // 2 mins
-
     private void addEntry(float value, int chartIndex) {
-        if (threshold_error_usd_try > value) return;
+        if (THRESHOLD_ERROR_USD_TRY > value) return;
         LineData data = usdLineChart.getData();
         int newX = (int) (((System.currentTimeMillis() - startMilis) / 1000));
 
@@ -410,7 +409,7 @@ public class RatesActivity extends AppCompatActivity {
         data.addEntry(entry, chartIndex);
         data.notifyDataChanged();
         IDataSet dataSet = data.getDataSetByIndex(chartIndex);
-        if (Math.abs(dataSet.getXMin() - dataSet.getXMax()) > VISIBLE_SECONDS * 2 && dataSet.getEntryCount() > VISIBLE_SECONDS) {
+        if (Math.abs(dataSet.getXMin() - dataSet.getXMax()) > VISIBLE_CHART_SECONDS * 2 && dataSet.getEntryCount() > VISIBLE_CHART_SECONDS) {
             dataSet.removeEntry(0);
         }
 
@@ -418,7 +417,7 @@ public class RatesActivity extends AppCompatActivity {
         usdLineChart.notifyDataSetChanged();
 
         //mChart.setVisibleYRangeMaximum(15, AxisDependency.LEFT);
-        usdLineChart.setVisibleXRangeMaximum(VISIBLE_SECONDS);
+        usdLineChart.setVisibleXRangeMaximum(VISIBLE_CHART_SECONDS);
 
         if (usdLineChart.getXAxis().getAxisMaximum() <= newX) {
             usdLineChart.moveViewToX(newX);
