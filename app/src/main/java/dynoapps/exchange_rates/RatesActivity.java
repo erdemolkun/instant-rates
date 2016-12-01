@@ -52,6 +52,7 @@ import dynoapps.exchange_rates.provider.IPollingSource;
 import dynoapps.exchange_rates.provider.YapıKrediRateProvider;
 import dynoapps.exchange_rates.provider.YorumlarRateProvider;
 import dynoapps.exchange_rates.util.CollectionUtils;
+import dynoapps.exchange_rates.util.RateUtils;
 import dynoapps.exchange_rates.util.ViewUtils;
 
 /**
@@ -89,26 +90,16 @@ public class RatesActivity extends AppCompatActivity {
         providers.add(new YorumlarRateProvider(new ProviderSourceCallbackAdapter<List<YorumlarRate>>() {
             @Override
             public void onResult(List<YorumlarRate> rates) {
-                YorumlarRate rateUsd = null;
-                for (BaseRate rate : rates) {
-                    if (rate.rateType == BaseRate.RateTypes.USD) {
-                        rateUsd = (YorumlarRate) rate;
-                    }
-                }
+                YorumlarRate rateUsd = RateUtils.getRate(rates, BaseRate.RateTypes.USD);
                 addEntry(rateUsd != null ? rateUsd.realValue : 0.0f, 0);
             }
         }));
         providers.add(new EnparaRateProvider(new ProviderSourceCallbackAdapter<List<BuySellRate>>() {
             @Override
             public void onResult(List<BuySellRate> rates) {
-                BuySellRate rateUsd = null;
-                for (BaseRate rate : rates) {
-                    if (rate.rateType == BaseRate.RateTypes.USD) {
-                        rateUsd = (BuySellRate) rate;
-                    }
-                    addEntry(rateUsd != null ? rateUsd.value_sell_real : 0.0f, 1);
-                    addEntry(rateUsd != null ? rateUsd.value_buy_real : 0.0f, 2);
-                }
+                BuySellRate rateUsd = RateUtils.getRate(rates, BaseRate.RateTypes.USD);
+                addEntry(rateUsd != null ? rateUsd.value_sell_real : 0.0f, 1);
+                addEntry(rateUsd != null ? rateUsd.value_buy_real : 0.0f, 2);
             }
         }));
 
@@ -123,13 +114,7 @@ public class RatesActivity extends AppCompatActivity {
         providers.add(new DolarTlKurRateProvider(new ProviderSourceCallbackAdapter<List<DolarTlKurRate>>() {
             @Override
             public void onResult(List<DolarTlKurRate> rates) {
-                DolarTlKurRate rateUsd = null;
-                for (BaseRate rate : rates) {
-                    if (rate.rateType == BaseRate.RateTypes.USD) {
-                        rateUsd = (DolarTlKurRate) rate;
-                    }
-
-                }
+                DolarTlKurRate rateUsd = RateUtils.getRate(rates, BaseRate.RateTypes.USD);
                 addEntry(rateUsd != null ? rateUsd.realValue : 0.0f, 4);
             }
         }));
@@ -138,13 +123,8 @@ public class RatesActivity extends AppCompatActivity {
         providers.add(new YapıKrediRateProvider(new ProviderSourceCallbackAdapter<List<YapıKrediRate>>() {
             @Override
             public void onResult(List<YapıKrediRate> rates) {
-                YapıKrediRate rateUsd = null;
-                for (BaseRate rate : rates) {
-                    if (rate.rateType == BaseRate.RateTypes.USD) {
-                        rateUsd = (YapıKrediRate) rate;
-                    }
-
-                }
+                YapıKrediRate rateUsd = RateUtils.getRate(rates, BaseRate.RateTypes.USD);
+                ;
                 addEntry(rateUsd != null ? rateUsd.value_sell_real : 0.0f, 5);
             }
         }));
