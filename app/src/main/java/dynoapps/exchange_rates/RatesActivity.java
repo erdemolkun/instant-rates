@@ -124,7 +124,6 @@ public class RatesActivity extends AppCompatActivity {
             @Override
             public void onResult(List<YapıKrediRate> rates) {
                 YapıKrediRate rateUsd = RateUtils.getRate(rates, BaseRate.RateTypes.USD);
-                ;
                 addEntry(rateUsd != null ? rateUsd.value_sell_real : 0.0f, 5);
             }
         }));
