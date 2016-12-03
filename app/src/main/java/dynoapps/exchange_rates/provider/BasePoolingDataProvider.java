@@ -21,8 +21,6 @@ public abstract class BasePoolingDataProvider<T> implements IPollingSource, Runn
     private int error_count = 0;
     private int success_count = 0;
 
-    private int interval = -1;
-
     BasePoolingDataProvider(SourceCallback<T> callback) {
         this.callback = callback;
     }
@@ -36,14 +34,6 @@ public abstract class BasePoolingDataProvider<T> implements IPollingSource, Runn
         return handler;
     }
 
-
-    public void setInterval(int interval) {
-        this.interval = interval;
-    }
-
-    public int getInterval() {
-        return interval;
-    }
 
     private AtomicBoolean isWorking = new AtomicBoolean(false);
 
@@ -60,7 +50,7 @@ public abstract class BasePoolingDataProvider<T> implements IPollingSource, Runn
     }
 
     void fetchAgain(boolean wasError) {
-        int interval_value = this.interval < 0 ? TimeIntervalManager.getIntervalInMiliseconds() : this.interval;
+        int interval_value = TimeIntervalManager.getIntervalInMiliseconds();
         if (wasError) {
             /**
              * Calculate error interval in logarithmic.
@@ -70,6 +60,11 @@ public abstract class BasePoolingDataProvider<T> implements IPollingSource, Runn
         }
         getHandler().postDelayed(this, interval_value);
 
+    }
+
+    public void refreshForIntervals() {
+        getHandler().removeCallbacks(this);
+        getHandler().postDelayed(this, TimeIntervalManager.getIntervalInMiliseconds());
     }
 
     @Override

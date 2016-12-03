@@ -367,6 +367,9 @@ public class RatesActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 TimeIntervalManager.setSelectedIndex(temp_selected_item_index);
+                for (BasePoolingDataProvider provider : providers) {
+                    provider.refreshForIntervals();
+                }
             }
         });
 
