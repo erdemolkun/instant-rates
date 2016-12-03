@@ -5,6 +5,7 @@ import android.os.Looper;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import dynoapps.exchange_rates.time.TimeIntervalManager;
 import dynoapps.exchange_rates.util.L;
 
 /**
@@ -13,13 +14,14 @@ import dynoapps.exchange_rates.util.L;
 
 public abstract class BasePoolingDataProvider<T> implements IPollingSource, Runnable {
 
-    private static final int INTERVAL = 3000;
-    private static final int INTERVAL_ON_ERROR = 4000;
+    private static final int NEXT_FETCH_ON_ERROR = 4000;
 
     private SourceCallback<T> callback;
 
     private int error_count = 0;
     private int success_count = 0;
+
+    private int interval = -1;
 
     BasePoolingDataProvider(SourceCallback<T> callback) {
         this.callback = callback;
@@ -32,6 +34,15 @@ public abstract class BasePoolingDataProvider<T> implements IPollingSource, Runn
             handler = new Handler(Looper.getMainLooper());
         }
         return handler;
+    }
+
+
+    public void setInterval(int interval) {
+        this.interval = interval;
+    }
+
+    public int getInterval() {
+        return interval;
     }
 
     private AtomicBoolean isWorking = new AtomicBoolean(false);
@@ -49,15 +60,15 @@ public abstract class BasePoolingDataProvider<T> implements IPollingSource, Runn
     }
 
     void fetchAgain(boolean wasError) {
-        int interval = INTERVAL;
+        int interval_value = this.interval < 0 ? TimeIntervalManager.getIntervalInMiliseconds() : this.interval;
         if (wasError) {
             /**
              * Calculate error interval in logarithmic.
              * */
             float ratio = (error_count / (float) (success_count <= 0 ? 1 : success_count));
-            interval = (int) (INTERVAL_ON_ERROR + Math.log(ratio) * INTERVAL_ON_ERROR);
+            interval_value = (int) (NEXT_FETCH_ON_ERROR + Math.log(ratio) * NEXT_FETCH_ON_ERROR);
         }
-        getHandler().postDelayed(this, interval);
+        getHandler().postDelayed(this, interval_value);
 
     }
 

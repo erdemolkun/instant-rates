@@ -51,6 +51,7 @@ import dynoapps.exchange_rates.provider.EnparaRateProvider;
 import dynoapps.exchange_rates.provider.IPollingSource;
 import dynoapps.exchange_rates.provider.YapıKrediRateProvider;
 import dynoapps.exchange_rates.provider.YorumlarRateProvider;
+import dynoapps.exchange_rates.time.TimeIntervalManager;
 import dynoapps.exchange_rates.util.CollectionUtils;
 import dynoapps.exchange_rates.util.RateUtils;
 import dynoapps.exchange_rates.util.ViewUtils;
@@ -307,6 +308,9 @@ public class RatesActivity extends AppCompatActivity {
         if (id == R.id.menu_item_sources) {
             selectSources();
             return true;
+        } else if (id == R.id.menu_time_interval) {
+            selectInterval();
+            return true;
         } else if (id == R.id.menu_item_refresh) {
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -333,11 +337,45 @@ public class RatesActivity extends AppCompatActivity {
             AlertDialog dialog = builder.create();
             dialog.show();
 
-
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
+
+    int temp_selected_item_index = -1;
+
+    private void selectInterval() {
+
+        final ArrayList<TimeIntervalManager.TimeInterval> timeIntervals = TimeIntervalManager.getDefaultIntervals();
+        temp_selected_item_index = TimeIntervalManager.getSelectedIndex();
+        String[] time_values = new String[timeIntervals.size()];
+        for (int i = 0; i < time_values.length; i++) {
+            time_values[i] = timeIntervals.get(i).toString();
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setSingleChoiceItems(time_values, temp_selected_item_index, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                temp_selected_item_index = i;
+            }
+        });
+
+        builder.setCancelable(true);
+        builder.setTitle(R.string.select_time_interval);
+        builder.setPositiveButton(R.string.apply, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                TimeIntervalManager.setSelectedIndex(temp_selected_item_index);
+            }
+        });
+
+        builder.setNegativeButton(R.string.dismiss, null);
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
 
     // Boolean array for initial enabled items
     boolean[] temp_data_source_states;
