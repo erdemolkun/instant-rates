@@ -3,19 +3,36 @@ package dynoapps.exchange_rates.time;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
+import dynoapps.exchange_rates.App;
+import dynoapps.exchange_rates.Prefs;
+
 /**
  * Created by erdemmac on 03/12/2016.
  */
 
 public class TimeIntervalManager {
 
-    private static int selected_interval_index = -1;
+    private static int selected_interval_index = getPrefIndex();
+    private static long prefInterval = Prefs.getInterval(App.context());
+
+    private static int getPrefIndex() {
+        long saved = Prefs.getInterval(App.context());
+        if (saved < 0)
+            return -1;
+        int index = 0;
+        for (TimeInterval timeInterval : getDefaultIntervals()) {
+            if (timeInterval.to(TimeUnit.MILLISECONDS) == saved) {
+                return index;
+            }
+            index++;
+        }
+        return -1;
+    }
 
     public static int getSelectedIndex() {
         return selected_interval_index;
     }
 
-    private static final TimeInterval DEFAULT_INTERVAL = getDefaultIntervals().get(0);
 
     public static void setSelectedIndex(int index) {
         if (getDefaultIntervals().size() > index) {
@@ -23,14 +40,18 @@ public class TimeIntervalManager {
         } else {
             selected_interval_index = getDefaultIntervals().size();
         }
+        Prefs.saveInterval(App.context(), getIntervalInMiliseconds());
     }
 
-    public static int getIntervalInMiliseconds() {
-        // // TODO: 03/12/2016  add Persistent
+    public static long getIntervalInMiliseconds() {
         if (selected_interval_index < 0) {
-            return (int) DEFAULT_INTERVAL.to(TimeUnit.MILLISECONDS);
+            if (prefInterval < 0) {
+                return getDefaultIntervals().get(0).to(TimeUnit.MILLISECONDS);
+            } else {
+                return prefInterval;
+            }
         }
-        return (int) getDefaultIntervals().get(selected_interval_index).to(TimeUnit.MILLISECONDS);
+        return getDefaultIntervals().get(selected_interval_index).to(TimeUnit.MILLISECONDS);
     }
 
 

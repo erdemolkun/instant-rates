@@ -50,7 +50,7 @@ public abstract class BasePoolingDataProvider<T> implements IPollingSource, Runn
     }
 
     void fetchAgain(boolean wasError) {
-        int interval_value = TimeIntervalManager.getIntervalInMiliseconds();
+        long interval_value = TimeIntervalManager.getIntervalInMiliseconds();
         if (wasError) {
             /**
              * Calculate error interval in logarithmic.
