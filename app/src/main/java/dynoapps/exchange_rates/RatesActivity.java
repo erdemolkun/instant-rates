@@ -442,7 +442,7 @@ public class RatesActivity extends AppCompatActivity {
         } else if (chartIndex == 4) {
             color = ContextCompat.getColor(this, R.color.colorDolarTlKur);
         } else if (chartIndex == 5) {
-            color = ContextCompat.getColor(this, R.color.colorYaıKredi);
+            color = ContextCompat.getColor(this, R.color.colorYapıKredi);
         } else {
             color = ContextCompat.getColor(this, R.color.colorBigPara);
         }
