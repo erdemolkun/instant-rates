@@ -9,7 +9,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -49,10 +48,10 @@ import dynoapps.exchange_rates.provider.BigparaRateProvider;
 import dynoapps.exchange_rates.provider.DolarTlKurRateProvider;
 import dynoapps.exchange_rates.provider.EnparaRateProvider;
 import dynoapps.exchange_rates.provider.IPollingSource;
+import dynoapps.exchange_rates.provider.ProviderSourceCallbackAdapter;
 import dynoapps.exchange_rates.provider.YapıKrediRateProvider;
 import dynoapps.exchange_rates.provider.YorumlarRateProvider;
 import dynoapps.exchange_rates.time.TimeIntervalManager;
-import dynoapps.exchange_rates.util.CollectionUtils;
 import dynoapps.exchange_rates.util.RateUtils;
 import dynoapps.exchange_rates.util.ViewUtils;
 
@@ -73,7 +72,6 @@ public class RatesActivity extends AppCompatActivity {
 
     private long startMilis;
     ArrayList<BasePoolingDataProvider> providers = new ArrayList<>();
-    ArrayList<RateDataSource> rateDataSources = new ArrayList<>();
     SimpleDateFormat hourFormatter = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
     private int white;
 
@@ -129,33 +127,9 @@ public class RatesActivity extends AppCompatActivity {
             }
         }));
 
-
-        initDataSourceSelections();
+        DataSourcesManager.init();
+        DataSourcesManager.updateProviders(providers);
         refreshSources();
-    }
-
-    private void updateSourceStates() {
-        String sources = Prefs.getSources(this);
-        if (!TextUtils.isEmpty(sources)) {
-            String[] splits = sources.split(";");
-            for (String str : splits) {
-                if (TextUtils.isEmpty(str)) continue;
-                int sourceType;
-                try {
-                    sourceType = Integer.parseInt(str);
-                    for (RateDataSource rateDataSource : rateDataSources) {
-                        if (rateDataSource.getSourceType() == sourceType) {
-                            rateDataSource.setEnabled(true);
-                        }
-                    }
-                } catch (Exception ignored) {
-                }
-            }
-        } else {
-            for (RateDataSource rateDataSource : rateDataSources) {
-                rateDataSource.setEnabled(true);
-            }
-        }
     }
 
     private void saveSources(List<RateDataSource> rateDataSources) {
@@ -169,29 +143,9 @@ public class RatesActivity extends AppCompatActivity {
         Prefs.saveSources(getApplicationContext(), sources);
     }
 
-    private void initDataSourceSelections() {
-        RateDataSource rateDataSource0 = new RateDataSource("Yorumlar", RateDataSource.Type.YORUMLAR);
-        RateDataSource rateDataSource1 = new RateDataSource("Enpara", RateDataSource.Type.ENPARA);
-        RateDataSource rateDataSource2 = new RateDataSource("Bigpara", RateDataSource.Type.BIGPARA);
-        RateDataSource rateDataSource3 = new RateDataSource("TlKur", RateDataSource.Type.TLKUR);
-        RateDataSource rateDataSource4 = new RateDataSource("Yapı Kredi", RateDataSource.Type.YAPIKREDI);
-
-        rateDataSources.add(rateDataSource0);
-        rateDataSources.add(rateDataSource1);
-        rateDataSources.add(rateDataSource2);
-        rateDataSources.add(rateDataSource3);
-        rateDataSources.add(rateDataSource4);
-
-        rateDataSource0.setPollingSource(CollectionUtils.getInstance(providers, YorumlarRateProvider.class));
-        rateDataSource1.setPollingSource(CollectionUtils.getInstance(providers, EnparaRateProvider.class));
-        rateDataSource2.setPollingSource(CollectionUtils.getInstance(providers, BigparaRateProvider.class));
-        rateDataSource3.setPollingSource(CollectionUtils.getInstance(providers, DolarTlKurRateProvider.class));
-        rateDataSource4.setPollingSource(CollectionUtils.getInstance(providers, YapıKrediRateProvider.class));
-
-        updateSourceStates();
-    }
 
     private void refreshSources() {
+        ArrayList<RateDataSource> rateDataSources = DataSourcesManager.getRateDataSources();
         for (RateDataSource rateDataSource : rateDataSources) {
             IPollingSource iPollingSource = rateDataSource.getPollingSource();
             if (rateDataSource.isEnabled()) {
@@ -384,6 +338,7 @@ public class RatesActivity extends AppCompatActivity {
     boolean[] temp_data_source_states;
 
     private void selectSources() {
+        final ArrayList<RateDataSource> rateDataSources = DataSourcesManager.getRateDataSources();
         temp_data_source_states = new boolean[rateDataSources.size()];
         for (int i = 0; i < temp_data_source_states.length; i++) {
             temp_data_source_states[i] = rateDataSources.get(i).isEnabled();
@@ -523,20 +478,6 @@ public class RatesActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    /***
-     * Adapter class for {@link IPollingSource.SourceCallback}
-     */
-    static class ProviderSourceCallbackAdapter<T> implements IPollingSource.SourceCallback<T> {
-        @Override
-        public void onResult(T value) {
-
-        }
-
-        @Override
-        public void onError() {
-
-        }
-    }
 
 }
 
