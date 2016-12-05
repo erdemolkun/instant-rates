@@ -3,6 +3,7 @@ package dynoapps.exchange_rates.provider;
 import java.util.List;
 
 import dynoapps.exchange_rates.model.BuySellRate;
+import dynoapps.exchange_rates.model.EnparaRate;
 import dynoapps.exchange_rates.network.Api;
 import dynoapps.exchange_rates.network.EnparaService;
 import retrofit2.Call;
@@ -12,11 +13,11 @@ import retrofit2.Response;
  * Created by erdemmac on 25/11/2016.
  */
 
-public class EnparaRateProvider extends BasePoolingDataProvider<List<BuySellRate>> {
+public class EnparaRateProvider extends BasePoolingDataProvider<List<EnparaRate>> {
 
-    private Call<List<BuySellRate>> lastCall;
+    private Call<List<EnparaRate>> lastCall;
 
-    public EnparaRateProvider(SourceCallback<List<BuySellRate>> callback) {
+    public EnparaRateProvider(SourceCallback<List<EnparaRate>> callback) {
         super(callback);
     }
 
@@ -30,12 +31,12 @@ public class EnparaRateProvider extends BasePoolingDataProvider<List<BuySellRate
     public void run() {
         super.run();
         final EnparaService enparaService = Api.getEnparaApi().create(EnparaService.class);
-        Call<List<BuySellRate>> call = enparaService.rates();
-        call.enqueue(new retrofit2.Callback<List<BuySellRate>>() {
+        Call<List<EnparaRate>> call = enparaService.rates();
+        call.enqueue(new retrofit2.Callback<List<EnparaRate>>() {
             @Override
-            public void onResponse(Call<List<BuySellRate>> call, Response<List<BuySellRate>> response) {
+            public void onResponse(Call<List<EnparaRate>> call, Response<List<EnparaRate>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    List<BuySellRate> rates = response.body();
+                    List<EnparaRate> rates = response.body();
                     notifyValue(rates);
                     fetchAgain(false);
                 } else {
@@ -45,7 +46,7 @@ public class EnparaRateProvider extends BasePoolingDataProvider<List<BuySellRate
             }
 
             @Override
-            public void onFailure(Call<List<BuySellRate>> call, Throwable t) {
+            public void onFailure(Call<List<EnparaRate>> call, Throwable t) {
                 notifyError();
                 fetchAgain(true);
             }

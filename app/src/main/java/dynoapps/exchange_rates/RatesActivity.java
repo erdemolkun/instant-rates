@@ -1,8 +1,10 @@
 package dynoapps.exchange_rates;
 
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -28,6 +30,10 @@ import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.IDataSet;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -38,19 +44,17 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import dynoapps.exchange_rates.data.RateDataSource;
+import dynoapps.exchange_rates.event.DataSourceUpdate;
+import dynoapps.exchange_rates.event.IntervalUpdate;
+import dynoapps.exchange_rates.event.RatesEvent;
 import dynoapps.exchange_rates.model.BaseRate;
+import dynoapps.exchange_rates.model.BigparaRate;
 import dynoapps.exchange_rates.model.BuySellRate;
 import dynoapps.exchange_rates.model.DolarTlKurRate;
+import dynoapps.exchange_rates.model.EnparaRate;
 import dynoapps.exchange_rates.model.YapıKrediRate;
 import dynoapps.exchange_rates.model.YorumlarRate;
-import dynoapps.exchange_rates.provider.BasePoolingDataProvider;
-import dynoapps.exchange_rates.provider.BigparaRateProvider;
-import dynoapps.exchange_rates.provider.DolarTlKurRateProvider;
-import dynoapps.exchange_rates.provider.EnparaRateProvider;
-import dynoapps.exchange_rates.provider.IPollingSource;
-import dynoapps.exchange_rates.provider.ProviderSourceCallbackAdapter;
-import dynoapps.exchange_rates.provider.YapıKrediRateProvider;
-import dynoapps.exchange_rates.provider.YorumlarRateProvider;
+import dynoapps.exchange_rates.service.RatePollingService;
 import dynoapps.exchange_rates.time.TimeIntervalManager;
 import dynoapps.exchange_rates.util.RateUtils;
 import dynoapps.exchange_rates.util.ViewUtils;
@@ -71,7 +75,6 @@ public class RatesActivity extends AppCompatActivity {
     View vProgress;
 
     private long startMilis;
-    ArrayList<BasePoolingDataProvider> providers = new ArrayList<>();
     SimpleDateFormat hourFormatter = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
     private int white;
 
@@ -86,50 +89,38 @@ public class RatesActivity extends AppCompatActivity {
 
         vProgress.setVisibility(View.GONE);
 
-        providers.add(new YorumlarRateProvider(new ProviderSourceCallbackAdapter<List<YorumlarRate>>() {
-            @Override
-            public void onResult(List<YorumlarRate> rates) {
-                YorumlarRate rateUsd = RateUtils.getRate(rates, BaseRate.RateTypes.USD);
-                addEntry(rateUsd != null ? rateUsd.realValue : 0.0f, 0);
+        if (!isMyServiceRunning(RatePollingService.class)) {
+            startService(new Intent(this, RatePollingService.class));
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(RatesEvent ratesEvent) {
+        List<BaseRate> rates = ratesEvent.rates;
+        BaseRate rateUsd = RateUtils.getRate(rates, BaseRate.RateTypes.USD);
+        if (rateUsd != null) {
+            if (rateUsd instanceof YapıKrediRate) {
+                addEntry(((YapıKrediRate) rateUsd).value_sell_real, 5);
+            } else if (rateUsd instanceof DolarTlKurRate) {
+                addEntry(((DolarTlKurRate) rateUsd).realValue, 4);
+            } else if (rateUsd instanceof YorumlarRate) {
+                addEntry(((YorumlarRate) rateUsd).realValue, 0);
+            } else if (rateUsd instanceof EnparaRate) {
+                addEntry(((EnparaRate) rateUsd).value_sell_real, 1);
+                addEntry(((EnparaRate) rateUsd).value_buy_real, 2);
+            } else if (rateUsd instanceof BigparaRate) {
+                addEntry(((BuySellRate) rateUsd).value_sell_real, 3);
             }
-        }));
-        providers.add(new EnparaRateProvider(new ProviderSourceCallbackAdapter<List<BuySellRate>>() {
-            @Override
-            public void onResult(List<BuySellRate> rates) {
-                BuySellRate rateUsd = RateUtils.getRate(rates, BaseRate.RateTypes.USD);
-                addEntry(rateUsd != null ? rateUsd.value_sell_real : 0.0f, 1);
-                addEntry(rateUsd != null ? rateUsd.value_buy_real : 0.0f, 2);
-            }
-        }));
+        }
 
-        providers.add(
-                new BigparaRateProvider(new ProviderSourceCallbackAdapter<List<BuySellRate>>() {
-                    @Override
-                    public void onResult(List<BuySellRate> value) {
-                        addEntry(value.get(0).value_sell_real, 3);
-                    }
-                }));
-
-        providers.add(new DolarTlKurRateProvider(new ProviderSourceCallbackAdapter<List<DolarTlKurRate>>() {
-            @Override
-            public void onResult(List<DolarTlKurRate> rates) {
-                DolarTlKurRate rateUsd = RateUtils.getRate(rates, BaseRate.RateTypes.USD);
-                addEntry(rateUsd != null ? rateUsd.realValue : 0.0f, 4);
-            }
-        }));
-
-
-        providers.add(new YapıKrediRateProvider(new ProviderSourceCallbackAdapter<List<YapıKrediRate>>() {
-            @Override
-            public void onResult(List<YapıKrediRate> rates) {
-                YapıKrediRate rateUsd = RateUtils.getRate(rates, BaseRate.RateTypes.USD);
-                addEntry(rateUsd != null ? rateUsd.value_sell_real : 0.0f, 5);
-            }
-        }));
-
-        DataSourcesManager.init();
-        DataSourcesManager.updateProviders(providers);
-        refreshSources();
     }
 
     private void saveSources(List<RateDataSource> rateDataSources) {
@@ -143,18 +134,6 @@ public class RatesActivity extends AppCompatActivity {
         Prefs.saveSources(getApplicationContext(), sources);
     }
 
-
-    private void refreshSources() {
-        ArrayList<RateDataSource> rateDataSources = DataSourcesManager.getRateDataSources();
-        for (RateDataSource rateDataSource : rateDataSources) {
-            IPollingSource iPollingSource = rateDataSource.getPollingSource();
-            if (rateDataSource.isEnabled()) {
-                iPollingSource.start();
-            } else {
-                iPollingSource.stop();
-            }
-        }
-    }
 
     private void initUsdChart() {
 //        Description description = new Description();
@@ -321,9 +300,7 @@ public class RatesActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 TimeIntervalManager.setSelectedIndex(temp_selected_item_index);
-                for (BasePoolingDataProvider provider : providers) {
-                    provider.refreshForIntervals();
-                }
+                EventBus.getDefault().post(new IntervalUpdate());
             }
         });
 
@@ -364,7 +341,7 @@ public class RatesActivity extends AppCompatActivity {
                 for (int i = 0; i < rateDataSources.size(); i++) {
                     rateDataSources.get(i).setEnabled(temp_data_source_states[i]);
                 }
-                refreshSources();
+                EventBus.getDefault().post(new DataSourceUpdate());
                 saveSources(rateDataSources);
             }
         });
@@ -470,12 +447,21 @@ public class RatesActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        if (providers != null) {
-            for (IPollingSource iPollingSource : providers) {
-                iPollingSource.stop();
-            }
+        EventBus.getDefault().unregister(this);
+        if (isMyServiceRunning(RatePollingService.class)) {
+            stopService(new Intent(this, RatePollingService.class));
         }
         super.onDestroy();
+    }
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
 

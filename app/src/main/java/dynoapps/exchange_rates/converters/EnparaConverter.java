@@ -14,6 +14,7 @@ import java.util.List;
 
 import dynoapps.exchange_rates.model.BuySellRate;
 import dynoapps.exchange_rates.model.BaseRate;
+import dynoapps.exchange_rates.model.EnparaRate;
 import okhttp3.ResponseBody;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
@@ -62,9 +63,9 @@ public class EnparaConverter implements Converter<ResponseBody, List<BaseRate>> 
         return rates;
     }
 
-    private static BuySellRate parseRate(Element element) {
+    private static EnparaRate parseRate(Element element) {
         final Elements divElements = element.select("div");
-        BuySellRate rate = new BuySellRate();
+        EnparaRate rate = new EnparaRate();
         for (int i = 0; i < divElements.size(); i++) {
             Element innerElement = divElements.get(i);
             Node childNode = innerElement.childNodes().get(0);

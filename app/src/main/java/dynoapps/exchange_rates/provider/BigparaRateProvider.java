@@ -2,7 +2,7 @@ package dynoapps.exchange_rates.provider;
 
 import java.util.List;
 
-import dynoapps.exchange_rates.model.BuySellRate;
+import dynoapps.exchange_rates.model.BigparaRate;
 import dynoapps.exchange_rates.network.Api;
 import dynoapps.exchange_rates.network.BigparaService;
 import retrofit2.Call;
@@ -12,11 +12,11 @@ import retrofit2.Response;
  * Created by erdemmac on 25/11/2016.
  */
 
-public class BigparaRateProvider extends BasePoolingDataProvider<List<BuySellRate>> implements Runnable {
+public class BigparaRateProvider extends BasePoolingDataProvider<List<BigparaRate>> implements Runnable {
 
-    private Call<List<BuySellRate>> lastCall;
+    private Call<List<BigparaRate>> lastCall;
 
-    public BigparaRateProvider(SourceCallback<List<BuySellRate>> callback) {
+    public BigparaRateProvider(SourceCallback<List<BigparaRate>> callback) {
         super(callback);
     }
 
@@ -30,12 +30,12 @@ public class BigparaRateProvider extends BasePoolingDataProvider<List<BuySellRat
     public void run() {
         super.run();
         final BigparaService bigparaService = Api.getBigparaApi().create(BigparaService.class);
-        Call<List<BuySellRate>> call = bigparaService.rates();
-        call.enqueue(new retrofit2.Callback<List<BuySellRate>>() {
+        Call<List<BigparaRate>> call = bigparaService.rates();
+        call.enqueue(new retrofit2.Callback<List<BigparaRate>>() {
             @Override
-            public void onResponse(Call<List<BuySellRate>> call, Response<List<BuySellRate>> response) {
+            public void onResponse(Call<List<BigparaRate>> call, Response<List<BigparaRate>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    List<BuySellRate> rates = response.body();
+                    List<BigparaRate> rates = response.body();
                     notifyValue(rates);
                     fetchAgain(false);
                 } else {
@@ -45,7 +45,7 @@ public class BigparaRateProvider extends BasePoolingDataProvider<List<BuySellRat
             }
 
             @Override
-            public void onFailure(Call<List<BuySellRate>> call, Throwable t) {
+            public void onFailure(Call<List<BigparaRate>> call, Throwable t) {
                 notifyError();
                 fetchAgain(true);
             }

@@ -10,6 +10,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import dynoapps.exchange_rates.model.BigparaRate;
 import dynoapps.exchange_rates.model.BuySellRate;
 import dynoapps.exchange_rates.model.BaseRate;
 import okhttp3.ResponseBody;
@@ -55,7 +56,7 @@ public class BigparaConverter implements Converter<ResponseBody, List<BaseRate>>
         String val_sell = elements.get(1).select(".value").text();
         String val_buy = elements.get(2).select(".value").text();
 
-        BuySellRate buySellRate = new BuySellRate();
+        BuySellRate buySellRate = new BigparaRate();
         buySellRate.value_sell =val_sell;
         buySellRate.value_buy = val_buy;
         buySellRate.setRealValues();

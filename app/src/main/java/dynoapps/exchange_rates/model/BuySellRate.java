@@ -4,7 +4,7 @@ package dynoapps.exchange_rates.model;
  * Created by erdemmac on 24/11/2016.
  */
 
-public class BuySellRate extends BaseRate {
+public abstract class BuySellRate extends BaseRate {
     public Float value_sell_real, value_buy_real;
     public String value_sell, value_buy;
 
