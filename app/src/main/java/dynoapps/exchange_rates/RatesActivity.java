@@ -290,7 +290,7 @@ public class RatesActivity extends AppCompatActivity {
         // content (user-interface)
         @Override
         public void refreshContent(Entry e, Highlight highlight) {
-            tvMarker.setText("" + e.getY()); // set the entry-value as the display text
+            tvMarker.setText(e.getY() + " TL"); // set the entry-value as the display text
         }
 
     }

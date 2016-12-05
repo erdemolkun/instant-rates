@@ -1,4 +1,4 @@
-package dynoapps.exchange_rates.service;
+package dynoapps.exchange_rates.network;
 
 import java.util.concurrent.TimeUnit;
 

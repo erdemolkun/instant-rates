@@ -3,8 +3,8 @@ package dynoapps.exchange_rates.provider;
 import java.util.List;
 
 import dynoapps.exchange_rates.model.YorumlarRate;
-import dynoapps.exchange_rates.service.Api;
-import dynoapps.exchange_rates.service.YorumlarService;
+import dynoapps.exchange_rates.network.Api;
+import dynoapps.exchange_rates.network.YorumlarService;
 import retrofit2.Call;
 import retrofit2.Response;
 
