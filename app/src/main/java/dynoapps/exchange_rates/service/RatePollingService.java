@@ -2,6 +2,7 @@ package dynoapps.exchange_rates.service;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
@@ -38,10 +39,12 @@ import dynoapps.exchange_rates.provider.YorumlarRateProvider;
 public class RatePollingService extends Service {
     ArrayList<BasePoolingDataProvider> providers = new ArrayList<>();
 
+    private final IBinder mBinder = new SimpleBinder();
+
     @Nullable
     @Override
-    public IBinder onBind(Intent intent) {
-        return null;
+    public IBinder onBind(Intent arg0) {
+        return mBinder;
     }
 
     @Override
@@ -133,5 +136,11 @@ public class RatePollingService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         return START_NOT_STICKY;
+    }
+
+    public class SimpleBinder extends Binder {
+        public RatePollingService getService() {
+            return RatePollingService.this;
+        }
     }
 }

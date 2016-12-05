@@ -2,11 +2,14 @@ package dynoapps.exchange_rates;
 
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -78,6 +81,18 @@ public class RatesActivity extends AppCompatActivity {
     SimpleDateFormat hourFormatter = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
     private int white;
 
+
+    RatePollingService ratePollingService;
+    private ServiceConnection rateServiceConnection = new ServiceConnection() {
+        public void onServiceConnected(ComponentName className, IBinder binder) {
+            ratePollingService = ((RatePollingService.SimpleBinder) binder).getService();
+        }
+
+        public void onServiceDisconnected(ComponentName className) {
+            ratePollingService = null;
+        }
+    };
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,6 +105,8 @@ public class RatesActivity extends AppCompatActivity {
         vProgress.setVisibility(View.GONE);
 
         if (!isMyServiceRunning(RatePollingService.class)) {
+            Intent intent = new Intent(this, RatePollingService.class);
+            bindService(intent, rateServiceConnection, Context.BIND_AUTO_CREATE);
             startService(new Intent(this, RatePollingService.class));
         }
     }
@@ -450,6 +467,7 @@ public class RatesActivity extends AppCompatActivity {
         EventBus.getDefault().unregister(this);
         if (isMyServiceRunning(RatePollingService.class)) {
             stopService(new Intent(this, RatePollingService.class));
+            unbindService(rateServiceConnection);
         }
         super.onDestroy();
     }
