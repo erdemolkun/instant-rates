@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                        android:id="@+id/drawer_layout"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent">
+
+    <LinearLayout
+            android:id="@+id/v_main_content"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <include layout="@layout/toolbar_actionbar"/>
+
+        <TextView
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="12dp"
+                android:layout_marginTop="12dp"
+                android:textSize="14sp"
+                android:textColor="@color/colorPrimary"
+                android:text="Menüden istediğiniz grafiği seçiniz"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+            android:background="@color/colorPrimary"
+            android:orientation="vertical"
+            android:layout_width="280dp"
+            android:layout_gravity="start"
+            android:paddingTop="32dp"
+            android:layout_height="match_parent">
+
+        <TextView
+                android:id="@+id/v_drawer_item_usd"
+                android:padding="12dp"
+                android:textSize="18sp"
+                android:minHeight="72dp"
+                android:gravity="center_vertical"
+                android:textColor="?colorAccent"
+                android:background="?selectableItemBackground"
+                android:layout_width="match_parent"
+                android:text="USD"
+                android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+
+</android.support.v4.widget.DrawerLayout>

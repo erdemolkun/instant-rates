@@ -82,7 +82,7 @@ public abstract class BasePoolingDataProvider<T> implements IPollingSource, Runn
         long current_milis = System.currentTimeMillis();
         average_duration = (int)
                 (average_duration * success_count + (current_milis - last_call_start_milis)) / (success_count + 1);
-        
+
     }
 
     private void logDurationStart() {

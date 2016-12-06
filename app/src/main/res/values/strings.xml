@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Exchange Rates</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
     <string name="dismiss">Dismiss</string>
     <string name="apply">Apply</string>
     <string name="select_sources">Select Sources</string>

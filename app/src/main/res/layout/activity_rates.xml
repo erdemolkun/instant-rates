@@ -6,6 +6,8 @@
               android:layout_height="match_parent">
 
 
+    <include layout="@layout/toolbar_actionbar"/>
+
     <dynoapps.exchange_rates.ui.ProgressWheel
             android:id="@+id/v_progress_wheel"
             android:layout_width="32dp"

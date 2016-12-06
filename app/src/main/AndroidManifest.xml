@@ -22,10 +22,16 @@
                 android:screenOrientation="portrait">
 
         </activity>
+
+        <activity
+                android:configChanges="orientation|screenSize"
+                android:name=".LandingActivity"
+                android:screenOrientation="portrait">
+
+        </activity>
         <activity
                 android:configChanges="orientation|screenSize"
                 android:name=".SplashActivity"
-                android:theme="@style/SplashTheme"
                 android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

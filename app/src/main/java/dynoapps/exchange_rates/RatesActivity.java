@@ -1,19 +1,13 @@
 package dynoapps.exchange_rates;
 
 import android.annotation.SuppressLint;
-import android.app.ActivityManager;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -45,7 +39,6 @@ import java.util.List;
 import java.util.Locale;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import dynoapps.exchange_rates.data.RateDataSource;
 import dynoapps.exchange_rates.event.DataSourceUpdate;
 import dynoapps.exchange_rates.event.IntervalUpdate;
@@ -57,7 +50,6 @@ import dynoapps.exchange_rates.model.DolarTlKurRate;
 import dynoapps.exchange_rates.model.EnparaRate;
 import dynoapps.exchange_rates.model.YapıKrediRate;
 import dynoapps.exchange_rates.model.YorumlarRate;
-import dynoapps.exchange_rates.service.RatePollingService;
 import dynoapps.exchange_rates.time.TimeIntervalManager;
 import dynoapps.exchange_rates.util.RateUtils;
 import dynoapps.exchange_rates.util.ViewUtils;
@@ -66,9 +58,9 @@ import dynoapps.exchange_rates.util.ViewUtils;
  * Created by erdemmac on 24/11/2016.
  */
 
-public class RatesActivity extends AppCompatActivity {
+public class RatesActivity extends BaseActivity {
 
-    private static final int VISIBLE_CHART_SECONDS = 120; // 2 mins
+    private static final int DEFAULT_VISIBLE_CHART_SECONDS = 120; // 2 mins
     private static final float THRESHOLD_ERROR_USD_TRY = 0.2f;
 
     @BindView(R.id.line_usd_chart)
@@ -82,33 +74,23 @@ public class RatesActivity extends AppCompatActivity {
     private int white;
 
 
-    RatePollingService ratePollingService;
-    private ServiceConnection rateServiceConnection = new ServiceConnection() {
-        public void onServiceConnected(ComponentName className, IBinder binder) {
-            ratePollingService = ((RatePollingService.SimpleBinder) binder).getService();
-        }
-
-        public void onServiceDisconnected(ComponentName className) {
-            ratePollingService = null;
-        }
-    };
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_rates);
-        ButterKnife.bind(this);
+
+        setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
+        getActionBarToolbar().setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
         white = ContextCompat.getColor(getApplicationContext(), android.R.color.white);
         startMilis = System.currentTimeMillis();
         initUsdChart();
 
         vProgress.setVisibility(View.GONE);
-
-        if (!isMyServiceRunning(RatePollingService.class)) {
-            Intent intent = new Intent(this, RatePollingService.class);
-            bindService(intent, rateServiceConnection, Context.BIND_AUTO_CREATE);
-            startService(new Intent(this, RatePollingService.class));
-        }
     }
 
     @Override
@@ -378,7 +360,7 @@ public class RatesActivity extends AppCompatActivity {
         data.addEntry(entry, chartIndex);
         data.notifyDataChanged();
         IDataSet dataSet = data.getDataSetByIndex(chartIndex);
-        if (Math.abs(dataSet.getXMin() - dataSet.getXMax()) > VISIBLE_CHART_SECONDS * 2 && dataSet.getEntryCount() > VISIBLE_CHART_SECONDS) {
+        if (Math.abs(dataSet.getXMin() - dataSet.getXMax()) > DEFAULT_VISIBLE_CHART_SECONDS * 2 && dataSet.getEntryCount() > DEFAULT_VISIBLE_CHART_SECONDS) {
             dataSet.removeEntry(0);
         }
 
@@ -386,7 +368,7 @@ public class RatesActivity extends AppCompatActivity {
         usdLineChart.notifyDataSetChanged();
 
         //mChart.setVisibleYRangeMaximum(15, AxisDependency.LEFT);
-        usdLineChart.setVisibleXRangeMaximum(VISIBLE_CHART_SECONDS);
+        usdLineChart.setVisibleXRangeMaximum(DEFAULT_VISIBLE_CHART_SECONDS);
 
         if (usdLineChart.getXAxis().getAxisMaximum() <= newX) {
             usdLineChart.moveViewToX(newX);
@@ -465,21 +447,12 @@ public class RatesActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         EventBus.getDefault().unregister(this);
-        if (isMyServiceRunning(RatePollingService.class)) {
-            stopService(new Intent(this, RatePollingService.class));
-            unbindService(rateServiceConnection);
-        }
         super.onDestroy();
     }
 
-    private boolean isMyServiceRunning(Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-        return false;
+    @Override
+    public int getLayoutId() {
+        return R.layout.activity_rates;
     }
 
 

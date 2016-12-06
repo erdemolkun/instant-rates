@@ -52,7 +52,7 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void gotoNextIntent() {
-        Intent i = new Intent(this, RatesActivity.class);
+        Intent i = new Intent(this, LandingActivity.class);
         startActivity(i);
         finish();
     }
