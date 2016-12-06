@@ -43,15 +43,15 @@ import butterknife.BindView;
 import dynoapps.exchange_rates.data.RateDataSource;
 import dynoapps.exchange_rates.data.RatesHolder;
 import dynoapps.exchange_rates.event.DataSourceUpdate;
-import dynoapps.exchange_rates.event.IntervalUpdate;
 import dynoapps.exchange_rates.event.RatesEvent;
-import dynoapps.exchange_rates.model.BigparaRate;
-import dynoapps.exchange_rates.model.BuySellRate;
-import dynoapps.exchange_rates.model.DolarTlKurRate;
-import dynoapps.exchange_rates.model.EnparaRate;
-import dynoapps.exchange_rates.model.IRate;
-import dynoapps.exchange_rates.model.YapıKrediRate;
-import dynoapps.exchange_rates.model.YorumlarRate;
+import dynoapps.exchange_rates.model.rates.BaseRate;
+import dynoapps.exchange_rates.model.rates.BigparaRate;
+import dynoapps.exchange_rates.model.rates.BuySellRate;
+import dynoapps.exchange_rates.model.rates.DolarTlKurRate;
+import dynoapps.exchange_rates.model.rates.EnparaRate;
+import dynoapps.exchange_rates.model.rates.IRate;
+import dynoapps.exchange_rates.model.rates.YapıKrediRate;
+import dynoapps.exchange_rates.model.rates.YorumlarRate;
 import dynoapps.exchange_rates.time.TimeIntervalManager;
 import dynoapps.exchange_rates.util.RateUtils;
 import dynoapps.exchange_rates.util.ViewUtils;
@@ -97,7 +97,7 @@ public class RatesActivity extends BaseActivity {
         if (RatesHolder.getInstance().getAllRates() != null) {
             HashMap mp = RatesHolder.getInstance().getAllRates();
             for (Object value : mp.values()) {
-                update((List<IRate>) value);
+                update((List<BaseRate>) value);
             }
         }
     }
@@ -110,8 +110,8 @@ public class RatesActivity extends BaseActivity {
         }
     }
 
-    private void update(List<IRate> rates) {
-        IRate rateUsd = RateUtils.getRate(rates, IRate.USD);
+    private void update(List<BaseRate> rates) {
+        BaseRate rateUsd = RateUtils.getRate(rates, IRate.USD);
         if (rateUsd != null) {
             if (rateUsd instanceof YapıKrediRate) {
                 addEntry(((YapıKrediRate) rateUsd).value_sell_real, 5);
@@ -130,7 +130,7 @@ public class RatesActivity extends BaseActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(RatesEvent ratesEvent) {
-        List<IRate> rates = ratesEvent.rates;
+        List<BaseRate> rates = ratesEvent.rates;
         update(rates);
     }
 

@@ -1,4 +1,4 @@
-package dynoapps.exchange_rates.model;
+package dynoapps.exchange_rates.model.rates;
 
 /**
  * Created by erdemmac on 06/12/2016.
@@ -12,5 +12,5 @@ public interface IRate {
     int ONS_TRY = 4;
     int EUR_USD = 5;
 
-    public int getRateType();
+    int getRateType();
 }

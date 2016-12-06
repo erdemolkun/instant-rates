@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import dynoapps.exchange_rates.model.GarantiRate;
+import dynoapps.exchange_rates.model.rates.GarantiRate;
 import retrofit2.Call;
 
 /**
@@ -84,7 +84,7 @@ public class GarantiRateProvider extends BasePoolingDataProvider<List<GarantiRat
                     GarantiRate rate = new GarantiRate();
                     rate.value = element.child(2).text();
                     rate.type = element.child(0).text();
-                    rate.rateType = rate.toRateType();
+                    rate.toRateType();
                     rate.setRealValues();
                     rates.add(rate);
                 }

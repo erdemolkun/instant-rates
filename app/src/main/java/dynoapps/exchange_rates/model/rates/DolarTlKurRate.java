@@ -1,4 +1,4 @@
-package dynoapps.exchange_rates.model;
+package dynoapps.exchange_rates.model.rates;
 
 import android.text.TextUtils;
 
@@ -10,20 +10,24 @@ public class DolarTlKurRate extends BaseRate implements IConvertable {
 
 
     @Override
-    public int toRateType() {
-        if (TextUtils.isEmpty(type)) return UNKNOWN;
+    public void toRateType() {
+        if (TextUtils.isEmpty(type)) rateType= UNKNOWN;
         int rateType = UNKNOWN;
         switch (type) {
             case "USDTRY":
-                return USD;
+                rateType = USD;
+                break;
             case "EURTRY":
-                return EUR;
+                rateType = EUR;
+                break;
             case "EURUSD":
-                return EUR_USD;
+                rateType = EUR_USD;
+                break;
             case "XAUUSD":
-                return ONS;
+                rateType = ONS;
+                break;
         }
-        return rateType;
+        this.rateType = rateType;
     }
 
     @Override

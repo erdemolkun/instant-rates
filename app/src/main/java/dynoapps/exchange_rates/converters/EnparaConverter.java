@@ -11,8 +11,8 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import dynoapps.exchange_rates.model.BaseRate;
-import dynoapps.exchange_rates.model.EnparaRate;
+import dynoapps.exchange_rates.model.rates.BaseRate;
+import dynoapps.exchange_rates.model.rates.EnparaRate;
 import okhttp3.ResponseBody;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
@@ -69,7 +69,7 @@ public class EnparaConverter implements Converter<ResponseBody, List<BaseRate>> 
             rate.value_buy = divElements.get(1).text();
             rate.value_sell = divElements.get(2).text();
         }
-        rate.rateType = rate.toRateType();
+        rate.toRateType();
         rate.setRealValues();
 
         return rate;

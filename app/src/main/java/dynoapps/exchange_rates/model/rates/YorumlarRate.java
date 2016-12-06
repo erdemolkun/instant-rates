@@ -1,4 +1,4 @@
-package dynoapps.exchange_rates.model;
+package dynoapps.exchange_rates.model.rates;
 
 import android.text.TextUtils;
 
@@ -9,21 +9,26 @@ import android.text.TextUtils;
 public class YorumlarRate extends BaseRate implements IConvertable {
 
     public String time;
+
     @Override
-    public int toRateType() {
-        if (TextUtils.isEmpty(type)) return UNKNOWN;
+    public void toRateType() {
+        if (TextUtils.isEmpty(type)) rateType = UNKNOWN;
         int rateType = UNKNOWN;
         switch (type) {
             case "dolar_guncelle":
-                return USD;
+                rateType = USD;
+                break;
             case "euro_guncelle":
-                return EUR;
+                rateType = EUR;
+                break;
             case "parite_guncelle":
-                return EUR_USD;
+                rateType = EUR_USD;
+                break;
             case "ons_guncelle":
-                return ONS;
+                rateType = ONS;
+                break;
         }
-        return rateType;
+        this.rateType = rateType;
     }
 
     @Override

@@ -9,8 +9,8 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import dynoapps.exchange_rates.model.BaseRate;
-import dynoapps.exchange_rates.model.GarantiRate;
+import dynoapps.exchange_rates.model.rates.BaseRate;
+import dynoapps.exchange_rates.model.rates.GarantiRate;
 import okhttp3.ResponseBody;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
@@ -55,7 +55,7 @@ public class GarantiConverter implements Converter<ResponseBody, List<BaseRate>>
             GarantiRate rate = new GarantiRate();
             rate.value = element.child(2).text();
             rate.type = element.child(0).text();
-            rate.rateType = rate.toRateType();
+            rate.toRateType();
             rate.setRealValues();
             rates.add(rate);
         }

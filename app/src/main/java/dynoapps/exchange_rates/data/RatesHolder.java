@@ -3,11 +3,13 @@ package dynoapps.exchange_rates.data;
 import java.util.HashMap;
 import java.util.List;
 
+import dynoapps.exchange_rates.model.rates.BaseRate;
+
 /**
  * Created by erdemmac on 05/12/2016.
  */
 
-public class RatesHolder<T> {
+public class RatesHolder<T extends BaseRate> {
 
     private static RatesHolder instance;
 

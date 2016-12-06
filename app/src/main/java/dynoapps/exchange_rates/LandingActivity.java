@@ -3,7 +3,6 @@ package dynoapps.exchange_rates;
 import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Color;
@@ -16,7 +15,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,21 +24,19 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
 import dynoapps.exchange_rates.data.RatesHolder;
-import dynoapps.exchange_rates.event.IntervalUpdate;
 import dynoapps.exchange_rates.event.RatesEvent;
-import dynoapps.exchange_rates.model.BaseRate;
-import dynoapps.exchange_rates.model.BigparaRate;
-import dynoapps.exchange_rates.model.DolarTlKurRate;
-import dynoapps.exchange_rates.model.EnparaRate;
-import dynoapps.exchange_rates.model.IRate;
-import dynoapps.exchange_rates.model.YapıKrediRate;
-import dynoapps.exchange_rates.model.YorumlarRate;
+import dynoapps.exchange_rates.model.rates.BaseRate;
+import dynoapps.exchange_rates.model.rates.BigparaRate;
+import dynoapps.exchange_rates.model.rates.DolarTlKurRate;
+import dynoapps.exchange_rates.model.rates.EnparaRate;
+import dynoapps.exchange_rates.model.rates.IRate;
+import dynoapps.exchange_rates.model.rates.YapıKrediRate;
+import dynoapps.exchange_rates.model.rates.YorumlarRate;
 import dynoapps.exchange_rates.service.RatePollingService;
 import dynoapps.exchange_rates.time.TimeIntervalManager;
 import dynoapps.exchange_rates.util.Formatter;
@@ -104,7 +100,7 @@ public class LandingActivity extends BaseActivity {
         if (RatesHolder.getInstance().getAllRates() != null) {
             HashMap mp = RatesHolder.getInstance().getAllRates();
             for (Object value : mp.values()) {
-                update((List<IRate>) value);
+                update((List<BaseRate>) value);
             }
         }
 
@@ -272,7 +268,7 @@ public class LandingActivity extends BaseActivity {
         }
     };
 
-    private void update(List<IRate> rates) {
+    private void update(List<BaseRate> rates) {
         IRate rateUsd = RateUtils.getRate(rates, IRate.USD);
         IRate rateEur = RateUtils.getRate(rates, IRate.EUR);
         IRate rateParite = RateUtils.getRate(rates, IRate.EUR_USD);
@@ -315,7 +311,7 @@ public class LandingActivity extends BaseActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(RatesEvent ratesEvent) {
-        List<IRate> rates = ratesEvent.rates;
+        List<BaseRate> rates = ratesEvent.rates;
         update(rates);
     }
 

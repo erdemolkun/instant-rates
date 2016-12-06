@@ -8,8 +8,8 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import dynoapps.exchange_rates.model.BaseRate;
-import dynoapps.exchange_rates.model.DolarTlKurRate;
+import dynoapps.exchange_rates.model.rates.BaseRate;
+import dynoapps.exchange_rates.model.rates.DolarTlKurRate;
 import okhttp3.ResponseBody;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
@@ -60,7 +60,7 @@ public class DolarTlKurAjaxConverter implements Converter<ResponseBody, List<Bas
                         DolarTlKurRate rate = new DolarTlKurRate();
                         rate.type = splits[0];
                         rate.value = splits[1];
-                        rate.rateType = rate.toRateType();
+                        rate.toRateType();
                         rate.setRealValues();
                         rates.add(rate);
                     }

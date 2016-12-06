@@ -1,4 +1,4 @@
-package dynoapps.exchange_rates.model;
+package dynoapps.exchange_rates.model.rates;
 
 /**
  * Created by erdemmac on 24/11/2016.
@@ -11,7 +11,7 @@ public abstract class BaseRate implements IConvertable, IRate {
     }
 
     public long fetchMilis;
-    public int rateType;
+    protected int rateType;
     public float realValue;
     public String type;
     public String value;

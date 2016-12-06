@@ -1,4 +1,4 @@
-package dynoapps.exchange_rates.model;
+package dynoapps.exchange_rates.model.rates;
 
 import android.text.TextUtils;
 
@@ -9,14 +9,14 @@ import android.text.TextUtils;
 public class GarantiRate extends BaseRate implements IConvertable {
 
     @Override
-    public int toRateType() {
-        if (TextUtils.isEmpty(type)) return UNKNOWN;
+    public void toRateType() {
+        if (TextUtils.isEmpty(type)) rateType = UNKNOWN;
         int rateType = UNKNOWN;
         switch (type) {
             case "USD":
-                return USD;
+                rateType = USD;
         }
-        return rateType;
+        this.rateType = rateType;
     }
 
     @Override

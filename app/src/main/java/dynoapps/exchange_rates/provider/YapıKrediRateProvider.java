@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import dynoapps.exchange_rates.model.YapıKrediRate;
+import dynoapps.exchange_rates.model.rates.YapıKrediRate;
 
 /**
  * Created by erdemmac on 25/11/2016.
@@ -60,7 +60,7 @@ public class YapıKrediRateProvider extends BasePoolingDataProvider<List<YapıKr
                             rate.value_sell = innerElements.get(2).text();
                             rate.value_buy = innerElements.get(3).text();
                             rate.type = innerElements.get(0).text();
-                            rate.rateType = rate.toRateType();
+                            rate.toRateType();
                             rate.setRealValues();
                             rates.add(rate);
                         }

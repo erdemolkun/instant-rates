@@ -2,7 +2,7 @@ package dynoapps.exchange_rates.event;
 
 import java.util.List;
 
-import dynoapps.exchange_rates.model.BaseRate;
+import dynoapps.exchange_rates.model.rates.BaseRate;
 
 /**
  * Created by erdemmac on 05/12/2016.
