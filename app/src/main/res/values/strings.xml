@@ -12,4 +12,5 @@
     <string name="clear_sure_message">Sure to refresh. All data will be cleared.</string>
     <string name="time_interval">Time Interval</string>
     <string name="select_time_interval">Select Update Interval</string>
+    <string name="placeholder_tl">%f TL</string>
 </resources>

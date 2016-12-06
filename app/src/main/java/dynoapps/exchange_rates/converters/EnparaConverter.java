@@ -73,10 +73,10 @@ public class EnparaConverter implements Converter<ResponseBody, List<BaseRate>> 
                 rate.type = childNode.toString();
             }
             if (i == 1) {
-                rate.value_sell = childNode.childNodes().get(0).toString();
+                rate.value_buy = childNode.childNodes().get(0).toString();
             }
             if (i == 2) {
-                rate.value_buy = childNode.childNodes().get(0).toString();
+                rate.value_sell = childNode.childNodes().get(0).toString();
             }
         }
         rate.rateType = rate.toRateType();

@@ -13,9 +13,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -24,9 +23,9 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import dynoapps.exchange_rates.event.RatesEvent;
 import dynoapps.exchange_rates.model.BaseRate;
+import dynoapps.exchange_rates.model.BigparaRate;
 import dynoapps.exchange_rates.model.DolarTlKurRate;
 import dynoapps.exchange_rates.model.EnparaRate;
 import dynoapps.exchange_rates.model.YapıKrediRate;
@@ -48,6 +47,27 @@ public class LandingActivity extends BaseActivity {
     @BindView(R.id.v_drawer_item_usd)
     View vDrawerItemUsd;
 
+    @BindView(R.id.v_card_enpara_sell_usd)
+    View cardEnparaSellUsd;
+
+
+    @BindView(R.id.v_card_enpara_usd_buy)
+    View cardEnparaBuyUsd;
+
+    @BindView(R.id.v_card_yorumlar_usd)
+    View cardYorumlarUsd;
+
+    @BindView(R.id.v_card_enpara_sell_eur)
+    View cardEnparaSellEur;
+
+
+    @BindView(R.id.v_card_enpara_buy_eur)
+    View cardEnparaBuyEur;
+
+    @BindView(R.id.v_card_yorumlar_eur)
+    View cardYorumlarEur;
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +81,15 @@ public class LandingActivity extends BaseActivity {
             bindService(intent, rateServiceConnection, Context.BIND_AUTO_CREATE);
             startService(new Intent(this, RatePollingService.class));
         }
+
+        ((TextView) cardEnparaSellUsd.findViewById(R.id.tv_type)).setText("Enpara Satış");
+        ((TextView) cardEnparaBuyUsd.findViewById(R.id.tv_type)).setText("Enpara Alış");
+        ((TextView) cardYorumlarUsd.findViewById(R.id.tv_type)).setText("Yorumlar");
+
+        ((TextView) cardEnparaSellEur.findViewById(R.id.tv_type)).setText("Enpara Satış");
+        ((TextView) cardEnparaBuyEur.findViewById(R.id.tv_type)).setText("Enpara Alış");
+        ((TextView) cardYorumlarEur.findViewById(R.id.tv_type)).setText("Yorumlar");
+
     }
 
     @Override
@@ -157,7 +186,6 @@ public class LandingActivity extends BaseActivity {
     }
 
 
-
     private boolean isMyServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
@@ -193,21 +221,30 @@ public class LandingActivity extends BaseActivity {
     public void onEvent(RatesEvent ratesEvent) {
         List<BaseRate> rates = ratesEvent.rates;
         BaseRate rateUsd = RateUtils.getRate(rates, BaseRate.RateTypes.USD);
+        BaseRate rateEur = RateUtils.getRate(rates, BaseRate.RateTypes.EUR);
         if (rateUsd != null) {
             if (rateUsd instanceof YapıKrediRate) {
-//                addEntry(((YapıKrediRate) rateUsd).value_sell_real, 5);
             } else if (rateUsd instanceof DolarTlKurRate) {
-//                addEntry(((DolarTlKurRate) rateUsd).realValue, 4);
             } else if (rateUsd instanceof YorumlarRate) {
-//                addEntry(((YorumlarRate) rateUsd).realValue, 0);
+                ((TextView) cardYorumlarUsd.findViewById(R.id.tv_rate_value)).
+                        setText(getString(R.string.placeholder_tl, rateUsd.realValue));
+
+                ((TextView) cardYorumlarEur.findViewById(R.id.tv_rate_value)).
+                        setText(getString(R.string.placeholder_tl, rateEur.realValue));
+
             } else if (rateUsd instanceof EnparaRate) {
-//                addEntry(((EnparaRate) rateUsd).value_sell_real, 1);
-//                addEntry(((EnparaRate) rateUsd).value_buy_real, 2);
-//            } else if (rateUsd instanceof BigparaRate) {
-//                addEntry(((BuySellRate) rateUsd).value_sell_real, 3);
+                ((TextView) cardEnparaBuyUsd.findViewById(R.id.tv_rate_value)).
+                        setText(getString(R.string.placeholder_tl, ((EnparaRate) rateUsd).value_buy_real));
+                ((TextView) cardEnparaSellUsd.findViewById(R.id.tv_rate_value)).
+                        setText(getString(R.string.placeholder_tl, ((EnparaRate) rateUsd).value_sell_real));
+
+                ((TextView) cardEnparaBuyEur.findViewById(R.id.tv_rate_value)).
+                        setText(getString(R.string.placeholder_tl, ((EnparaRate) rateEur).value_buy_real));
+                ((TextView) cardEnparaSellEur.findViewById(R.id.tv_rate_value)).
+                        setText(getString(R.string.placeholder_tl, ((EnparaRate) rateEur).value_sell_real));
+            } else if (rateUsd instanceof BigparaRate) {
             }
         }
-
     }
 
 }
