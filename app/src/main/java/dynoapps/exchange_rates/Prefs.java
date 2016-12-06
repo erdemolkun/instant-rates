@@ -16,15 +16,12 @@ public class Prefs {
         return PreferenceManager.getDefaultSharedPreferences(context);
     }
 
-    public static void saveSources(Context context, String sources) {
-        SharedPreferences preferences = getPrefs(context);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(SOURCES, sources);
-        editor.apply();
+    public static void saveSources(String sources) {
+        saveString(SOURCES, sources);
     }
 
-    public static String getSources(Context context) {
-        return getPrefs(context).getString(SOURCES, null);
+    public static String getSources() {
+        return getPrefs(App.context()).getString(SOURCES, null);
     }
 
     public static void saveInterval(Context context, long interval) {
@@ -37,4 +34,12 @@ public class Prefs {
     public static long getInterval(Context context) {
         return getPrefs(context).getLong(INTERVAL, -1);
     }
+
+    private static void saveString(String key, String value) {
+        SharedPreferences preferences = getPrefs(App.context());
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(key, value);
+        editor.apply();
+    }
+
 }

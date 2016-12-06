@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Color;
+import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -18,6 +19,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -84,6 +86,9 @@ public class LandingActivity extends BaseActivity {
     @BindView(R.id.v_card_yorumlar_parite)
     View cardYorumlarParite;
 
+    @BindView(R.id.v_landing_side_menu_hint_close)
+    ImageView ivCloseHint;
+
     private Handler mHandler;
     private static final int NAVDRAWER_LAUNCH_DELAY = 250;
     private Formatter formatter = new Formatter(4);
@@ -122,6 +127,12 @@ public class LandingActivity extends BaseActivity {
         ((TextView) cardEnparaBuyParite.findViewById(R.id.tv_type)).setText("Enpara Alış");
         ((TextView) cardYorumlarParite.findViewById(R.id.tv_type)).setText("Yorumlar");
 
+        ivCloseHint.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
 
     }
 

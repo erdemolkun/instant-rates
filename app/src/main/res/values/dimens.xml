@@ -5,4 +5,5 @@
     <dimen name="chart_height">240dp</dimen>
 
     <dimen name="keyline_2">72dp</dimen>
+    <dimen name="cards_list_name_width">36dp</dimen>
 </resources>

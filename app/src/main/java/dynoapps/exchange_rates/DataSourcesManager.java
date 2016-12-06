@@ -67,7 +67,7 @@ public class DataSourcesManager {
     }
 
     private static void updateSourceStatesFromPrefs() {
-        String sources = Prefs.getSources(App.context());
+        String sources = Prefs.getSources();
         if (!TextUtils.isEmpty(sources)) {
             String[] splits = sources.split(";");
             for (String str : splits) {

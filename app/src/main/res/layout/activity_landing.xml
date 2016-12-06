@@ -12,16 +12,37 @@
 
         <include layout="@layout/toolbar_actionbar"/>
 
-        <TextView
-                android:layout_marginStart="32dp"
-                android:layout_marginLeft="32dp"
+        <LinearLayout
+                android:id="@+id/v_landing_side_menu_hint"
+                android:layout_width="wrap_content"
+                android:orientation="horizontal"
                 android:layout_marginBottom="12dp"
                 android:layout_marginTop="12dp"
-                android:textSize="14sp"
-                android:textColor="@color/colorPrimary"
-                android:text="@string/select_graph_using_side_menu"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:gravity="center_vertical"
+                android:layout_height="wrap_content">
+
+            <TextView
+                    android:layout_marginStart="60dp"
+                    android:layout_marginLeft="60dp"
+                    android:textSize="14sp"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/colorPrimary"
+                    android:text="@string/select_graph_using_side_menu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            <ImageView
+                    android:id="@+id/v_landing_side_menu_hint_close"
+                    android:layout_margin="4dp"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:background="?selectableItemBackgroundBorderless"
+                    android:tint="@android:color/holo_red_dark"
+                    android:layout_width="wrap_content"
+                    android:src="@drawable/ic_cancel_black_24dp"
+                    android:layout_height="wrap_content"/>
+
+        </LinearLayout>
 
 
         <HorizontalScrollView
@@ -39,8 +60,9 @@
 
                 <TextView
                         android:layout_width="wrap_content"
-                        android:minWidth="32dp"
+                        android:minWidth="@dimen/cards_list_name_width"
                         android:text="$"
+                        android:gravity="center"
                         android:textSize="20sp"
                         android:layout_gravity="center_vertical"
                         android:layout_margin="8dp"
@@ -79,9 +101,10 @@
                 <TextView
                         android:layout_width="wrap_content"
                         android:text="£"
-                        android:minWidth="32dp"
+                        android:minWidth="@dimen/cards_list_name_width"
                         android:textSize="20sp"
-                        android:layout_gravity="center_vertical"
+                        android:gravity="center"
+                        android:layout_gravity="center"
                         android:layout_margin="8dp"
                         android:layout_height="wrap_content"/>
 
@@ -118,9 +141,10 @@
                 <TextView
                         android:layout_width="wrap_content"
                         android:text="£/$"
-                        android:minWidth="32dp"
+                        android:minWidth="@dimen/cards_list_name_width"
                         android:textSize="20sp"
-                        android:layout_gravity="center_vertical"
+                        android:gravity="center"
+                        android:layout_gravity="center"
                         android:layout_margin="8dp"
                         android:layout_height="wrap_content"/>
 

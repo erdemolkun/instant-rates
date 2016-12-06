@@ -142,7 +142,7 @@ public class RatesActivity extends BaseActivity {
                 sources += rateDataSource.getSourceType() + ";";
             }
         }
-        Prefs.saveSources(getApplicationContext(), sources);
+        Prefs.saveSources(sources);
     }
 
 
