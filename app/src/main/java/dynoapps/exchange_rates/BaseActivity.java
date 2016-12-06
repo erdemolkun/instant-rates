@@ -62,4 +62,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
         getActionBarToolbar().setNavigationIcon(drawable);
     }
+
+
 }

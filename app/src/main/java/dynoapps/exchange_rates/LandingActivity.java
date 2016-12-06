@@ -7,7 +7,9 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
@@ -67,10 +69,13 @@ public class LandingActivity extends BaseActivity {
     @BindView(R.id.v_card_yorumlar_eur)
     View cardYorumlarEur;
 
+    private Handler mHandler;
+    private static final int NAVDRAWER_LAUNCH_DELAY = 250;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mHandler = new Handler(Looper.getMainLooper());
         if (getActionBarToolbar() != null) {
             getActionBarToolbar().setTitle(getTitle());
         }
@@ -92,6 +97,18 @@ public class LandingActivity extends BaseActivity {
 
     }
 
+    private void doLeftMenuWork(final Runnable runnable) {
+        closeNavDrawer();
+        // launch the target Activity after a short delay, to allow the close animation to play
+        mHandler.postDelayed(runnable, NAVDRAWER_LAUNCH_DELAY);
+    }
+
+    protected void closeNavDrawer() {
+        if (mDrawerLayout != null) {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
+        }
+    }
+
     @Override
     public int getLayoutId() {
         return R.layout.activity_landing;
@@ -111,8 +128,14 @@ public class LandingActivity extends BaseActivity {
         vDrawerItemUsd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(LandingActivity.this, RatesActivity.class);
-                startActivity(i);
+                doLeftMenuWork(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent i = new Intent(LandingActivity.this, RatesActivity.class);
+                        startActivity(i);
+                    }
+                });
+
             }
         });
     }
