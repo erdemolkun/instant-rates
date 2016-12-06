@@ -269,9 +269,9 @@ public class LandingActivity extends BaseActivity {
     };
 
     private void update(List<BaseRate> rates) {
-        IRate rateUsd = RateUtils.getRate(rates, IRate.USD);
-        IRate rateEur = RateUtils.getRate(rates, IRate.EUR);
-        IRate rateParite = RateUtils.getRate(rates, IRate.EUR_USD);
+        BaseRate rateUsd = RateUtils.getRate(rates, IRate.USD);
+        BaseRate rateEur = RateUtils.getRate(rates, IRate.EUR);
+        BaseRate rateParite = RateUtils.getRate(rates, IRate.EUR_USD);
 
         if (rateUsd != null) {
             if (rateUsd instanceof YapıKrediRate) {
@@ -279,14 +279,14 @@ public class LandingActivity extends BaseActivity {
             } else if (rateUsd instanceof YorumlarRate) {
 
                 ((TextView) cardYorumlarUsd.findViewById(R.id.tv_rate_value)).
-                        setText(getString(R.string.placeholder_tl, formatter.format(((BaseRate) rateUsd).realValue)));
+                        setText(getString(R.string.placeholder_tl, formatter.format(rateUsd.realValue)));
 
                 ((TextView) cardYorumlarEur.findViewById(R.id.tv_rate_value)).
-                        setText(getString(R.string.placeholder_tl, formatter.format(((BaseRate) rateEur).realValue)));
+                        setText(getString(R.string.placeholder_tl, formatter.format(rateEur.realValue)));
 
 
                 ((TextView) cardYorumlarParite.findViewById(R.id.tv_rate_value)).
-                        setText(getString(R.string.placeholder_tl, formatter.format(((BaseRate) rateParite).realValue)));
+                        setText(getString(R.string.placeholder_tl, formatter.format(rateParite.realValue)));
 
             } else if (rateUsd instanceof EnparaRate) {
                 ((TextView) cardEnparaBuyUsd.findViewById(R.id.tv_rate_value)).
@@ -331,7 +331,6 @@ public class LandingActivity extends BaseActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
 
 
 }
