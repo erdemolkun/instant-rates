@@ -11,6 +11,7 @@ import android.preference.PreferenceManager;
 public class Prefs {
     private static final String SOURCES = "SOURCES";
     private static final String INTERVAL = "INTERVAL";
+    private static final String LANDING_HINT_STATE = "LANDING_HINT_STATE";
 
     private static SharedPreferences getPrefs(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context);
@@ -31,6 +32,14 @@ public class Prefs {
         editor.apply();
     }
 
+    public static void saveLandingHintState(boolean closed) {
+        saveBoolean(LANDING_HINT_STATE, closed);
+    }
+
+    public static boolean isLandingHintClosed() {
+        return getPrefs(App.context()).getBoolean(LANDING_HINT_STATE, false);
+    }
+
     public static long getInterval(Context context) {
         return getPrefs(context).getLong(INTERVAL, -1);
     }
@@ -39,6 +48,13 @@ public class Prefs {
         SharedPreferences preferences = getPrefs(App.context());
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(key, value);
+        editor.apply();
+    }
+
+    private static void saveBoolean(String key, boolean value) {
+        SharedPreferences preferences = getPrefs(App.context());
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean(key, value);
         editor.apply();
     }
 

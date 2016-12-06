@@ -1,12 +1,14 @@
 package dynoapps.exchange_rates;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Color;
-import android.media.Image;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -16,9 +18,11 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.transition.TransitionManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -89,6 +93,9 @@ public class LandingActivity extends BaseActivity {
     @BindView(R.id.v_landing_side_menu_hint_close)
     ImageView ivCloseHint;
 
+    @BindView(R.id.v_landing_side_menu_hint)
+    View vCloseHint;
+
     private Handler mHandler;
     private static final int NAVDRAWER_LAUNCH_DELAY = 250;
     private Formatter formatter = new Formatter(4);
@@ -127,12 +134,26 @@ public class LandingActivity extends BaseActivity {
         ((TextView) cardEnparaBuyParite.findViewById(R.id.tv_type)).setText("Enpara Alış");
         ((TextView) cardYorumlarParite.findViewById(R.id.tv_type)).setText("Yorumlar");
 
-        ivCloseHint.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
+        boolean isHintRemoved = Prefs.isLandingHintClosed();
+        vCloseHint.setVisibility(isHintRemoved ? View.GONE : View.VISIBLE);
+        if (!isHintRemoved) {
+            ivCloseHint.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(final View view) {
+                    Prefs.saveLandingHintState(true);
+                    vCloseHint.animate().alpha(0).setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                                TransitionManager.beginDelayedTransition((ViewGroup) findViewById(R.id.v_main_content));
+                            }
+                            vCloseHint.setVisibility(View.GONE);
+                        }
+                    }).setDuration(400).start();
+                }
+            });
+        }
 
     }
 

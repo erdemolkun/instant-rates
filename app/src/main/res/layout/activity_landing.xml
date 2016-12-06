@@ -16,8 +16,8 @@
                 android:id="@+id/v_landing_side_menu_hint"
                 android:layout_width="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginBottom="12dp"
-                android:layout_marginTop="12dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
                 android:gravity="center_vertical"
                 android:layout_height="wrap_content">
 
@@ -33,9 +33,7 @@
 
             <ImageView
                     android:id="@+id/v_landing_side_menu_hint_close"
-                    android:layout_margin="4dp"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
+                    android:padding="8dp"
                     android:background="?selectableItemBackgroundBorderless"
                     android:tint="@android:color/holo_red_dark"
                     android:layout_width="wrap_content"
@@ -44,16 +42,17 @@
 
         </LinearLayout>
 
-
         <HorizontalScrollView
+                android:layout_marginTop="12dp"
                 android:layout_width="match_parent"
                 android:scrollbars="none"
                 android:layout_height="wrap_content">
 
-
             <LinearLayout
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginTop="4dp"
+                    android:clipToPadding="false"
+                    android:padding="4dp"
+                    android:layout_marginBottom="4dp"
                     android:layout_width="wrap_content"
                     android:orientation="horizontal"
                     android:layout_height="wrap_content">
@@ -92,8 +91,10 @@
 
 
             <LinearLayout
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginTop="4dp"
+                    android:clipToPadding="false"
+                    android:padding="4dp"
+                    android:layout_marginBottom="4dp"
                     android:layout_width="wrap_content"
                     android:orientation="horizontal"
                     android:layout_height="wrap_content">
@@ -132,8 +133,10 @@
 
 
             <LinearLayout
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginTop="4dp"
+                    android:clipToPadding="false"
+                    android:padding="4dp"
+                    android:layout_marginBottom="4dp"
                     android:layout_width="wrap_content"
                     android:orientation="horizontal"
                     android:layout_height="wrap_content">
