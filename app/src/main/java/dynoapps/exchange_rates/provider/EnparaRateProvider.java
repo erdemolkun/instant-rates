@@ -2,7 +2,6 @@ package dynoapps.exchange_rates.provider;
 
 import java.util.List;
 
-import dynoapps.exchange_rates.model.BuySellRate;
 import dynoapps.exchange_rates.model.EnparaRate;
 import dynoapps.exchange_rates.network.Api;
 import dynoapps.exchange_rates.network.EnparaService;

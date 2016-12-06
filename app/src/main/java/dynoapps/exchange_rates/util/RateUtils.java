@@ -2,7 +2,6 @@ package dynoapps.exchange_rates.util;
 
 import java.util.List;
 
-import dynoapps.exchange_rates.model.BaseRate;
 import dynoapps.exchange_rates.model.IRate;
 
 /**

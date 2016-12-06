@@ -9,8 +9,8 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import dynoapps.exchange_rates.model.GarantiRate;
 import dynoapps.exchange_rates.model.BaseRate;
+import dynoapps.exchange_rates.model.GarantiRate;
 import okhttp3.ResponseBody;
 import retrofit2.Converter;
 import retrofit2.Retrofit;

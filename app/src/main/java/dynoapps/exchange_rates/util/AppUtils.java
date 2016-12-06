@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.text.TextUtils;
 
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
