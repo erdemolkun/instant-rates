@@ -36,6 +36,7 @@
 
                 <TextView
                         android:layout_width="wrap_content"
+                        android:minWidth="32dp"
                         android:text="$"
                         android:textSize="20sp"
                         android:layout_gravity="center_vertical"
@@ -74,6 +75,7 @@
                 <TextView
                         android:layout_width="wrap_content"
                         android:text="£"
+                        android:minWidth="32dp"
                         android:textSize="20sp"
                         android:layout_gravity="center_vertical"
                         android:layout_margin="8dp"
@@ -89,6 +91,44 @@
 
                 <include
                         android:id="@+id/v_card_yorumlar_eur"
+                        layout="@layout/layout_simple_rate_card"/>
+
+            </LinearLayout>
+
+
+        </HorizontalScrollView>
+
+        <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:scrollbars="none"
+                android:layout_marginTop="12dp"
+                android:layout_height="wrap_content">
+
+
+            <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_height="wrap_content">
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:text="£/$"
+                        android:minWidth="32dp"
+                        android:textSize="20sp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_margin="8dp"
+                        android:layout_height="wrap_content"/>
+
+                <include
+                        android:id="@+id/v_card_enpara_sell_parite"
+                        layout="@layout/layout_simple_rate_card"/>
+
+                <include
+                        android:id="@+id/v_card_enpara_buy_parite"
+                        layout="@layout/layout_simple_rate_card"/>
+
+                <include
+                        android:id="@+id/v_card_yorumlar_parite"
                         layout="@layout/layout_simple_rate_card"/>
 
             </LinearLayout>

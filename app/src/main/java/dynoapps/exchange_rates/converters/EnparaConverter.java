@@ -3,7 +3,6 @@ package dynoapps.exchange_rates.converters;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
-import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
@@ -12,7 +11,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import dynoapps.exchange_rates.model.BuySellRate;
 import dynoapps.exchange_rates.model.BaseRate;
 import dynoapps.exchange_rates.model.EnparaRate;
 import okhttp3.ResponseBody;
@@ -66,18 +64,10 @@ public class EnparaConverter implements Converter<ResponseBody, List<BaseRate>> 
     private static EnparaRate parseRate(Element element) {
         final Elements divElements = element.select("div");
         EnparaRate rate = new EnparaRate();
-        for (int i = 0; i < divElements.size(); i++) {
-            Element innerElement = divElements.get(i);
-            Node childNode = innerElement.childNodes().get(0);
-            if (i == 0) {
-                rate.type = childNode.toString();
-            }
-            if (i == 1) {
-                rate.value_buy = childNode.childNodes().get(0).toString();
-            }
-            if (i == 2) {
-                rate.value_sell = childNode.childNodes().get(0).toString();
-            }
+        if (divElements.size() > 2) {
+            rate.type = divElements.get(0).text();
+            rate.value_buy = divElements.get(1).text();
+            rate.value_sell = divElements.get(2).text();
         }
         rate.rateType = rate.toRateType();
         rate.setRealValues();

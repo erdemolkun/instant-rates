@@ -62,12 +62,20 @@ public class LandingActivity extends BaseActivity {
     @BindView(R.id.v_card_enpara_sell_eur)
     View cardEnparaSellEur;
 
-
     @BindView(R.id.v_card_enpara_buy_eur)
     View cardEnparaBuyEur;
 
     @BindView(R.id.v_card_yorumlar_eur)
     View cardYorumlarEur;
+
+    @BindView(R.id.v_card_enpara_sell_parite)
+    View cardEnparaSellParite;
+
+    @BindView(R.id.v_card_enpara_buy_parite)
+    View cardEnparaBuyParite;
+
+    @BindView(R.id.v_card_yorumlar_parite)
+    View cardYorumlarParite;
 
     private Handler mHandler;
     private static final int NAVDRAWER_LAUNCH_DELAY = 250;
@@ -94,6 +102,10 @@ public class LandingActivity extends BaseActivity {
         ((TextView) cardEnparaSellEur.findViewById(R.id.tv_type)).setText("Enpara Satış");
         ((TextView) cardEnparaBuyEur.findViewById(R.id.tv_type)).setText("Enpara Alış");
         ((TextView) cardYorumlarEur.findViewById(R.id.tv_type)).setText("Yorumlar");
+
+        ((TextView) cardEnparaSellParite.findViewById(R.id.tv_type)).setText("Enpara Satış");
+        ((TextView) cardEnparaBuyParite.findViewById(R.id.tv_type)).setText("Enpara Alış");
+        ((TextView) cardYorumlarParite.findViewById(R.id.tv_type)).setText("Yorumlar");
 
     }
 
@@ -245,6 +257,8 @@ public class LandingActivity extends BaseActivity {
         List<BaseRate> rates = ratesEvent.rates;
         BaseRate rateUsd = RateUtils.getRate(rates, BaseRate.RateTypes.USD);
         BaseRate rateEur = RateUtils.getRate(rates, BaseRate.RateTypes.EUR);
+        BaseRate rateParite = RateUtils.getRate(rates, BaseRate.RateTypes.EUR_USD);
+
         if (rateUsd != null) {
             if (rateUsd instanceof YapıKrediRate) {
             } else if (rateUsd instanceof DolarTlKurRate) {
@@ -254,6 +268,10 @@ public class LandingActivity extends BaseActivity {
 
                 ((TextView) cardYorumlarEur.findViewById(R.id.tv_rate_value)).
                         setText(getString(R.string.placeholder_tl, rateEur.realValue));
+
+
+                ((TextView) cardYorumlarParite.findViewById(R.id.tv_rate_value)).
+                        setText(getString(R.string.placeholder_tl, rateParite.realValue));
 
             } else if (rateUsd instanceof EnparaRate) {
                 ((TextView) cardEnparaBuyUsd.findViewById(R.id.tv_rate_value)).
@@ -265,6 +283,11 @@ public class LandingActivity extends BaseActivity {
                         setText(getString(R.string.placeholder_tl, ((EnparaRate) rateEur).value_buy_real));
                 ((TextView) cardEnparaSellEur.findViewById(R.id.tv_rate_value)).
                         setText(getString(R.string.placeholder_tl, ((EnparaRate) rateEur).value_sell_real));
+
+                ((TextView) cardEnparaBuyParite.findViewById(R.id.tv_rate_value)).
+                        setText(getString(R.string.placeholder_tl, ((EnparaRate) rateParite).value_buy_real));
+                ((TextView) cardEnparaSellParite.findViewById(R.id.tv_rate_value)).
+                        setText(getString(R.string.placeholder_tl, ((EnparaRate) rateParite).value_sell_real));
             } else if (rateUsd instanceof BigparaRate) {
             }
         }

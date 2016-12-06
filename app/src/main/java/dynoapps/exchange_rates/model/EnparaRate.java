@@ -9,9 +9,10 @@ public class EnparaRate extends BuySellRate {
     public int toRateType() {
         int rateType = RateTypes.UNKNOWN;
         String plain_type = type.replace("\n", "");
-        if (plain_type.equals("USD")) {
+        plain_type = plain_type.toLowerCase();
+        if (plain_type.equals("usd")) {
             rateType = RateTypes.USD;
-        } else if (plain_type.equals("EUR")) {
+        } else if (plain_type.equals("eur")) {
             rateType = RateTypes.EUR;
         } else if (plain_type.contains("altın")) {
             rateType = RateTypes.ONS_TRY;
