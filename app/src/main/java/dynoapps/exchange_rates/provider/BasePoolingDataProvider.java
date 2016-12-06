@@ -6,7 +6,6 @@ import android.os.Looper;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import dynoapps.exchange_rates.time.TimeIntervalManager;
-import dynoapps.exchange_rates.util.L;
 
 /**
  * Created by erdemmac on 25/11/2016.
@@ -83,16 +82,12 @@ public abstract class BasePoolingDataProvider<T> implements IPollingSource, Runn
         long current_milis = System.currentTimeMillis();
         average_duration = (int)
                 (average_duration * success_count + (current_milis - last_call_start_milis)) / (success_count + 1);
-        if (this instanceof EnparaRateProvider) {
-            L.d(this.getClass().getSimpleName() + "", "Current Diff : " + (current_milis - last_call_start_milis));
-            L.e(this.getClass().getSimpleName() + "", "Average Duration :" + average_duration);
-        }
+        
     }
 
     private void logDurationStart() {
         last_call_start_milis = System.currentTimeMillis();
     }
-
 
     void notifyValue(T value) {
         logDurationSuccess();
