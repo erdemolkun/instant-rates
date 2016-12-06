@@ -33,6 +33,7 @@ import dynoapps.exchange_rates.model.EnparaRate;
 import dynoapps.exchange_rates.model.YapıKrediRate;
 import dynoapps.exchange_rates.model.YorumlarRate;
 import dynoapps.exchange_rates.service.RatePollingService;
+import dynoapps.exchange_rates.util.Formatter;
 import dynoapps.exchange_rates.util.RateUtils;
 
 /**
@@ -79,6 +80,7 @@ public class LandingActivity extends BaseActivity {
 
     private Handler mHandler;
     private static final int NAVDRAWER_LAUNCH_DELAY = 250;
+    private Formatter formatter = new Formatter(4);
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -264,30 +266,30 @@ public class LandingActivity extends BaseActivity {
             } else if (rateUsd instanceof DolarTlKurRate) {
             } else if (rateUsd instanceof YorumlarRate) {
                 ((TextView) cardYorumlarUsd.findViewById(R.id.tv_rate_value)).
-                        setText(getString(R.string.placeholder_tl, rateUsd.realValue));
+                        setText(getString(R.string.placeholder_tl, formatter.format(rateUsd.realValue)));
 
                 ((TextView) cardYorumlarEur.findViewById(R.id.tv_rate_value)).
-                        setText(getString(R.string.placeholder_tl, rateEur.realValue));
+                        setText(getString(R.string.placeholder_tl, formatter.format(rateEur.realValue)));
 
 
                 ((TextView) cardYorumlarParite.findViewById(R.id.tv_rate_value)).
-                        setText(getString(R.string.placeholder_tl, rateParite.realValue));
+                        setText(getString(R.string.placeholder_tl, formatter.format(rateParite.realValue)));
 
             } else if (rateUsd instanceof EnparaRate) {
                 ((TextView) cardEnparaBuyUsd.findViewById(R.id.tv_rate_value)).
-                        setText(getString(R.string.placeholder_tl, ((EnparaRate) rateUsd).value_buy_real));
+                        setText(getString(R.string.placeholder_tl, formatter.format(((EnparaRate) rateUsd).value_buy_real)));
                 ((TextView) cardEnparaSellUsd.findViewById(R.id.tv_rate_value)).
-                        setText(getString(R.string.placeholder_tl, ((EnparaRate) rateUsd).value_sell_real));
+                        setText(getString(R.string.placeholder_tl, formatter.format(((EnparaRate) rateUsd).value_sell_real)));
 
                 ((TextView) cardEnparaBuyEur.findViewById(R.id.tv_rate_value)).
-                        setText(getString(R.string.placeholder_tl, ((EnparaRate) rateEur).value_buy_real));
+                        setText(getString(R.string.placeholder_tl, formatter.format(((EnparaRate) rateEur).value_buy_real)));
                 ((TextView) cardEnparaSellEur.findViewById(R.id.tv_rate_value)).
-                        setText(getString(R.string.placeholder_tl, ((EnparaRate) rateEur).value_sell_real));
+                        setText(getString(R.string.placeholder_tl, formatter.format(((EnparaRate) rateEur).value_sell_real)));
 
                 ((TextView) cardEnparaBuyParite.findViewById(R.id.tv_rate_value)).
-                        setText(getString(R.string.placeholder_tl, ((EnparaRate) rateParite).value_buy_real));
+                        setText(getString(R.string.placeholder_tl, formatter.format(((EnparaRate) rateParite).value_buy_real)));
                 ((TextView) cardEnparaSellParite.findViewById(R.id.tv_rate_value)).
-                        setText(getString(R.string.placeholder_tl, ((EnparaRate) rateParite).value_sell_real));
+                        setText(getString(R.string.placeholder_tl, formatter.format(((EnparaRate) rateParite).value_sell_real)));
             } else if (rateUsd instanceof BigparaRate) {
             }
         }
