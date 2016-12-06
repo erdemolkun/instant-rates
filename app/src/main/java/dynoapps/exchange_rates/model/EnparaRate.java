@@ -7,17 +7,17 @@ package dynoapps.exchange_rates.model;
 public class EnparaRate extends BuySellRate {
     @Override
     public int toRateType() {
-        int rateType = RateTypes.UNKNOWN;
+        int rateType = UNKNOWN;
         String plain_type = type.replace("\n", "");
         plain_type = plain_type.toLowerCase();
         if (plain_type.equals("usd")) {
-            rateType = RateTypes.USD;
+            rateType = USD;
         } else if (plain_type.equals("eur")) {
-            rateType = RateTypes.EUR;
+            rateType = EUR;
         } else if (plain_type.contains("altın")) {
-            rateType = RateTypes.ONS_TRY;
+            rateType = ONS_TRY;
         } else if (plain_type.contains("parite")) {
-            rateType = RateTypes.EUR_USD;
+            rateType = EUR_USD;
         }
         return rateType;
     }

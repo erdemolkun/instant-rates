@@ -15,19 +15,19 @@ public abstract class BuySellRate extends BaseRate {
 
     @Override
     public int toRateType() {
-        int rateType = RateTypes.UNKNOWN;
+        int rateType = UNKNOWN;
         String plain_type = type.replace("\n","");
         if (plain_type.equals("USD")){
-            rateType = RateTypes.USD;
+            rateType = USD;
         }
         else if (plain_type.equals("EUR")){
-            rateType = RateTypes.EUR;
+            rateType = EUR;
         }
         else if (plain_type.contains("altın")){
-            rateType = RateTypes.ONS_TRY;
+            rateType = ONS_TRY;
         }
         else if (plain_type.contains("parite")){
-            rateType = RateTypes.EUR_USD;
+            rateType = EUR_USD;
         }
         return rateType;
     }

@@ -7,7 +7,7 @@ import java.util.List;
  * Created by erdemmac on 05/12/2016.
  */
 
-public class RatesHolder {
+public class RatesHolder<T> {
 
     private static RatesHolder instance;
 
@@ -18,16 +18,20 @@ public class RatesHolder {
     }
 
 
-    private HashMap<Class, List> ratesHash;
+    private HashMap<Class, List<T>> ratesHash;
 
-    public <T> List<T> getRates(Class clazz) {
+    public List<T> getRates(Class clazz) {
         if (ratesHash != null && ratesHash.containsKey(clazz)) {
             return ratesHash.get(clazz);
         }
         return null;
     }
 
-    public void addRate(List rates, Class clazz) {
+    public HashMap<Class, List<T>> getAllRates() {
+        return ratesHash;
+    }
+
+    public void addRate(List<T> rates, Class clazz) {
         if (ratesHash == null) {
             ratesHash = new HashMap<>();
         }

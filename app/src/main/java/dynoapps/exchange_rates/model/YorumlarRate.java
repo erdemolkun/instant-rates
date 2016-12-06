@@ -11,24 +11,24 @@ public class YorumlarRate extends BaseRate implements IConvertable {
     public String time;
     @Override
     public int toRateType() {
-        if (TextUtils.isEmpty(type)) return RateTypes.UNKNOWN;
-        int rateType = RateTypes.UNKNOWN;
+        if (TextUtils.isEmpty(type)) return UNKNOWN;
+        int rateType = UNKNOWN;
         switch (type) {
             case "dolar_guncelle":
-                return RateTypes.USD;
+                return USD;
             case "euro_guncelle":
-                return RateTypes.EUR;
+                return EUR;
             case "parite_guncelle":
-                return RateTypes.EUR_USD;
+                return EUR_USD;
             case "ons_guncelle":
-                return RateTypes.ONS;
+                return ONS;
         }
         return rateType;
     }
 
     @Override
     public void setRealValues() {
-        if (rateType == RateTypes.UNKNOWN) return;
+        if (rateType == UNKNOWN) return;
         String val = value.replace("\'", "").replace("$", "").trim();
         realValue = Float.valueOf(val);
     }

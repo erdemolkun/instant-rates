@@ -3,6 +3,7 @@ package dynoapps.exchange_rates;
 import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Color;
@@ -15,6 +16,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -22,17 +26,23 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
+import dynoapps.exchange_rates.data.RatesHolder;
+import dynoapps.exchange_rates.event.IntervalUpdate;
 import dynoapps.exchange_rates.event.RatesEvent;
 import dynoapps.exchange_rates.model.BaseRate;
 import dynoapps.exchange_rates.model.BigparaRate;
 import dynoapps.exchange_rates.model.DolarTlKurRate;
 import dynoapps.exchange_rates.model.EnparaRate;
+import dynoapps.exchange_rates.model.IRate;
 import dynoapps.exchange_rates.model.YapıKrediRate;
 import dynoapps.exchange_rates.model.YorumlarRate;
 import dynoapps.exchange_rates.service.RatePollingService;
+import dynoapps.exchange_rates.time.TimeIntervalManager;
 import dynoapps.exchange_rates.util.Formatter;
 import dynoapps.exchange_rates.util.RateUtils;
 
@@ -91,6 +101,13 @@ public class LandingActivity extends BaseActivity {
         }
         setupNavDrawer();
 
+        if (RatesHolder.getInstance().getAllRates() != null) {
+            HashMap mp = RatesHolder.getInstance().getAllRates();
+            for (Object value : mp.values()) {
+                update((List<IRate>) value);
+            }
+        }
+
         if (!isMyServiceRunning(RatePollingService.class)) {
             Intent intent = new Intent(this, RatePollingService.class);
             bindService(intent, rateServiceConnection, Context.BIND_AUTO_CREATE);
@@ -108,6 +125,7 @@ public class LandingActivity extends BaseActivity {
         ((TextView) cardEnparaSellParite.findViewById(R.id.tv_type)).setText("Enpara Satış");
         ((TextView) cardEnparaBuyParite.findViewById(R.id.tv_type)).setText("Enpara Alış");
         ((TextView) cardYorumlarParite.findViewById(R.id.tv_type)).setText("Yorumlar");
+
 
     }
 
@@ -254,26 +272,25 @@ public class LandingActivity extends BaseActivity {
         }
     };
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(RatesEvent ratesEvent) {
-        List<BaseRate> rates = ratesEvent.rates;
-        BaseRate rateUsd = RateUtils.getRate(rates, BaseRate.RateTypes.USD);
-        BaseRate rateEur = RateUtils.getRate(rates, BaseRate.RateTypes.EUR);
-        BaseRate rateParite = RateUtils.getRate(rates, BaseRate.RateTypes.EUR_USD);
+    private void update(List<IRate> rates) {
+        IRate rateUsd = RateUtils.getRate(rates, IRate.USD);
+        IRate rateEur = RateUtils.getRate(rates, IRate.EUR);
+        IRate rateParite = RateUtils.getRate(rates, IRate.EUR_USD);
 
         if (rateUsd != null) {
             if (rateUsd instanceof YapıKrediRate) {
             } else if (rateUsd instanceof DolarTlKurRate) {
             } else if (rateUsd instanceof YorumlarRate) {
+                BaseRate baseRate = (BaseRate) rateUsd;
                 ((TextView) cardYorumlarUsd.findViewById(R.id.tv_rate_value)).
-                        setText(getString(R.string.placeholder_tl, formatter.format(rateUsd.realValue)));
+                        setText(getString(R.string.placeholder_tl, formatter.format(baseRate.realValue)));
 
                 ((TextView) cardYorumlarEur.findViewById(R.id.tv_rate_value)).
-                        setText(getString(R.string.placeholder_tl, formatter.format(rateEur.realValue)));
+                        setText(getString(R.string.placeholder_tl, formatter.format(baseRate.realValue)));
 
 
                 ((TextView) cardYorumlarParite.findViewById(R.id.tv_rate_value)).
-                        setText(getString(R.string.placeholder_tl, formatter.format(rateParite.realValue)));
+                        setText(getString(R.string.placeholder_tl, formatter.format(baseRate.realValue)));
 
             } else if (rateUsd instanceof EnparaRate) {
                 ((TextView) cardEnparaBuyUsd.findViewById(R.id.tv_rate_value)).
@@ -293,6 +310,65 @@ public class LandingActivity extends BaseActivity {
             } else if (rateUsd instanceof BigparaRate) {
             }
         }
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(RatesEvent ratesEvent) {
+        List<IRate> rates = ratesEvent.rates;
+        update(rates);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_landing, menu);
+        return true;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.menu_time_interval) {
+            selectInterval();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    int temp_selected_item_index = -1;
+
+    private void selectInterval() {
+
+        final ArrayList<TimeIntervalManager.TimeInterval> timeIntervals = TimeIntervalManager.getDefaultIntervals();
+        temp_selected_item_index = TimeIntervalManager.getSelectedIndex();
+        String[] time_values = new String[timeIntervals.size()];
+        for (int i = 0; i < time_values.length; i++) {
+            time_values[i] = timeIntervals.get(i).toString();
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setSingleChoiceItems(time_values, temp_selected_item_index, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                temp_selected_item_index = i;
+            }
+        });
+
+        builder.setCancelable(true);
+        builder.setTitle(R.string.select_time_interval);
+        builder.setPositiveButton(R.string.apply, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                TimeIntervalManager.setSelectedIndex(temp_selected_item_index);
+                EventBus.getDefault().post(new IntervalUpdate());
+            }
+        });
+
+        builder.setNegativeButton(R.string.dismiss, null);
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
 }

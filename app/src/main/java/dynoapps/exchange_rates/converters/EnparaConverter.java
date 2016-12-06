@@ -61,7 +61,7 @@ public class EnparaConverter implements Converter<ResponseBody, List<BaseRate>> 
         return rates;
     }
 
-    private static EnparaRate parseRate(Element element) {
+    private EnparaRate parseRate(Element element) {
         final Elements divElements = element.select("div");
         EnparaRate rate = new EnparaRate();
         if (divElements.size() > 2) {

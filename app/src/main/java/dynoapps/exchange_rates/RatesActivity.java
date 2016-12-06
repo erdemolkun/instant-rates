@@ -35,19 +35,21 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
 import butterknife.BindView;
 import dynoapps.exchange_rates.data.RateDataSource;
+import dynoapps.exchange_rates.data.RatesHolder;
 import dynoapps.exchange_rates.event.DataSourceUpdate;
 import dynoapps.exchange_rates.event.IntervalUpdate;
 import dynoapps.exchange_rates.event.RatesEvent;
-import dynoapps.exchange_rates.model.BaseRate;
 import dynoapps.exchange_rates.model.BigparaRate;
 import dynoapps.exchange_rates.model.BuySellRate;
 import dynoapps.exchange_rates.model.DolarTlKurRate;
 import dynoapps.exchange_rates.model.EnparaRate;
+import dynoapps.exchange_rates.model.IRate;
 import dynoapps.exchange_rates.model.YapıKrediRate;
 import dynoapps.exchange_rates.model.YorumlarRate;
 import dynoapps.exchange_rates.time.TimeIntervalManager;
@@ -91,6 +93,13 @@ public class RatesActivity extends BaseActivity {
         initUsdChart();
 
         vProgress.setVisibility(View.GONE);
+
+        if (RatesHolder.getInstance().getAllRates() != null) {
+            HashMap mp = RatesHolder.getInstance().getAllRates();
+            for (Object value : mp.values()) {
+                update((List<IRate>) value);
+            }
+        }
     }
 
     @Override
@@ -101,10 +110,8 @@ public class RatesActivity extends BaseActivity {
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(RatesEvent ratesEvent) {
-        List<BaseRate> rates = ratesEvent.rates;
-        BaseRate rateUsd = RateUtils.getRate(rates, BaseRate.RateTypes.USD);
+    private void update(List<IRate> rates) {
+        IRate rateUsd = RateUtils.getRate(rates, IRate.USD);
         if (rateUsd != null) {
             if (rateUsd instanceof YapıKrediRate) {
                 addEntry(((YapıKrediRate) rateUsd).value_sell_real, 5);
@@ -119,7 +126,12 @@ public class RatesActivity extends BaseActivity {
                 addEntry(((BuySellRate) rateUsd).value_sell_real, 3);
             }
         }
+    }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(RatesEvent ratesEvent) {
+        List<IRate> rates = ratesEvent.rates;
+        update(rates);
     }
 
     private void saveSources(List<RateDataSource> rateDataSources) {
