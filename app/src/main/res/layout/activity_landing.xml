@@ -13,12 +13,13 @@
         <include layout="@layout/toolbar_actionbar"/>
 
         <TextView
-                android:layout_gravity="center_horizontal"
+                android:layout_marginStart="32dp"
+                android:layout_marginLeft="32dp"
                 android:layout_marginBottom="12dp"
                 android:layout_marginTop="12dp"
                 android:textSize="14sp"
                 android:textColor="@color/colorPrimary"
-                android:text="Menüden istediğiniz grafiği seçiniz"
+                android:text="@string/select_graph_using_side_menu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
@@ -30,6 +31,8 @@
 
 
             <LinearLayout
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
                     android:layout_width="wrap_content"
                     android:orientation="horizontal"
                     android:layout_height="wrap_content">
@@ -63,11 +66,12 @@
         <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:scrollbars="none"
-                android:layout_marginTop="12dp"
                 android:layout_height="wrap_content">
 
 
             <LinearLayout
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
                     android:layout_width="wrap_content"
                     android:orientation="horizontal"
                     android:layout_height="wrap_content">
@@ -101,11 +105,12 @@
         <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:scrollbars="none"
-                android:layout_marginTop="12dp"
                 android:layout_height="wrap_content">
 
 
             <LinearLayout
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
                     android:layout_width="wrap_content"
                     android:orientation="horizontal"
                     android:layout_height="wrap_content">

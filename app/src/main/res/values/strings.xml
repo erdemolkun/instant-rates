@@ -13,4 +13,5 @@
     <string name="time_interval">Time Interval</string>
     <string name="select_time_interval">Select Update Interval</string>
     <string name="placeholder_tl" translatable="false">%s TL</string>
+    <string name="select_graph_using_side_menu">Select the graph using side menu</string>
 </resources>
