@@ -73,7 +73,12 @@ public class TimeIntervalManager {
         return -1;
     }
 
+    private static final int DEFAULT_INTERVAL_INDEX = 2;
+
     public static int getSelectedIndex() {
+        if (selected_interval_index < 0) {
+            return DEFAULT_INTERVAL_INDEX;
+        }
         return selected_interval_index;
     }
 
@@ -90,7 +95,7 @@ public class TimeIntervalManager {
     public static long getIntervalInMiliseconds() {
         if (selected_interval_index < 0) {
             if (prefInterval < 0) {
-                return getDefaultIntervals().get(0).to(TimeUnit.MILLISECONDS);
+                return getDefaultIntervals().get(DEFAULT_INTERVAL_INDEX).to(TimeUnit.MILLISECONDS);
             } else {
                 return prefInterval;
             }
