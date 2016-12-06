@@ -147,7 +147,7 @@
     <LinearLayout
             android:background="@color/colorPrimary"
             android:orientation="vertical"
-            android:layout_width="280dp"
+            android:layout_width="@dimen/nav_drawer_width"
             android:layout_gravity="start"
             android:paddingTop="32dp"
             android:layout_height="match_parent">
