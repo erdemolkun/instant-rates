@@ -23,12 +23,12 @@ public class DataSourcesManager {
     private static ArrayList<BasePoolingDataProvider> providers;
 
     public static void init() {
-        if (rateDataSources.size() > 0) return; // Already initalized
+        if (rateDataSources.size() > 0) return; // Already initialized
         initDataSourceSelections();
     }
 
     public static void updateProviders(ArrayList<BasePoolingDataProvider> providers) {
-        
+
         DataSourcesManager.providers = providers;
         for (RateDataSource rateDataSource : rateDataSources) {
             switch (rateDataSource.getSourceType()) {
@@ -51,11 +51,22 @@ public class DataSourcesManager {
         }
     }
 
+    public static String getSourceName(int type) {
+        for (RateDataSource dataSource : rateDataSources) {
+            if (type == dataSource.getSourceType()) {
+                return dataSource.getName();
+            }
+        }
+        return "";
+    }
+
     public static ArrayList<RateDataSource> getRateDataSources() {
         return rateDataSources;
     }
 
     private static void initDataSourceSelections() {
+
+        if (rateDataSources!=null && rateDataSources.size()>0)return;
 
         rateDataSources.add(new RateDataSource("Yorumlar", RateDataSource.Type.YORUMLAR));
         rateDataSources.add(new RateDataSource("Enpara", RateDataSource.Type.ENPARA));

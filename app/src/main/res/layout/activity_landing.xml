@@ -49,6 +49,7 @@
                 android:layout_height="wrap_content">
 
             <LinearLayout
+                    android:id="@+id/v_card_holder_usd"
                     android:layout_marginTop="4dp"
                     android:clipToPadding="false"
                     android:padding="4dp"
@@ -91,6 +92,7 @@
 
 
             <LinearLayout
+                    android:id="@+id/v_card_holder_eur"
                     android:layout_marginTop="4dp"
                     android:clipToPadding="false"
                     android:padding="4dp"
@@ -133,6 +135,7 @@
 
 
             <LinearLayout
+                    android:id="@+id/v_card_holder_parity"
                     android:layout_marginTop="4dp"
                     android:clipToPadding="false"
                     android:padding="4dp"

@@ -55,14 +55,14 @@ public class RatePollingService extends Service {
         providers.add(new YorumlarRateProvider(new ProviderSourceCallbackAdapter<List<YorumlarRate>>() {
             @Override
             public void onResult(List<YorumlarRate> rates) {
-                RatesHolder.getInstance().addRate(rates, YorumlarRate.class);
+                RatesHolder.getInstance().addRate(rates, RateDataSource.Type.YORUMLAR);
                 EventBus.getDefault().post(new RatesEvent<>(rates));
             }
         }));
         providers.add(new EnparaRateProvider(new ProviderSourceCallbackAdapter<List<EnparaRate>>() {
             @Override
             public void onResult(List<EnparaRate> rates) {
-                RatesHolder.getInstance().addRate(rates, EnparaRate.class);
+                RatesHolder.getInstance().addRate(rates, RateDataSource.Type.ENPARA);
                 EventBus.getDefault().post(new RatesEvent<>(rates));
             }
         }));
@@ -71,7 +71,7 @@ public class RatePollingService extends Service {
                 new BigparaRateProvider(new ProviderSourceCallbackAdapter<List<BigparaRate>>() {
                     @Override
                     public void onResult(List<BigparaRate> rates) {
-                        RatesHolder.getInstance().addRate(rates, BigparaRate.class);
+                        RatesHolder.getInstance().addRate(rates, RateDataSource.Type.BIGPARA);
                         EventBus.getDefault().post(new RatesEvent<>(rates));
                     }
                 }));
@@ -79,7 +79,7 @@ public class RatePollingService extends Service {
         providers.add(new DolarTlKurRateProvider(new ProviderSourceCallbackAdapter<List<DolarTlKurRate>>() {
             @Override
             public void onResult(List<DolarTlKurRate> rates) {
-                RatesHolder.getInstance().addRate(rates, DolarTlKurRate.class);
+                RatesHolder.getInstance().addRate(rates, RateDataSource.Type.TLKUR);
                 EventBus.getDefault().post(new RatesEvent<>(rates));
             }
         }));
@@ -88,7 +88,7 @@ public class RatePollingService extends Service {
         providers.add(new YapıKrediRateProvider(new ProviderSourceCallbackAdapter<List<YapıKrediRate>>() {
             @Override
             public void onResult(List<YapıKrediRate> rates) {
-                RatesHolder.getInstance().addRate(rates, YapıKrediRate.class);
+                RatesHolder.getInstance().addRate(rates, RateDataSource.Type.YAPIKREDI);
                 EventBus.getDefault().post(new RatesEvent<>(rates));
             }
         }));

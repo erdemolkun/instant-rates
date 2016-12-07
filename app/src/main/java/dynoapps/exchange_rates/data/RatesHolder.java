@@ -20,7 +20,7 @@ public class RatesHolder<T extends BaseRate> {
     }
 
 
-    private HashMap<Class, List<T>> ratesHash;
+    private HashMap<Integer, List<T>> ratesHash;
 
     public List<T> getRates(Class clazz) {
         if (ratesHash != null && ratesHash.containsKey(clazz)) {
@@ -29,14 +29,14 @@ public class RatesHolder<T extends BaseRate> {
         return null;
     }
 
-    public HashMap<Class, List<T>> getAllRates() {
+    public HashMap<Integer, List<T>> getAllRates() {
         return ratesHash;
     }
 
-    public void addRate(List<T> rates, Class clazz) {
+    public void addRate(List<T> rates, int type) {
         if (ratesHash == null) {
             ratesHash = new HashMap<>();
         }
-        ratesHash.put(clazz, rates);
+        ratesHash.put(type, rates);
     }
 }

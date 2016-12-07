@@ -30,10 +30,12 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
+import dynoapps.exchange_rates.data.RateDataSource;
 import dynoapps.exchange_rates.data.RatesHolder;
 import dynoapps.exchange_rates.event.RatesEvent;
 import dynoapps.exchange_rates.model.rates.BaseRate;
@@ -100,6 +102,83 @@ public class LandingActivity extends BaseActivity {
     private static final int NAVDRAWER_LAUNCH_DELAY = 250;
     private Formatter formatter = new Formatter(4);
 
+    interface ValueType {
+        int BUY = 1;
+        int SELL = 2;
+        int AVG = 3;
+    }
+
+    List<CardViewItemParent> parentItems = new ArrayList<>();
+
+    static class CardViewItemParent {
+        View me;
+        /**
+         * Refers to {@link IRate#getRateType()}
+         **/
+        int type;
+
+        List<CardViewItem> items = new ArrayList<>();
+
+    }
+
+    static class CardViewItem {
+
+        CardViewItem(View card, int source_type, int valueType) {
+            this.card = card;
+            this.source_type = source_type;
+            this.valueType = valueType;
+        }
+
+        View card;
+
+        int valueType;
+
+        /**
+         * Refers to {@link RateDataSource#getSourceType()}
+         */
+        int source_type;
+
+
+    }
+
+    private void setUpDataSourceCards() {
+        if (parentItems == null) parentItems = new ArrayList<>();
+
+        //#
+        CardViewItemParent parentUsd = new CardViewItemParent();
+        parentUsd.me = findViewById(R.id.v_card_holder_usd);
+        parentUsd.type = IRate.USD;
+
+        parentUsd.items.add(new CardViewItem(cardEnparaSellUsd, RateDataSource.Type.ENPARA, ValueType.SELL));
+        parentUsd.items.add(new CardViewItem(cardEnparaBuyUsd, RateDataSource.Type.ENPARA, ValueType.BUY));
+        parentUsd.items.add(new CardViewItem(cardYorumlarUsd, RateDataSource.Type.YORUMLAR, ValueType.AVG));
+
+        parentItems.add(parentUsd);
+
+        //#
+        CardViewItemParent parentEur = new CardViewItemParent();
+        parentEur.type = IRate.EUR;
+        parentEur.me = findViewById(R.id.v_card_holder_eur);
+
+        parentEur.items.add(new CardViewItem(cardEnparaSellEur, RateDataSource.Type.ENPARA, ValueType.SELL));
+        parentEur.items.add(new CardViewItem(cardEnparaBuyEur, RateDataSource.Type.ENPARA, ValueType.BUY));
+        parentEur.items.add(new CardViewItem(cardYorumlarEur, RateDataSource.Type.YORUMLAR, ValueType.AVG));
+
+        parentItems.add(parentEur);
+
+        //#
+        CardViewItemParent parentParity = new CardViewItemParent();
+        parentParity.type = IRate.EUR_USD;
+        parentParity.me = findViewById(R.id.v_card_holder_parity);
+
+        parentParity.items.add(new CardViewItem(cardEnparaSellParite, RateDataSource.Type.ENPARA, ValueType.SELL));
+        parentParity.items.add(new CardViewItem(cardEnparaBuyParite, RateDataSource.Type.ENPARA, ValueType.BUY));
+        parentParity.items.add(new CardViewItem(cardYorumlarParite, RateDataSource.Type.YORUMLAR, ValueType.AVG));
+
+        parentItems.add(parentParity);
+
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,6 +187,8 @@ public class LandingActivity extends BaseActivity {
             getActionBarToolbar().setTitle(getTitle());
         }
         setupNavDrawer();
+        DataSourcesManager.init();
+        setUpDataSourceCards();
 
         if (RatesHolder.getInstance().getAllRates() != null) {
             HashMap mp = RatesHolder.getInstance().getAllRates();
@@ -121,18 +202,28 @@ public class LandingActivity extends BaseActivity {
             bindService(intent, rateServiceConnection, Context.BIND_AUTO_CREATE);
             startService(new Intent(this, RatePollingService.class));
         }
-
-        ((TextView) cardEnparaSellUsd.findViewById(R.id.tv_type)).setText("Enpara Satış");
-        ((TextView) cardEnparaBuyUsd.findViewById(R.id.tv_type)).setText("Enpara Alış");
-        ((TextView) cardYorumlarUsd.findViewById(R.id.tv_type)).setText("Yorumlar");
-
-        ((TextView) cardEnparaSellEur.findViewById(R.id.tv_type)).setText("Enpara Satış");
-        ((TextView) cardEnparaBuyEur.findViewById(R.id.tv_type)).setText("Enpara Alış");
-        ((TextView) cardYorumlarEur.findViewById(R.id.tv_type)).setText("Yorumlar");
-
-        ((TextView) cardEnparaSellParite.findViewById(R.id.tv_type)).setText("Enpara Satış");
-        ((TextView) cardEnparaBuyParite.findViewById(R.id.tv_type)).setText("Enpara Alış");
-        ((TextView) cardYorumlarParite.findViewById(R.id.tv_type)).setText("Yorumlar");
+        for (CardViewItemParent parent : parentItems) {
+            for (CardViewItem item : parent.items) {
+                String postFix = "";
+                if (item.valueType == ValueType.SELL) {
+                    postFix = " Satış";
+                } else if (item.valueType == ValueType.BUY) {
+                    postFix = " Alış";
+                }
+                ((TextView) item.card.findViewById(R.id.tv_type)).setText(DataSourcesManager.getSourceName(item.source_type) + postFix);
+            }
+        }
+//        ((TextView) cardEnparaSellUsd.findViewById(R.id.tv_type)).setText("Enpara Satış");
+//        ((TextView) cardEnparaBuyUsd.findViewById(R.id.tv_type)).setText("Enpara Alış");
+//        ((TextView) cardYorumlarUsd.findViewById(R.id.tv_type)).setText("Yorumlar");
+//
+//        ((TextView) cardEnparaSellEur.findViewById(R.id.tv_type)).setText("Enpara Satış");
+//        ((TextView) cardEnparaBuyEur.findViewById(R.id.tv_type)).setText("Enpara Alış");
+//        ((TextView) cardYorumlarEur.findViewById(R.id.tv_type)).setText("Yorumlar");
+//
+//        ((TextView) cardEnparaSellParite.findViewById(R.id.tv_type)).setText("Enpara Satış");
+//        ((TextView) cardEnparaBuyParite.findViewById(R.id.tv_type)).setText("Enpara Alış");
+//        ((TextView) cardYorumlarParite.findViewById(R.id.tv_type)).setText("Yorumlar");
 
         boolean isHintRemoved = Prefs.isLandingHintClosed();
         vCloseHint.setVisibility(isHintRemoved ? View.GONE : View.VISIBLE);
@@ -281,7 +372,9 @@ public class LandingActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        EventBus.getDefault().unregister(this);
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
         if (isMyServiceRunning(RatePollingService.class)) {
             stopService(new Intent(this, RatePollingService.class));
             unbindService(rateServiceConnection);
