@@ -415,7 +415,9 @@ public class LandingActivity extends BaseActivity {
         }
         if (isMyServiceRunning(RatePollingService.class)) {
             stopService(new Intent(this, RatePollingService.class));
-            unbindService(rateServiceConnection);
+            if (ratePollingService != null) {
+                unbindService(rateServiceConnection);
+            }
         }
         super.onDestroy();
     }
@@ -436,7 +438,7 @@ public class LandingActivity extends BaseActivity {
             for (CardViewItem item : parent.items) {
                 if (item.source_type == source_type) {
                     BaseRate baseRate = RateUtils.getRate(rates, parent.type);
-                    if (baseRate!=null) {
+                    if (baseRate != null) {
                         String val = "";
                         if (baseRate instanceof BuySellRate) {
                             if (item.valueType == ValueType.SELL) {
