@@ -213,17 +213,6 @@ public class LandingActivity extends BaseActivity {
                 ((TextView) item.card.findViewById(R.id.tv_type)).setText(DataSourcesManager.getSourceName(item.source_type) + postFix);
             }
         }
-//        ((TextView) cardEnparaSellUsd.findViewById(R.id.tv_type)).setText("Enpara Satış");
-//        ((TextView) cardEnparaBuyUsd.findViewById(R.id.tv_type)).setText("Enpara Alış");
-//        ((TextView) cardYorumlarUsd.findViewById(R.id.tv_type)).setText("Yorumlar");
-//
-//        ((TextView) cardEnparaSellEur.findViewById(R.id.tv_type)).setText("Enpara Satış");
-//        ((TextView) cardEnparaBuyEur.findViewById(R.id.tv_type)).setText("Enpara Alış");
-//        ((TextView) cardYorumlarEur.findViewById(R.id.tv_type)).setText("Yorumlar");
-//
-//        ((TextView) cardEnparaSellParite.findViewById(R.id.tv_type)).setText("Enpara Satış");
-//        ((TextView) cardEnparaBuyParite.findViewById(R.id.tv_type)).setText("Enpara Alış");
-//        ((TextView) cardYorumlarParite.findViewById(R.id.tv_type)).setText("Yorumlar");
 
         boolean isHintRemoved = Prefs.isLandingHintClosed();
         vCloseHint.setVisibility(isHintRemoved ? View.GONE : View.VISIBLE);
