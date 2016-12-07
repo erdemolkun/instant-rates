@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Döviz Kurları</string>
+    <string name="app_name">Anlık Kurlar</string>
     <string name="open">Aç</string>
     <string name="close">Kapat</string>
     <string name="dismiss">Kapat</string>

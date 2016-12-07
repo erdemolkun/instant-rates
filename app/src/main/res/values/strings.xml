@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Exchange Rates</string>
+    <string name="app_name">Instant Currencies</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
     <string name="dismiss">Dismiss</string>
