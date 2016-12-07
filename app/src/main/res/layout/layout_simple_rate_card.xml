@@ -9,7 +9,7 @@
         tools:showIn="@layout/activity_landing"
         android:layout_gravity="center_horizontal"
         app:cardElevation="4dp"
-        android:layout_margin="8dp"
+        android:layout_margin="6dp"
         android:layout_height="wrap_content">
 
     <LinearLayout
@@ -17,7 +17,7 @@
             android:orientation="vertical"
             android:minHeight="84dp"
             android:padding="8dp"
-            android:minWidth="112dp"
+            android:minWidth="96dp"
             android:gravity="center"
             android:layout_height="wrap_content">
 
@@ -31,6 +31,8 @@
         <TextView
                 android:id="@+id/tv_rate_value"
                 tools:text="3,45 TL"
+                android:textSize="15sp"
+                android:textStyle="bold"
                 android:textColor="@color/colorAccent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
