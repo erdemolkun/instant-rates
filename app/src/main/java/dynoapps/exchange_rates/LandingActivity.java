@@ -20,6 +20,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.transition.TransitionManager;
 import android.util.SparseArray;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -107,15 +108,34 @@ public class LandingActivity extends BaseActivity implements DataSourcesManager.
             boolean isEnabled = dataSource.isEnabled();
             for (CardViewItemParent parent : parentItems) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    TransitionManager.beginDelayedTransition((ViewGroup) parent.me);
+                    TransitionManager.beginDelayedTransition(parent.me);
                 }
+                boolean foundCard = false;
                 for (CardViewItem item : parent.items) {
                     if (item.source_type == dataSource.getSourceType()) {
                         item.card.setVisibility(isEnabled ? View.VISIBLE : View.GONE);
+                        foundCard = true;
+                    }
+                }
+                if (!foundCard && isEnabled) {
+                    if (dataSource.getSourceType() == RateDataSource.Type.TLKUR) {
+                        addCardToParent(parent, ValueType.AVG, dataSource.getSourceType());
+                    }
+                    if (dataSource.getSourceType() == RateDataSource.Type.BIGPARA || dataSource.getSourceType() == RateDataSource.Type.YAPIKREDI) {
+                        addCardToParent(parent, ValueType.SELL, dataSource.getSourceType());
+                        addCardToParent(parent, ValueType.BUY, dataSource.getSourceType());
                     }
                 }
             }
         }
+    }
+
+    private void addCardToParent(CardViewItemParent parent, int valueType, int sourceType) {
+        LayoutInflater.from(this).inflate(R.layout.layout_simple_rate_card, parent.me, true);
+        View v = parent.me.getChildAt(parent.me.getChildCount() - 1);
+        CardViewItem item = new CardViewItem(v, sourceType, valueType);
+        ((TextView) v.findViewById(R.id.tv_type)).setText(DataSourcesManager.getSourceName(sourceType));
+        parent.items.add(item);
     }
 
     interface ValueType {
@@ -127,7 +147,7 @@ public class LandingActivity extends BaseActivity implements DataSourcesManager.
     List<CardViewItemParent> parentItems = new ArrayList<>();
 
     static class CardViewItemParent {
-        View me;
+        ViewGroup me;
         /**
          * Refers to {@link IRate#getRateType()}
          **/
@@ -170,7 +190,7 @@ public class LandingActivity extends BaseActivity implements DataSourcesManager.
 
         //#
         CardViewItemParent parentUsd = new CardViewItemParent();
-        parentUsd.me = findViewById(R.id.v_card_holder_usd);
+        parentUsd.me = (ViewGroup) findViewById(R.id.v_card_holder_usd);
         parentUsd.type = IRate.USD;
 
         parentUsd.items.add(new CardViewItem(cardEnparaSellUsd, RateDataSource.Type.ENPARA, ValueType.SELL));
@@ -182,7 +202,7 @@ public class LandingActivity extends BaseActivity implements DataSourcesManager.
         //#
         CardViewItemParent parentEur = new CardViewItemParent();
         parentEur.type = IRate.EUR;
-        parentEur.me = findViewById(R.id.v_card_holder_eur);
+        parentEur.me = (ViewGroup) findViewById(R.id.v_card_holder_eur);
 
         parentEur.items.add(new CardViewItem(cardEnparaSellEur, RateDataSource.Type.ENPARA, ValueType.SELL));
         parentEur.items.add(new CardViewItem(cardEnparaBuyEur, RateDataSource.Type.ENPARA, ValueType.BUY));
@@ -193,7 +213,7 @@ public class LandingActivity extends BaseActivity implements DataSourcesManager.
         //#
         CardViewItemParent parentParity = new CardViewItemParent();
         parentParity.type = IRate.EUR_USD;
-        parentParity.me = findViewById(R.id.v_card_holder_parity);
+        parentParity.me = (ViewGroup) findViewById(R.id.v_card_holder_parity);
 
         parentParity.items.add(new CardViewItem(cardEnparaSellParite, RateDataSource.Type.ENPARA, ValueType.SELL));
         parentParity.items.add(new CardViewItem(cardEnparaBuyParite, RateDataSource.Type.ENPARA, ValueType.BUY));

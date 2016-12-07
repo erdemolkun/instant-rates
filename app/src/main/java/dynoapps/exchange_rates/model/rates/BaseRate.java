@@ -10,7 +10,7 @@ import dynoapps.exchange_rates.util.Formatter;
 
 public abstract class BaseRate implements IConvertable, IRate {
 
-    Formatter formatter = new Formatter(4);
+    static Formatter formatter = new Formatter(5);
 
     BaseRate() {
         fetchMilis = System.currentTimeMillis();
