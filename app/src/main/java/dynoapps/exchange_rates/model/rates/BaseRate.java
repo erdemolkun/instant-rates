@@ -22,10 +22,6 @@ public abstract class BaseRate implements IConvertable, IRate {
     public String type;
     public String value;
 
-    public boolean isValidDiffTime(BaseRate rate) {
-        return Math.abs(rate.fetchMilis - fetchMilis) < 5000;
-    }
-
     @Override
     public int getRateType() {
         return rateType;

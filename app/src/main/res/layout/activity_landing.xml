@@ -61,7 +61,7 @@
                 <TextView
                         android:layout_width="wrap_content"
                         android:minWidth="@dimen/cards_list_name_width"
-                        android:text="$"
+                        android:text="@string/dollar_sign"
                         android:gravity="center"
                         android:textSize="20sp"
                         android:layout_gravity="center_vertical"
@@ -103,7 +103,7 @@
 
                 <TextView
                         android:layout_width="wrap_content"
-                        android:text="£"
+                        android:text="@string/euro_sign"
                         android:minWidth="@dimen/cards_list_name_width"
                         android:textSize="20sp"
                         android:gravity="center"
@@ -184,7 +184,7 @@
 
         <TextView
                 android:layout_width="wrap_content"
-                android:text="Grafik Tipini Seçiniz"
+                android:text="@string/select_graph_type"
                 android:textColor="@color/white"
                 android:textSize="13sp"
                 android:padding="16dp"

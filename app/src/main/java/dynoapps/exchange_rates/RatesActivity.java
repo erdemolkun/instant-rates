@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,7 +36,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -94,10 +94,11 @@ public class RatesActivity extends BaseActivity {
 
         vProgress.setVisibility(View.GONE);
 
-        if (RatesHolder.getInstance().getAllRates() != null) {
-            HashMap mp = RatesHolder.getInstance().getAllRates();
-            for (Object value : mp.values()) {
-                update((List<BaseRate>) value);
+        SparseArray<List<BaseRate>> sparseArray = RatesHolder.getInstance().getAllRates();
+        if (sparseArray != null) {
+            for (int i = 0; i < sparseArray.size(); i++) {
+                List<BaseRate> rates = sparseArray.valueAt(i);
+                update(rates);
             }
         }
     }

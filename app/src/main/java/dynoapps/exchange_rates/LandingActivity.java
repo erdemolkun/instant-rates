@@ -19,6 +19,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.transition.TransitionManager;
+import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,9 +32,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import dynoapps.exchange_rates.data.RateDataSource;
@@ -44,7 +43,6 @@ import dynoapps.exchange_rates.model.rates.BuySellRate;
 import dynoapps.exchange_rates.model.rates.IRate;
 import dynoapps.exchange_rates.service.RatePollingService;
 import dynoapps.exchange_rates.time.TimeIntervalManager;
-import dynoapps.exchange_rates.util.Formatter;
 import dynoapps.exchange_rates.util.RateUtils;
 
 /**
@@ -97,7 +95,6 @@ public class LandingActivity extends BaseActivity {
 
     private Handler mHandler;
     private static final int NAVDRAWER_LAUNCH_DELAY = 250;
-    private Formatter formatter = new Formatter(4);
 
     interface ValueType {
         int BUY = 1;
@@ -195,13 +192,13 @@ public class LandingActivity extends BaseActivity {
         DataSourcesManager.init();
         setUpDataSourceCards();
 
-        HashMap<Integer, List<BaseRate>> mp = RatesHolder.getInstance().getAllRates();
-        if (mp != null) {
-            for (Map.Entry<Integer, List<BaseRate>> entry : mp.entrySet()) {
-                update(entry.getValue(), entry.getKey());
+        SparseArray<List<BaseRate>> sparseArray = RatesHolder.getInstance().getAllRates();
+        if (sparseArray != null) {
+            for (int i = 0; i < sparseArray.size(); i++) {
+                List<BaseRate> rates = sparseArray.valueAt(i);
+                update(rates, sparseArray.keyAt(i));
             }
         }
-
 
         if (!isMyServiceRunning(RatePollingService.class)) {
             Intent intent = new Intent(this, RatePollingService.class);

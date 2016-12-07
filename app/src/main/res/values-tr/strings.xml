@@ -15,4 +15,5 @@
     <string name="select_graph_using_side_menu">Yan menüden istediğiniz grafiği seçiniz</string>
     <string name="sell">Satış</string>
     <string name="buy">Alış</string>
+    <string name="select_graph_type">Grafik Tipini Seçiniz</string>
 </resources>

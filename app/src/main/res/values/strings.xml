@@ -16,4 +16,7 @@
     <string name="select_graph_using_side_menu">Select the graph using side menu</string>
     <string name="sell">Sell</string>
     <string name="buy">Buy</string>
+    <string name="dollar_sign" translatable="false">$</string>
+    <string name="euro_sign" translatable="false">£</string>
+    <string name="select_graph_type">Select Graph Type</string>
 </resources>

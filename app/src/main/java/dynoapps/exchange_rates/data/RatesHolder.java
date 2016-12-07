@@ -1,6 +1,7 @@
 package dynoapps.exchange_rates.data;
 
-import java.util.HashMap;
+import android.util.SparseArray;
+
 import java.util.List;
 
 import dynoapps.exchange_rates.model.rates.BaseRate;
@@ -20,23 +21,23 @@ public class RatesHolder<T extends BaseRate> {
     }
 
 
-    private HashMap<Integer, List<T>> ratesHash;
+    private SparseArray<List<T>> ratesArray;
 
-    public List<T> getRates(Integer rateType) {
-        if (ratesHash != null && ratesHash.containsKey(rateType)) {
-            return ratesHash.get(rateType);
+    public List<T> getRates(int rateType) {
+        if (ratesArray != null && ratesArray.get(rateType, null) != null) {
+            return ratesArray.get(rateType);
         }
         return null;
     }
 
-    public HashMap<Integer, List<T>> getAllRates() {
-        return ratesHash;
+    public SparseArray<List<T>> getAllRates() {
+        return ratesArray;
     }
 
     public void addRate(List<T> rates, int type) {
-        if (ratesHash == null) {
-            ratesHash = new HashMap<>();
+        if (ratesArray == null) {
+            ratesArray = new SparseArray<>();
         }
-        ratesHash.put(type, rates);
+        ratesArray.put(type, rates);
     }
 }
