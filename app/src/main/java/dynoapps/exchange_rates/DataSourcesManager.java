@@ -27,10 +27,6 @@ import dynoapps.exchange_rates.util.CollectionUtils;
 public class DataSourcesManager {
 
 
-    interface SelectionCallback {
-        void onDone();
-    }
-
     private static ArrayList<RateDataSource> rateDataSources = new ArrayList<>();
     private static ArrayList<BasePoolingDataProvider> providers;
 
@@ -95,9 +91,6 @@ public class DataSourcesManager {
                 }
                 EventBus.getDefault().post(new DataSourceUpdate());
                 saveSources(rateDataSources);
-                if (activity instanceof SelectionCallback) {
-                    ((SelectionCallback) activity).onDone();
-                }
             }
         });
 

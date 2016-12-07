@@ -38,6 +38,7 @@ import java.util.List;
 import butterknife.BindView;
 import dynoapps.exchange_rates.data.RateDataSource;
 import dynoapps.exchange_rates.data.RatesHolder;
+import dynoapps.exchange_rates.event.DataSourceUpdate;
 import dynoapps.exchange_rates.event.RatesEvent;
 import dynoapps.exchange_rates.model.rates.BaseRate;
 import dynoapps.exchange_rates.model.rates.BuySellRate;
@@ -50,7 +51,7 @@ import dynoapps.exchange_rates.util.RateUtils;
  * Created by erdemmac on 06/12/2016.
  */
 
-public class LandingActivity extends BaseActivity implements DataSourcesManager.SelectionCallback {
+public class LandingActivity extends BaseActivity {
 
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
@@ -97,10 +98,6 @@ public class LandingActivity extends BaseActivity implements DataSourcesManager.
     private Handler mHandler;
     private static final int NAVDRAWER_LAUNCH_DELAY = 250;
 
-    @Override
-    public void onDone() {
-        refreshCards();
-    }
 
     private void refreshCards() {
         ArrayList<RateDataSource> dataSources = DataSourcesManager.getRateDataSources();
@@ -439,17 +436,19 @@ public class LandingActivity extends BaseActivity implements DataSourcesManager.
             for (CardViewItem item : parent.items) {
                 if (item.source_type == source_type) {
                     BaseRate baseRate = RateUtils.getRate(rates, parent.type);
-                    String val = "";
-                    if (baseRate instanceof BuySellRate) {
-                        if (item.valueType == ValueType.SELL) {
-                            val = baseRate.getFormatted(((BuySellRate) baseRate).value_sell_real);
-                        } else if (item.valueType == ValueType.BUY) {
-                            val = baseRate.getFormatted(((BuySellRate) baseRate).value_buy_real);
+                    if (baseRate!=null) {
+                        String val = "";
+                        if (baseRate instanceof BuySellRate) {
+                            if (item.valueType == ValueType.SELL) {
+                                val = baseRate.getFormatted(((BuySellRate) baseRate).value_sell_real);
+                            } else if (item.valueType == ValueType.BUY) {
+                                val = baseRate.getFormatted(((BuySellRate) baseRate).value_buy_real);
+                            }
+                        } else {
+                            val = baseRate.getFormatted(baseRate.realValue);
                         }
-                    } else {
-                        val = baseRate.getFormatted(baseRate.realValue);
+                        ((TextView) item.card.findViewById(R.id.tv_rate_value)).setText(val);
                     }
-                    ((TextView) item.card.findViewById(R.id.tv_rate_value)).setText(val);
                 }
             }
         }
@@ -460,6 +459,11 @@ public class LandingActivity extends BaseActivity implements DataSourcesManager.
     public void onEvent(RatesEvent ratesEvent) {
         List<BaseRate> rates = ratesEvent.rates;
         update(rates, ratesEvent.sourceType);
+    }
+
+    @Subscribe
+    public void onEvent(DataSourceUpdate event) {
+        refreshCards();
     }
 
     @Override
