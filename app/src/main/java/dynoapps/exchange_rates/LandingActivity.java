@@ -61,34 +61,6 @@ public class LandingActivity extends BaseActivity {
     @BindView(R.id.v_drawer_item_usd)
     View vDrawerItemUsd;
 
-    @BindView(R.id.v_card_enpara_sell_usd)
-    View cardEnparaSellUsd;
-
-
-    @BindView(R.id.v_card_enpara_usd_buy)
-    View cardEnparaBuyUsd;
-
-    @BindView(R.id.v_card_yorumlar_usd)
-    View cardYorumlarUsd;
-
-    @BindView(R.id.v_card_enpara_sell_eur)
-    View cardEnparaSellEur;
-
-    @BindView(R.id.v_card_enpara_buy_eur)
-    View cardEnparaBuyEur;
-
-    @BindView(R.id.v_card_yorumlar_eur)
-    View cardYorumlarEur;
-
-    @BindView(R.id.v_card_enpara_sell_parite)
-    View cardEnparaSellParite;
-
-    @BindView(R.id.v_card_enpara_buy_parite)
-    View cardEnparaBuyParite;
-
-    @BindView(R.id.v_card_yorumlar_parite)
-    View cardYorumlarParite;
-
     @BindView(R.id.v_landing_side_menu_hint_close)
     ImageView ivCloseHint;
 
@@ -115,10 +87,13 @@ public class LandingActivity extends BaseActivity {
                     }
                 }
                 if (!foundCard && isEnabled) {
-                    if (dataSource.getSourceType() == RateDataSource.Type.TLKUR) {
+                    // todo associate ValueTypes with data source type.
+                    if (dataSource.getSourceType() == RateDataSource.Type.TLKUR ||
+                            dataSource.getSourceType() == RateDataSource.Type.YORUMLAR) {
                         addCardToParent(parent, ValueType.AVG, dataSource.getSourceType());
-                    }
-                    if (dataSource.getSourceType() == RateDataSource.Type.BIGPARA || dataSource.getSourceType() == RateDataSource.Type.YAPIKREDI) {
+                    } else if (dataSource.getSourceType() == RateDataSource.Type.BIGPARA ||
+                            dataSource.getSourceType() == RateDataSource.Type.YAPIKREDI ||
+                            dataSource.getSourceType() == RateDataSource.Type.ENPARA) {
                         addCardToParent(parent, ValueType.BUY, dataSource.getSourceType());
                         addCardToParent(parent, ValueType.SELL, dataSource.getSourceType());
                     }
@@ -196,9 +171,6 @@ public class LandingActivity extends BaseActivity {
         parentUsd.me = (ViewGroup) findViewById(R.id.v_card_holder_usd);
         parentUsd.type = IRate.USD;
 
-        parentUsd.items.add(new CardViewItem(cardEnparaSellUsd, RateDataSource.Type.ENPARA, ValueType.SELL));
-        parentUsd.items.add(new CardViewItem(cardEnparaBuyUsd, RateDataSource.Type.ENPARA, ValueType.BUY));
-        parentUsd.items.add(new CardViewItem(cardYorumlarUsd, RateDataSource.Type.YORUMLAR, ValueType.AVG));
 
         parentItems.add(parentUsd);
 
@@ -207,9 +179,6 @@ public class LandingActivity extends BaseActivity {
         parentEur.type = IRate.EUR;
         parentEur.me = (ViewGroup) findViewById(R.id.v_card_holder_eur);
 
-        parentEur.items.add(new CardViewItem(cardEnparaSellEur, RateDataSource.Type.ENPARA, ValueType.SELL));
-        parentEur.items.add(new CardViewItem(cardEnparaBuyEur, RateDataSource.Type.ENPARA, ValueType.BUY));
-        parentEur.items.add(new CardViewItem(cardYorumlarEur, RateDataSource.Type.YORUMLAR, ValueType.AVG));
 
         parentItems.add(parentEur);
 
@@ -218,9 +187,6 @@ public class LandingActivity extends BaseActivity {
         parentParity.type = IRate.EUR_USD;
         parentParity.me = (ViewGroup) findViewById(R.id.v_card_holder_parity);
 
-        parentParity.items.add(new CardViewItem(cardEnparaSellParite, RateDataSource.Type.ENPARA, ValueType.SELL));
-        parentParity.items.add(new CardViewItem(cardEnparaBuyParite, RateDataSource.Type.ENPARA, ValueType.BUY));
-        parentParity.items.add(new CardViewItem(cardYorumlarParite, RateDataSource.Type.YORUMLAR, ValueType.AVG));
 
         parentItems.add(parentParity);
 

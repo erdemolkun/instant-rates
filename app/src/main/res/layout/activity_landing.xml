@@ -68,17 +68,6 @@
                         android:layout_margin="8dp"
                         android:layout_height="wrap_content"/>
 
-                <include
-                        android:id="@+id/v_card_enpara_sell_usd"
-                        layout="@layout/layout_simple_rate_card"/>
-
-                <include
-                        android:id="@+id/v_card_enpara_usd_buy"
-                        layout="@layout/layout_simple_rate_card"/>
-
-                <include
-                        android:id="@+id/v_card_yorumlar_usd"
-                        layout="@layout/layout_simple_rate_card"/>
 
             </LinearLayout>
 
@@ -111,17 +100,6 @@
                         android:layout_margin="8dp"
                         android:layout_height="wrap_content"/>
 
-                <include
-                        android:id="@+id/v_card_enpara_sell_eur"
-                        layout="@layout/layout_simple_rate_card"/>
-
-                <include
-                        android:id="@+id/v_card_enpara_buy_eur"
-                        layout="@layout/layout_simple_rate_card"/>
-
-                <include
-                        android:id="@+id/v_card_yorumlar_eur"
-                        layout="@layout/layout_simple_rate_card"/>
 
             </LinearLayout>
 
@@ -154,18 +132,7 @@
                         android:layout_margin="8dp"
                         android:layout_height="wrap_content"/>
 
-                <include
-                        android:id="@+id/v_card_enpara_sell_parite"
-                        layout="@layout/layout_simple_rate_card"/>
-
-                <include
-                        android:id="@+id/v_card_enpara_buy_parite"
-                        layout="@layout/layout_simple_rate_card"/>
-
-                <include
-                        android:id="@+id/v_card_yorumlar_parite"
-                        layout="@layout/layout_simple_rate_card"/>
-
+                
             </LinearLayout>
 
 
