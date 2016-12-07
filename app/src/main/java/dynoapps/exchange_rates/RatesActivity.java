@@ -33,16 +33,13 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 import butterknife.BindView;
-import dynoapps.exchange_rates.data.RateDataSource;
 import dynoapps.exchange_rates.data.RatesHolder;
-import dynoapps.exchange_rates.event.DataSourceUpdate;
 import dynoapps.exchange_rates.event.RatesEvent;
 import dynoapps.exchange_rates.model.rates.BaseRate;
 import dynoapps.exchange_rates.model.rates.BigparaRate;
@@ -133,17 +130,6 @@ public class RatesActivity extends BaseActivity {
     public void onEvent(RatesEvent ratesEvent) {
         List<BaseRate> rates = ratesEvent.rates;
         update(rates);
-    }
-
-    private void saveSources(List<RateDataSource> rateDataSources) {
-        String sources = "";
-        for (int i = 0; i < rateDataSources.size(); i++) {
-            RateDataSource rateDataSource = rateDataSources.get(i);
-            if (rateDataSource.isEnabled()) {
-                sources += rateDataSource.getSourceType() + ";";
-            }
-        }
-        Prefs.saveSources(sources);
     }
 
 
@@ -251,7 +237,7 @@ public class RatesActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.menu_item_sources) {
-            selectSources();
+            DataSourcesManager.selectSources(this);
             return true;
         } else if (id == R.id.menu_time_interval) {
             TimeIntervalManager.selectInterval(this);
@@ -287,46 +273,6 @@ public class RatesActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    // Boolean array for initial enabled items
-    boolean[] temp_data_source_states;
-
-    private void selectSources() {
-        final ArrayList<RateDataSource> rateDataSources = DataSourcesManager.getRateDataSources();
-        temp_data_source_states = new boolean[rateDataSources.size()];
-        for (int i = 0; i < temp_data_source_states.length; i++) {
-            temp_data_source_states[i] = rateDataSources.get(i).isEnabled();
-        }
-        String[] data_set_names = new String[rateDataSources.size()];
-        for (int i = 0; i < rateDataSources.size(); i++) {
-            data_set_names[i] = rateDataSources.get(i).getName();
-        }
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        builder.setMultiChoiceItems(data_set_names, temp_data_source_states, new DialogInterface.OnMultiChoiceClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                temp_data_source_states[which] = isChecked;
-            }
-        });
-
-        builder.setCancelable(true);
-        builder.setTitle(R.string.select_sources);
-        builder.setPositiveButton(R.string.apply, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                for (int i = 0; i < rateDataSources.size(); i++) {
-                    rateDataSources.get(i).setEnabled(temp_data_source_states[i]);
-                }
-                EventBus.getDefault().post(new DataSourceUpdate());
-                saveSources(rateDataSources);
-            }
-        });
-
-        builder.setNegativeButton(R.string.dismiss, null);
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
 
     private void addEntry(float value, int chartIndex) {
         if (THRESHOLD_ERROR_USD_TRY > value) return;

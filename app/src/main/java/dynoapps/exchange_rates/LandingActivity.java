@@ -49,7 +49,7 @@ import dynoapps.exchange_rates.util.RateUtils;
  * Created by erdemmac on 06/12/2016.
  */
 
-public class LandingActivity extends BaseActivity {
+public class LandingActivity extends BaseActivity implements DataSourcesManager.SelectionCallback {
 
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
@@ -95,6 +95,28 @@ public class LandingActivity extends BaseActivity {
 
     private Handler mHandler;
     private static final int NAVDRAWER_LAUNCH_DELAY = 250;
+
+    @Override
+    public void onDone() {
+        refreshCards();
+    }
+
+    private void refreshCards() {
+        ArrayList<RateDataSource> dataSources = DataSourcesManager.getRateDataSources();
+        for (RateDataSource dataSource : dataSources) {
+            boolean isEnabled = dataSource.isEnabled();
+            for (CardViewItemParent parent : parentItems) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    TransitionManager.beginDelayedTransition((ViewGroup) parent.me);
+                }
+                for (CardViewItem item : parent.items) {
+                    if (item.source_type == dataSource.getSourceType()) {
+                        item.card.setVisibility(isEnabled ? View.VISIBLE : View.GONE);
+                    }
+                }
+            }
+        }
+    }
 
     interface ValueType {
         int BUY = 1;
@@ -191,6 +213,7 @@ public class LandingActivity extends BaseActivity {
         setupNavDrawer();
         DataSourcesManager.init();
         setUpDataSourceCards();
+        refreshCards();
 
         SparseArray<List<BaseRate>> sparseArray = RatesHolder.getInstance().getAllRates();
         if (sparseArray != null) {
@@ -425,6 +448,9 @@ public class LandingActivity extends BaseActivity {
         int id = item.getItemId();
         if (id == R.id.menu_time_interval) {
             TimeIntervalManager.selectInterval(this);
+            return true;
+        } else if (id == R.id.menu_item_sources) {
+            DataSourcesManager.selectSources(this);
             return true;
         }
         return super.onOptionsItemSelected(item);

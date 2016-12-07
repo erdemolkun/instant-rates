@@ -8,5 +8,10 @@
             app:showAsAction="ifRoom"
             android:icon="@drawable/ic_update_white_24dp"/>
 
+    <item
+            android:id="@+id/menu_item_sources"
+            android:title="@string/sources"
+            app:showAsAction="ifRoom"
+            android:icon="@drawable/ic_settings_white_24dp"/>
 
 </menu>

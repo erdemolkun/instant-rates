@@ -1,10 +1,17 @@
 package dynoapps.exchange_rates;
 
+import android.app.Activity;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
+import java.util.List;
 
 import dynoapps.exchange_rates.data.RateDataSource;
+import dynoapps.exchange_rates.event.DataSourceUpdate;
 import dynoapps.exchange_rates.provider.BasePoolingDataProvider;
 import dynoapps.exchange_rates.provider.BigparaRateProvider;
 import dynoapps.exchange_rates.provider.DolarTlKurRateProvider;
@@ -18,6 +25,11 @@ import dynoapps.exchange_rates.util.CollectionUtils;
  */
 
 public class DataSourcesManager {
+
+
+    interface SelectionCallback {
+        void onDone();
+    }
 
     private static ArrayList<RateDataSource> rateDataSources = new ArrayList<>();
     private static ArrayList<BasePoolingDataProvider> providers;
@@ -51,6 +63,62 @@ public class DataSourcesManager {
         }
     }
 
+    // Boolean array for initial enabled items
+    private static boolean[] temp_data_source_states;
+
+    public static void selectSources(final Activity activity) {
+        final ArrayList<RateDataSource> rateDataSources = DataSourcesManager.getRateDataSources();
+        temp_data_source_states = new boolean[rateDataSources.size()];
+        for (int i = 0; i < temp_data_source_states.length; i++) {
+            temp_data_source_states[i] = rateDataSources.get(i).isEnabled();
+        }
+        String[] data_set_names = new String[rateDataSources.size()];
+        for (int i = 0; i < rateDataSources.size(); i++) {
+            data_set_names[i] = rateDataSources.get(i).getName();
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+
+        builder.setMultiChoiceItems(data_set_names, temp_data_source_states, new DialogInterface.OnMultiChoiceClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                temp_data_source_states[which] = isChecked;
+            }
+        });
+
+        builder.setCancelable(true);
+        builder.setTitle(R.string.select_sources);
+        builder.setPositiveButton(R.string.apply, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                for (int i = 0; i < rateDataSources.size(); i++) {
+                    rateDataSources.get(i).setEnabled(temp_data_source_states[i]);
+                }
+                EventBus.getDefault().post(new DataSourceUpdate());
+                saveSources(rateDataSources);
+                if (activity instanceof SelectionCallback) {
+                    ((SelectionCallback) activity).onDone();
+                }
+            }
+        });
+
+        builder.setNegativeButton(R.string.dismiss, null);
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private static void saveSources(List<RateDataSource> rateDataSources) {
+        String sources = "";
+        for (int i = 0; i < rateDataSources.size(); i++) {
+            RateDataSource rateDataSource = rateDataSources.get(i);
+            if (rateDataSource.isEnabled()) {
+                sources += rateDataSource.getSourceType() + ";";
+            }
+        }
+        Prefs.saveSources(sources);
+    }
+
+
     public static String getSourceName(int type) {
         for (RateDataSource dataSource : rateDataSources) {
             if (type == dataSource.getSourceType()) {
@@ -66,7 +134,7 @@ public class DataSourcesManager {
 
     private static void initDataSourceSelections() {
 
-        if (rateDataSources!=null && rateDataSources.size()>0)return;
+        if (rateDataSources != null && rateDataSources.size() > 0) return;
 
         rateDataSources.add(new RateDataSource("Yorumlar", RateDataSource.Type.YORUMLAR));
         rateDataSources.add(new RateDataSource("Enpara", RateDataSource.Type.ENPARA));
