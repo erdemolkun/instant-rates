@@ -1,10 +1,16 @@
 package dynoapps.exchange_rates.model.rates;
 
+import dynoapps.exchange_rates.App;
+import dynoapps.exchange_rates.R;
+import dynoapps.exchange_rates.util.Formatter;
+
 /**
  * Created by erdemmac on 24/11/2016.
  */
 
 public abstract class BaseRate implements IConvertable, IRate {
+
+    Formatter formatter = new Formatter(4);
 
     BaseRate() {
         fetchMilis = System.currentTimeMillis();
@@ -23,5 +29,13 @@ public abstract class BaseRate implements IConvertable, IRate {
     @Override
     public int getRateType() {
         return rateType;
+    }
+
+    public String getFormatted(float val) {
+        if (rateType == IRate.EUR_USD) {
+            return formatter.format(val);
+        } else {
+            return App.context().getString(R.string.placeholder_tl, formatter.format(val));
+        }
     }
 }

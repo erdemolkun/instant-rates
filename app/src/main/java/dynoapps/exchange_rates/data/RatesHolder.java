@@ -22,9 +22,9 @@ public class RatesHolder<T extends BaseRate> {
 
     private HashMap<Integer, List<T>> ratesHash;
 
-    public List<T> getRates(Class clazz) {
-        if (ratesHash != null && ratesHash.containsKey(clazz)) {
-            return ratesHash.get(clazz);
+    public List<T> getRates(Integer rateType) {
+        if (ratesHash != null && ratesHash.containsKey(rateType)) {
+            return ratesHash.get(rateType);
         }
         return null;
     }

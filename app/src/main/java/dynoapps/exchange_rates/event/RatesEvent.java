@@ -9,8 +9,12 @@ import dynoapps.exchange_rates.model.rates.BaseRate;
  */
 
 public class RatesEvent<T extends BaseRate> {
-    public RatesEvent(List<T> rates) {
+
+    public int sourceType;
+
+    public RatesEvent(List<T> rates,int sourceType) {
         this.rates = rates;
+        this.sourceType = sourceType;
     }
 
     public List<T> rates;

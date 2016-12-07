@@ -56,14 +56,14 @@ public class RatePollingService extends Service {
             @Override
             public void onResult(List<YorumlarRate> rates) {
                 RatesHolder.getInstance().addRate(rates, RateDataSource.Type.YORUMLAR);
-                EventBus.getDefault().post(new RatesEvent<>(rates));
+                EventBus.getDefault().post(new RatesEvent<>(rates, RateDataSource.Type.YORUMLAR));
             }
         }));
         providers.add(new EnparaRateProvider(new ProviderSourceCallbackAdapter<List<EnparaRate>>() {
             @Override
             public void onResult(List<EnparaRate> rates) {
                 RatesHolder.getInstance().addRate(rates, RateDataSource.Type.ENPARA);
-                EventBus.getDefault().post(new RatesEvent<>(rates));
+                EventBus.getDefault().post(new RatesEvent<>(rates, RateDataSource.Type.ENPARA));
             }
         }));
 
@@ -72,7 +72,7 @@ public class RatePollingService extends Service {
                     @Override
                     public void onResult(List<BigparaRate> rates) {
                         RatesHolder.getInstance().addRate(rates, RateDataSource.Type.BIGPARA);
-                        EventBus.getDefault().post(new RatesEvent<>(rates));
+                        EventBus.getDefault().post(new RatesEvent<>(rates, RateDataSource.Type.BIGPARA));
                     }
                 }));
 
@@ -80,7 +80,7 @@ public class RatePollingService extends Service {
             @Override
             public void onResult(List<DolarTlKurRate> rates) {
                 RatesHolder.getInstance().addRate(rates, RateDataSource.Type.TLKUR);
-                EventBus.getDefault().post(new RatesEvent<>(rates));
+                EventBus.getDefault().post(new RatesEvent<>(rates, RateDataSource.Type.TLKUR));
             }
         }));
 
@@ -89,7 +89,7 @@ public class RatePollingService extends Service {
             @Override
             public void onResult(List<YapıKrediRate> rates) {
                 RatesHolder.getInstance().addRate(rates, RateDataSource.Type.YAPIKREDI);
-                EventBus.getDefault().post(new RatesEvent<>(rates));
+                EventBus.getDefault().post(new RatesEvent<>(rates, RateDataSource.Type.YAPIKREDI));
             }
         }));
         DataSourcesManager.init();

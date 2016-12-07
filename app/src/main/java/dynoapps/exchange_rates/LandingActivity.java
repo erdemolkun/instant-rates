@@ -33,18 +33,15 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import dynoapps.exchange_rates.data.RateDataSource;
 import dynoapps.exchange_rates.data.RatesHolder;
 import dynoapps.exchange_rates.event.RatesEvent;
 import dynoapps.exchange_rates.model.rates.BaseRate;
-import dynoapps.exchange_rates.model.rates.BigparaRate;
-import dynoapps.exchange_rates.model.rates.DolarTlKurRate;
-import dynoapps.exchange_rates.model.rates.EnparaRate;
+import dynoapps.exchange_rates.model.rates.BuySellRate;
 import dynoapps.exchange_rates.model.rates.IRate;
-import dynoapps.exchange_rates.model.rates.YapıKrediRate;
-import dynoapps.exchange_rates.model.rates.YorumlarRate;
 import dynoapps.exchange_rates.service.RatePollingService;
 import dynoapps.exchange_rates.time.TimeIntervalManager;
 import dynoapps.exchange_rates.util.Formatter;
@@ -119,6 +116,14 @@ public class LandingActivity extends BaseActivity {
 
         List<CardViewItem> items = new ArrayList<>();
 
+        @Override
+        public String toString() {
+            String itemsToString = "";
+            for (CardViewItem item : items) {
+                itemsToString += "\n" + item.toString();
+            }
+            return itemsToString + "\nType : " + type;
+        }
     }
 
     static class CardViewItem {
@@ -190,12 +195,13 @@ public class LandingActivity extends BaseActivity {
         DataSourcesManager.init();
         setUpDataSourceCards();
 
-        if (RatesHolder.getInstance().getAllRates() != null) {
-            HashMap mp = RatesHolder.getInstance().getAllRates();
-            for (Object value : mp.values()) {
-                update((List<BaseRate>) value);
+        HashMap<Integer, List<BaseRate>> mp = RatesHolder.getInstance().getAllRates();
+        if (mp != null) {
+            for (Map.Entry<Integer, List<BaseRate>> entry : mp.entrySet()) {
+                update(entry.getValue(), entry.getKey());
             }
         }
+
 
         if (!isMyServiceRunning(RatePollingService.class)) {
             Intent intent = new Intent(this, RatePollingService.class);
@@ -206,9 +212,9 @@ public class LandingActivity extends BaseActivity {
             for (CardViewItem item : parent.items) {
                 String postFix = "";
                 if (item.valueType == ValueType.SELL) {
-                    postFix = " Satış";
+                    postFix = " " + getString(R.string.sell);
                 } else if (item.valueType == ValueType.BUY) {
-                    postFix = " Alış";
+                    postFix = " " + getString(R.string.buy);
                 }
                 ((TextView) item.card.findViewById(R.id.tv_type)).setText(DataSourcesManager.getSourceName(item.source_type) + postFix);
             }
@@ -382,42 +388,23 @@ public class LandingActivity extends BaseActivity {
         }
     };
 
-    private void update(List<BaseRate> rates) {
-        BaseRate rateUsd = RateUtils.getRate(rates, IRate.USD);
-        BaseRate rateEur = RateUtils.getRate(rates, IRate.EUR);
-        BaseRate rateParite = RateUtils.getRate(rates, IRate.EUR_USD);
-
-        if (rateUsd != null) {
-            if (rateUsd instanceof YapıKrediRate) {
-            } else if (rateUsd instanceof DolarTlKurRate) {
-            } else if (rateUsd instanceof YorumlarRate) {
-
-                ((TextView) cardYorumlarUsd.findViewById(R.id.tv_rate_value)).
-                        setText(getString(R.string.placeholder_tl, formatter.format(rateUsd.realValue)));
-
-                ((TextView) cardYorumlarEur.findViewById(R.id.tv_rate_value)).
-                        setText(getString(R.string.placeholder_tl, formatter.format(rateEur.realValue)));
-
-
-                ((TextView) cardYorumlarParite.findViewById(R.id.tv_rate_value)).
-                        setText(getString(R.string.placeholder_tl, formatter.format(rateParite.realValue)));
-
-            } else if (rateUsd instanceof EnparaRate) {
-                ((TextView) cardEnparaBuyUsd.findViewById(R.id.tv_rate_value)).
-                        setText(getString(R.string.placeholder_tl, formatter.format(((EnparaRate) rateUsd).value_buy_real)));
-                ((TextView) cardEnparaSellUsd.findViewById(R.id.tv_rate_value)).
-                        setText(getString(R.string.placeholder_tl, formatter.format(((EnparaRate) rateUsd).value_sell_real)));
-
-                ((TextView) cardEnparaBuyEur.findViewById(R.id.tv_rate_value)).
-                        setText(getString(R.string.placeholder_tl, formatter.format(((EnparaRate) rateEur).value_buy_real)));
-                ((TextView) cardEnparaSellEur.findViewById(R.id.tv_rate_value)).
-                        setText(getString(R.string.placeholder_tl, formatter.format(((EnparaRate) rateEur).value_sell_real)));
-
-                ((TextView) cardEnparaBuyParite.findViewById(R.id.tv_rate_value)).
-                        setText(getString(R.string.placeholder_tl, formatter.format(((EnparaRate) rateParite).value_buy_real)));
-                ((TextView) cardEnparaSellParite.findViewById(R.id.tv_rate_value)).
-                        setText(getString(R.string.placeholder_tl, formatter.format(((EnparaRate) rateParite).value_sell_real)));
-            } else if (rateUsd instanceof BigparaRate) {
+    private void update(List<BaseRate> rates, int source_type) {
+        for (CardViewItemParent parent : parentItems) {
+            for (CardViewItem item : parent.items) {
+                if (item.source_type == source_type) {
+                    BaseRate baseRate = RateUtils.getRate(rates, parent.type);
+                    String val = "";
+                    if (baseRate instanceof BuySellRate) {
+                        if (item.valueType == ValueType.SELL) {
+                            val = baseRate.getFormatted(((BuySellRate) baseRate).value_sell_real);
+                        } else if (item.valueType == ValueType.BUY) {
+                            val = baseRate.getFormatted(((BuySellRate) baseRate).value_buy_real);
+                        }
+                    } else {
+                        val = baseRate.getFormatted(baseRate.realValue);
+                    }
+                    ((TextView) item.card.findViewById(R.id.tv_rate_value)).setText(val);
+                }
             }
         }
     }
@@ -426,7 +413,7 @@ public class LandingActivity extends BaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(RatesEvent ratesEvent) {
         List<BaseRate> rates = ratesEvent.rates;
-        update(rates);
+        update(rates, ratesEvent.sourceType);
     }
 
     @Override

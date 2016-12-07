@@ -13,4 +13,6 @@
     <string name="time_interval">Zaman Aralığı</string>
     <string name="select_time_interval">Güncelleme Sıklığını Seçiniz</string>
     <string name="select_graph_using_side_menu">Yan menüden istediğiniz grafiği seçiniz</string>
+    <string name="sell">Satış</string>
+    <string name="buy">Alış</string>
 </resources>
