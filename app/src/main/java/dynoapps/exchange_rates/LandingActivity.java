@@ -122,8 +122,8 @@ public class LandingActivity extends BaseActivity implements DataSourcesManager.
                         addCardToParent(parent, ValueType.AVG, dataSource.getSourceType());
                     }
                     if (dataSource.getSourceType() == RateDataSource.Type.BIGPARA || dataSource.getSourceType() == RateDataSource.Type.YAPIKREDI) {
-                        addCardToParent(parent, ValueType.SELL, dataSource.getSourceType());
                         addCardToParent(parent, ValueType.BUY, dataSource.getSourceType());
+                        addCardToParent(parent, ValueType.SELL, dataSource.getSourceType());
                     }
                 }
             }
@@ -134,7 +134,13 @@ public class LandingActivity extends BaseActivity implements DataSourcesManager.
         LayoutInflater.from(this).inflate(R.layout.layout_simple_rate_card, parent.me, true);
         View v = parent.me.getChildAt(parent.me.getChildCount() - 1);
         CardViewItem item = new CardViewItem(v, sourceType, valueType);
-        ((TextView) v.findViewById(R.id.tv_type)).setText(DataSourcesManager.getSourceName(sourceType));
+        String postFix = "";
+        if (item.valueType == ValueType.SELL) {
+            postFix = " " + getString(R.string.sell);
+        } else if (item.valueType == ValueType.BUY) {
+            postFix = " " + getString(R.string.buy);
+        }
+        ((TextView) v.findViewById(R.id.tv_type)).setText(DataSourcesManager.getSourceName(sourceType) + postFix);
         parent.items.add(item);
     }
 
