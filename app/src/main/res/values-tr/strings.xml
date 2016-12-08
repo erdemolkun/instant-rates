@@ -8,7 +8,7 @@
     <string name="refresh">Yenile</string>
     <string name="sources">Kaynaklar</string>
     <string name="sure">Eminim</string>
-    <string name="dolar_tl_graph">Dolar-TL Grafiği</string>
+    <string name="dollar_tl_graph">Dolar-TL Grafiği</string>
     <string name="clear_sure_message">Yenilemek istediğinize emin misiniz ? Varolan veriler silinecek.</string>
     <string name="time_interval">Zaman Aralığı</string>
     <string name="select_time_interval">Güncelleme Sıklığını Seçiniz</string>

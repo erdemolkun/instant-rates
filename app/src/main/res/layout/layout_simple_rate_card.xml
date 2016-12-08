@@ -8,6 +8,7 @@
         app:cardCornerRadius="6dp"
         tools:showIn="@layout/activity_landing"
         android:layout_gravity="center_horizontal"
+        android:foreground="?selectableItemBackground"
         app:cardElevation="4dp"
         android:layout_margin="6dp"
         android:layout_height="wrap_content">

@@ -109,6 +109,14 @@ public class LandingActivity extends BaseActivity {
     private void addCardToParent(CardViewItemParent parent, int valueType, int sourceType) {
         LayoutInflater.from(this).inflate(R.layout.layout_simple_rate_card, parent.me, true);
         View v = parent.me.getChildAt(parent.me.getChildCount() - 1);
+        v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // todo Only starts usd chart activity.
+                Intent i = new Intent(LandingActivity.this, RatesActivity.class);
+                startActivity(i);
+            }
+        });
         CardViewItem item = new CardViewItem(v, sourceType, valueType);
         String postFix = "";
         if (item.valueType == ValueType.SELL) {
