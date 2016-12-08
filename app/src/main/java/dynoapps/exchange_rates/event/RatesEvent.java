@@ -11,10 +11,18 @@ import dynoapps.exchange_rates.model.rates.BaseRate;
 public class RatesEvent<T extends BaseRate> {
 
     public int sourceType;
+    public long fetchTime;
 
-    public RatesEvent(List<T> rates,int sourceType) {
+    public RatesEvent(List<T> rates, int sourceType, long fetchTime) {
         this.rates = rates;
         this.sourceType = sourceType;
+        this.fetchTime = fetchTime;
+    }
+
+    public RatesEvent(List<T> rates, int sourceType) {
+        this.rates = rates;
+        this.sourceType = sourceType;
+        this.fetchTime = System.currentTimeMillis();
     }
 
     public List<T> rates;

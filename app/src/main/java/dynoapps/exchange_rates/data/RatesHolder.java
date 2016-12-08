@@ -4,6 +4,7 @@ import android.util.SparseArray;
 
 import java.util.List;
 
+import dynoapps.exchange_rates.event.RatesEvent;
 import dynoapps.exchange_rates.model.rates.BaseRate;
 
 /**
@@ -21,23 +22,32 @@ public class RatesHolder<T extends BaseRate> {
     }
 
 
-    private SparseArray<List<T>> ratesArray;
+    private SparseArray<RatesEvent<T>> ratesArray;
 
-    public List<T> getRates(int rateType) {
-        if (ratesArray != null && ratesArray.get(rateType, null) != null) {
-            return ratesArray.get(rateType);
+    public RatesEvent<T> getRates(int sourceType) {
+        if (ratesArray != null && ratesArray.get(sourceType, null) != null) {
+            return ratesArray.get(sourceType);
         }
         return null;
     }
 
-    public SparseArray<List<T>> getAllRates() {
+    public SparseArray<RatesEvent<T>> getAllRates() {
         return ratesArray;
+    }
+
+    public void addRate(List<T> rates, long fetchMilis, int type) {
+        if (ratesArray == null) {
+            ratesArray = new SparseArray<>();
+        }
+
+        ratesArray.put(type, new RatesEvent<>(rates, type, fetchMilis));
     }
 
     public void addRate(List<T> rates, int type) {
         if (ratesArray == null) {
             ratesArray = new SparseArray<>();
         }
-        ratesArray.put(type, rates);
+
+        ratesArray.put(type, new RatesEvent<>(rates, type, System.currentTimeMillis()));
     }
 }

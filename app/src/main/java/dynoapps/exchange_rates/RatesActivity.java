@@ -91,11 +91,11 @@ public class RatesActivity extends BaseActivity {
 
         vProgress.setVisibility(View.GONE);
 
-        SparseArray<List<BaseRate>> sparseArray = RatesHolder.getInstance().getAllRates();
+        SparseArray<RatesEvent<BaseRate>> sparseArray = RatesHolder.getInstance().getAllRates();
         if (sparseArray != null) {
             for (int i = 0; i < sparseArray.size(); i++) {
-                List<BaseRate> rates = sparseArray.valueAt(i);
-                update(rates);
+                RatesEvent<BaseRate> ratesEvent = sparseArray.valueAt(i);
+                update(ratesEvent.rates, ratesEvent.fetchTime);
             }
         }
     }
@@ -108,20 +108,20 @@ public class RatesActivity extends BaseActivity {
         }
     }
 
-    private void update(List<BaseRate> rates) {
+    private void update(List<BaseRate> rates, long fetchMilis) {
         BaseRate rateUsd = RateUtils.getRate(rates, IRate.USD);
         if (rateUsd != null) {
             if (rateUsd instanceof YapıKrediRate) {
-                addEntry(((YapıKrediRate) rateUsd).value_sell_real, 5);
+                addEntry(((YapıKrediRate) rateUsd).value_sell_real, 5, fetchMilis);
             } else if (rateUsd instanceof DolarTlKurRate) {
-                addEntry(((DolarTlKurRate) rateUsd).realValue, 4);
+                addEntry(((DolarTlKurRate) rateUsd).realValue, 4, fetchMilis);
             } else if (rateUsd instanceof YorumlarRate) {
-                addEntry(((YorumlarRate) rateUsd).realValue, 0);
+                addEntry(((YorumlarRate) rateUsd).realValue, 0, fetchMilis);
             } else if (rateUsd instanceof EnparaRate) {
-                addEntry(((EnparaRate) rateUsd).value_sell_real, 1);
-                addEntry(((EnparaRate) rateUsd).value_buy_real, 2);
+                addEntry(((EnparaRate) rateUsd).value_sell_real, 1, fetchMilis);
+                addEntry(((EnparaRate) rateUsd).value_buy_real, 2, fetchMilis);
             } else if (rateUsd instanceof BigparaRate) {
-                addEntry(((BuySellRate) rateUsd).value_sell_real, 3);
+                addEntry(((BuySellRate) rateUsd).value_sell_real, 3, fetchMilis);
             }
         }
     }
@@ -129,7 +129,7 @@ public class RatesActivity extends BaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(RatesEvent ratesEvent) {
         List<BaseRate> rates = ratesEvent.rates;
-        update(rates);
+        update(rates, ratesEvent.fetchTime);
     }
 
 
@@ -221,7 +221,7 @@ public class RatesActivity extends BaseActivity {
         // content (user-interface)
         @Override
         public void refreshContent(Entry e, Highlight highlight) {
-            tvMarker.setText(e.getY() + " TL"); // set the entry-value as the display text
+            tvMarker.setText(App.context().getString(R.string.placeholder_tl, "" + e.getY())); // set the entry-value as the display text
         }
 
     }
@@ -274,10 +274,10 @@ public class RatesActivity extends BaseActivity {
     }
 
 
-    private void addEntry(float value, int chartIndex) {
+    private void addEntry(float value, int chartIndex, long milis) {
         if (THRESHOLD_ERROR_USD_TRY > value) return;
         LineData data = usdLineChart.getData();
-        int newX = (int) (((System.currentTimeMillis() - startMilis) / 1000));
+        int newX = (int) (((milis - startMilis) / 1000));
 
         Entry entry = new Entry(newX, value);
         data.addEntry(entry, chartIndex);

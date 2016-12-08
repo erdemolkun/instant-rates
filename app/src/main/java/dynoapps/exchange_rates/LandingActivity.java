@@ -75,7 +75,7 @@ public class LandingActivity extends BaseActivity {
     private static final int NAVDRAWER_LAUNCH_DELAY = 250;
 
 
-    private void refreshCards() {
+    private void refreshCardItems() {
         ArrayList<RateDataSource> dataSources = DataSourcesManager.getRateDataSources();
         for (RateDataSource dataSource : dataSources) {
             boolean isEnabled = dataSource.isEnabled();
@@ -206,7 +206,7 @@ public class LandingActivity extends BaseActivity {
         setupNavDrawer();
         DataSourcesManager.init();
         setUpDataSourceCards();
-        refreshCards();
+        refreshCardItems();
 
         SparseArray<List<BaseRate>> sparseArray = RatesHolder.getInstance().getAllRates();
         if (sparseArray != null) {
@@ -452,7 +452,7 @@ public class LandingActivity extends BaseActivity {
 
     @Subscribe
     public void onEvent(DataSourceUpdate event) {
-        refreshCards();
+        refreshCardItems();
     }
 
     @Override

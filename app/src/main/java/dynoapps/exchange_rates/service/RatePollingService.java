@@ -63,7 +63,7 @@ public class RatePollingService extends Service {
             @Override
             public void onResult(List<EnparaRate> rates) {
                 RatesHolder.getInstance().addRate(rates, RateDataSource.Type.ENPARA);
-                EventBus.getDefault().post(new RatesEvent<>(rates, RateDataSource.Type.ENPARA));
+                EventBus.getDefault().post(new RatesEvent<>(rates, RateDataSource.Type.ENPARA, System.currentTimeMillis()));
             }
         }));
 
