@@ -125,6 +125,13 @@ public class DataSourcesManager {
         return rateDataSources;
     }
 
+    public static RateDataSource getSource(int source_type){
+        for (RateDataSource rateDataSource : rateDataSources){
+            if (rateDataSource.getSourceType()==source_type)return rateDataSource;
+        }
+        return null;
+    }
+
     private static void initDataSourceSelections() {
 
         if (rateDataSources != null && rateDataSources.size() > 0) return;

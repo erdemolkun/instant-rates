@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.Locale;
 
 import butterknife.BindView;
+import dynoapps.exchange_rates.data.RateDataSource;
 import dynoapps.exchange_rates.data.RatesHolder;
 import dynoapps.exchange_rates.event.RatesEvent;
 import dynoapps.exchange_rates.model.rates.BaseRate;
@@ -95,7 +96,10 @@ public class RatesActivity extends BaseActivity {
         if (sparseArray != null) {
             for (int i = 0; i < sparseArray.size(); i++) {
                 RatesEvent<BaseRate> ratesEvent = sparseArray.valueAt(i);
-                update(ratesEvent.rates, ratesEvent.fetchTime);
+                RateDataSource rateDataSource = DataSourcesManager.getSource(ratesEvent.sourceType);
+                if (rateDataSource != null && rateDataSource.isEnabled()) {
+                    update(ratesEvent.rates, ratesEvent.fetchTime);
+                }
             }
         }
     }
