@@ -2,6 +2,8 @@ package dynoapps.exchange_rates;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -16,6 +18,8 @@ import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.animation.FastOutSlowInInterpolator;
+import android.support.v4.view.animation.LinearOutSlowInInterpolator;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.transition.TransitionManager;
@@ -208,7 +212,7 @@ public class LandingActivity extends BaseActivity {
         if (sparseArray != null) {
             for (int i = 0; i < sparseArray.size(); i++) {
                 List<BaseRate> rates = sparseArray.valueAt(i);
-                update(rates, sparseArray.keyAt(i));
+                update(rates, sparseArray.keyAt(i), false);
             }
         }
 
@@ -399,7 +403,7 @@ public class LandingActivity extends BaseActivity {
         }
     };
 
-    private void update(List<BaseRate> rates, int source_type) {
+    private void update(List<BaseRate> rates, int source_type, boolean animated) {
         for (CardViewItemParent parent : parentItems) {
             for (CardViewItem item : parent.items) {
                 if (item.source_type == source_type) {
@@ -415,18 +419,35 @@ public class LandingActivity extends BaseActivity {
                         } else {
                             val = baseRate.getFormatted(baseRate.realValue);
                         }
-                        ((TextView) item.card.findViewById(R.id.tv_rate_value)).setText(val);
+                        View v = item.card.findViewById(R.id.tv_rate_value);
+                        ((TextView) v).setText(val);
+                        if (animated)
+                            playFadeOutInAnim(v);
                     }
                 }
             }
         }
     }
 
+    private void playFadeOutInAnim(View v) {
+        ObjectAnimator fadeOut = ObjectAnimator.ofFloat(v, "alpha", 1f, .3f);
+        fadeOut.setDuration(450);
+        fadeOut.setInterpolator(new FastOutSlowInInterpolator());
+        ObjectAnimator fadeIn = ObjectAnimator.ofFloat(v, "alpha", .3f, 1f);
+        fadeIn.setDuration(450);
+        fadeOut.setInterpolator(new LinearOutSlowInInterpolator());
+
+        final AnimatorSet mAnimationSet = new AnimatorSet();
+
+        mAnimationSet.play(fadeIn).after(fadeOut);
+        mAnimationSet.start();
+    }
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(RatesEvent ratesEvent) {
         List<BaseRate> rates = ratesEvent.rates;
-        update(rates, ratesEvent.sourceType);
+        update(rates, ratesEvent.sourceType, true);
     }
 
     @Subscribe
