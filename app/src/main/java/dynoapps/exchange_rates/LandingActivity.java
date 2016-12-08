@@ -40,7 +40,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import dynoapps.exchange_rates.data.RateDataSource;
+import dynoapps.exchange_rates.data.CurrencySource;
 import dynoapps.exchange_rates.data.RatesHolder;
 import dynoapps.exchange_rates.event.DataSourceUpdate;
 import dynoapps.exchange_rates.event.RatesEvent;
@@ -76,8 +76,8 @@ public class LandingActivity extends BaseActivity {
 
 
     private void refreshCardItems() {
-        ArrayList<RateDataSource> dataSources = DataSourcesManager.getRateDataSources();
-        for (RateDataSource dataSource : dataSources) {
+        ArrayList<CurrencySource> dataSources = DataSourcesManager.getCurrencySources();
+        for (CurrencySource dataSource : dataSources) {
             boolean isEnabled = dataSource.isEnabled();
             for (CardViewItemParent parent : parentItems) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -92,12 +92,12 @@ public class LandingActivity extends BaseActivity {
                 }
                 if (!foundCard && isEnabled) {
                     // todo associate ValueTypes with data source type.
-                    if (dataSource.getSourceType() == RateDataSource.Type.TLKUR ||
-                            dataSource.getSourceType() == RateDataSource.Type.YORUMLAR) {
+                    if (dataSource.getSourceType() == CurrencySource.Type.TLKUR ||
+                            dataSource.getSourceType() == CurrencySource.Type.YORUMLAR) {
                         addCardToParent(parent, ValueType.AVG, dataSource.getSourceType());
-                    } else if (dataSource.getSourceType() == RateDataSource.Type.BIGPARA ||
-                            dataSource.getSourceType() == RateDataSource.Type.YAPIKREDI ||
-                            dataSource.getSourceType() == RateDataSource.Type.ENPARA) {
+                    } else if (dataSource.getSourceType() == CurrencySource.Type.BIGPARA ||
+                            dataSource.getSourceType() == CurrencySource.Type.YAPIKREDI ||
+                            dataSource.getSourceType() == CurrencySource.Type.ENPARA) {
                         addCardToParent(parent, ValueType.BUY, dataSource.getSourceType());
                         addCardToParent(parent, ValueType.SELL, dataSource.getSourceType());
                     }
@@ -160,7 +160,7 @@ public class LandingActivity extends BaseActivity {
         int valueType;
 
         /**
-         * Refers to {@link RateDataSource#getSourceType()}
+         * Refers to {@link CurrencySource#getSourceType()}
          */
         int source_type;
 

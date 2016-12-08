@@ -6,13 +6,13 @@ import dynoapps.exchange_rates.provider.IPollingSource;
  * Created by erdemmac on 01/12/2016.
  */
 
-public class RateDataSource {
+public class CurrencySource {
     private IPollingSource iPollingSource;
     private String name;
     private boolean enabled;
     private int sourceType;
 
-    public RateDataSource(String name, int sourceType) {
+    public CurrencySource(String name, int sourceType) {
         this.name = name;
         this.sourceType = sourceType;
     }

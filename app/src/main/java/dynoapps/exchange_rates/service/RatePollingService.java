@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dynoapps.exchange_rates.DataSourcesManager;
-import dynoapps.exchange_rates.data.RateDataSource;
+import dynoapps.exchange_rates.data.CurrencySource;
 import dynoapps.exchange_rates.data.RatesHolder;
 import dynoapps.exchange_rates.event.DataSourceUpdate;
 import dynoapps.exchange_rates.event.IntervalUpdate;
@@ -55,15 +55,15 @@ public class RatePollingService extends Service {
         providers.add(new YorumlarRateProvider(new ProviderSourceCallbackAdapter<List<YorumlarRate>>() {
             @Override
             public void onResult(List<YorumlarRate> rates) {
-                RatesHolder.getInstance().addRate(rates, RateDataSource.Type.YORUMLAR);
-                EventBus.getDefault().post(new RatesEvent<>(rates, RateDataSource.Type.YORUMLAR));
+                RatesHolder.getInstance().addRate(rates, CurrencySource.Type.YORUMLAR);
+                EventBus.getDefault().post(new RatesEvent<>(rates, CurrencySource.Type.YORUMLAR));
             }
         }));
         providers.add(new EnparaRateProvider(new ProviderSourceCallbackAdapter<List<EnparaRate>>() {
             @Override
             public void onResult(List<EnparaRate> rates) {
-                RatesHolder.getInstance().addRate(rates, RateDataSource.Type.ENPARA);
-                EventBus.getDefault().post(new RatesEvent<>(rates, RateDataSource.Type.ENPARA, System.currentTimeMillis()));
+                RatesHolder.getInstance().addRate(rates, CurrencySource.Type.ENPARA);
+                EventBus.getDefault().post(new RatesEvent<>(rates, CurrencySource.Type.ENPARA, System.currentTimeMillis()));
             }
         }));
 
@@ -71,16 +71,16 @@ public class RatePollingService extends Service {
                 new BigparaRateProvider(new ProviderSourceCallbackAdapter<List<BigparaRate>>() {
                     @Override
                     public void onResult(List<BigparaRate> rates) {
-                        RatesHolder.getInstance().addRate(rates, RateDataSource.Type.BIGPARA);
-                        EventBus.getDefault().post(new RatesEvent<>(rates, RateDataSource.Type.BIGPARA));
+                        RatesHolder.getInstance().addRate(rates, CurrencySource.Type.BIGPARA);
+                        EventBus.getDefault().post(new RatesEvent<>(rates, CurrencySource.Type.BIGPARA));
                     }
                 }));
 
         providers.add(new DolarTlKurRateProvider(new ProviderSourceCallbackAdapter<List<DolarTlKurRate>>() {
             @Override
             public void onResult(List<DolarTlKurRate> rates) {
-                RatesHolder.getInstance().addRate(rates, RateDataSource.Type.TLKUR);
-                EventBus.getDefault().post(new RatesEvent<>(rates, RateDataSource.Type.TLKUR));
+                RatesHolder.getInstance().addRate(rates, CurrencySource.Type.TLKUR);
+                EventBus.getDefault().post(new RatesEvent<>(rates, CurrencySource.Type.TLKUR));
             }
         }));
 
@@ -88,8 +88,8 @@ public class RatePollingService extends Service {
         providers.add(new YapıKrediRateProvider(new ProviderSourceCallbackAdapter<List<YapıKrediRate>>() {
             @Override
             public void onResult(List<YapıKrediRate> rates) {
-                RatesHolder.getInstance().addRate(rates, RateDataSource.Type.YAPIKREDI);
-                EventBus.getDefault().post(new RatesEvent<>(rates, RateDataSource.Type.YAPIKREDI));
+                RatesHolder.getInstance().addRate(rates, CurrencySource.Type.YAPIKREDI);
+                EventBus.getDefault().post(new RatesEvent<>(rates, CurrencySource.Type.YAPIKREDI));
             }
         }));
         DataSourcesManager.init();
@@ -110,10 +110,10 @@ public class RatePollingService extends Service {
     }
 
     private void refreshSources() {
-        ArrayList<RateDataSource> rateDataSources = DataSourcesManager.getRateDataSources();
-        for (RateDataSource rateDataSource : rateDataSources) {
-            IPollingSource iPollingSource = rateDataSource.getPollingSource();
-            if (rateDataSource.isEnabled()) {
+        ArrayList<CurrencySource> currencySources = DataSourcesManager.getCurrencySources();
+        for (CurrencySource currencySource : currencySources) {
+            IPollingSource iPollingSource = currencySource.getPollingSource();
+            if (currencySource.isEnabled()) {
                 iPollingSource.start();
             } else {
                 iPollingSource.stop();
