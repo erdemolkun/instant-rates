@@ -76,7 +76,7 @@ public class LandingActivity extends BaseActivity {
 
 
     private void refreshCardItems() {
-        ArrayList<CurrencySource> dataSources = DataSourcesManager.getCurrencySources();
+        ArrayList<CurrencySource> dataSources = SourcesManager.getCurrencySources();
         for (CurrencySource dataSource : dataSources) {
             boolean isEnabled = dataSource.isEnabled();
             for (CardViewItemParent parent : parentItems) {
@@ -124,7 +124,7 @@ public class LandingActivity extends BaseActivity {
         } else if (item.valueType == ValueType.BUY) {
             postFix = " " + getString(R.string.buy);
         }
-        ((TextView) v.findViewById(R.id.tv_type)).setText(DataSourcesManager.getSourceName(sourceType) + postFix);
+        ((TextView) v.findViewById(R.id.tv_type)).setText(SourcesManager.getSourceName(sourceType) + postFix);
         parent.items.add(item);
     }
 
@@ -212,7 +212,7 @@ public class LandingActivity extends BaseActivity {
             getActionBarToolbar().setTitle(getTitle());
         }
         setupNavDrawer();
-        DataSourcesManager.init();
+        SourcesManager.init();
         setUpDataSourceCards();
         refreshCardItems();
 
@@ -238,7 +238,7 @@ public class LandingActivity extends BaseActivity {
                 } else if (item.valueType == ValueType.BUY) {
                     postFix = " " + getString(R.string.buy);
                 }
-                ((TextView) item.card.findViewById(R.id.tv_type)).setText(DataSourcesManager.getSourceName(item.source_type) + postFix);
+                ((TextView) item.card.findViewById(R.id.tv_type)).setText(SourcesManager.getSourceName(item.source_type) + postFix);
             }
         }
 
@@ -478,7 +478,7 @@ public class LandingActivity extends BaseActivity {
             TimeIntervalManager.selectInterval(this);
             return true;
         } else if (id == R.id.menu_item_sources) {
-            DataSourcesManager.selectSources(this);
+            SourcesManager.selectSources(this);
             return true;
         }
         return super.onOptionsItemSelected(item);

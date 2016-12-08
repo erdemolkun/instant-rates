@@ -98,7 +98,7 @@ public class RatesActivity extends BaseActivity {
             List<RatesEvent<BaseRate>> cachedEvents = new ArrayList<>();
             for (int i = 0; i < sparseArray.size(); i++) {
                 RatesEvent<BaseRate> ratesEvent = sparseArray.valueAt(i);
-                CurrencySource currencySource = DataSourcesManager.getSource(ratesEvent.sourceType);
+                CurrencySource currencySource = SourcesManager.getSource(ratesEvent.sourceType);
                 if (currencySource != null && currencySource.isEnabled()) {
                     if (ratesEvent.fetchTime < startMilis) {
                         startMilis = ratesEvent.fetchTime;
@@ -249,7 +249,7 @@ public class RatesActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.menu_item_sources) {
-            DataSourcesManager.selectSources(this);
+            SourcesManager.selectSources(this);
             return true;
         } else if (id == R.id.menu_time_interval) {
             TimeIntervalManager.selectInterval(this);
@@ -316,6 +316,9 @@ public class RatesActivity extends BaseActivity {
 
     private LineDataSet createDataSet(int chartIndex) {
 
+        /**
+         * TODO: get label via {@link SourcesManager}
+         * */
         String label;
         switch (chartIndex) {
             case 0:
@@ -363,7 +366,6 @@ public class RatesActivity extends BaseActivity {
         } else {
             color = ContextCompat.getColor(this, R.color.colorBigPara);
         }
-
 
         set.setCircleColor(color);
         set.setHighLightColor(Color.rgb(155, 155, 155));

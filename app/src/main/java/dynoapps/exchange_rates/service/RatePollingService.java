@@ -12,7 +12,7 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
 
-import dynoapps.exchange_rates.DataSourcesManager;
+import dynoapps.exchange_rates.SourcesManager;
 import dynoapps.exchange_rates.data.CurrencySource;
 import dynoapps.exchange_rates.data.RatesHolder;
 import dynoapps.exchange_rates.event.DataSourceUpdate;
@@ -92,8 +92,8 @@ public class RatePollingService extends Service {
                 EventBus.getDefault().post(new RatesEvent<>(rates, CurrencySource.Type.YAPIKREDI));
             }
         }));
-        DataSourcesManager.init();
-        DataSourcesManager.updateProviders(providers);
+        SourcesManager.init();
+        SourcesManager.updateProviders(providers);
         refreshSources();
     }
 
@@ -110,7 +110,7 @@ public class RatePollingService extends Service {
     }
 
     private void refreshSources() {
-        ArrayList<CurrencySource> currencySources = DataSourcesManager.getCurrencySources();
+        ArrayList<CurrencySource> currencySources = SourcesManager.getCurrencySources();
         for (CurrencySource currencySource : currencySources) {
             IPollingSource iPollingSource = currencySource.getPollingSource();
             if (currencySource.isEnabled()) {

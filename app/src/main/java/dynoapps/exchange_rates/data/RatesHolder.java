@@ -21,7 +21,6 @@ public class RatesHolder<T extends BaseRate> {
         return instance;
     }
 
-
     private SparseArray<RatesEvent<T>> ratesArray;
 
     public RatesEvent<T> getRates(int sourceType) {

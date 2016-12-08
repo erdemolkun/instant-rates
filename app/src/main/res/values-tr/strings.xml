@@ -16,4 +16,5 @@
     <string name="sell">Satış</string>
     <string name="buy">Alış</string>
     <string name="select_graph_type">Grafik Tipini Seçiniz</string>
+    <string name="select_at_least_one_source">En az bir kaynak seçmelisiniz</string>
 </resources>

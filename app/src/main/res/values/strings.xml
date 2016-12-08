@@ -19,4 +19,5 @@
     <string name="dollar_sign" translatable="false">$</string>
     <string name="euro_sign" translatable="false">£</string>
     <string name="select_graph_type">Select Graph Type</string>
+    <string name="select_at_least_one_source">Select at least one source.</string>
 </resources>

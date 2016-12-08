@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -24,11 +27,10 @@ import dynoapps.exchange_rates.util.CollectionUtils;
  * Created by erdemmac on 05/12/2016.
  */
 
-public class DataSourcesManager {
+public class SourcesManager {
 
 
     private static ArrayList<CurrencySource> currencySources = new ArrayList<>();
-    private static ArrayList<BasePoolingDataProvider> providers;
 
     public static void init() {
         if (currencySources.size() > 0) return; // Already initialized
@@ -37,7 +39,6 @@ public class DataSourcesManager {
 
     public static void updateProviders(ArrayList<BasePoolingDataProvider> providers) {
 
-        DataSourcesManager.providers = providers;
         for (CurrencySource currencySource : currencySources) {
             switch (currencySource.getSourceType()) {
                 case CurrencySource.Type.YORUMLAR:
@@ -63,7 +64,7 @@ public class DataSourcesManager {
     private static boolean[] temp_data_source_states;
 
     public static void selectSources(final Activity activity) {
-        final ArrayList<CurrencySource> currencySources = DataSourcesManager.getCurrencySources();
+        final ArrayList<CurrencySource> currencySources = SourcesManager.getCurrencySources();
         temp_data_source_states = new boolean[currencySources.size()];
         for (int i = 0; i < temp_data_source_states.length; i++) {
             temp_data_source_states[i] = currencySources.get(i).isEnabled();
@@ -83,21 +84,40 @@ public class DataSourcesManager {
 
         builder.setCancelable(true);
         builder.setTitle(R.string.select_sources);
-        builder.setPositiveButton(R.string.apply, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                for (int i = 0; i < currencySources.size(); i++) {
-                    currencySources.get(i).setEnabled(temp_data_source_states[i]);
-                }
-                EventBus.getDefault().post(new DataSourceUpdate());
-                saveSources(currencySources);
-            }
-        });
-
+        builder.setPositiveButton(R.string.apply, null);
         builder.setNegativeButton(R.string.dismiss, null);
 
-        AlertDialog dialog = builder.create();
+        final AlertDialog dialog = builder.create();
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+                Button button = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                button.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+
+                        int enabled_count = 0;
+                        for (int i = 0; i < currencySources.size(); i++) {
+                            if (temp_data_source_states[i]) enabled_count++;
+                        }
+                        if (enabled_count == 0) {
+                            Toast.makeText(activity, R.string.select_at_least_one_source, Toast.LENGTH_SHORT).show();
+                        } else {
+                            for (int i = 0; i < currencySources.size(); i++) {
+                                currencySources.get(i).setEnabled(temp_data_source_states[i]);
+                            }
+                            EventBus.getDefault().post(new DataSourceUpdate());
+                            saveSources(currencySources);
+                            dialog.dismiss();
+                        }
+                    }
+                });
+            }
+        });
         dialog.show();
+
+
     }
 
     private static void saveSources(List<CurrencySource> currencySources) {
@@ -125,9 +145,9 @@ public class DataSourcesManager {
         return currencySources;
     }
 
-    public static CurrencySource getSource(int source_type){
-        for (CurrencySource currencySource : currencySources){
-            if (currencySource.getSourceType()==source_type)return currencySource;
+    public static CurrencySource getSource(int source_type) {
+        for (CurrencySource currencySource : currencySources) {
+            if (currencySource.getSourceType() == source_type) return currencySource;
         }
         return null;
     }
