@@ -33,6 +33,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -94,12 +95,19 @@ public class RatesActivity extends BaseActivity {
 
         SparseArray<RatesEvent<BaseRate>> sparseArray = RatesHolder.getInstance().getAllRates();
         if (sparseArray != null) {
+            List<RatesEvent<BaseRate>> cachedEvents = new ArrayList<>();
             for (int i = 0; i < sparseArray.size(); i++) {
                 RatesEvent<BaseRate> ratesEvent = sparseArray.valueAt(i);
                 CurrencySource currencySource = DataSourcesManager.getSource(ratesEvent.sourceType);
                 if (currencySource != null && currencySource.isEnabled()) {
-                    update(ratesEvent.rates, ratesEvent.fetchTime);
+                    if (ratesEvent.fetchTime < startMilis) {
+                        startMilis = ratesEvent.fetchTime;
+                    }
+                    cachedEvents.add(ratesEvent);
                 }
+            }
+            for (RatesEvent<BaseRate> ratesEvent : cachedEvents) {
+                update(ratesEvent.rates, ratesEvent.fetchTime);
             }
         }
     }
@@ -153,7 +161,7 @@ public class RatesActivity extends BaseActivity {
 //        mChart.getXAxis().setDrawLabels(false);
         lineChart.getXAxis().setDrawGridLines(true);
 
-        lineChart.getXAxis().setLabelCount(6);
+        lineChart.getXAxis().setLabelCount(5);
 //        lineChart.getAxisRight().setAxisMaximum(3.48f);
 //        lineChart.getAxisRight().setAxisMinimum(3.42f);
         lineChart.getAxisLeft().setEnabled(false);

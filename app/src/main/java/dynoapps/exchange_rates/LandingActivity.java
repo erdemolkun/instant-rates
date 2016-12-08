@@ -216,11 +216,12 @@ public class LandingActivity extends BaseActivity {
         setUpDataSourceCards();
         refreshCardItems();
 
-        SparseArray<List<BaseRate>> sparseArray = RatesHolder.getInstance().getAllRates();
+        SparseArray<RatesEvent<BaseRate>> sparseArray = RatesHolder.getInstance().getAllRates();
         if (sparseArray != null) {
             for (int i = 0; i < sparseArray.size(); i++) {
-                List<BaseRate> rates = sparseArray.valueAt(i);
-                update(rates, sparseArray.keyAt(i), false);
+                RatesEvent<BaseRate> ratesEvent = sparseArray.valueAt(i);
+                List<BaseRate> rates = ratesEvent.rates;
+                update(rates, ratesEvent.sourceType, false);
             }
         }
 
