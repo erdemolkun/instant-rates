@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<dynoapps.exchange_rates.ui.ScrimInsetsScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        android:layout_width="@dimen/nav_drawer_width"
+        android:background="@color/colorPrimary"
+        android:layout_height="match_parent">
+
+    <LinearLayout
+
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:paddingTop="32dp"
+            android:layout_height="match_parent">
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:text="@string/select_graph_type"
+                android:textColor="@color/white"
+                android:textSize="13sp"
+                android:padding="16dp"
+                android:layout_marginTop="32dp"
+                android:layout_height="wrap_content"/>
+
+        <TextView
+                android:id="@+id/v_drawer_item_usd"
+                android:paddingStart="24dp"
+                android:paddingLeft="24dp"
+                android:textSize="18sp"
+                android:minHeight="72dp"
+                android:gravity="center_vertical"
+                android:textColor="?colorAccent"
+                android:background="?selectableItemBackground"
+                android:layout_width="match_parent"
+                android:text="USD"
+                android:layout_height="wrap_content"/>
+
+        <TextView
+                android:id="@+id/v_drawer_item_eur"
+                android:paddingStart="24dp"
+                android:paddingLeft="24dp"
+                android:textSize="18sp"
+                android:minHeight="72dp"
+                android:gravity="center_vertical"
+                android:textColor="?colorAccent"
+                android:background="?selectableItemBackground"
+                android:layout_width="match_parent"
+                android:text="Euro"
+                android:layout_height="wrap_content"/>
+
+        <TextView
+                android:id="@+id/v_drawer_item_eur_usd"
+                android:paddingStart="24dp"
+                android:paddingLeft="24dp"
+                android:textSize="18sp"
+                android:minHeight="72dp"
+                android:gravity="center_vertical"
+                android:textColor="?colorAccent"
+                android:background="?selectableItemBackground"
+                android:layout_width="match_parent"
+                android:text="Euro/USD"
+                android:layout_height="wrap_content"/>
+
+      
+    </LinearLayout>
+
+</dynoapps.exchange_rates.ui.ScrimInsetsScrollView>

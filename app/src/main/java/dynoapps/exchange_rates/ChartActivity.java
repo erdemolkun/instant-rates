@@ -205,7 +205,8 @@ public class ChartActivity extends BaseActivity {
         lineChart.getAxisRight().setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-                return axisValueFormatter.getFormattedValue(value, axis) + " TL";
+                String postFix = rateType==IRate.USD || rateType==IRate.EUR ? " TL" :""; //todo
+                return axisValueFormatter.getFormattedValue(value, axis) + postFix;
             }
         });
         lineChart.setScaleEnabled(false);
@@ -258,12 +259,21 @@ public class ChartActivity extends BaseActivity {
         // content (user-interface)
         @Override
         public void refreshContent(Entry e, Highlight highlight) {
-            String val = (rateType == IRate.USD || rateType == IRate.EUR) ?
-                    App.context().getString(R.string.placeholder_tl, "" + e.getY()) : "" + e.getY();
+            String val = entryToUI(e.getY(), rateType);
             tvMarker.setText(val); // set the entry-value as the display text
         }
-
     }
+
+    private static String entryToUI(float entry, int rateType) {
+        String val = (rateType == IRate.USD || rateType == IRate.EUR) ?
+                App.context().getString(R.string.placeholder_tl, "" + entry) : "" + entry;
+        return val;
+    }
+
+    private String entryToUI(float entry) {
+        return entryToUI(entry, rateType);
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -417,7 +427,7 @@ public class ChartActivity extends BaseActivity {
 
     @Override
     public int getLayoutId() {
-        return R.layout.activity_rates;
+        return R.layout.activity_chart;
     }
 
 

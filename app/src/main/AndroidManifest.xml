@@ -19,6 +19,7 @@
         <activity
                 android:configChanges="orientation|screenSize"
                 android:name=".ChartActivity"
+                android:theme="@style/AppTheme"
                 android:screenOrientation="portrait">
 
         </activity>
@@ -26,6 +27,7 @@
         <activity
                 android:configChanges="orientation|screenSize"
                 android:name=".LandingActivity"
+                android:theme="@style/AppTheme.WithDrawer"
                 android:screenOrientation="portrait">
 
         </activity>

@@ -387,6 +387,7 @@ public class LandingActivity extends BaseActivity {
 
 
         mDrawerLayout.setScrimColor(Color.TRANSPARENT);
+//        mDrawerLayout.setScrimColor(Color.parseColor("#66000000"));
 //        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         toggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.open, R.string.close) {
             @Override
