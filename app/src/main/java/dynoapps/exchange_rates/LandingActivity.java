@@ -7,6 +7,7 @@ import android.animation.ObjectAnimator;
 import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Color;
@@ -22,6 +23,7 @@ import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v4.view.animation.LinearOutSlowInInterpolator;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.transition.TransitionManager;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -113,7 +115,7 @@ public class LandingActivity extends BaseActivity {
         }
     }
 
-    private void addCardToParent(final CardViewItemParent parent, int valueType, int sourceType) {
+    private void addCardToParent(final CardViewItemParent parent, int valueType, final int sourceType) {
         LayoutInflater.from(this).inflate(R.layout.layout_simple_rate_card, parent.me, true);
         View v = parent.me.getChildAt(parent.me.getChildCount() - 1);
         v.setOnClickListener(new View.OnClickListener() {
@@ -122,6 +124,31 @@ public class LandingActivity extends BaseActivity {
                 Intent i = new Intent(LandingActivity.this, ChartActivity.class);
                 i.putExtra(ChartActivity.EXTRA_RATE_TYPE, parent.rate_type);
                 startActivity(i);
+            }
+        });
+        v.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(LandingActivity.this);
+                builder.setCancelable(true);
+                builder.setTitle(R.string.remove);
+                builder.setMessage(R.string.remove_source_approve);
+                builder.setPositiveButton(R.string.sure, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        CurrencySource currencySource = SourcesManager.getSource(sourceType);
+                        if (currencySource != null) {
+                            currencySource.setEnabled(false);
+                        }
+                        EventBus.getDefault().post(new DataSourceUpdate());
+                        refreshCardItems();
+                    }
+                });
+
+                builder.setNegativeButton(R.string.dismiss, null);
+                AlertDialog dialog = builder.create();
+                dialog.show();
+                return true;
             }
         });
         CardViewItem item = new CardViewItem(v, sourceType, valueType);
