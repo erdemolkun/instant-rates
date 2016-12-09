@@ -119,8 +119,8 @@ public class LandingActivity extends BaseActivity {
         v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(LandingActivity.this, RatesActivity.class);
-                i.putExtra(RatesActivity.EXTRA_RATE_TYPE, parent.rate_type);
+                Intent i = new Intent(LandingActivity.this, ChartActivity.class);
+                i.putExtra(ChartActivity.EXTRA_RATE_TYPE, parent.rate_type);
                 startActivity(i);
             }
         });
@@ -306,8 +306,8 @@ public class LandingActivity extends BaseActivity {
                 doLeftMenuWork(new Runnable() {
                     @Override
                     public void run() {
-                        Intent i = new Intent(LandingActivity.this, RatesActivity.class);
-                        i.putExtra(RatesActivity.EXTRA_RATE_TYPE, IRate.USD);
+                        Intent i = new Intent(LandingActivity.this, ChartActivity.class);
+                        i.putExtra(ChartActivity.EXTRA_RATE_TYPE, IRate.USD);
                         startActivity(i);
                     }
                 });
@@ -321,8 +321,8 @@ public class LandingActivity extends BaseActivity {
                 doLeftMenuWork(new Runnable() {
                     @Override
                     public void run() {
-                        Intent i = new Intent(LandingActivity.this, RatesActivity.class);
-                        i.putExtra(RatesActivity.EXTRA_RATE_TYPE, IRate.EUR);
+                        Intent i = new Intent(LandingActivity.this, ChartActivity.class);
+                        i.putExtra(ChartActivity.EXTRA_RATE_TYPE, IRate.EUR);
                         startActivity(i);
                     }
                 });
@@ -335,8 +335,8 @@ public class LandingActivity extends BaseActivity {
                 doLeftMenuWork(new Runnable() {
                     @Override
                     public void run() {
-                        Intent i = new Intent(LandingActivity.this, RatesActivity.class);
-                        i.putExtra(RatesActivity.EXTRA_RATE_TYPE, IRate.EUR_USD);
+                        Intent i = new Intent(LandingActivity.this, ChartActivity.class);
+                        i.putExtra(ChartActivity.EXTRA_RATE_TYPE, IRate.EUR_USD);
                         startActivity(i);
                     }
                 });

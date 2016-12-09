@@ -59,7 +59,7 @@ import dynoapps.exchange_rates.util.ViewUtils;
  * Created by erdemmac on 24/11/2016.
  */
 
-public class RatesActivity extends BaseActivity {
+public class ChartActivity extends BaseActivity {
 
     public static final String EXTRA_RATE_TYPE = "EXTRA_RATE_TYPE";
     private static final int DEFAULT_VISIBLE_CHART_SECONDS = 120; // 2 mins
