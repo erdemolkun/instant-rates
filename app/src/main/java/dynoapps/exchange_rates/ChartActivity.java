@@ -62,7 +62,6 @@ import dynoapps.exchange_rates.util.ViewUtils;
 public class ChartActivity extends BaseActivity {
 
     public static final String EXTRA_RATE_TYPE = "EXTRA_RATE_TYPE";
-    private static final int DEFAULT_VISIBLE_CHART_SECONDS = 120; // 2 mins
     private static final float THRESHOLD_ERROR_USD_TRY = 0.2f;
 
     @BindView(R.id.tv_chart_title)
@@ -81,6 +80,11 @@ public class ChartActivity extends BaseActivity {
     private int white;
     private int black;
 
+    private static final int DATA_COUNT = 20;
+
+    private long getVisibleTimeInMilis() {
+        return TimeIntervalManager.getIntervalInMiliseconds() * DATA_COUNT;
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -180,7 +184,7 @@ public class ChartActivity extends BaseActivity {
 //        mChart.getXAxis().setDrawLabels(false);
         lineChart.getXAxis().setDrawGridLines(true);
 
-        lineChart.getXAxis().setLabelCount(5);
+        lineChart.getXAxis().setLabelCount(4);
 //        lineChart.getAxisRight().setAxisMaximum(3.48f);
 //        lineChart.getAxisRight().setAxisMinimum(3.42f);
         lineChart.getAxisLeft().setEnabled(false);
@@ -189,7 +193,7 @@ public class ChartActivity extends BaseActivity {
             public String getFormattedValue(float value, AxisBase axis) {
                 Calendar calendar = Calendar.getInstance();
                 int time = (int) value;
-                calendar.add(Calendar.SECOND, time);
+                calendar.add(Calendar.MILLISECOND, time);
                 Date date = calendar.getTime();
 
                 return time > 0 ? hourFormatter.format(date) : "";
@@ -312,13 +316,14 @@ public class ChartActivity extends BaseActivity {
     private void addEntry(float value, int chartIndex, long milis) {
         if (THRESHOLD_ERROR_USD_TRY > value) return;
         LineData data = lineChart.getData();
-        int newX = (int) (((milis - startMilis) / 1000));
+        long newX = ((milis - startMilis));
 
         Entry entry = new Entry(newX, value);
         data.addEntry(entry, chartIndex);
         data.notifyDataChanged();
         IDataSet dataSet = data.getDataSetByIndex(chartIndex);
-        if (Math.abs(dataSet.getXMin() - dataSet.getXMax()) > DEFAULT_VISIBLE_CHART_SECONDS * 2 && dataSet.getEntryCount() > DEFAULT_VISIBLE_CHART_SECONDS) {
+        if (Math.abs(dataSet.getXMin() - dataSet.getXMax()) > getVisibleTimeInMilis() * 3
+                && dataSet.getEntryCount() > DATA_COUNT) {
             dataSet.removeEntry(0);
         }
 
@@ -326,7 +331,7 @@ public class ChartActivity extends BaseActivity {
         lineChart.notifyDataSetChanged();
 
         //mChart.setVisibleYRangeMaximum(15, AxisDependency.LEFT);
-        lineChart.setVisibleXRangeMaximum(DEFAULT_VISIBLE_CHART_SECONDS);
+        lineChart.setVisibleXRangeMaximum(getVisibleTimeInMilis());
 
         if (lineChart.getXAxis().getAxisMaximum() <= newX) {
             lineChart.moveViewToX(newX);
