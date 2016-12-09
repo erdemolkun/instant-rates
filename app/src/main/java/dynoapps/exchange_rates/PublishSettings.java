@@ -14,7 +14,7 @@ public class PublishSettings {
     private static ReleaseTypes releaseType = null;
 
     public static ReleaseTypes getReleaseType() {
-        // Lazy release type loading.
+        // Lazy release rate_type loading.
         if (releaseType == null)
             releaseType = getReleaseTypeByVersionName();
         return releaseType;
@@ -48,7 +48,7 @@ public class PublishSettings {
     }
 
     /**
-     * Returns release type by extracting build type from version name. Build Type extracted from
+     * Returns release rate_type by extracting build rate_type from version name. Build Type extracted from
      * application versionNameSuffix
      */
     private static ReleaseTypes getReleaseTypeByVersionName() {

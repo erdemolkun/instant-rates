@@ -65,6 +65,13 @@ public class LandingActivity extends BaseActivity {
     @BindView(R.id.v_drawer_item_usd)
     View vDrawerItemUsd;
 
+    @BindView(R.id.v_drawer_item_eur)
+    View vDrawerItemEur;
+
+
+    @BindView(R.id.v_drawer_item_eur_usd)
+    View vDrawerItemEurUsd;
+
     @BindView(R.id.v_landing_side_menu_hint_close)
     ImageView ivCloseHint;
 
@@ -91,7 +98,7 @@ public class LandingActivity extends BaseActivity {
                     }
                 }
                 if (!foundCard && isEnabled) {
-                    // todo associate ValueTypes with data source type.
+                    // todo associate ValueTypes with data source rate_type.
                     if (dataSource.getSourceType() == CurrencySource.Type.TLKUR ||
                             dataSource.getSourceType() == CurrencySource.Type.YORUMLAR) {
                         addCardToParent(parent, ValueType.AVG, dataSource.getSourceType());
@@ -106,14 +113,14 @@ public class LandingActivity extends BaseActivity {
         }
     }
 
-    private void addCardToParent(CardViewItemParent parent, int valueType, int sourceType) {
+    private void addCardToParent(final CardViewItemParent parent, int valueType, int sourceType) {
         LayoutInflater.from(this).inflate(R.layout.layout_simple_rate_card, parent.me, true);
         View v = parent.me.getChildAt(parent.me.getChildCount() - 1);
         v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // todo Only starts usd chart activity.
                 Intent i = new Intent(LandingActivity.this, RatesActivity.class);
+                i.putExtra(RatesActivity.EXTRA_RATE_TYPE, parent.rate_type);
                 startActivity(i);
             }
         });
@@ -141,7 +148,7 @@ public class LandingActivity extends BaseActivity {
         /**
          * Refers to {@link IRate#getRateType()}
          **/
-        int type;
+        int rate_type;
 
         List<CardViewItem> items = new ArrayList<>();
 
@@ -151,7 +158,7 @@ public class LandingActivity extends BaseActivity {
             for (CardViewItem item : items) {
                 itemsToString += "\n" + item.toString();
             }
-            return itemsToString + "\nType : " + type;
+            return itemsToString + "\nType : " + rate_type;
         }
     }
 
@@ -181,14 +188,14 @@ public class LandingActivity extends BaseActivity {
         //#
         CardViewItemParent parentUsd = new CardViewItemParent();
         parentUsd.me = (ViewGroup) findViewById(R.id.v_card_holder_usd);
-        parentUsd.type = IRate.USD;
+        parentUsd.rate_type = IRate.USD;
 
 
         parentItems.add(parentUsd);
 
         //#
         CardViewItemParent parentEur = new CardViewItemParent();
-        parentEur.type = IRate.EUR;
+        parentEur.rate_type = IRate.EUR;
         parentEur.me = (ViewGroup) findViewById(R.id.v_card_holder_eur);
 
 
@@ -196,7 +203,7 @@ public class LandingActivity extends BaseActivity {
 
         //#
         CardViewItemParent parentParity = new CardViewItemParent();
-        parentParity.type = IRate.EUR_USD;
+        parentParity.rate_type = IRate.EUR_USD;
         parentParity.me = (ViewGroup) findViewById(R.id.v_card_holder_parity);
 
 
@@ -300,10 +307,39 @@ public class LandingActivity extends BaseActivity {
                     @Override
                     public void run() {
                         Intent i = new Intent(LandingActivity.this, RatesActivity.class);
+                        i.putExtra(RatesActivity.EXTRA_RATE_TYPE, IRate.USD);
                         startActivity(i);
                     }
                 });
 
+            }
+        });
+
+        vDrawerItemEur.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                doLeftMenuWork(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent i = new Intent(LandingActivity.this, RatesActivity.class);
+                        i.putExtra(RatesActivity.EXTRA_RATE_TYPE, IRate.EUR);
+                        startActivity(i);
+                    }
+                });
+            }
+        });
+
+        vDrawerItemEurUsd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                doLeftMenuWork(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent i = new Intent(LandingActivity.this, RatesActivity.class);
+                        i.putExtra(RatesActivity.EXTRA_RATE_TYPE, IRate.EUR_USD);
+                        startActivity(i);
+                    }
+                });
             }
         });
     }
@@ -416,7 +452,7 @@ public class LandingActivity extends BaseActivity {
         for (CardViewItemParent parent : parentItems) {
             for (CardViewItem item : parent.items) {
                 if (item.source_type == source_type) {
-                    BaseRate baseRate = RateUtils.getRate(rates, parent.type);
+                    BaseRate baseRate = RateUtils.getRate(rates, parent.rate_type);
                     if (baseRate != null) {
                         String val = "";
                         if (baseRate instanceof BuySellRate) {

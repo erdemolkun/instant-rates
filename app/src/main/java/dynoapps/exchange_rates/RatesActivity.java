@@ -61,14 +61,20 @@ import dynoapps.exchange_rates.util.ViewUtils;
 
 public class RatesActivity extends BaseActivity {
 
+    public static final String EXTRA_RATE_TYPE = "EXTRA_RATE_TYPE";
     private static final int DEFAULT_VISIBLE_CHART_SECONDS = 120; // 2 mins
     private static final float THRESHOLD_ERROR_USD_TRY = 0.2f;
 
-    @BindView(R.id.line_usd_chart)
+    @BindView(R.id.tv_chart_title)
+    TextView tvTitle;
+
+    @BindView(R.id.line_chart)
     LineChart lineChart;
 
     @BindView(R.id.v_progress_wheel)
     View vProgress;
+
+    private int rateType = IRate.USD;
 
     private long startMilis;
     SimpleDateFormat hourFormatter = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
@@ -77,7 +83,18 @@ public class RatesActivity extends BaseActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+        rateType = getIntent().getExtras().getInt(EXTRA_RATE_TYPE, rateType);
+
+
+        String title = getString(R.string.dollar_tl_graph);
+        if (rateType == IRate.EUR) {
+            title = getString(R.string.euro_tl_graph);
+        } else if (rateType == IRate.EUR_USD) {
+            title = getString(R.string.euro_usd_graph);
+        }
+        tvTitle.setText(title);
 
         setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
         getActionBarToolbar().setNavigationOnClickListener(new View.OnClickListener() {
@@ -121,7 +138,7 @@ public class RatesActivity extends BaseActivity {
     }
 
     private void update(List<BaseRate> rates, long fetchMilis) {
-        BaseRate rateUsd = RateUtils.getRate(rates, IRate.USD);
+        BaseRate rateUsd = RateUtils.getRate(rates, rateType);
         if (rateUsd != null) {
             if (rateUsd instanceof YapıKrediRate) {
                 addEntry(((YapıKrediRate) rateUsd).value_sell_real, 5, fetchMilis);
@@ -209,7 +226,7 @@ public class RatesActivity extends BaseActivity {
         legend.setXEntrySpace(10);
 
         lineChart.setHighlightPerTapEnabled(true);
-        CustomMarkerView customMarkerView = new CustomMarkerView(this, R.layout.view_marker);
+        CustomMarkerView customMarkerView = new CustomMarkerView(this, R.layout.view_marker, rateType);
         customMarkerView.setOffset(ViewUtils.dpToPx(4), -customMarkerView.getMeasuredHeight() - ViewUtils.dpToPx(4));
         lineChart.setMarker(customMarkerView);
 
@@ -223,9 +240,11 @@ public class RatesActivity extends BaseActivity {
     static class CustomMarkerView extends MarkerView {
 
         private TextView tvMarker;
+        private int rateType;
 
-        public CustomMarkerView(Context context, int layoutResource) {
+        public CustomMarkerView(Context context, int layoutResource, int rateType) {
             super(context, layoutResource);
+            this.rateType = rateType;
             tvMarker = (TextView) findViewById(R.id.tv_marker);
         }
 
@@ -233,7 +252,9 @@ public class RatesActivity extends BaseActivity {
         // content (user-interface)
         @Override
         public void refreshContent(Entry e, Highlight highlight) {
-            tvMarker.setText(App.context().getString(R.string.placeholder_tl, "" + e.getY())); // set the entry-value as the display text
+            String val = (rateType == IRate.USD || rateType == IRate.EUR) ?
+                    App.context().getString(R.string.placeholder_tl, "" + e.getY()) : "" + e.getY();
+            tvMarker.setText(val); // set the entry-value as the display text
         }
 
     }

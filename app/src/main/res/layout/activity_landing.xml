@@ -171,6 +171,32 @@
                 android:text="USD"
                 android:layout_height="wrap_content"/>
 
+        <TextView
+                android:id="@+id/v_drawer_item_eur"
+                android:paddingStart="24dp"
+                android:paddingLeft="24dp"
+                android:textSize="18sp"
+                android:minHeight="72dp"
+                android:gravity="center_vertical"
+                android:textColor="?colorAccent"
+                android:background="?selectableItemBackground"
+                android:layout_width="match_parent"
+                android:text="Euro"
+                android:layout_height="wrap_content"/>
+
+        <TextView
+                android:id="@+id/v_drawer_item_eur_usd"
+                android:paddingStart="24dp"
+                android:paddingLeft="24dp"
+                android:textSize="18sp"
+                android:minHeight="72dp"
+                android:gravity="center_vertical"
+                android:textColor="?colorAccent"
+                android:background="?selectableItemBackground"
+                android:layout_width="match_parent"
+                android:text="Euro/USD"
+                android:layout_height="wrap_content"/>
+
     </LinearLayout>
 
 
