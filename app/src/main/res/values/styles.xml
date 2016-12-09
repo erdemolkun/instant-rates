@@ -17,6 +17,8 @@
         <item name="toolbarTextAppearance">@style/ActionBar.TitleText</item>
         <item name="android:windowFullscreen">false</item>
 
+        <!--<item name="android:windowBackground">@color/white</item>-->
+
 
     </style>
 

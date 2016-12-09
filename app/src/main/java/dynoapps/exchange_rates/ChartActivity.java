@@ -79,6 +79,7 @@ public class ChartActivity extends BaseActivity {
     private long startMilis;
     SimpleDateFormat hourFormatter = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
     private int white;
+    private int black;
 
 
     @Override
@@ -105,6 +106,7 @@ public class ChartActivity extends BaseActivity {
         });
 
         white = ContextCompat.getColor(getApplicationContext(), android.R.color.white);
+        black = ContextCompat.getColor(getApplicationContext(), android.R.color.black);
         startMilis = System.currentTimeMillis();
         initChart();
 
@@ -219,7 +221,7 @@ public class ChartActivity extends BaseActivity {
 
         Legend legend = lineChart.getLegend();
         legend.setTextSize(13);
-        legend.setTextColor(white);
+        legend.setTextColor(black);
         legend.setYOffset(6);
         legend.setForm(Legend.LegendForm.CIRCLE);
         legend.setWordWrapEnabled(true);
@@ -231,8 +233,8 @@ public class ChartActivity extends BaseActivity {
         lineChart.setMarker(customMarkerView);
 
         lineChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
-        lineChart.getXAxis().setTextColor(white);
-        lineChart.getAxisRight().setTextColor(white);
+        lineChart.getXAxis().setTextColor(black);
+        lineChart.getAxisRight().setTextColor(black);
 
     }
 
