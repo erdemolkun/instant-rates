@@ -3,6 +3,7 @@
     <string name="open">Aç</string>
     <string name="close">Kapat</string>
     <string name="dismiss">Kapat</string>
+    <string name="ignore">Vazgeç</string>
     <string name="apply">Uygula</string>
     <string name="select_sources">Kaynakları Seç</string>
     <string name="refresh">Yenile</string>

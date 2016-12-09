@@ -303,7 +303,7 @@ public class ChartActivity extends BaseActivity {
                 }
             });
 
-            builder.setNegativeButton(R.string.dismiss, null);
+            builder.setNegativeButton(R.string.ignore, null);
             AlertDialog dialog = builder.create();
             dialog.show();
 
