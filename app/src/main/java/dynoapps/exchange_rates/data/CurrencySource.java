@@ -17,6 +17,13 @@ public class CurrencySource {
         this.sourceType = sourceType;
     }
 
+    public CurrencySource(String name, int sourceType, boolean enabled) {
+        this.name = name;
+        this.sourceType = sourceType;
+        this.enabled = enabled;
+    }
+
+
     public int getSourceType() {
         return sourceType;
     }

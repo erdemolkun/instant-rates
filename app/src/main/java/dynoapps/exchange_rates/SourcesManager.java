@@ -156,11 +156,11 @@ public class SourcesManager {
 
         if (currencySources != null && currencySources.size() > 0) return;
 
-        currencySources.add(new CurrencySource("Yorumlar", CurrencySource.Type.YORUMLAR));
-        currencySources.add(new CurrencySource("Enpara", CurrencySource.Type.ENPARA));
-        currencySources.add(new CurrencySource("Bigpara", CurrencySource.Type.BIGPARA));
-        currencySources.add(new CurrencySource("TlKur", CurrencySource.Type.TLKUR));
-        currencySources.add(new CurrencySource("Yapı Kredi", CurrencySource.Type.YAPIKREDI));
+        currencySources.add(new CurrencySource("Yorumlar", CurrencySource.Type.YORUMLAR, true));
+        currencySources.add(new CurrencySource("Enpara", CurrencySource.Type.ENPARA, true));
+        currencySources.add(new CurrencySource("Bigpara", CurrencySource.Type.BIGPARA, false));
+        currencySources.add(new CurrencySource("TlKur", CurrencySource.Type.TLKUR, false));
+        currencySources.add(new CurrencySource("Yapı Kredi", CurrencySource.Type.YAPIKREDI, false));
 
         updateSourceStatesFromPrefs();
     }
