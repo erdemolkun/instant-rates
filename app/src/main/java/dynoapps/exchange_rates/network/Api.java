@@ -6,7 +6,8 @@ import dynoapps.exchange_rates.converters.BigparaConverter;
 import dynoapps.exchange_rates.converters.DolarTlKurAjaxConverter;
 import dynoapps.exchange_rates.converters.EnparaConverter;
 import dynoapps.exchange_rates.converters.GarantiConverter;
-import dynoapps.exchange_rates.converters.YorumlarAjaxConverter;
+import dynoapps.exchange_rates.converters.YahooConverter;
+import dynoapps.exchange_rates.converters.YorumlarConverter;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -23,6 +24,7 @@ public class Api {
     private static Retrofit bigparaApi;
     private static Retrofit dolarTlKurApi;
     private static Retrofit garantiApi;
+    private static Retrofit yahooApi;
 
 
     public static Retrofit getYorumlarApi() {
@@ -34,7 +36,7 @@ public class Api {
             yorumlarApi = new Retrofit.Builder()
                     .client(client)
                     .baseUrl("https://yorumlar.altin.in/")
-                    .addConverterFactory(new YorumlarAjaxConverter.Factory())
+                    .addConverterFactory(new YorumlarConverter.Factory())
                     .build();
         }
         return yorumlarApi;
@@ -69,6 +71,15 @@ public class Api {
                     .build();
         }
         return dolarTlKurApi;
+    }
+
+    public static Retrofit getYahooApi(){
+        if (yahooApi==null){
+            yahooApi = new Retrofit.Builder().
+                    addConverterFactory(new YahooConverter.Factory()).
+                    baseUrl("http://finance.yahoo.com/").build();
+        }
+        return yahooApi;
     }
 
     public static Retrofit getGarantiApi() {

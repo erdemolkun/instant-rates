@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dynoapps.exchange_rates.model.rates.BaseRate;
+import dynoapps.exchange_rates.model.rates.YahooRate;
 import dynoapps.exchange_rates.model.rates.YorumlarRate;
 import okhttp3.ResponseBody;
 import retrofit2.Converter;
@@ -18,7 +19,7 @@ import retrofit2.Retrofit;
  * Created by erdemmac on 24/11/2016.
  */
 
-public class YorumlarAjaxConverter implements Converter<ResponseBody, List<BaseRate>> {
+public class YahooConverter implements Converter<ResponseBody, List<BaseRate>> {
 
     /**
      * Factory for creating converter. We only care about decoding responses.
@@ -34,16 +35,17 @@ public class YorumlarAjaxConverter implements Converter<ResponseBody, List<BaseR
 
     }
 
-    private YorumlarAjaxConverter() {
+    private YahooConverter() {
     }
 
-    static final YorumlarAjaxConverter INSTANCE = new YorumlarAjaxConverter();
+    static final YahooConverter INSTANCE = new YahooConverter();
 
 
     /**
      * Sample response body
      *
-     * <p> dolar_guncelle('3.4047','13:01:36');euro_guncelle('3.6012','13:01:36');sterlin_guncelle('4.2431','13:01:36');gumus_guncelle('1.7921','1.7941','13:01:36');parite_guncelle('1.0570','13:01:36');ons_guncelle('$1190.0000','13:01:36');ySi('[5164806,5388042,5387395,5387090]');
+     * <p> "USDTRY=X",3.4837,"12/9/2016","11:45pm"
+           "EURTRY=X",3.6767,"12/9/2016","10:30pm"
      * </p>
      **/
     @Override
@@ -52,15 +54,15 @@ public class YorumlarAjaxConverter implements Converter<ResponseBody, List<BaseR
         ArrayList<BaseRate> rates = new ArrayList<>();
         String responseBody = value != null ? value.string() : null;
         if (!TextUtils.isEmpty(responseBody)) {
-            String[] splitsMoney = responseBody.split(";");
+            String[] splitsMoney = responseBody.split("\n");
             if (splitsMoney.length > 0) {
                 for (String singleSplit : splitsMoney) {
-                    String[] splits = singleSplit.split("\\(|\\)|,"); // ysi Type not supported
+                    String[] splits = singleSplit.split(","); // ysi Type not supported
                     if (splits.length > 2) {
-                        YorumlarRate rate = new YorumlarRate();
-                        rate.type = splits[0];
-                        rate.value = splits[1];
-                        rate.time = splits[2];
+                        YahooRate rate = new YahooRate();
+                        rate.type = splits[0].replace("\"","");
+                        rate.avg_val = splits[1];
+                        //rate.time = splits[2];
                         rate.toRateType();
                         rate.setRealValues();
                         rates.add(rate);

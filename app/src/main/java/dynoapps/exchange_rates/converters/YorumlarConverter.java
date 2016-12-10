@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dynoapps.exchange_rates.model.rates.BaseRate;
-import dynoapps.exchange_rates.model.rates.DolarTlKurRate;
+import dynoapps.exchange_rates.model.rates.YorumlarRate;
 import okhttp3.ResponseBody;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
@@ -18,7 +18,7 @@ import retrofit2.Retrofit;
  * Created by erdemmac on 24/11/2016.
  */
 
-public class DolarTlKurAjaxConverter implements Converter<ResponseBody, List<BaseRate>> {
+public class YorumlarConverter implements Converter<ResponseBody, List<BaseRate>> {
 
     /**
      * Factory for creating converter. We only care about decoding responses.
@@ -34,16 +34,16 @@ public class DolarTlKurAjaxConverter implements Converter<ResponseBody, List<Bas
 
     }
 
-    private DolarTlKurAjaxConverter() {
+    private YorumlarConverter() {
     }
 
-    static final DolarTlKurAjaxConverter INSTANCE = new DolarTlKurAjaxConverter();
+    static final YorumlarConverter INSTANCE = new YorumlarConverter();
 
 
     /**
      * Sample response body
      *
-     * <p> USDTRY:3.4560: EURTRY:3.6623: EURUSD:1.0595: XAUUSD:1187.34: GBPTRY:4.2978: CHFTRY:3.4122: SARTRY:0.9216: 16:33:31
+     * <p> dolar_guncelle('3.4047','13:01:36');euro_guncelle('3.6012','13:01:36');sterlin_guncelle('4.2431','13:01:36');gumus_guncelle('1.7921','1.7941','13:01:36');parite_guncelle('1.0570','13:01:36');ons_guncelle('$1190.0000','13:01:36');ySi('[5164806,5388042,5387395,5387090]');
      * </p>
      **/
     @Override
@@ -52,14 +52,15 @@ public class DolarTlKurAjaxConverter implements Converter<ResponseBody, List<Bas
         ArrayList<BaseRate> rates = new ArrayList<>();
         String responseBody = value != null ? value.string() : null;
         if (!TextUtils.isEmpty(responseBody)) {
-            String[] splitsMoney = responseBody.split("\n");
+            String[] splitsMoney = responseBody.split(";");
             if (splitsMoney.length > 0) {
                 for (String singleSplit : splitsMoney) {
-                    String[] splits = singleSplit.split(":"); // ysi Type not supported
-                    if (splits.length ==2) {
-                        DolarTlKurRate rate = new DolarTlKurRate();
+                    String[] splits = singleSplit.split("\\(|\\)|,"); // ysi Type not supported
+                    if (splits.length > 2) {
+                        YorumlarRate rate = new YorumlarRate();
                         rate.type = splits[0];
                         rate.avg_val = splits[1];
+                        rate.time = splits[2];
                         rate.toRateType();
                         rate.setRealValues();
                         rates.add(rate);

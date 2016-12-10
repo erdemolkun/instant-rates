@@ -53,7 +53,7 @@ public class CurrencySource {
     }
 
     public boolean isAvgType(){
-        return sourceType==Type.YORUMLAR || sourceType==Type.BIGPARA || sourceType==Type.TLKUR;
+        return sourceType==Type.YORUMLAR || sourceType==Type.BIGPARA || sourceType==Type.TLKUR || sourceType==Type.YAHOO;
     }
 
     public interface Type {
@@ -62,5 +62,7 @@ public class CurrencySource {
         int BIGPARA = 3;
         int TLKUR = 4;
         int YAPIKREDI = 5;
+        int YAHOO = 6;
+
     }
 }

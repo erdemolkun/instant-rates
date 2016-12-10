@@ -49,6 +49,7 @@ import dynoapps.exchange_rates.model.rates.BuySellRate;
 import dynoapps.exchange_rates.model.rates.DolarTlKurRate;
 import dynoapps.exchange_rates.model.rates.EnparaRate;
 import dynoapps.exchange_rates.model.rates.IRate;
+import dynoapps.exchange_rates.model.rates.YahooRate;
 import dynoapps.exchange_rates.model.rates.YapıKrediRate;
 import dynoapps.exchange_rates.model.rates.YorumlarRate;
 import dynoapps.exchange_rates.time.TimeIntervalManager;
@@ -144,21 +145,26 @@ public class ChartActivity extends BaseActivity {
     }
 
     private void update(List<BaseRate> rates, long fetchMilis) {
-        // todo find indexy via source manager.
+        /*
+        ** TODO find index via source manager.
+        */
         BaseRate rateUsd = RateUtils.getRate(rates, rateType);
         if (rateUsd != null) {
             if (rateUsd instanceof YapıKrediRate) {
                 addEntry(((YapıKrediRate) rateUsd).value_sell_real, 5, fetchMilis);
                 addEntry(((YapıKrediRate) rateUsd).value_buy_real, 6, fetchMilis);
             } else if (rateUsd instanceof DolarTlKurRate) {
-                addEntry(((DolarTlKurRate) rateUsd).realValue, 4, fetchMilis);
+                addEntry(((DolarTlKurRate) rateUsd).avg_val_real, 4, fetchMilis);
             } else if (rateUsd instanceof YorumlarRate) {
-                addEntry(((YorumlarRate) rateUsd).realValue, 0, fetchMilis);
+                addEntry(((YorumlarRate) rateUsd).avg_val_real, 0, fetchMilis);
             } else if (rateUsd instanceof EnparaRate) {
                 addEntry(((EnparaRate) rateUsd).value_sell_real, 1, fetchMilis);
                 addEntry(((EnparaRate) rateUsd).value_buy_real, 2, fetchMilis);
             } else if (rateUsd instanceof BigparaRate) {
                 addEntry(((BuySellRate) rateUsd).value_sell_real, 3, fetchMilis);
+            }
+            else if (rateUsd instanceof YahooRate) {
+                addEntry(((YahooRate) rateUsd).avg_val_real, 7, fetchMilis);
             }
         }
     }

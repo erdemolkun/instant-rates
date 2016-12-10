@@ -20,6 +20,7 @@ import dynoapps.exchange_rates.provider.BasePoolingDataProvider;
 import dynoapps.exchange_rates.provider.BigparaRateProvider;
 import dynoapps.exchange_rates.provider.DolarTlKurRateProvider;
 import dynoapps.exchange_rates.provider.EnparaRateProvider;
+import dynoapps.exchange_rates.provider.YahooRateProvider;
 import dynoapps.exchange_rates.provider.YapıKrediRateProvider;
 import dynoapps.exchange_rates.provider.YorumlarRateProvider;
 import dynoapps.exchange_rates.util.CollectionUtils;
@@ -56,6 +57,9 @@ public class SourcesManager {
                     break;
                 case CurrencySource.Type.YAPIKREDI:
                     currencySource.setPollingSource(CollectionUtils.getInstance(providers, YapıKrediRateProvider.class));
+                    break;
+                case CurrencySource.Type.YAHOO:
+                    currencySource.setPollingSource(CollectionUtils.getInstance(providers, YahooRateProvider.class));
                     break;
             }
         }
@@ -162,6 +166,7 @@ public class SourcesManager {
         currencySources.add(new CurrencySource("Bigpara", CurrencySource.Type.BIGPARA,R.color.colorBigPara, false));
         currencySources.add(new CurrencySource("TlKur", CurrencySource.Type.TLKUR,R.color.colorDolarTlKur, false));
         currencySources.add(new CurrencySource("Yapı Kredi", CurrencySource.Type.YAPIKREDI,R.color.colorYapıKredi, false));
+        currencySources.add(new CurrencySource("Yahoo", CurrencySource.Type.YAHOO,R.color.colorYahoo, false));
 
         updateSourceStatesFromPrefs();
     }

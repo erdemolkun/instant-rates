@@ -46,6 +46,7 @@ import dynoapps.exchange_rates.data.CurrencySource;
 import dynoapps.exchange_rates.data.RatesHolder;
 import dynoapps.exchange_rates.event.DataSourceUpdate;
 import dynoapps.exchange_rates.event.RatesEvent;
+import dynoapps.exchange_rates.model.rates.AvgRate;
 import dynoapps.exchange_rates.model.rates.BaseRate;
 import dynoapps.exchange_rates.model.rates.BuySellRate;
 import dynoapps.exchange_rates.model.rates.IRate;
@@ -53,7 +54,6 @@ import dynoapps.exchange_rates.service.RatePollingService;
 import dynoapps.exchange_rates.time.TimeIntervalManager;
 import dynoapps.exchange_rates.util.AppUtils;
 import dynoapps.exchange_rates.util.RateUtils;
-import dynoapps.exchange_rates.util.ViewUtils;
 
 /**
  * Created by erdemmac on 06/12/2016.
@@ -105,13 +105,10 @@ public class LandingActivity extends BaseActivity {
                     }
                 }
                 if (!foundCard && isEnabled) {
-                    // todo associate ValueTypes with data source rate_type.
-                    if (dataSource.getSourceType() == CurrencySource.Type.TLKUR ||
-                            dataSource.getSourceType() == CurrencySource.Type.YORUMLAR) {
+                    if (dataSource.isAvgType()){
                         addCardToParent(parent, ValueType.AVG, dataSource.getSourceType());
-                    } else if (dataSource.getSourceType() == CurrencySource.Type.BIGPARA ||
-                            dataSource.getSourceType() == CurrencySource.Type.YAPIKREDI ||
-                            dataSource.getSourceType() == CurrencySource.Type.ENPARA) {
+                    }
+                    else{
                         addCardToParent(parent, ValueType.BUY, dataSource.getSourceType());
                         addCardToParent(parent, ValueType.SELL, dataSource.getSourceType());
                     }
@@ -496,8 +493,8 @@ public class LandingActivity extends BaseActivity {
                             } else if (item.valueType == ValueType.BUY) {
                                 val = baseRate.getFormatted(((BuySellRate) baseRate).value_buy_real);
                             }
-                        } else {
-                            val = baseRate.getFormatted(baseRate.realValue);
+                        } else if (baseRate instanceof AvgRate){
+                            val = baseRate.getFormatted(((AvgRate) baseRate).avg_val_real);
                         }
                         View v = item.card.findViewById(R.id.tv_rate_value);
                         ((TextView) v).setText(val);

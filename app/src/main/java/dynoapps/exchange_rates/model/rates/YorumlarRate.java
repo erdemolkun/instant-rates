@@ -6,7 +6,7 @@ import android.text.TextUtils;
  * Created by erdemmac on 24/11/2016.
  */
 
-public class YorumlarRate extends BaseRate implements IConvertable {
+public class YorumlarRate extends AvgRate implements IConvertable {
 
     public String time;
 
@@ -34,13 +34,13 @@ public class YorumlarRate extends BaseRate implements IConvertable {
     @Override
     public void setRealValues() {
         if (rateType == UNKNOWN) return;
-        String val = value.replace("\'", "").replace("$", "").trim();
-        realValue = Float.valueOf(val);
+        String val = avg_val.replace("\'", "").replace("$", "").trim();
+        avg_val_real = Float.valueOf(val);
     }
 
     @Override
     public String toString() {
-        return type.split("_")[0] + " -> : " + realValue + " : Time -> " + time.replace("\'", "");
+        return type.split("_")[0] + " -> : " + avg_val_real + " : Time -> " + time.replace("\'", "");
     }
 
 }

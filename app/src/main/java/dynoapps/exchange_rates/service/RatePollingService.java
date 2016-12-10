@@ -21,6 +21,7 @@ import dynoapps.exchange_rates.event.RatesEvent;
 import dynoapps.exchange_rates.model.rates.BigparaRate;
 import dynoapps.exchange_rates.model.rates.DolarTlKurRate;
 import dynoapps.exchange_rates.model.rates.EnparaRate;
+import dynoapps.exchange_rates.model.rates.YahooRate;
 import dynoapps.exchange_rates.model.rates.YapıKrediRate;
 import dynoapps.exchange_rates.model.rates.YorumlarRate;
 import dynoapps.exchange_rates.provider.BasePoolingDataProvider;
@@ -29,6 +30,7 @@ import dynoapps.exchange_rates.provider.DolarTlKurRateProvider;
 import dynoapps.exchange_rates.provider.EnparaRateProvider;
 import dynoapps.exchange_rates.provider.IPollingSource;
 import dynoapps.exchange_rates.provider.ProviderSourceCallbackAdapter;
+import dynoapps.exchange_rates.provider.YahooRateProvider;
 import dynoapps.exchange_rates.provider.YapıKrediRateProvider;
 import dynoapps.exchange_rates.provider.YorumlarRateProvider;
 
@@ -90,6 +92,13 @@ public class RatePollingService extends Service {
             public void onResult(List<YapıKrediRate> rates) {
                 RatesHolder.getInstance().addRate(rates, CurrencySource.Type.YAPIKREDI);
                 EventBus.getDefault().post(new RatesEvent<>(rates, CurrencySource.Type.YAPIKREDI));
+            }
+        }));
+        providers.add(new YahooRateProvider(new ProviderSourceCallbackAdapter<List<YahooRate>>() {
+            @Override
+            public void onResult(List<YahooRate> rates) {
+                RatesHolder.getInstance().addRate(rates, CurrencySource.Type.YAHOO);
+                EventBus.getDefault().post(new RatesEvent<>(rates, CurrencySource.Type.YAHOO));
             }
         }));
         SourcesManager.init();

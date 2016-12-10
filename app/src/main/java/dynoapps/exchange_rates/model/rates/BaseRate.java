@@ -18,9 +18,7 @@ public abstract class BaseRate implements IConvertable, IRate {
 
     public long fetchMilis;
     protected int rateType;
-    public float realValue;
     public String type;
-    public String value;
 
     @Override
     public int getRateType() {

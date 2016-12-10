@@ -82,7 +82,7 @@ public class GarantiRateProvider extends BasePoolingDataProvider<List<GarantiRat
             if (elements != null) {
                 for (Element element : elements) {
                     GarantiRate rate = new GarantiRate();
-                    rate.value = element.child(2).text();
+                    rate.avg_val = element.child(2).text();
                     rate.type = element.child(0).text();
                     rate.toRateType();
                     rate.setRealValues();
