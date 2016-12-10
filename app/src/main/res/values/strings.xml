@@ -25,4 +25,5 @@
     <string name="select_at_least_one_source">Select at least one source.</string>
     <string name="remove">Remove</string>
     <string name="remove_source_approve">Remove selected source?</string>
+    <string name="euro_dollar_sign" translatable="false">€/$</string>
 </resources>

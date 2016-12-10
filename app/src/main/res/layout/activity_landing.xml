@@ -126,7 +126,7 @@
 
                 <TextView
                         android:layout_width="wrap_content"
-                        android:text="£/$"
+                        android:text="@string/euro_dollar_sign"
                         android:minWidth="@dimen/cards_list_name_width"
                         android:textSize="20sp"
                         android:gravity="center"

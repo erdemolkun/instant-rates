@@ -6,4 +6,5 @@
 
     <dimen name="keyline_2">72dp</dimen>
     <dimen name="cards_list_name_width">36dp</dimen>
+    <dimen name="drawer_item_height">72dp</dimen>
 </resources>
