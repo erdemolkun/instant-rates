@@ -144,10 +144,12 @@ public class ChartActivity extends BaseActivity {
     }
 
     private void update(List<BaseRate> rates, long fetchMilis) {
+        // todo find indexy via source manager.
         BaseRate rateUsd = RateUtils.getRate(rates, rateType);
         if (rateUsd != null) {
             if (rateUsd instanceof YapıKrediRate) {
                 addEntry(((YapıKrediRate) rateUsd).value_sell_real, 5, fetchMilis);
+                addEntry(((YapıKrediRate) rateUsd).value_buy_real, 6, fetchMilis);
             } else if (rateUsd instanceof DolarTlKurRate) {
                 addEntry(((DolarTlKurRate) rateUsd).realValue, 4, fetchMilis);
             } else if (rateUsd instanceof YorumlarRate) {
@@ -217,12 +219,16 @@ public class ChartActivity extends BaseActivity {
         lineChart.setPinchZoom(false);
 
         LineData data = lineChart.getData();
-        data.addDataSet(createDataSet(0));
-        data.addDataSet(createDataSet(1));
-        data.addDataSet(createDataSet(2));
-        data.addDataSet(createDataSet(3));
-        data.addDataSet(createDataSet(4));
-        data.addDataSet(createDataSet(5));
+        ArrayList<CurrencySource> sources = SourcesManager.getCurrencySources();
+        for (CurrencySource source:sources){
+            if (!source.isAvgType()){
+                data.addDataSet(createDataSet(source.getColor(),source.getName()+" "+getString(R.string.sell)));
+                data.addDataSet(createDataSet(source.getColor(),source.getName()+" "+getString(R.string.buy)));
+            }
+            else{
+                data.addDataSet(createDataSet(source.getColor(),source.getName()));
+            }
+        }
 
         Legend legend = lineChart.getLegend();
         legend.setTextSize(13);
@@ -352,58 +358,16 @@ public class ChartActivity extends BaseActivity {
         }
     }
 
-    private LineDataSet createDataSet(int chartIndex) {
+    private LineDataSet createDataSet(int color,String name) {
 
-        /**
-         * TODO: get label via {@link SourcesManager}
-         * */
-        String label;
-        switch (chartIndex) {
-            case 0:
-                label = "yorumlar.altin.in";
-                break;
-            case 1:
-                label = "Enpara Satış";
-                break;
-            case 2:
-                label = "Enpara Alış";
-                break;
-            case 3:
-                label = "Bigpara";
-                break;
-            case 4:
-                label = "dolar.tlkur.com";
-                break;
-            case 5:
-                label = "Yapı Kredi";
-                break;
-            default:
-                label = "Unknown";
-                break;
-        }
 
-        LineDataSet set = new LineDataSet(null, label);
+        LineDataSet set = new LineDataSet(null, name);
         set.setCubicIntensity(0.1f);
         set.setDrawCircleHole(false);
         set.setLineWidth(2f);
         set.setCircleRadius(2.5f);
         set.setDrawCircles(true);
-        int color;
-        if (chartIndex == 0) {
-            color = ContextCompat.getColor(this, R.color.colorYorumlar);
-        } else if (chartIndex == 1) {
-            color = ContextCompat.getColor(this, R.color.colorEnpara);
-        } else if (chartIndex == 2) {
-            color = ContextCompat.getColor(this, R.color.colorEnpara);
-        } else if (chartIndex == 3) {
-            color = ContextCompat.getColor(this, R.color.colorBigPara);
-        } else if (chartIndex == 4) {
-            color = ContextCompat.getColor(this, R.color.colorDolarTlKur);
-        } else if (chartIndex == 5) {
-            color = ContextCompat.getColor(this, R.color.colorYapıKredi);
-        } else {
-            color = ContextCompat.getColor(this, R.color.colorBigPara);
-        }
+
 
         set.setCircleColor(color);
         set.setHighLightColor(Color.rgb(155, 155, 155));

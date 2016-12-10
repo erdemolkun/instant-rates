@@ -51,7 +51,9 @@ import dynoapps.exchange_rates.model.rates.BuySellRate;
 import dynoapps.exchange_rates.model.rates.IRate;
 import dynoapps.exchange_rates.service.RatePollingService;
 import dynoapps.exchange_rates.time.TimeIntervalManager;
+import dynoapps.exchange_rates.util.AppUtils;
 import dynoapps.exchange_rates.util.RateUtils;
+import dynoapps.exchange_rates.util.ViewUtils;
 
 /**
  * Created by erdemmac on 06/12/2016.
@@ -79,6 +81,9 @@ public class LandingActivity extends BaseActivity {
 
     @BindView(R.id.v_landing_side_menu_hint)
     View vCloseHint;
+
+    @BindView(R.id.v_navdrawer_version)
+    TextView tvVersion;
 
     private Handler mHandler;
     private static final int NAVDRAWER_LAUNCH_DELAY = 250;
@@ -296,6 +301,8 @@ public class LandingActivity extends BaseActivity {
                 }
             });
         }
+
+        tvVersion.setText("v"+AppUtils.getAppVersion());
 
     }
 

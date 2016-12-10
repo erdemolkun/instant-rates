@@ -1,5 +1,9 @@
 package dynoapps.exchange_rates.data;
 
+import android.support.annotation.ColorRes;
+import android.support.v4.content.ContextCompat;
+
+import dynoapps.exchange_rates.App;
 import dynoapps.exchange_rates.provider.IPollingSource;
 
 /**
@@ -11,18 +15,18 @@ public class CurrencySource {
     private String name;
     private boolean enabled;
     private int sourceType;
+    private int color;
 
-    public CurrencySource(String name, int sourceType) {
-        this.name = name;
-        this.sourceType = sourceType;
-    }
-
-    public CurrencySource(String name, int sourceType, boolean enabled) {
+    public CurrencySource(String name, int sourceType, @ColorRes int colorRes, boolean enabled) {
         this.name = name;
         this.sourceType = sourceType;
         this.enabled = enabled;
+        this.color= ContextCompat.getColor(App.context(),colorRes);
     }
 
+    public int getColor() {
+        return color;
+    }
 
     public int getSourceType() {
         return sourceType;
@@ -48,6 +52,9 @@ public class CurrencySource {
         return iPollingSource;
     }
 
+    public boolean isAvgType(){
+        return sourceType==Type.YORUMLAR || sourceType==Type.BIGPARA || sourceType==Type.TLKUR;
+    }
 
     public interface Type {
         int YORUMLAR = 1;

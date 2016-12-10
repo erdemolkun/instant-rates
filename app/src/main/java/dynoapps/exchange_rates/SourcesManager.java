@@ -2,6 +2,7 @@ package dynoapps.exchange_rates;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.View;
@@ -156,11 +157,11 @@ public class SourcesManager {
 
         if (currencySources != null && currencySources.size() > 0) return;
 
-        currencySources.add(new CurrencySource("Yorumlar", CurrencySource.Type.YORUMLAR, true));
-        currencySources.add(new CurrencySource("Enpara", CurrencySource.Type.ENPARA, true));
-        currencySources.add(new CurrencySource("Bigpara", CurrencySource.Type.BIGPARA, false));
-        currencySources.add(new CurrencySource("TlKur", CurrencySource.Type.TLKUR, false));
-        currencySources.add(new CurrencySource("Yapı Kredi", CurrencySource.Type.YAPIKREDI, false));
+        currencySources.add(new CurrencySource("Yorumlar", CurrencySource.Type.YORUMLAR,R.color.colorYorumlar ,true));
+        currencySources.add(new CurrencySource("Enpara", CurrencySource.Type.ENPARA, R.color.colorEnpara,true));
+        currencySources.add(new CurrencySource("Bigpara", CurrencySource.Type.BIGPARA,R.color.colorBigPara, false));
+        currencySources.add(new CurrencySource("TlKur", CurrencySource.Type.TLKUR,R.color.colorDolarTlKur, false));
+        currencySources.add(new CurrencySource("Yapı Kredi", CurrencySource.Type.YAPIKREDI,R.color.colorYapıKredi, false));
 
         updateSourceStatesFromPrefs();
     }
