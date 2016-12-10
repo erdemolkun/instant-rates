@@ -9,6 +9,7 @@ import dynoapps.exchange_rates.time.TimeIntervalManager;
 
 /**
  * Created by erdemmac on 25/11/2016.
+ * todo add is enabled state
  */
 
 public abstract class BasePoolingDataProvider<T> implements IPollingSource, Runnable {
@@ -57,13 +58,16 @@ public abstract class BasePoolingDataProvider<T> implements IPollingSource, Runn
             float ratio = (error_count / (float) (success_count <= 0 ? 1 : success_count));
             interval_value = (int) (NEXT_FETCH_ON_ERROR + Math.log(ratio) * NEXT_FETCH_ON_ERROR);
         }
+        isWorking.set(true);
         getHandler().postDelayed(this, interval_value);
 
     }
 
     public void refreshForIntervals() {
         getHandler().removeCallbacks(this);
-        getHandler().postDelayed(this, TimeIntervalManager.getIntervalInMiliseconds());
+        if (isWorking.get()) {
+            getHandler().postDelayed(this, TimeIntervalManager.getIntervalInMiliseconds());
+        }
     }
 
     @Override
