@@ -91,8 +91,10 @@ public class ChartActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+        if (savedInstanceState!=null) {
+            SourcesManager.init();
+        }
         rateType = getIntent().getExtras().getInt(EXTRA_RATE_TYPE, rateType);
-
 
         String title = getString(R.string.dollar_tl_graph);
         if (rateType == IRate.EUR) {
