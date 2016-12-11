@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -177,7 +178,6 @@ public class ChartActivity extends BaseActivity {
         update(rates, ratesEvent.fetchTime);
     }
 
-
     private void initChart() {
 //        Description description = new Description();
 //        description.setTextSize(12f);
@@ -284,11 +284,6 @@ public class ChartActivity extends BaseActivity {
         return val;
     }
 
-    private String entryToUI(float entry) {
-        return entryToUI(entry, rateType);
-    }
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_rates, menu);
@@ -366,7 +361,7 @@ public class ChartActivity extends BaseActivity {
         }
     }
 
-    private LineDataSet createDataSet(int color,String name) {
+    private LineDataSet createDataSet(@ColorInt int color, String name) {
 
 
         LineDataSet set = new LineDataSet(null, name);
