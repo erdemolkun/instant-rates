@@ -18,11 +18,28 @@ import dynoapps.exchange_rates.event.IntervalUpdate;
  * Created by erdemmac on 03/12/2016.
  */
 
-public class TimeIntervalManager {
+public final class TimeIntervalManager {
 
-    private static int selected_interval_index = getPrefIndex();
-    private static long prefInterval = Prefs.getInterval(App.context());
+    private static final int DEFAULT_INTERVAL_INDEX = 2;
 
+    private static Integer selected_interval_index = getSelectedIndexViaPrefs();
+    private static long pref_interval_milis = Prefs.getInterval(App.context());
+    private static ArrayList<TimeInterval> intervals;
+
+    private static ArrayList<TimeInterval> getDefaultIntervals() {
+        if (intervals == null || intervals.size() == 0) {
+            intervals = new ArrayList<>();
+            intervals.add(new TimeInterval(3, TimeUnit.SECONDS));
+            intervals.add(new TimeInterval(5, TimeUnit.SECONDS));
+            intervals.add(new TimeInterval(10, TimeUnit.SECONDS));
+            intervals.add(new TimeInterval(20, TimeUnit.SECONDS));
+            intervals.add(new TimeInterval(30, TimeUnit.MINUTES));
+            intervals.add(new TimeInterval(1, TimeUnit.MINUTES));
+            intervals.add(new TimeInterval(2, TimeUnit.MINUTES));
+            intervals.add(new TimeInterval(3, TimeUnit.MINUTES));
+        }
+        return intervals;
+    }
 
     private static int temp_selected_item_index = -1;
 
@@ -59,7 +76,7 @@ public class TimeIntervalManager {
         dialog.show();
     }
 
-    private static int getPrefIndex() {
+    private static int getSelectedIndexViaPrefs() {
         long saved = Prefs.getInterval(App.context());
         if (saved < 0)
             return -1;
@@ -73,9 +90,7 @@ public class TimeIntervalManager {
         return -1;
     }
 
-    private static final int DEFAULT_INTERVAL_INDEX = 2;
-
-    public static int getSelectedIndex() {
+    private static int getSelectedIndex() {
         if (selected_interval_index < 0) {
             return DEFAULT_INTERVAL_INDEX;
         }
@@ -94,42 +109,19 @@ public class TimeIntervalManager {
 
     public static long getIntervalInMiliseconds() {
         if (selected_interval_index < 0) {
-            if (prefInterval < 0) {
+            if (pref_interval_milis < 0) {
                 return getDefaultIntervals().get(DEFAULT_INTERVAL_INDEX).to(TimeUnit.MILLISECONDS);
             } else {
-                return prefInterval;
+                return pref_interval_milis;
             }
         }
         return getDefaultIntervals().get(selected_interval_index).to(TimeUnit.MILLISECONDS);
     }
 
-
-    private static ArrayList<TimeInterval> intervals;
-
-    public static ArrayList<TimeInterval> getDefaultIntervals() {
-        if (intervals == null || intervals.size() <= 0) {
-            intervals = new ArrayList<>();
-            intervals.add(new TimeInterval(3, TimeUnit.SECONDS));
-            intervals.add(new TimeInterval(5, TimeUnit.SECONDS));
-            intervals.add(new TimeInterval(10, TimeUnit.SECONDS));
-            intervals.add(new TimeInterval(30, TimeUnit.SECONDS));
-            intervals.add(new TimeInterval(1, TimeUnit.MINUTES));
-            intervals.add(new TimeInterval(3, TimeUnit.MINUTES));
-            intervals.add(new TimeInterval(5, TimeUnit.MINUTES));
-            intervals.add(new TimeInterval(10, TimeUnit.MINUTES));
-            intervals.add(new TimeInterval(15, TimeUnit.MINUTES));
-        }
-        return intervals;
-    }
-
-    public static class TimeInterval {
-        public TimeInterval(int value, TimeUnit timeUnit) {
+    static class TimeInterval {
+         TimeInterval(int value, TimeUnit timeUnit) {
             this.value = value;
             this.timeUnit = timeUnit;
-        }
-
-        public TimeUnit getTimeUnit() {
-            return timeUnit;
         }
 
         public long to(TimeUnit unit) {
@@ -138,11 +130,10 @@ public class TimeIntervalManager {
 
         @Override
         public String toString() {
-            // // TODO: 03/12/2016 localization
             if (timeUnit == TimeUnit.SECONDS) {
-                return value + " " + "sn";
+                return value + " " + App.context().getString(R.string.sec_short);
             } else if (timeUnit == TimeUnit.MINUTES) {
-                return value + " " + "dk";
+                return value + " " + App.context().getString(R.string.min_short);
             } else {
                 return value + "";
             }

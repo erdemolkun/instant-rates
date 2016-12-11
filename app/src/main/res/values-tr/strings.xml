@@ -22,4 +22,6 @@
     <string name="select_at_least_one_source">En az bir kaynak seçmelisiniz</string>
     <string name="remove">Kaldır</string>
     <string name="remove_source_approve">Seçili kaynağı kaldır?</string>
+    <string name="sec_short">sn</string>
+    <string name="min_short">dk</string>
 </resources>

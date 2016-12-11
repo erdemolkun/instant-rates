@@ -26,4 +26,6 @@
     <string name="remove">Remove</string>
     <string name="remove_source_approve">Remove selected source?</string>
     <string name="euro_dollar_sign" translatable="false">€/$</string>
+    <string name="sec_short">sec</string>
+    <string name="min_short">min</string>
 </resources>
