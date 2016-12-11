@@ -175,6 +175,9 @@ public class SourcesManager {
         String sources = Prefs.getSources();
         if (!TextUtils.isEmpty(sources)) {
             String[] splits = sources.split(";");
+            for (CurrencySource currencySource : currencySources) {
+                currencySource.setEnabled(false);
+            }
             for (String str : splits) {
                 if (TextUtils.isEmpty(str)) continue;
                 int sourceType;
