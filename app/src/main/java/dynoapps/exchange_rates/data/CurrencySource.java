@@ -14,12 +14,12 @@ public class CurrencySource {
     private IPollingSource iPollingSource;
     private String name;
     private boolean enabled;
-    private int sourceType;
+    private int source_type;
     private int color;
 
-    public CurrencySource(String name, int sourceType, @ColorRes int colorRes, boolean enabled) {
+    public CurrencySource(String name, int source_type, @ColorRes int colorRes, boolean enabled) {
         this.name = name;
-        this.sourceType = sourceType;
+        this.source_type = source_type;
         this.enabled = enabled;
         this.color= ContextCompat.getColor(App.context(),colorRes);
     }
@@ -28,8 +28,8 @@ public class CurrencySource {
         return color;
     }
 
-    public int getSourceType() {
-        return sourceType;
+    public int getSource_type() {
+        return source_type;
     }
 
     public String getName() {
@@ -53,7 +53,7 @@ public class CurrencySource {
     }
 
     public boolean isAvgType(){
-        return sourceType==Type.YORUMLAR || sourceType==Type.BIGPARA || sourceType==Type.TLKUR || sourceType==Type.YAHOO;
+        return source_type ==Type.YORUMLAR || source_type ==Type.BIGPARA || source_type ==Type.TLKUR || source_type ==Type.YAHOO;
     }
 
     public interface Type {

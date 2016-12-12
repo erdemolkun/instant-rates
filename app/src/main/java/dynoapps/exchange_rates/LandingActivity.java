@@ -106,24 +106,24 @@ public class LandingActivity extends BaseActivity {
                 }
                 boolean foundCard = false;
                 for (CardViewItem item : parent.items) {
-                    if (item.source_type == dataSource.getSourceType()) {
+                    if (item.source_type == dataSource.getSource_type()) {
                         item.card.setVisibility(isEnabled ? View.VISIBLE : View.GONE);
                         foundCard = true;
                     }
                 }
                 if (!foundCard && isEnabled) {
                     if (dataSource.isAvgType()) {
-                        addCardToParent(parent, ValueType.AVG, dataSource.getSourceType());
+                        addCardToParent(parent, ValueType.AVG, dataSource.getSource_type());
                     } else {
-                        addCardToParent(parent, ValueType.BUY, dataSource.getSourceType());
-                        addCardToParent(parent, ValueType.SELL, dataSource.getSourceType());
+                        addCardToParent(parent, ValueType.BUY, dataSource.getSource_type());
+                        addCardToParent(parent, ValueType.SELL, dataSource.getSource_type());
                     }
                 }
             }
         }
     }
 
-    private void addCardToParent(final CardViewItemParent parent, int valueType, final int sourceType) {
+    private void addCardToParent(final CardViewItemParent parent, int value_type, final int source_type) {
         LayoutInflater.from(this).inflate(R.layout.layout_simple_rate_card, parent.me, true);
         View v = parent.me.getChildAt(parent.me.getChildCount() - 1);
         v.setOnClickListener(new View.OnClickListener() {
@@ -144,7 +144,7 @@ public class LandingActivity extends BaseActivity {
                 builder.setPositiveButton(R.string.sure, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        CurrencySource currencySource = SourcesManager.getSource(sourceType);
+                        CurrencySource currencySource = SourcesManager.getSource(source_type);
                         if (currencySource != null) {
                             currencySource.setEnabled(false);
                         }
@@ -160,8 +160,8 @@ public class LandingActivity extends BaseActivity {
                 return true;
             }
         });
-        CardViewItem item = new CardViewItem(v, sourceType, valueType);
-        item.tvType.setText(SourcesManager.getSourceName(sourceType, valueType));
+        CardViewItem item = new CardViewItem(v, source_type, value_type);
+        item.tvType.setText(SourcesManager.getSourceName(source_type, value_type));
         parent.items.add(item);
     }
 
@@ -194,19 +194,19 @@ public class LandingActivity extends BaseActivity {
         @BindView(R.id.tv_rate_value)
         TextView tvValue;
 
-        CardViewItem(View card, int source_type, int valueType) {
+        CardViewItem(View card, int source_type, int value_type) {
             this.card = card;
             this.source_type = source_type;
-            this.valueType = valueType;
+            this.value_type = value_type;
             ButterKnife.bind(this,card);
         }
 
         View card;
 
-        int valueType;
+        int value_type;
 
         /**
-         * Refers to {@link CurrencySource#getSourceType()}
+         * Refers to {@link CurrencySource#getSource_type()}
          */
         int source_type;
 
@@ -260,7 +260,7 @@ public class LandingActivity extends BaseActivity {
             for (int i = 0; i < sparseArray.size(); i++) {
                 RatesEvent<BaseRate> ratesEvent = sparseArray.valueAt(i);
                 List<BaseRate> rates = ratesEvent.rates;
-                update(rates, ratesEvent.sourceType, false);
+                update(rates, ratesEvent.source_type, false);
             }
         }
 
@@ -271,7 +271,7 @@ public class LandingActivity extends BaseActivity {
         }
         for (CardViewItemParent parent : parentItems) {
             for (CardViewItem item : parent.items) {
-                item.tvType.setText(SourcesManager.getSourceName(item.source_type, item.valueType));
+                item.tvType.setText(SourcesManager.getSourceName(item.source_type, item.value_type));
             }
         }
 
@@ -486,9 +486,9 @@ public class LandingActivity extends BaseActivity {
                     if (baseRate != null) {
                         String val = "";
                         if (baseRate instanceof BuySellRate) {
-                            if (item.valueType == ValueType.SELL) {
+                            if (item.value_type == ValueType.SELL) {
                                 val = baseRate.getFormatted(((BuySellRate) baseRate).value_sell_real);
-                            } else if (item.valueType == ValueType.BUY) {
+                            } else if (item.value_type == ValueType.BUY) {
                                 val = baseRate.getFormatted(((BuySellRate) baseRate).value_buy_real);
                             }
                         } else if (baseRate instanceof AvgRate) {
@@ -521,7 +521,7 @@ public class LandingActivity extends BaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(RatesEvent ratesEvent) {
         List<BaseRate> rates = ratesEvent.rates;
-        update(rates, ratesEvent.sourceType, true);
+        update(rates, ratesEvent.source_type, true);
     }
 
     @Subscribe

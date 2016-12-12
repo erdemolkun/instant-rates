@@ -126,16 +126,16 @@ public class ChartActivity extends BaseActivity {
             List<RatesEvent<BaseRate>> cachedEvents = new ArrayList<>();
             for (int i = 0; i < sparseArray.size(); i++) {
                 RatesEvent<BaseRate> ratesEvent = sparseArray.valueAt(i);
-                CurrencySource currencySource = SourcesManager.getSource(ratesEvent.sourceType);
+                CurrencySource currencySource = SourcesManager.getSource(ratesEvent.source_type);
                 if (currencySource != null && currencySource.isEnabled()) {
-                    if (ratesEvent.fetchTime < startMilis) {
-                        startMilis = ratesEvent.fetchTime;
+                    if (ratesEvent.fetch_time < startMilis) {
+                        startMilis = ratesEvent.fetch_time;
                     }
                     cachedEvents.add(ratesEvent);
                 }
             }
             for (RatesEvent<BaseRate> ratesEvent : cachedEvents) {
-                update(ratesEvent.rates, ratesEvent.fetchTime);
+                update(ratesEvent.rates, ratesEvent.fetch_time);
             }
         }
     }
@@ -176,7 +176,7 @@ public class ChartActivity extends BaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(RatesEvent ratesEvent) {
         List<BaseRate> rates = ratesEvent.rates;
-        update(rates, ratesEvent.fetchTime);
+        update(rates, ratesEvent.fetch_time);
     }
 
     private void initChart() {

@@ -41,7 +41,7 @@ public class SourcesManager {
     public static void updateProviders(ArrayList<BasePoolingDataProvider> providers) {
 
         for (CurrencySource currencySource : currencySources) {
-            switch (currencySource.getSourceType()) {
+            switch (currencySource.getSource_type()) {
                 case CurrencySource.Type.YORUMLAR:
                     currencySource.setPollingSource(CollectionUtils.getInstance(providers, YorumlarRateProvider.class));
                     break;
@@ -130,7 +130,7 @@ public class SourcesManager {
         for (int i = 0; i < currencySources.size(); i++) {
             CurrencySource currencySource = currencySources.get(i);
             if (currencySource.isEnabled()) {
-                sources += currencySource.getSourceType() + ";";
+                sources += currencySource.getSource_type() + ";";
             }
         }
         Prefs.saveSources(sources);
@@ -152,7 +152,7 @@ public class SourcesManager {
 
     public static String getSourceName(int type) {
         for (CurrencySource dataSource : currencySources) {
-            if (type == dataSource.getSourceType()) {
+            if (type == dataSource.getSource_type()) {
                 return dataSource.getName();
             }
         }
@@ -165,7 +165,7 @@ public class SourcesManager {
 
     public static CurrencySource getSource(int source_type) {
         for (CurrencySource currencySource : currencySources) {
-            if (currencySource.getSourceType() == source_type) return currencySource;
+            if (currencySource.getSource_type() == source_type) return currencySource;
         }
         return null;
     }
@@ -193,11 +193,11 @@ public class SourcesManager {
             }
             for (String str : splits) {
                 if (TextUtils.isEmpty(str)) continue;
-                int sourceType;
+                int source_type_temp;
                 try {
-                    sourceType = Integer.parseInt(str);
+                    source_type_temp = Integer.parseInt(str);
                     for (CurrencySource currencySource : currencySources) {
-                        if (currencySource.getSourceType() == sourceType) {
+                        if (currencySource.getSource_type() == source_type_temp) {
                             currencySource.setEnabled(true);
                         }
                     }

@@ -23,9 +23,9 @@ public class RatesHolder<T extends BaseRate> {
 
     private SparseArray<RatesEvent<T>> ratesArray;
 
-    public RatesEvent<T> getRates(int sourceType) {
-        if (ratesArray != null && ratesArray.get(sourceType, null) != null) {
-            return ratesArray.get(sourceType);
+    public RatesEvent<T> getRates(int source_type) {
+        if (ratesArray != null && ratesArray.get(source_type, null) != null) {
+            return ratesArray.get(source_type);
         }
         return null;
     }
