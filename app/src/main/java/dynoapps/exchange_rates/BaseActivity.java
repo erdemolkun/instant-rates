@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import butterknife.ButterKnife;
+import dynoapps.exchange_rates.util.AnimationHelper;
 import dynoapps.exchange_rates.util.L;
 
 /**
@@ -20,11 +21,37 @@ import dynoapps.exchange_rates.util.L;
  */
 
 public abstract class BaseActivity extends AppCompatActivity {
+
+    @AnimationHelper.AnimationType
+    int animationTypeEnter = AnimationHelper.NONE;
+    protected
+    @AnimationHelper.AnimationType
+    int animationTypeExit = AnimationHelper.NONE;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        AnimationHelper.doAnimation(this, animationTypeEnter, true);
         super.onCreate(savedInstanceState);
         setContentView(getLayoutId());
         ButterKnife.bind(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (isFinishing()) {
+            AnimationHelper.doAnimation(this, animationTypeExit, false);
+        }
+    }
+
+    protected void setAnimationType(@AnimationHelper.AnimationType int animationType) {
+        this.animationTypeEnter = animationType;
+        this.animationTypeExit = animationType;
+    }
+
+    protected void setAnimationType(@AnimationHelper.AnimationType int animationTypeEnter, @AnimationHelper.AnimationType int animationTypeExit) {
+        this.animationTypeEnter = animationTypeEnter;
+        this.animationTypeExit = animationTypeExit;
     }
 
 

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+     android:duration="@integer/jump_anim_total"
+     android:interpolator="@android:interpolator/accelerate_quint"
+     android:shareInterpolator="true">
+
+
+    <scale
+            android:duration="@integer/jump_anim_offset"
+            android:fromXScale="1.0"
+            android:fromYScale="1.0"
+            android:pivotX="50.0%"
+            android:pivotY="50.0%"
+            android:startOffset="0"
+            android:toXScale="0.6"
+            android:toYScale="0.6"/>
+
+    <alpha
+            android:duration="@integer/jump_anim_duration"
+            android:fromAlpha="1.0"
+            android:startOffset="@integer/jump_anim_offset"
+            android:toAlpha="0.0"/>
+    <scale
+            android:duration="@integer/jump_anim_duration"
+            android:fromXScale="1.0"
+            android:fromYScale="1.0"
+            android:pivotX="50.0%"
+            android:pivotY="50.0%"
+            android:startOffset="@integer/jump_anim_offset"
+            android:toXScale="10.0"
+            android:toYScale="10.0"/>
+
+</set>

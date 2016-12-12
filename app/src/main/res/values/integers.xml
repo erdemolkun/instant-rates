@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="activity_anim_duration_too_fast">200</integer>
+    <integer name="activity_anim_duration_fast">300</integer>
+    <integer name="activity_anim_duration_medium">400</integer>
+
+    <integer name="max_password_length_new">25</integer>
+    <integer name="max_mail_length">36</integer>
+    <integer name="activation_code_length">6</integer>
+    <integer name="tckn_length">11</integer>
+    <integer name="max_name_length">18</integer>
+
+    <integer name="card_flip_time_full">500</integer>
+    <integer name="card_flip_time_half">250</integer>
+
+    <integer name="product_list_span_count">2</integer>
+
+    <integer name="jump_anim_total">425</integer>
+    <integer name="jump_anim_offset">125</integer>
+    <integer name="jump_anim_duration">300</integer>
+
+    <integer name="mp_sms_length">8</integer>
+    <integer name="mp_pin_length">6</integer>
+</resources>

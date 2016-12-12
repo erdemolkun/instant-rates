@@ -53,6 +53,7 @@ import dynoapps.exchange_rates.model.rates.BuySellRate;
 import dynoapps.exchange_rates.model.rates.IRate;
 import dynoapps.exchange_rates.service.RatePollingService;
 import dynoapps.exchange_rates.time.TimeIntervalManager;
+import dynoapps.exchange_rates.util.AnimationHelper;
 import dynoapps.exchange_rates.util.AppUtils;
 import dynoapps.exchange_rates.util.RateUtils;
 
@@ -152,6 +153,7 @@ public class LandingActivity extends BaseActivity {
 
                 builder.setNegativeButton(R.string.ignore, null);
                 AlertDialog dialog = builder.create();
+                dialog.getWindow().setWindowAnimations(R.style.DialogAnimationFade);
                 dialog.show();
                 return true;
             }
@@ -245,6 +247,7 @@ public class LandingActivity extends BaseActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        setAnimationType(AnimationHelper.FADE_IN);
         super.onCreate(savedInstanceState);
         mHandler = new Handler(Looper.getMainLooper());
         if (getActionBarToolbar() != null) {

@@ -120,6 +120,7 @@ public class SourcesManager {
                 });
             }
         });
+        dialog.getWindow().setWindowAnimations(R.style.DialogAnimationFade);
         dialog.show();
 
 

@@ -54,6 +54,7 @@ import dynoapps.exchange_rates.model.rates.YahooRate;
 import dynoapps.exchange_rates.model.rates.YapıKrediRate;
 import dynoapps.exchange_rates.model.rates.YorumlarRate;
 import dynoapps.exchange_rates.time.TimeIntervalManager;
+import dynoapps.exchange_rates.util.AnimationHelper;
 import dynoapps.exchange_rates.util.RateUtils;
 import dynoapps.exchange_rates.util.ViewUtils;
 
@@ -90,7 +91,7 @@ public class ChartActivity extends BaseActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-
+        setAnimationType(AnimationHelper.FADE_IN);
         super.onCreate(savedInstanceState);
         if (savedInstanceState!=null) {
             SourcesManager.init();

@@ -77,6 +77,7 @@ public final class TimeIntervalManager {
         builder.setNegativeButton(R.string.dismiss, null);
 
         AlertDialog dialog = builder.create();
+        dialog.getWindow().setWindowAnimations(R.style.DialogAnimationFade);
         dialog.show();
     }
 
