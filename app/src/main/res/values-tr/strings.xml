@@ -24,4 +24,5 @@
     <string name="remove_source_approve">Seçili kaynağı kaldır?</string>
     <string name="sec_short">sn</string>
     <string name="min_short">dk</string>
+    <string name="interval_hint">• Veri yenileme sıklığı %s</string>
 </resources>

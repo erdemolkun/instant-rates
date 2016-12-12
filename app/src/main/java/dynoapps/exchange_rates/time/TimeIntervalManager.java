@@ -43,7 +43,11 @@ public final class TimeIntervalManager {
 
     private static int temp_selected_item_index = -1;
 
-    public static void selectInterval(Activity activity) {
+    public static String getSelection() {
+        return getDefaultIntervals().get(getSelectedIndex()).toString();
+    }
+
+    public static void selectInterval(final Activity activity) {
 
         final ArrayList<TimeIntervalManager.TimeInterval> timeIntervals = TimeIntervalManager.getDefaultIntervals();
         temp_selected_item_index = TimeIntervalManager.getSelectedIndex();
@@ -119,7 +123,7 @@ public final class TimeIntervalManager {
     }
 
     static class TimeInterval {
-         TimeInterval(int value, TimeUnit timeUnit) {
+        TimeInterval(int value, TimeUnit timeUnit) {
             this.value = value;
             this.timeUnit = timeUnit;
         }

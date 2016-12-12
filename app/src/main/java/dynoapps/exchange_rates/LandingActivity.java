@@ -45,6 +45,7 @@ import butterknife.BindView;
 import dynoapps.exchange_rates.data.CurrencySource;
 import dynoapps.exchange_rates.data.RatesHolder;
 import dynoapps.exchange_rates.event.DataSourceUpdate;
+import dynoapps.exchange_rates.event.IntervalUpdate;
 import dynoapps.exchange_rates.event.RatesEvent;
 import dynoapps.exchange_rates.model.rates.AvgRate;
 import dynoapps.exchange_rates.model.rates.BaseRate;
@@ -85,6 +86,9 @@ public class LandingActivity extends BaseActivity {
     @BindView(R.id.v_navdrawer_version)
     TextView tvVersion;
 
+    @BindView(R.id.tv_interval_hint)
+    TextView tvIntervalHint;
+
     private Handler mHandler;
     private static final int NAVDRAWER_LAUNCH_DELAY = 250;
 
@@ -105,10 +109,9 @@ public class LandingActivity extends BaseActivity {
                     }
                 }
                 if (!foundCard && isEnabled) {
-                    if (dataSource.isAvgType()){
+                    if (dataSource.isAvgType()) {
                         addCardToParent(parent, ValueType.AVG, dataSource.getSourceType());
-                    }
-                    else{
+                    } else {
                         addCardToParent(parent, ValueType.BUY, dataSource.getSourceType());
                         addCardToParent(parent, ValueType.SELL, dataSource.getSourceType());
                     }
@@ -299,7 +302,8 @@ public class LandingActivity extends BaseActivity {
             });
         }
 
-        tvVersion.setText("v"+AppUtils.getAppVersion());
+        tvVersion.setText("v" + AppUtils.getAppVersion());
+        updateHint();
 
     }
 
@@ -493,7 +497,7 @@ public class LandingActivity extends BaseActivity {
                             } else if (item.valueType == ValueType.BUY) {
                                 val = baseRate.getFormatted(((BuySellRate) baseRate).value_buy_real);
                             }
-                        } else if (baseRate instanceof AvgRate){
+                        } else if (baseRate instanceof AvgRate) {
                             val = baseRate.getFormatted(((AvgRate) baseRate).avg_val_real);
                         }
                         View v = item.card.findViewById(R.id.tv_rate_value);
@@ -530,6 +534,15 @@ public class LandingActivity extends BaseActivity {
     @Subscribe
     public void onEvent(DataSourceUpdate event) {
         refreshCardItems();
+    }
+
+    @Subscribe
+    public void onEvent(IntervalUpdate event) {
+        updateHint();
+    }
+
+    private void updateHint() {
+        tvIntervalHint.setText(getString(R.string.interval_hint, TimeIntervalManager.getSelection()));
     }
 
     @Override
