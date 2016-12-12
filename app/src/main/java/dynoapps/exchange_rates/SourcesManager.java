@@ -40,25 +40,25 @@ public class SourcesManager {
 
     public static void updateProviders(ArrayList<BasePoolingDataProvider> providers) {
 
-        for (CurrencySource currencySource : currencySources) {
-            switch (currencySource.getSource_type()) {
+        for (CurrencySource source : currencySources) {
+            switch (source.getSource_type()) {
                 case CurrencySource.Type.YORUMLAR:
-                    currencySource.setPollingSource(CollectionUtils.getInstance(providers, YorumlarRateProvider.class));
+                    source.setPollingSource(CollectionUtils.getInstance(providers, YorumlarRateProvider.class));
                     break;
                 case CurrencySource.Type.ENPARA:
-                    currencySource.setPollingSource(CollectionUtils.getInstance(providers, EnparaRateProvider.class));
+                    source.setPollingSource(CollectionUtils.getInstance(providers, EnparaRateProvider.class));
                     break;
                 case CurrencySource.Type.BIGPARA:
-                    currencySource.setPollingSource(CollectionUtils.getInstance(providers, BigparaRateProvider.class));
+                    source.setPollingSource(CollectionUtils.getInstance(providers, BigparaRateProvider.class));
                     break;
                 case CurrencySource.Type.TLKUR:
-                    currencySource.setPollingSource(CollectionUtils.getInstance(providers, DolarTlKurRateProvider.class));
+                    source.setPollingSource(CollectionUtils.getInstance(providers, DolarTlKurRateProvider.class));
                     break;
                 case CurrencySource.Type.YAPIKREDI:
-                    currencySource.setPollingSource(CollectionUtils.getInstance(providers, YapıKrediRateProvider.class));
+                    source.setPollingSource(CollectionUtils.getInstance(providers, YapıKrediRateProvider.class));
                     break;
                 case CurrencySource.Type.YAHOO:
-                    currencySource.setPollingSource(CollectionUtils.getInstance(providers, YahooRateProvider.class));
+                    source.setPollingSource(CollectionUtils.getInstance(providers, YahooRateProvider.class));
                     break;
             }
         }
@@ -138,7 +138,7 @@ public class SourcesManager {
 
 
     /**
-     * @param value_type one of {@link ValueType}
+     * @param value_type is one of {@link ValueType}
      */
     public static String getSourceName(int type, int value_type) {
         String postFix = "";
@@ -151,9 +151,9 @@ public class SourcesManager {
     }
 
     public static String getSourceName(int type) {
-        for (CurrencySource dataSource : currencySources) {
-            if (type == dataSource.getSource_type()) {
-                return dataSource.getName();
+        for (CurrencySource source : currencySources) {
+            if (type == source.getSource_type()) {
+                return source.getName();
             }
         }
         return "";
