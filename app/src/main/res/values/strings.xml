@@ -26,7 +26,13 @@
     <string name="remove">Remove</string>
     <string name="remove_source_approve">Remove selected source?</string>
     <string name="euro_dollar_sign" translatable="false">€/$</string>
-    <string name="sec_short">sec</string>
-    <string name="min_short">min</string>
-    <string name="interval_hint">• Data update interval %s</string>
+    <string name="interval_hint"> • Data update interval <b>%s</b></string>
+    <plurals name="sec_short">
+        <item quantity="one">%d sec</item>
+        <item quantity="other">%d secs</item>
+    </plurals>
+    <plurals name="min_short">
+        <item quantity="one">%d min</item>
+        <item quantity="other">%d mins</item>
+    </plurals>
 </resources>

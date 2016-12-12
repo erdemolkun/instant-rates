@@ -22,7 +22,13 @@
     <string name="select_at_least_one_source">En az bir kaynak seçmelisiniz</string>
     <string name="remove">Kaldır</string>
     <string name="remove_source_approve">Seçili kaynağı kaldır?</string>
-    <string name="sec_short">sn</string>
-    <string name="min_short">dk</string>
-    <string name="interval_hint">• Veri yenileme sıklığı %s</string>
+    <string name="interval_hint"> • Veri yenileme sıklığı <b>%s</b></string>
+    <plurals name="sec_short">
+        <item quantity="one">%d sn</item>
+        <item quantity="other">%d sn</item>
+    </plurals>
+    <plurals name="min_short">
+        <item quantity="one">%d dk</item>
+        <item quantity="other">%d dk</item>
+    </plurals>
 </resources>

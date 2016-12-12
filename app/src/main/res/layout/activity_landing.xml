@@ -52,10 +52,12 @@
                 android:paddingBottom="2dp"
                 android:paddingStart="32sp"
                 android:paddingEnd="32dp"
+                android:fontFamily="sans-serif"
                 android:textColor="@color/colorPrimary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="16sp"
+                android:textSize="14sp"
                 android:paddingRight="16dp"/>
 
         <HorizontalScrollView

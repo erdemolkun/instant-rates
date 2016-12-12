@@ -135,9 +135,9 @@ public final class TimeIntervalManager {
         @Override
         public String toString() {
             if (timeUnit == TimeUnit.SECONDS) {
-                return value + " " + App.context().getString(R.string.sec_short);
+                return App.context().getResources().getQuantityString(R.plurals.sec_short, value, value);
             } else if (timeUnit == TimeUnit.MINUTES) {
-                return value + " " + App.context().getString(R.string.min_short);
+                return App.context().getResources().getQuantityString(R.plurals.min_short, value, value);
             } else {
                 return value + "";
             }
