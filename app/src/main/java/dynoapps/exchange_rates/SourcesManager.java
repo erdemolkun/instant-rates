@@ -2,7 +2,6 @@ package dynoapps.exchange_rates;
 
 import android.app.Activity;
 import android.content.DialogInterface;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.View;
@@ -16,6 +15,7 @@ import java.util.List;
 
 import dynoapps.exchange_rates.data.CurrencySource;
 import dynoapps.exchange_rates.event.DataSourceUpdate;
+import dynoapps.exchange_rates.interfaces.ValueType;
 import dynoapps.exchange_rates.provider.BasePoolingDataProvider;
 import dynoapps.exchange_rates.provider.BigparaRateProvider;
 import dynoapps.exchange_rates.provider.DolarTlKurRateProvider;
@@ -30,7 +30,6 @@ import dynoapps.exchange_rates.util.CollectionUtils;
  */
 
 public class SourcesManager {
-
 
     private static ArrayList<CurrencySource> currencySources = new ArrayList<>();
 
@@ -138,6 +137,19 @@ public class SourcesManager {
     }
 
 
+    /**
+     * @param value_type one of {@link ValueType}
+     */
+    public static String getSourceName(int type, int value_type) {
+        String postFix = "";
+        if (value_type == ValueType.SELL) {
+            postFix = " " + App.context().getString(R.string.sell);
+        } else if (value_type == ValueType.BUY) {
+            postFix = " " + App.context().getString(R.string.buy);
+        }
+        return getSourceName(type) + postFix;
+    }
+
     public static String getSourceName(int type) {
         for (CurrencySource dataSource : currencySources) {
             if (type == dataSource.getSourceType()) {
@@ -162,12 +174,12 @@ public class SourcesManager {
 
         if (currencySources != null && currencySources.size() > 0) return;
 
-        currencySources.add(new CurrencySource("Yorumlar", CurrencySource.Type.YORUMLAR,R.color.colorYorumlar ,true));
-        currencySources.add(new CurrencySource("Enpara", CurrencySource.Type.ENPARA, R.color.colorEnpara,true));
-        currencySources.add(new CurrencySource("Bigpara", CurrencySource.Type.BIGPARA,R.color.colorBigPara, false));
-        currencySources.add(new CurrencySource("TlKur", CurrencySource.Type.TLKUR,R.color.colorDolarTlKur, false));
-        currencySources.add(new CurrencySource("Yapı Kredi", CurrencySource.Type.YAPIKREDI,R.color.colorYapıKredi, false));
-        currencySources.add(new CurrencySource("Yahoo", CurrencySource.Type.YAHOO,R.color.colorYahoo, false));
+        currencySources.add(new CurrencySource("Yorumlar", CurrencySource.Type.YORUMLAR, R.color.colorYorumlar, true));
+        currencySources.add(new CurrencySource("Enpara", CurrencySource.Type.ENPARA, R.color.colorEnpara, true));
+        currencySources.add(new CurrencySource("Bigpara", CurrencySource.Type.BIGPARA, R.color.colorBigPara, false));
+        currencySources.add(new CurrencySource("TlKur", CurrencySource.Type.TLKUR, R.color.colorDolarTlKur, false));
+        currencySources.add(new CurrencySource("Yapı Kredi", CurrencySource.Type.YAPIKREDI, R.color.colorYapıKredi, false));
+        currencySources.add(new CurrencySource("Yahoo", CurrencySource.Type.YAHOO, R.color.colorYahoo, false));
 
         updateSourceStatesFromPrefs();
     }

@@ -42,11 +42,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import dynoapps.exchange_rates.data.CurrencySource;
 import dynoapps.exchange_rates.data.RatesHolder;
 import dynoapps.exchange_rates.event.DataSourceUpdate;
 import dynoapps.exchange_rates.event.IntervalUpdate;
 import dynoapps.exchange_rates.event.RatesEvent;
+import dynoapps.exchange_rates.interfaces.ValueType;
 import dynoapps.exchange_rates.model.rates.AvgRate;
 import dynoapps.exchange_rates.model.rates.BaseRate;
 import dynoapps.exchange_rates.model.rates.BuySellRate;
@@ -159,20 +161,8 @@ public class LandingActivity extends BaseActivity {
             }
         });
         CardViewItem item = new CardViewItem(v, sourceType, valueType);
-        String postFix = "";
-        if (item.valueType == ValueType.SELL) {
-            postFix = " " + getString(R.string.sell);
-        } else if (item.valueType == ValueType.BUY) {
-            postFix = " " + getString(R.string.buy);
-        }
-        ((TextView) v.findViewById(R.id.tv_type)).setText(SourcesManager.getSourceName(sourceType) + postFix);
+        item.tvType.setText(SourcesManager.getSourceName(sourceType, valueType));
         parent.items.add(item);
-    }
-
-    interface ValueType {
-        int BUY = 1;
-        int SELL = 2;
-        int AVG = 3;
     }
 
     List<CardViewItemParent> parentItems = new ArrayList<>();
@@ -198,10 +188,17 @@ public class LandingActivity extends BaseActivity {
 
     static class CardViewItem {
 
+        @BindView(R.id.tv_type)
+        TextView tvType;
+
+        @BindView(R.id.tv_rate_value)
+        TextView tvValue;
+
         CardViewItem(View card, int source_type, int valueType) {
             this.card = card;
             this.source_type = source_type;
             this.valueType = valueType;
+            ButterKnife.bind(this,card);
         }
 
         View card;
@@ -274,13 +271,7 @@ public class LandingActivity extends BaseActivity {
         }
         for (CardViewItemParent parent : parentItems) {
             for (CardViewItem item : parent.items) {
-                String postFix = "";
-                if (item.valueType == ValueType.SELL) {
-                    postFix = " " + getString(R.string.sell);
-                } else if (item.valueType == ValueType.BUY) {
-                    postFix = " " + getString(R.string.buy);
-                }
-                ((TextView) item.card.findViewById(R.id.tv_type)).setText(SourcesManager.getSourceName(item.source_type) + postFix);
+                item.tvType.setText(SourcesManager.getSourceName(item.source_type, item.valueType));
             }
         }
 
@@ -503,10 +494,9 @@ public class LandingActivity extends BaseActivity {
                         } else if (baseRate instanceof AvgRate) {
                             val = baseRate.getFormatted(((AvgRate) baseRate).avg_val_real);
                         }
-                        View v = item.card.findViewById(R.id.tv_rate_value);
-                        ((TextView) v).setText(val);
+                        item.tvValue.setText(val);
                         if (animated)
-                            playFadeOutInAnim(v);
+                            playFadeOutInAnim(item.tvValue);
                     }
                 }
             }
