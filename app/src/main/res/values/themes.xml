@@ -1,0 +1,45 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+
+        <item name="actionBarIconColor">@color/white</item>
+        <item name="actionBarInsetStart">@dimen/keyline_2</item>
+        <item name="actionbarHeaderStyle">@style/HeaderBar</item>
+        <item name="android:splitMotionEvents">true</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+        <item name="toolbarTheme">@style/ActionBarThemeOverlay</item>
+        <item name="toolbarTextAppearance">@style/ActionBar.TitleText</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:navigationBarColor">@color/colorPrimary</item>
+
+    </style>
+
+    <style name="AppTheme.WithDrawer">
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+
+        <item name="android:windowTranslucentStatus">true</item>
+        <!--<item name="android:windowBackground">@color/white</item>-->
+    </style>
+
+    <!--<style name="AppTheme.NoActionbar" parent="AppTheme">-->
+    <!--<item name="windowActionBar">false</item>-->
+    <!--<item name="windowNoTitle">true</item>-->
+    <!--</style>-->
+
+    <!--<style name="SplashTheme" parent="AppTheme">-->
+    <!--<item name="windowActionBar">false</item>-->
+    <!--<item name="windowNoTitle">true</item>-->
+    <!--</style>-->
+
+
+    <style name="ActionBarPopupThemeOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+
+
+</resources>
