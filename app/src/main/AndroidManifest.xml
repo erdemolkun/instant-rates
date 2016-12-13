@@ -37,6 +37,7 @@
         <activity
                 android:configChanges="orientation|screenSize"
                 android:name=".LandingActivity"
+                android:launchMode="singleTask"
                 android:theme="@style/AppTheme.WithDrawer"
                 android:screenOrientation="portrait">
 

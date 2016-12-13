@@ -161,7 +161,7 @@ public class RatePollingService extends Service {
                 sendNotification(getString(R.string.is_below_value, formatter.format(alarm.val)), "decreasing");
             }
         }
-        if (size!=alarmsHolder.alarms.size()){
+        if (size != alarmsHolder.alarms.size()) {
             AlarmManager.saveAlarms();
         }
     }
@@ -205,8 +205,7 @@ public class RatePollingService extends Service {
     private void sendNotification(String message, String category) {
 
         Intent pushIntent = new Intent(this, LandingActivity.class);
-        pushIntent.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT |
-                Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        pushIntent.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
                 pushIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
