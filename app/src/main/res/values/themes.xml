@@ -6,12 +6,10 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-
-
+        
         <item name="actionBarIconColor">@color/white</item>
         <item name="actionBarInsetStart">@dimen/keyline_2</item>
         <item name="actionbarHeaderStyle">@style/HeaderBar</item>
-        <item name="android:splitMotionEvents">true</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <item name="toolbarTheme">@style/ActionBarThemeOverlay</item>
         <item name="toolbarTextAppearance">@style/ActionBar.TitleText</item>
