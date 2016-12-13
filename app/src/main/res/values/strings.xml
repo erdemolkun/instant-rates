@@ -35,6 +35,8 @@
     <string name="is_above_val">Value reached above %f</string>
     <string name="if_below">If below value</string>
     <string name="if_above">If above value</string>
+    <string name="alarms">Alarms</string>
+    <string name="graphic">Graphic</string>
     <plurals name="sec_short">
         <item quantity="one">%d sec</item>
         <item quantity="other">%d secs</item>

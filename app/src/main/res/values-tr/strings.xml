@@ -31,6 +31,8 @@
     <string name="is_above_val">%f değerininin üstüne çıktı</string>
     <string name="if_below">Değerinden Küçükse</string>
     <string name="if_above">Değerinden Büyükse</string>
+    <string name="alarms">Alarmlar</string>
+    <string name="graphic">Grafik</string>
     <plurals name="sec_short">
         <item quantity="one">%d sn</item>
         <item quantity="other">%d sn</item>

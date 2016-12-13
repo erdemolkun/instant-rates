@@ -10,4 +10,5 @@ public class Alarm implements Serializable {
     public Float val;
     public boolean is_above = false;
     public boolean is_enabled = true;
+    public int rate_type;
 }

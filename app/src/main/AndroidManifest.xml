@@ -19,6 +19,16 @@
         <activity
                 android:configChanges="orientation|screenSize"
                 android:name=".ChartActivity"
+                android:label="@string/graphic"
+                android:theme="@style/AppTheme"
+                android:screenOrientation="portrait">
+
+        </activity>
+
+        <activity
+                android:configChanges="orientation|screenSize"
+                android:name=".AlarmsActivity"
+                android:label="@string/alarms"
                 android:theme="@style/AppTheme"
                 android:screenOrientation="portrait">
 
