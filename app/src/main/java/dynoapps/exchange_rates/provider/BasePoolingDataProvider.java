@@ -8,8 +8,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import dynoapps.exchange_rates.time.TimeIntervalManager;
 
 /**
- * Created by erdemmac on 25/11/2016.
- * todo add is enabled state
+ * Created by erdemmac on 25/11/2016. todo add is enabled state
  */
 
 public abstract class BasePoolingDataProvider<T> implements IPollingSource, Runnable {
@@ -20,6 +19,7 @@ public abstract class BasePoolingDataProvider<T> implements IPollingSource, Runn
 
     private int error_count = 0;
     private int success_count = 0;
+
 
     BasePoolingDataProvider(SourceCallback<T> callback) {
         this.callback = callback;
@@ -34,7 +34,7 @@ public abstract class BasePoolingDataProvider<T> implements IPollingSource, Runn
         return handler;
     }
 
-
+    private AtomicBoolean is_enabled = new AtomicBoolean(false);
     private AtomicBoolean isWorking = new AtomicBoolean(false);
 
     @Override
@@ -44,9 +44,13 @@ public abstract class BasePoolingDataProvider<T> implements IPollingSource, Runn
 
     @Override
     public void start() {
-        if (isWorking.get()) return;
-        getHandler().post(this);
-        isWorking.set(true);
+        is_enabled.set(true);
+        if (isWorking.get())
+        /**
+         Working already. Has a handler callback.
+         */
+            return;
+        postWork(this, 0);
     }
 
     void fetchAgain(boolean wasError) {
@@ -58,23 +62,33 @@ public abstract class BasePoolingDataProvider<T> implements IPollingSource, Runn
             float ratio = (error_count / (float) (success_count <= 0 ? 1 : success_count));
             interval_value = (int) (NEXT_FETCH_ON_ERROR + Math.log(ratio) * NEXT_FETCH_ON_ERROR);
         }
-        isWorking.set(true);
-        getHandler().postDelayed(this, interval_value);
+        postWork(this, interval_value);
 
     }
 
     public void refreshForIntervals() {
-        getHandler().removeCallbacks(this);
-        if (isWorking.get()) {
-            getHandler().postDelayed(this, TimeIntervalManager.getIntervalInMiliseconds());
+        cancelWorks();
+        if (!is_enabled.get()) {
+            return;
         }
+        postWork(this, TimeIntervalManager.getIntervalInMiliseconds());
     }
 
     @Override
     public void stop() {
+        is_enabled.set(false);
+        cancelWorks();
+    }
+
+    private void cancelWorks() {
         getHandler().removeCallbacks(this);
         cancel();
         isWorking.set(false);
+    }
+
+    private void postWork(Runnable runnable, long delayed) {
+        isWorking.set(true);
+        getHandler().postDelayed(runnable, delayed);
     }
 
 

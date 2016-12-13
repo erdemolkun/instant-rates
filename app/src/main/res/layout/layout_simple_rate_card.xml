@@ -10,7 +10,7 @@
         android:layout_gravity="center_horizontal"
         android:foreground="?selectableItemBackground"
         app:cardElevation="2dp"
-        android:layout_margin="4dp"
+        android:layout_margin="6dp"
         android:layout_height="wrap_content">
 
     <LinearLayout
@@ -18,7 +18,7 @@
             android:orientation="vertical"
             android:minHeight="60dp"
             android:padding="4dp"
-            android:minWidth="72dp"
+            android:minWidth="80dp"
             android:gravity="center"
             android:layout_height="wrap_content">
 
