@@ -17,6 +17,7 @@
         <item name="toolbarTextAppearance">@style/ActionBar.TitleText</item>
         <item name="android:windowFullscreen">false</item>
         <item name="android:navigationBarColor">@color/colorPrimary</item>
+        <item name="android:splitMotionEvents">false</item>
 
     </style>
 
