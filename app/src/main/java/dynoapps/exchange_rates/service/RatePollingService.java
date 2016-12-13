@@ -202,7 +202,8 @@ public class RatePollingService extends Service {
                         .setSmallIcon(R.drawable.ic_add_alarm_white_24dp)
                         .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
                         .setContentTitle(getString(R.string.app_name))
-                        .setDefaults(Notification.DEFAULT_ALL);
+                        .setDefaults(Notification.FLAG_AUTO_CANCEL | Notification.DEFAULT_SOUND
+                                | Notification.DEFAULT_VIBRATE | Notification.FLAG_SHOW_LIGHTS);
 
 
         mBuilder.setStyle(new NotificationCompat.BigTextStyle()
