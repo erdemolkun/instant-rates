@@ -33,9 +33,9 @@ import dynoapps.exchange_rates.event.RatesEvent;
 import dynoapps.exchange_rates.model.rates.AvgRate;
 import dynoapps.exchange_rates.model.rates.BaseRate;
 import dynoapps.exchange_rates.model.rates.BigparaRate;
+import dynoapps.exchange_rates.model.rates.BuySellRate;
 import dynoapps.exchange_rates.model.rates.DolarTlKurRate;
 import dynoapps.exchange_rates.model.rates.EnparaRate;
-import dynoapps.exchange_rates.model.rates.IRate;
 import dynoapps.exchange_rates.model.rates.YahooRate;
 import dynoapps.exchange_rates.model.rates.YapıKrediRate;
 import dynoapps.exchange_rates.model.rates.YorumlarRate;
@@ -82,6 +82,7 @@ public class RatePollingService extends Service {
         providers.add(new EnparaRateProvider(new ProviderSourceCallbackAdapter<List<EnparaRate>>() {
             @Override
             public void onResult(List<EnparaRate> rates) {
+                alarmChecks(rates, CurrencySource.Type.ENPARA);
                 RatesHolder.getInstance().addRate(rates, CurrencySource.Type.ENPARA);
                 EventBus.getDefault().post(new RatesEvent<>(rates, CurrencySource.Type.ENPARA, System.currentTimeMillis()));
             }
@@ -91,6 +92,7 @@ public class RatePollingService extends Service {
                 new BigparaRateProvider(new ProviderSourceCallbackAdapter<List<BigparaRate>>() {
                     @Override
                     public void onResult(List<BigparaRate> rates) {
+                        alarmChecks(rates, CurrencySource.Type.BIGPARA);
                         RatesHolder.getInstance().addRate(rates, CurrencySource.Type.BIGPARA);
                         EventBus.getDefault().post(new RatesEvent<>(rates, CurrencySource.Type.BIGPARA));
                     }
@@ -99,6 +101,7 @@ public class RatePollingService extends Service {
         providers.add(new DolarTlKurRateProvider(new ProviderSourceCallbackAdapter<List<DolarTlKurRate>>() {
             @Override
             public void onResult(List<DolarTlKurRate> rates) {
+                alarmChecks(rates, CurrencySource.Type.TLKUR);
                 RatesHolder.getInstance().addRate(rates, CurrencySource.Type.TLKUR);
                 EventBus.getDefault().post(new RatesEvent<>(rates, CurrencySource.Type.TLKUR));
             }
@@ -108,6 +111,7 @@ public class RatePollingService extends Service {
         providers.add(new YapıKrediRateProvider(new ProviderSourceCallbackAdapter<List<YapıKrediRate>>() {
             @Override
             public void onResult(List<YapıKrediRate> rates) {
+                alarmChecks(rates, CurrencySource.Type.YAPIKREDI);
                 RatesHolder.getInstance().addRate(rates, CurrencySource.Type.YAPIKREDI);
                 EventBus.getDefault().post(new RatesEvent<>(rates, CurrencySource.Type.YAPIKREDI));
             }
@@ -115,6 +119,7 @@ public class RatePollingService extends Service {
         providers.add(new YahooRateProvider(new ProviderSourceCallbackAdapter<List<YahooRate>>() {
             @Override
             public void onResult(List<YahooRate> rates) {
+                alarmChecks(rates, CurrencySource.Type.YAHOO);
                 RatesHolder.getInstance().addRate(rates, CurrencySource.Type.YAHOO);
                 EventBus.getDefault().post(new RatesEvent<>(rates, CurrencySource.Type.YAHOO));
             }
@@ -129,23 +134,35 @@ public class RatePollingService extends Service {
     private <T extends BaseRate> void alarmChecks(List<T> rates, int source_type) {
         if (rates == null) return;
         AlarmsHolder alarmsHolder = AlarmManager.getAlarmsHolder();
-        BaseRate baseRateCurrent = RateUtils.getRate(rates, IRate.USD);
-        RatesEvent ratesEvent = RatesHolder.getInstance().getRates(source_type);
-        BaseRate baseRateOld = ratesEvent != null ? RateUtils.getRate(ratesEvent.rates, IRate.USD) : null;
-
-        if (baseRateCurrent == null || baseRateOld == null) return;
         Iterator<Alarm> iterator = alarmsHolder.alarms.iterator();
+        int size = alarmsHolder.alarms.size();
         while (iterator.hasNext()) {
             Alarm alarm = iterator.next();
-            AvgRate avgRateCurrent = (AvgRate) baseRateCurrent;
-            AvgRate avgRateOld = (AvgRate) baseRateOld;
-            if (alarm.is_above && avgRateCurrent.avg_val_real > alarm.val && avgRateOld.avg_val_real <= alarm.val) {
+            if (alarm.source_type != source_type) continue;
+            BaseRate baseRateCurrent = RateUtils.getRate(rates, alarm.rate_type);
+            RatesEvent ratesEvent = RatesHolder.getInstance().getRates(source_type);
+            BaseRate baseRateOld = ratesEvent != null ? RateUtils.getRate(ratesEvent.rates, alarm.rate_type) : null;
+
+            if (baseRateCurrent == null || baseRateOld == null) continue;
+            float val_current = 0.0f;
+            float val_old = 0.0f;
+            if (baseRateCurrent instanceof AvgRate) {
+                val_current = ((AvgRate) baseRateCurrent).avg_val_real;
+                val_old = ((AvgRate) baseRateOld).avg_val_real;
+            } else if (baseRateCurrent instanceof BuySellRate) {
+                val_current = ((BuySellRate) baseRateCurrent).value_sell_real;
+                val_old = ((BuySellRate) baseRateOld).value_sell_real;
+            }
+            if (alarm.is_above && val_current > alarm.val && val_old <= alarm.val) {
                 iterator.remove();
                 sendNotification(getString(R.string.is_above_val, formatter.format(alarm.val)), "increasing");
-            } else if (!alarm.is_above && avgRateCurrent.avg_val_real < alarm.val && avgRateOld.avg_val_real >= alarm.val) {
+            } else if (!alarm.is_above && val_current < alarm.val && val_old >= alarm.val) {
                 iterator.remove();
                 sendNotification(getString(R.string.is_below_value, formatter.format(alarm.val)), "decreasing");
             }
+        }
+        if (size!=alarmsHolder.alarms.size()){
+            AlarmManager.saveAlarms();
         }
     }
 

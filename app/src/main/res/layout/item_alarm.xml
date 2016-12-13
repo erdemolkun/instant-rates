@@ -26,6 +26,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
+    <TextView
+            tools:text="Yorumlar"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="12dp"
+            android:layout_marginLeft="12dp"
+            android:layout_toRightOf="@+id/tv_alarm_val"
+            android:id="@+id/tv_alarm_source"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+
     <ImageView
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"

@@ -20,6 +20,8 @@ import java.util.ArrayList;
 
 import dynoapps.exchange_rates.Prefs;
 import dynoapps.exchange_rates.R;
+import dynoapps.exchange_rates.SourcesManager;
+import dynoapps.exchange_rates.data.CurrencySource;
 import dynoapps.exchange_rates.event.AlarmUpdateEvent;
 import dynoapps.exchange_rates.model.rates.IRate;
 
@@ -40,14 +42,12 @@ public class AlarmManager {
         if (alarmsHolder.alarms.size() >= MAX_ALARM_COUNT)
             return false;
         alarmsHolder.alarms.add(alarm);
-        EventBus.getDefault().post(new AlarmUpdateEvent());
         saveAlarms();
         return true;
     }
 
     public static void remove(int index) {
         getAlarmsHolder().alarms.remove(index);
-        EventBus.getDefault().post(new AlarmUpdateEvent());
         saveAlarms();
     }
 
@@ -70,19 +70,35 @@ public class AlarmManager {
 
 
     public static void saveAlarms() {
+        EventBus.getDefault().post(new AlarmUpdateEvent());
         String alarms_json = new GsonBuilder().create().toJson(alarmsHolder);
         Prefs.saveAlarms(alarms_json);
     }
 
     public static void addAlarm(final Context context) {
         final View v = LayoutInflater.from(context).inflate(R.layout.layout_alarm_selection, null);
-        final Spinner spinner = (Spinner) v.findViewById(R.id.spn_above_below);
+
+        final Spinner spn_above_below = (Spinner) v.findViewById(R.id.spn_above_below);
         ArrayList<String> values = new ArrayList<>();
         values.add(context.getString(R.string.if_below));
         values.add(context.getString(R.string.if_above));
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item, values);
-        spinner.setAdapter(arrayAdapter);
-        spinner.setSelection(0);
+        spn_above_below.setAdapter(arrayAdapter);
+        spn_above_below.setSelection(0);
+
+
+        final Spinner spn_sources = (Spinner) v.findViewById(R.id.spn_source_types);
+        ArrayList<CurrencySource> sources = new ArrayList<>();
+        for (CurrencySource source : SourcesManager.getCurrencySources()) {
+            if (source.isEnabled()) {
+                sources.add(source);
+            }
+        }
+        ArrayAdapter<CurrencySource> sourceArrayAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item, sources);
+        spn_sources.setAdapter(sourceArrayAdapter);
+        spn_sources.setSelection(0);
+
+
         final AlertDialog alertDialog = new AlertDialog.Builder(context).setIcon(R.drawable.ic_splash).
                 setTitle(R.string.add_alarm)
                 .setView(v)
@@ -103,8 +119,9 @@ public class AlarmManager {
                             val = Float.valueOf(str);
                             Alarm alarm = new Alarm();
                             alarm.val = val;
-                            alarm.rate_type = IRate.USD;
-                            alarm.is_above = spinner.getSelectedItemPosition() == 1;
+                            alarm.rate_type = IRate.USD; // // TODO: 13/12/2016
+                            alarm.is_above = spn_above_below.getSelectedItemPosition() == 1;
+                            alarm.source_type = ((CurrencySource) spn_sources.getSelectedItem()).getSourceType();
                             AlarmManager.addAlarm(alarm);
                         } catch (Exception ex) {
 

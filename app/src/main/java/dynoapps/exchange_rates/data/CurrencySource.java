@@ -21,14 +21,14 @@ public class CurrencySource {
         this.name = name;
         this.source_type = source_type;
         this.enabled = enabled;
-        this.color= ContextCompat.getColor(App.context(),colorRes);
+        this.color = ContextCompat.getColor(App.context(), colorRes);
     }
 
     public int getColor() {
         return color;
     }
 
-    public int getSource_type() {
+    public int getSourceType() {
         return source_type;
     }
 
@@ -48,12 +48,17 @@ public class CurrencySource {
         this.iPollingSource = iPollingSource;
     }
 
+    @Override
+    public String toString() {
+        return getName();
+    }
+
     public IPollingSource getPollingSource() {
         return iPollingSource;
     }
 
-    public boolean isAvgType(){
-        return source_type ==Type.YORUMLAR || source_type ==Type.BIGPARA || source_type ==Type.TLKUR || source_type ==Type.YAHOO;
+    public boolean isAvgType() {
+        return source_type == Type.YORUMLAR || source_type == Type.BIGPARA || source_type == Type.TLKUR || source_type == Type.YAHOO;
     }
 
     public interface Type {

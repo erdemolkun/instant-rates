@@ -110,17 +110,17 @@ public class LandingActivity extends BaseActivity {
                 }
                 boolean foundCard = false;
                 for (CardViewItem item : parent.items) {
-                    if (item.source_type == dataSource.getSource_type()) {
+                    if (item.source_type == dataSource.getSourceType()) {
                         item.card.setVisibility(isEnabled ? View.VISIBLE : View.GONE);
                         foundCard = true;
                     }
                 }
                 if (!foundCard && isEnabled) {
                     if (dataSource.isAvgType()) {
-                        addCardToParent(parent, ValueType.AVG, dataSource.getSource_type());
+                        addCardToParent(parent, ValueType.AVG, dataSource.getSourceType());
                     } else {
-                        addCardToParent(parent, ValueType.BUY, dataSource.getSource_type());
-                        addCardToParent(parent, ValueType.SELL, dataSource.getSource_type());
+                        addCardToParent(parent, ValueType.BUY, dataSource.getSourceType());
+                        addCardToParent(parent, ValueType.SELL, dataSource.getSourceType());
                     }
                 }
             }
@@ -210,7 +210,7 @@ public class LandingActivity extends BaseActivity {
         int value_type;
 
         /**
-         * Refers to {@link CurrencySource#getSource_type()}
+         * Refers to {@link CurrencySource#getSourceType()}
          */
         int source_type;
 

@@ -22,6 +22,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import dynoapps.exchange_rates.alarm.Alarm;
 import dynoapps.exchange_rates.alarm.AlarmManager;
+import dynoapps.exchange_rates.data.CurrencySource;
 import dynoapps.exchange_rates.event.AlarmUpdateEvent;
 import dynoapps.exchange_rates.util.AnimationHelper;
 import dynoapps.exchange_rates.util.RateUtils;
@@ -114,9 +115,18 @@ public class AlarmsActivity extends BaseActivity {
         @Override
         public void onBindViewHolder(final AlarmViewHolder holder, int position) {
             Alarm alarm = alarms.get(position);
-            holder.ivType.setRotation(alarm.is_above ?  90 : 270);
+            holder.ivType.setRotation(alarm.is_above ? 90 : 270);
             holder.ivType.setColorFilter(Color.parseColor(!alarm.is_above ? "#ff0000" : "#00ff00"));
-            holder.tvValue.setText(RateUtils.entryToUI(alarm.val,alarm.rate_type));
+            holder.tvValue.setText(RateUtils.entryToUI(alarm.val, alarm.rate_type));
+            CurrencySource source = SourcesManager.getSource(alarm.source_type);
+            if (source != null) {
+                holder.tvSource.setText(source.getName());
+                holder.tvSource.setTextColor(source.getColor());
+            } else {
+                holder.tvSource.setText("-");
+                holder.tvSource.setTextColor(Color.parseColor("#222222"));
+            }
+
             holder.vClose.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -155,6 +165,9 @@ public class AlarmsActivity extends BaseActivity {
         ImageView ivType;
         @BindView(R.id.tv_alarm_val)
         TextView tvValue;
+
+        @BindView(R.id.tv_alarm_source)
+        TextView tvSource;
 
         @BindView(R.id.v_alarm_close)
         View vClose;

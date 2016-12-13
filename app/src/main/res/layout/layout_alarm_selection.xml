@@ -21,8 +21,26 @@
 
 
     <Spinner
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:id="@+id/spn_above_below"
+            android:overlapAnchor="false"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+    </Spinner>
+
+    <TextView
+            android:layout_marginTop="8dp"
+            android:layout_width="wrap_content"
+            android:textSize="12sp"
+            android:text="@string/sources"
+            android:textColor="?colorAccent"
+            android:layout_height="wrap_content"/>
+
+    <Spinner
+            android:layout_marginTop="2dp"
+            android:overlapAnchor="false"
+            android:id="@+id/spn_source_types"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 

@@ -41,7 +41,7 @@ public class SourcesManager {
     public static void updateProviders(ArrayList<BasePoolingDataProvider> providers) {
 
         for (CurrencySource source : currencySources) {
-            switch (source.getSource_type()) {
+            switch (source.getSourceType()) {
                 case CurrencySource.Type.YORUMLAR:
                     source.setPollingSource(CollectionUtils.getInstance(providers, YorumlarRateProvider.class));
                     break;
@@ -130,7 +130,7 @@ public class SourcesManager {
         for (int i = 0; i < currencySources.size(); i++) {
             CurrencySource currencySource = currencySources.get(i);
             if (currencySource.isEnabled()) {
-                sources += currencySource.getSource_type() + ";";
+                sources += currencySource.getSourceType() + ";";
             }
         }
         Prefs.saveSources(sources);
@@ -152,7 +152,7 @@ public class SourcesManager {
 
     public static String getSourceName(int type) {
         for (CurrencySource source : currencySources) {
-            if (type == source.getSource_type()) {
+            if (type == source.getSourceType()) {
                 return source.getName();
             }
         }
@@ -165,7 +165,7 @@ public class SourcesManager {
 
     public static CurrencySource getSource(int source_type) {
         for (CurrencySource currencySource : currencySources) {
-            if (currencySource.getSource_type() == source_type) return currencySource;
+            if (currencySource.getSourceType() == source_type) return currencySource;
         }
         return null;
     }
@@ -197,7 +197,7 @@ public class SourcesManager {
                 try {
                     source_type_temp = Integer.parseInt(str);
                     for (CurrencySource currencySource : currencySources) {
-                        if (currencySource.getSource_type() == source_type_temp) {
+                        if (currencySource.getSourceType() == source_type_temp) {
                             currencySource.setEnabled(true);
                         }
                     }
