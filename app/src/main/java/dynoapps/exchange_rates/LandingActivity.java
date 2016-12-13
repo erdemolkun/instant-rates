@@ -300,7 +300,7 @@ public class LandingActivity extends BaseActivity {
             });
         }
 
-        tvVersion.setText("v" + AppUtils.getAppVersion());
+        tvVersion.setText(AppUtils.getAppVersionForSemver());
         updateHint();
 
     }

@@ -3,7 +3,6 @@
 <dynoapps.exchange_rates.ui.ScrimInsetsScrollView xmlns:android="http://schemas.android.com/apk/res/android"
                                                   xmlns:tools="http://schemas.android.com/tools"
                                                   android:layout_gravity="start"
-                                                  android:fitsSystemWindows="true"
                                                   android:layout_width="@dimen/nav_drawer_width"
                                                   android:fillViewport="true"
                                                   android:background="@color/colorPrimary"
@@ -13,26 +12,72 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+        <RelativeLayout
+                android:id="@+id/v_drawer_header"
+                android:layout_width="match_parent"
+                android:background="#CFD8DC"
+                android:padding="16dp"
+                android:layout_height="136dp">
+
+            <ImageView
+                    android:layout_alignParentBottom="true"
+                    android:id="@+id/iv_drawer_header_logo"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:src="@drawable/ic_splash"
+                    />
+
+            <LinearLayout
+                    android:layout_alignParentBottom="true"
+                    android:layout_toRightOf="@+id/iv_drawer_header_logo"
+                    android:orientation="vertical"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                <TextView
+                        android:textColor="@android:color/black"
+                        android:text="@string/app_name"
+                        android:textStyle="bold"
+                        android:textSize="16sp"
+                        android:ellipsize="end"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                <TextView
+                        android:id="@+id/v_navdrawer_version"
+                        android:textColor="@android:color/black"
+                        tools:text="v0.0.1"
+                        android:textSize="13sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+
+        </RelativeLayout>
+
         <LinearLayout
+                android:layout_below="@+id/v_drawer_header"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:paddingTop="32dp"
+                android:paddingTop="8dp"
                 android:layout_height="wrap_content">
 
             <TextView
                     android:layout_width="wrap_content"
-                    android:text="@string/select_graph_type"
+                    android:text="@string/graph_types"
                     android:textColor="@color/white"
                     android:textSize="13sp"
-                    android:padding="16dp"
-                    android:layout_marginTop="32dp"
+                    android:padding="12dp"
+                    android:layout_marginTop="8dp"
                     android:layout_height="wrap_content"/>
 
             <TextView
                     android:id="@+id/v_drawer_item_usd"
                     android:paddingStart="24dp"
                     android:paddingLeft="24dp"
-                    android:textSize="18sp"
+                    android:textSize="@dimen/drawer_item_menu_text_size"
                     android:minHeight="@dimen/drawer_item_height"
                     android:gravity="center_vertical"
                     android:textColor="?colorAccent"
@@ -45,7 +90,7 @@
                     android:id="@+id/v_drawer_item_eur"
                     android:paddingStart="24dp"
                     android:paddingLeft="24dp"
-                    android:textSize="18sp"
+                    android:textSize="@dimen/drawer_item_menu_text_size"
                     android:minHeight="@dimen/drawer_item_height"
                     android:gravity="center_vertical"
                     android:textColor="?colorAccent"
@@ -58,7 +103,7 @@
                     android:id="@+id/v_drawer_item_eur_usd"
                     android:paddingStart="24dp"
                     android:paddingLeft="24dp"
-                    android:textSize="18sp"
+                    android:textSize="@dimen/drawer_item_menu_text_size"
                     android:minHeight="@dimen/drawer_item_height"
                     android:gravity="center_vertical"
                     android:textColor="?colorAccent"
@@ -67,14 +112,28 @@
                     android:text="EURO / USD"
                     android:layout_height="wrap_content"/>
 
+            <ImageView
+                    android:layout_width="match_parent"
+                    android:background="@color/colorGraph"
+                    android:layout_height="1px"/>
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:text="@string/others"
+                    android:textColor="@color/white"
+                    android:textSize="13sp"
+                    android:padding="12dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_height="wrap_content"/>
+
             <TextView
                     android:id="@+id/v_drawer_item_alarms"
                     android:paddingStart="24dp"
                     android:paddingLeft="24dp"
-                    android:textSize="14sp"
+                    android:textSize="@dimen/drawer_item_menu_text_size"
                     android:minHeight="@dimen/drawer_item_height"
                     android:gravity="center_vertical"
-                    android:textColor="@color/white"
+                    android:textColor="?colorAccent"
                     android:background="?selectableItemBackground"
                     android:layout_width="match_parent"
                     android:text="@string/alarms"
@@ -82,17 +141,6 @@
 
 
         </LinearLayout>
-
-        <TextView
-                android:id="@+id/v_navdrawer_version"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:textColor="@color/colorAccent"
-                tools:text="v0.0.1"
-                android:padding="12dp"
-                android:layout_alignParentBottom="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
 
     </RelativeLayout>
 

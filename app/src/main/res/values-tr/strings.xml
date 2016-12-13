@@ -33,6 +33,8 @@
     <string name="if_above">Değerinden Büyükse</string>
     <string name="alarms">Alarmlar</string>
     <string name="graphic">Grafik</string>
+    <string name="graph_types">Grafik Tipleri</string>
+    <string name="others">Diğerleri</string>
     <plurals name="sec_short">
         <item quantity="one">%d sn</item>
         <item quantity="other">%d sn</item>

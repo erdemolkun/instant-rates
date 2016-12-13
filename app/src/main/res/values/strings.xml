@@ -37,6 +37,8 @@
     <string name="if_above">If above value</string>
     <string name="alarms">Alarms</string>
     <string name="graphic">Graphic</string>
+    <string name="graph_types">Graph Types</string>
+    <string name="others">Diğer</string>
     <plurals name="sec_short">
         <item quantity="one">%d sec</item>
         <item quantity="other">%d secs</item>
