@@ -48,6 +48,7 @@ import dynoapps.exchange_rates.provider.ProviderSourceCallbackAdapter;
 import dynoapps.exchange_rates.provider.YahooRateProvider;
 import dynoapps.exchange_rates.provider.YapıKrediRateProvider;
 import dynoapps.exchange_rates.provider.YorumlarRateProvider;
+import dynoapps.exchange_rates.util.Formatter;
 import dynoapps.exchange_rates.util.RateUtils;
 
 /**
@@ -123,6 +124,7 @@ public class RatePollingService extends Service {
         refreshSources();
     }
 
+    private static Formatter formatter = new Formatter(3);
 
     private <T extends BaseRate> void alarmChecks(List<T> rates, int source_type) {
         if (rates == null) return;
@@ -135,15 +137,14 @@ public class RatePollingService extends Service {
         Iterator<Alarm> iterator = alarmsHolder.alarms.iterator();
         while (iterator.hasNext()) {
             Alarm alarm = iterator.next();
-
             AvgRate avgRateCurrent = (AvgRate) baseRateCurrent;
             AvgRate avgRateOld = (AvgRate) baseRateOld;
             if (alarm.is_above && avgRateCurrent.avg_val_real > alarm.val && avgRateOld.avg_val_real <= alarm.val) {
                 iterator.remove();
-                sendNotification(getString(R.string.is_above_val, alarm.val));
+                sendNotification(getString(R.string.is_above_val, formatter.format(alarm.val)), "increasing");
             } else if (!alarm.is_above && avgRateCurrent.avg_val_real < alarm.val && avgRateOld.avg_val_real >= alarm.val) {
                 iterator.remove();
-                sendNotification(getString(R.string.is_below_value, alarm.val));
+                sendNotification(getString(R.string.is_below_value, formatter.format(alarm.val)), "decreasing");
             }
         }
     }
@@ -187,7 +188,7 @@ public class RatePollingService extends Service {
     // Put the message into a notification and post it.
     // This is just one simple example of what you might choose to do with
     // a GCM message.
-    private void sendNotification(String message) {
+    private void sendNotification(String message, String category) {
 
 
         Intent pushIntent = new Intent(this, LandingActivity.class);
@@ -201,7 +202,7 @@ public class RatePollingService extends Service {
                         .setSmallIcon(R.drawable.ic_add_alarm_white_24dp)
                         .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
                         .setContentTitle(getString(R.string.app_name))
-                        .setDefaults(Notification.FLAG_AUTO_CANCEL);
+                        .setDefaults(Notification.DEFAULT_ALL);
 
 
         mBuilder.setStyle(new NotificationCompat.BigTextStyle()
@@ -210,10 +211,10 @@ public class RatePollingService extends Service {
         mBuilder.setColor(ContextCompat.getColor(this, R.color.colorPrimary))
                 .setContentIntent(pendingIntent)
                 .setContentText(message);
-
+        mBuilder.setAutoCancel(true);
         Notification notification = mBuilder.build();
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
-        notificationManagerCompat.notify("category", 111, notification);
+        notificationManagerCompat.notify(category, 1, notification);
     }
 
     @Override
