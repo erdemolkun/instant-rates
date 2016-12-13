@@ -40,8 +40,15 @@ public class AlarmManager {
         if (alarmsHolder.alarms.size() >= MAX_ALARM_COUNT)
             return false;
         alarmsHolder.alarms.add(alarm);
+        EventBus.getDefault().post(new AlarmUpdateEvent());
         saveAlarms();
         return true;
+    }
+
+    public static void remove(int index) {
+        getAlarmsHolder().alarms.remove(index);
+        EventBus.getDefault().post(new AlarmUpdateEvent());
+        saveAlarms();
     }
 
     public static AlarmsHolder getAlarmsHolder() {
@@ -61,10 +68,10 @@ public class AlarmManager {
         return alarmsHolder;
     }
 
+
     public static void saveAlarms() {
         String alarms_json = new GsonBuilder().create().toJson(alarmsHolder);
         Prefs.saveAlarms(alarms_json);
-        EventBus.getDefault().post(new AlarmUpdateEvent());
     }
 
     public static void addAlarm(final Context context) {

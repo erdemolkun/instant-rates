@@ -117,9 +117,8 @@ public class AlarmsActivity extends BaseActivity {
                 @Override
                 public void onClick(View view) {
                     int pos = holder.getAdapterPosition();
-                    AlarmManager.getAlarmsHolder().alarms.remove(pos);
+                    AlarmManager.remove(pos);
                     notifyItemRemoved(pos);
-                    AlarmManager.saveAlarms();
                 }
             });
         }
