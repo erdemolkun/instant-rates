@@ -73,7 +73,7 @@ public class RatePollingService extends Service {
         providers.add(new YorumlarRateProvider(new ProviderSourceCallbackAdapter<List<YorumlarRate>>() {
             @Override
             public void onResult(List<YorumlarRate> rates) {
-                alarmChecks(rates);
+                alarmChecks(rates, CurrencySource.Type.YORUMLAR);
                 RatesHolder.getInstance().addRate(rates, CurrencySource.Type.YORUMLAR);
                 EventBus.getDefault().post(new RatesEvent<>(rates, CurrencySource.Type.YORUMLAR));
             }
@@ -124,22 +124,26 @@ public class RatePollingService extends Service {
     }
 
 
-    private <T extends BaseRate> void alarmChecks(List<T> rates) {
+    private <T extends BaseRate> void alarmChecks(List<T> rates, int source_type) {
         if (rates == null) return;
         AlarmsHolder alarmsHolder = AlarmManager.getAlarmsHolder();
-        BaseRate baseRate = RateUtils.getRate(rates, IRate.USD);
-        if (baseRate == null) return;
+        BaseRate baseRateCurrent = RateUtils.getRate(rates, IRate.USD);
+        RatesEvent ratesEvent = RatesHolder.getInstance().getRates(source_type);
+        BaseRate baseRateOld = ratesEvent != null ? RateUtils.getRate(ratesEvent.rates, IRate.USD) : null;
+
+        if (baseRateCurrent == null || baseRateOld == null) return;
         Iterator<Alarm> iterator = alarmsHolder.alarms.iterator();
         while (iterator.hasNext()) {
             Alarm alarm = iterator.next();
 
-            AvgRate avgRate = (AvgRate) baseRate;
-            if (alarm.is_above && avgRate.avg_val_real > alarm.val) {
+            AvgRate avgRateCurrent = (AvgRate) baseRateCurrent;
+            AvgRate avgRateOld = (AvgRate) baseRateOld;
+            if (alarm.is_above && avgRateCurrent.avg_val_real > alarm.val && avgRateOld.avg_val_real <= alarm.val) {
                 iterator.remove();
-                sendNotification(String.format("%s değerininin üstüne çıktı", alarm.val));
-            } else if (!alarm.is_above && avgRate.avg_val_real < alarm.val) {
+                sendNotification(getString(R.string.is_above_val, alarm.val));
+            } else if (!alarm.is_above && avgRateCurrent.avg_val_real < alarm.val && avgRateOld.avg_val_real >= alarm.val) {
                 iterator.remove();
-                sendNotification(String.format("%s değerininin altına indi", alarm.val));
+                sendNotification(getString(R.string.is_below_value, alarm.val));
             }
         }
     }
@@ -197,7 +201,7 @@ public class RatePollingService extends Service {
                         .setSmallIcon(R.drawable.ic_add_alarm_white_24dp)
                         .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
                         .setContentTitle(getString(R.string.app_name))
-                        .setDefaults(Notification.DEFAULT_ALL);
+                        .setDefaults(Notification.FLAG_AUTO_CANCEL);
 
 
         mBuilder.setStyle(new NotificationCompat.BigTextStyle()

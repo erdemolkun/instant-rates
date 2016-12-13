@@ -27,6 +27,10 @@
     <string name="add">Ekle</string>
     <string name="enter_value">Değer Giriniz</string>
     <string name="check_value">Değeri Kontrol Ediniz</string>
+    <string name="is_below_value">%f değerininin altına indi</string>
+    <string name="is_above_val">%f değerininin üstüne çıktı</string>
+    <string name="if_below">Değerinden Küçükse</string>
+    <string name="if_above">Değerinden Büyükse</string>
     <plurals name="sec_short">
         <item quantity="one">%d sn</item>
         <item quantity="other">%d sn</item>

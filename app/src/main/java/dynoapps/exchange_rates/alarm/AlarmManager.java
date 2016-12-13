@@ -17,7 +17,7 @@ import dynoapps.exchange_rates.event.AlarmUpdateEvent;
 
 public class AlarmManager {
 
-    public static final int MAX_ALARM_COUNT = 2;
+    public static final int MAX_ALARM_COUNT = 12;
 
     public static AlarmsHolder alarmsHolder;
 

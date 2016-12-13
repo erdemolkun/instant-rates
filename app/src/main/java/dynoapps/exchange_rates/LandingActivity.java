@@ -555,8 +555,8 @@ public class LandingActivity extends BaseActivity {
         final View v = LayoutInflater.from(this).inflate(R.layout.layout_alarm_selection, null);
         final Spinner spinner = (Spinner) v.findViewById(R.id.spn_above_below);
         ArrayList<String> values = new ArrayList<>();
-        values.add("Değerinden Küçükse");
-        values.add("Değerinden Büyükse");
+        values.add(getString(R.string.if_below));
+        values.add(getString(R.string.if_above));
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(LandingActivity.this, android.R.layout.simple_spinner_dropdown_item, values);
         spinner.setAdapter(arrayAdapter);
         spinner.setSelection(0);
@@ -595,6 +595,7 @@ public class LandingActivity extends BaseActivity {
                 });
             }
         });
+        alertDialog.setCanceledOnTouchOutside(false);
         alertDialog.show();
 
     }

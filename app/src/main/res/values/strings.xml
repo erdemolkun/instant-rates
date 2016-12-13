@@ -31,6 +31,10 @@
     <string name="add">Add</string>
     <string name="enter_value">Enter Value</string>
     <string name="check_value">Check Value</string>
+    <string name="is_below_value">Value drop below %f</string>
+    <string name="is_above_val">Value reached above %f</string>
+    <string name="if_below">If below value</string>
+    <string name="if_above">If above value</string>
     <plurals name="sec_short">
         <item quantity="one">%d sec</item>
         <item quantity="other">%d secs</item>
