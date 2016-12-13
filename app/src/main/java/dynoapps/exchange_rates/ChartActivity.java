@@ -93,7 +93,7 @@ public class ChartActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         setAnimationType(AnimationHelper.FADE_IN);
         super.onCreate(savedInstanceState);
-        if (savedInstanceState!=null) {
+        if (savedInstanceState != null) {
             SourcesManager.init();
         }
         rateType = getIntent().getExtras().getInt(EXTRA_RATE_TYPE, rateType);
@@ -166,8 +166,7 @@ public class ChartActivity extends BaseActivity {
                 addEntry(((EnparaRate) rateUsd).value_buy_real, 2, fetchMilis);
             } else if (rateUsd instanceof BigparaRate) {
                 addEntry(((BuySellRate) rateUsd).value_sell_real, 3, fetchMilis);
-            }
-            else if (rateUsd instanceof YahooRate) {
+            } else if (rateUsd instanceof YahooRate) {
                 addEntry(((YahooRate) rateUsd).avg_val_real, 7, fetchMilis);
             }
         }
@@ -216,7 +215,7 @@ public class ChartActivity extends BaseActivity {
         lineChart.getAxisRight().setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-                String postFix = rateType==IRate.USD || rateType==IRate.EUR ? " TL" :""; //todo
+                String postFix = rateType == IRate.USD || rateType == IRate.EUR ? " TL" : ""; //todo
                 return axisValueFormatter.getFormattedValue(value, axis) + postFix;
             }
         });
@@ -229,13 +228,12 @@ public class ChartActivity extends BaseActivity {
 
         LineData data = lineChart.getData();
         ArrayList<CurrencySource> sources = SourcesManager.getCurrencySources();
-        for (CurrencySource source:sources){
-            if (!source.isAvgType()){
-                data.addDataSet(createDataSet(source.getColor(),source.getName()+" "+getString(R.string.sell)));
-                data.addDataSet(createDataSet(source.getColor(),source.getName()+" "+getString(R.string.buy)));
-            }
-            else{
-                data.addDataSet(createDataSet(source.getColor(),source.getName()));
+        for (CurrencySource source : sources) {
+            if (!source.isAvgType()) {
+                data.addDataSet(createDataSet(source.getColor(), source.getName() + " " + getString(R.string.sell)));
+                data.addDataSet(createDataSet(source.getColor(), source.getName() + " " + getString(R.string.buy)));
+            } else {
+                data.addDataSet(createDataSet(source.getColor(), source.getName()));
             }
         }
 
@@ -274,16 +272,11 @@ public class ChartActivity extends BaseActivity {
         // content (user-interface)
         @Override
         public void refreshContent(Entry e, Highlight highlight) {
-            String val = entryToUI(e.getY(), rateType);
+            String val = RateUtils.entryToUI(e.getY(), rateType);
             tvMarker.setText(val); // set the entry-value as the display text
         }
     }
 
-    private static String entryToUI(float entry, int rateType) {
-        String val = (rateType == IRate.USD || rateType == IRate.EUR) ?
-                App.context().getString(R.string.placeholder_tl, "" + entry) : "" + entry;
-        return val;
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -5,12 +5,12 @@
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:layout_width="match_parent"
-                android:layout_height="60dp">
+                android:layout_height="64dp">
 
-    <TextView
-            tools:text="Üstünde"
+    <ImageView
             android:layout_centerVertical="true"
-            android:id="@+id/tv_alarm_type"
+            android:id="@+id/iv_alarm_type"
+            android:src="@drawable/ic_arrow_back_black_24dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
@@ -19,8 +19,10 @@
             android:layout_centerVertical="true"
             android:layout_marginStart="12dp"
             android:layout_marginLeft="12dp"
-            android:layout_toRightOf="@+id/tv_alarm_type"
+            android:layout_toRightOf="@+id/iv_alarm_type"
             android:id="@+id/tv_alarm_val"
+            android:textSize="16sp"
+            android:textStyle="bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
@@ -32,6 +34,7 @@
             android:background="?selectableItemBackgroundBorderless"
             android:tint="@android:color/holo_red_dark"
             android:layout_width="wrap_content"
+            android:contentDescription="@string/remove"
             android:src="@drawable/ic_cancel_black_24dp"
             android:layout_height="wrap_content"/>
 

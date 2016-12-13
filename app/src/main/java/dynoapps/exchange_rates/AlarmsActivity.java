@@ -1,5 +1,6 @@
 package dynoapps.exchange_rates;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -22,6 +24,7 @@ import dynoapps.exchange_rates.alarm.Alarm;
 import dynoapps.exchange_rates.alarm.AlarmManager;
 import dynoapps.exchange_rates.event.AlarmUpdateEvent;
 import dynoapps.exchange_rates.util.AnimationHelper;
+import dynoapps.exchange_rates.util.RateUtils;
 
 /**
  * Created by erdemmac on 13/12/2016.
@@ -111,8 +114,9 @@ public class AlarmsActivity extends BaseActivity {
         @Override
         public void onBindViewHolder(final AlarmViewHolder holder, int position) {
             Alarm alarm = alarms.get(position);
-            holder.tvType.setText(alarm.is_above ? R.string.if_above : R.string.if_below);
-            holder.tvValue.setText(alarm.val + "");
+            holder.ivType.setRotation(alarm.is_above ?  90 : 270);
+            holder.ivType.setColorFilter(Color.parseColor(!alarm.is_above ? "#ff0000" : "#00ff00"));
+            holder.tvValue.setText(RateUtils.entryToUI(alarm.val,alarm.rate_type));
             holder.vClose.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -147,8 +151,8 @@ public class AlarmsActivity extends BaseActivity {
     }
 
     static class AlarmViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.tv_alarm_type)
-        TextView tvType;
+        @BindView(R.id.iv_alarm_type)
+        ImageView ivType;
         @BindView(R.id.tv_alarm_val)
         TextView tvValue;
 
