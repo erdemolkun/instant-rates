@@ -27,6 +27,6 @@
 
 
     <declare-styleable name="ScrimInsetsView">
-        <attr name="insetForeground" format="integer"/>
+        <attr name="insetForeground"/>
     </declare-styleable>
 </resources>

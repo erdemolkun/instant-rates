@@ -23,6 +23,10 @@
     <string name="remove">Kaldır</string>
     <string name="remove_source_approve">Seçili kaynağı kaldır?</string>
     <string name="interval_hint"> • Veri yenileme sıklığı <b>%s</b></string>
+    <string name="add_alarm">Alarm Ekle</string>
+    <string name="add">Ekle</string>
+    <string name="enter_value">Değer Giriniz</string>
+    <string name="check_value">Değeri Kontrol Ediniz</string>
     <plurals name="sec_short">
         <item quantity="one">%d sn</item>
         <item quantity="other">%d sn</item>

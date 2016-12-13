@@ -287,7 +287,7 @@ public class ChartActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_rates, menu);
+        getMenuInflater().inflate(R.menu.menu_chart, menu);
         return true;
     }
 

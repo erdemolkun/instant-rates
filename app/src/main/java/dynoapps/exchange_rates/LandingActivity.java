@@ -31,8 +31,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -43,6 +48,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import dynoapps.exchange_rates.alarm.Alarm;
+import dynoapps.exchange_rates.alarm.AlarmManager;
 import dynoapps.exchange_rates.data.CurrencySource;
 import dynoapps.exchange_rates.data.RatesHolder;
 import dynoapps.exchange_rates.event.DataSourceUpdate;
@@ -198,7 +205,7 @@ public class LandingActivity extends BaseActivity {
             this.card = card;
             this.source_type = source_type;
             this.value_type = value_type;
-            ButterKnife.bind(this,card);
+            ButterKnife.bind(this, card);
         }
 
         View card;
@@ -544,6 +551,54 @@ public class LandingActivity extends BaseActivity {
         return true;
     }
 
+    private void addAlarm() {
+        final View v = LayoutInflater.from(this).inflate(R.layout.layout_alarm_selection, null);
+        final Spinner spinner = (Spinner) v.findViewById(R.id.spn_above_below);
+        ArrayList<String> values = new ArrayList<>();
+        values.add("Değerinden Küçükse");
+        values.add("Değerinden Büyükse");
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(LandingActivity.this, android.R.layout.simple_spinner_dropdown_item, values);
+        spinner.setAdapter(arrayAdapter);
+        spinner.setSelection(0);
+        final AlertDialog alertDialog = new AlertDialog.Builder(this).setIcon(R.drawable.ic_splash).
+                setTitle(R.string.add_alarm)
+                .setView(v)
+                .setNegativeButton(R.string.dismiss, null)
+                .setPositiveButton(R.string.add, null).create();
+        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+                Button b = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                b.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+                        EditText etValue = (EditText) v.findViewById(R.id.et_value);
+                        String str = etValue.getText().toString();
+                        Float val = null;
+                        try {
+                            val = Float.valueOf(str);
+                            Alarm alarm = new Alarm();
+                            alarm.val = val;
+                            alarm.is_above = spinner.getSelectedItemPosition() == 1;
+                            AlarmManager.addAlarm(alarm);
+                        } catch (Exception ex) {
+
+                        }
+                        if (val == null) {
+                            Toast.makeText(LandingActivity.this, R.string.check_value, Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        alertDialog.dismiss();
+
+                    }
+                });
+            }
+        });
+        alertDialog.show();
+
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -553,6 +608,9 @@ public class LandingActivity extends BaseActivity {
             return true;
         } else if (id == R.id.menu_item_sources) {
             SourcesManager.selectSources(this);
+            return true;
+        } else if (id == R.id.menu_add_alarm) {
+            addAlarm();
             return true;
         }
         return super.onOptionsItemSelected(item);

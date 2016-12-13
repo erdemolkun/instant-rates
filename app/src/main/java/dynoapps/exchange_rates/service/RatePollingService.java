@@ -1,26 +1,41 @@
 package dynoapps.exchange_rates.service;
 
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.content.ContextCompat;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
+import dynoapps.exchange_rates.LandingActivity;
+import dynoapps.exchange_rates.R;
 import dynoapps.exchange_rates.SourcesManager;
+import dynoapps.exchange_rates.alarm.Alarm;
+import dynoapps.exchange_rates.alarm.AlarmManager;
+import dynoapps.exchange_rates.alarm.AlarmsHolder;
 import dynoapps.exchange_rates.data.CurrencySource;
 import dynoapps.exchange_rates.data.RatesHolder;
 import dynoapps.exchange_rates.event.DataSourceUpdate;
 import dynoapps.exchange_rates.event.IntervalUpdate;
 import dynoapps.exchange_rates.event.RatesEvent;
+import dynoapps.exchange_rates.model.rates.AvgRate;
+import dynoapps.exchange_rates.model.rates.BaseRate;
 import dynoapps.exchange_rates.model.rates.BigparaRate;
 import dynoapps.exchange_rates.model.rates.DolarTlKurRate;
 import dynoapps.exchange_rates.model.rates.EnparaRate;
+import dynoapps.exchange_rates.model.rates.IRate;
 import dynoapps.exchange_rates.model.rates.YahooRate;
 import dynoapps.exchange_rates.model.rates.YapıKrediRate;
 import dynoapps.exchange_rates.model.rates.YorumlarRate;
@@ -33,6 +48,7 @@ import dynoapps.exchange_rates.provider.ProviderSourceCallbackAdapter;
 import dynoapps.exchange_rates.provider.YahooRateProvider;
 import dynoapps.exchange_rates.provider.YapıKrediRateProvider;
 import dynoapps.exchange_rates.provider.YorumlarRateProvider;
+import dynoapps.exchange_rates.util.RateUtils;
 
 /**
  * Created by erdemmac on 05/12/2016.
@@ -57,6 +73,7 @@ public class RatePollingService extends Service {
         providers.add(new YorumlarRateProvider(new ProviderSourceCallbackAdapter<List<YorumlarRate>>() {
             @Override
             public void onResult(List<YorumlarRate> rates) {
+                alarmChecks(rates);
                 RatesHolder.getInstance().addRate(rates, CurrencySource.Type.YORUMLAR);
                 EventBus.getDefault().post(new RatesEvent<>(rates, CurrencySource.Type.YORUMLAR));
             }
@@ -106,6 +123,27 @@ public class RatePollingService extends Service {
         refreshSources();
     }
 
+
+    private <T extends BaseRate> void alarmChecks(List<T> rates) {
+        if (rates == null) return;
+        AlarmsHolder alarmsHolder = AlarmManager.getAlarmsHolder();
+        BaseRate baseRate = RateUtils.getRate(rates, IRate.USD);
+        if (baseRate == null) return;
+        Iterator<Alarm> iterator = alarmsHolder.alarms.iterator();
+        while (iterator.hasNext()) {
+            Alarm alarm = iterator.next();
+
+            AvgRate avgRate = (AvgRate) baseRate;
+            if (alarm.is_above && avgRate.avg_val_real > alarm.val) {
+                iterator.remove();
+                sendNotification(String.format("%s değerininin üstüne çıktı", alarm.val));
+            } else if (!alarm.is_above && avgRate.avg_val_real < alarm.val) {
+                iterator.remove();
+                sendNotification(String.format("%s değerininin altına indi", alarm.val));
+            }
+        }
+    }
+
     @Subscribe
     public void onEvent(DataSourceUpdate event) {
         refreshSources();
@@ -141,6 +179,38 @@ public class RatePollingService extends Service {
         super.onDestroy();
     }
 
+
+    // Put the message into a notification and post it.
+    // This is just one simple example of what you might choose to do with
+    // a GCM message.
+    private void sendNotification(String message) {
+
+
+        Intent pushIntent = new Intent(this, LandingActivity.class);
+        pushIntent.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT |
+                Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
+                pushIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.ic_add_alarm_white_24dp)
+                        .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
+                        .setContentTitle(getString(R.string.app_name))
+                        .setDefaults(Notification.DEFAULT_ALL);
+
+
+        mBuilder.setStyle(new NotificationCompat.BigTextStyle()
+                .bigText(message));
+
+        mBuilder.setColor(ContextCompat.getColor(this, R.color.colorPrimary))
+                .setContentIntent(pendingIntent)
+                .setContentText(message);
+
+        Notification notification = mBuilder.build();
+        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
+        notificationManagerCompat.notify("category", 111, notification);
+    }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {

@@ -12,6 +12,7 @@ public class Prefs {
     private static final String SOURCES = "SOURCES";
     private static final String INTERVAL = "INTERVAL";
     private static final String LANDING_HINT_STATE = "LANDING_HINT_STATE";
+    private static final String ALARMS = "ALARMS";
 
     private static SharedPreferences getPrefs(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context);
@@ -23,6 +24,15 @@ public class Prefs {
 
     public static String getSources() {
         return getPrefs(App.context()).getString(SOURCES, null);
+    }
+
+
+    public static void saveAlarms(String alarms_json) {
+        saveString(ALARMS, alarms_json);
+    }
+
+    public static String getAlarms() {
+        return getPrefs(App.context()).getString(ALARMS, null);
     }
 
     public static void saveInterval(Context context, long interval) {
