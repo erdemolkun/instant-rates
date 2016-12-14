@@ -1,15 +1,12 @@
-package dynoapps.exchange_rates;
+package dynoapps.exchange_rates.alarm;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,12 +17,10 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import dynoapps.exchange_rates.alarm.Alarm;
-import dynoapps.exchange_rates.alarm.AlarmManager;
-import dynoapps.exchange_rates.data.CurrencySource;
+import dynoapps.exchange_rates.BaseActivity;
+import dynoapps.exchange_rates.R;
 import dynoapps.exchange_rates.event.AlarmUpdateEvent;
 import dynoapps.exchange_rates.util.AnimationHelper;
-import dynoapps.exchange_rates.util.RateUtils;
 
 /**
  * Created by erdemmac on 13/12/2016.
@@ -97,50 +92,6 @@ public class AlarmsActivity extends BaseActivity {
     @Override
     public int getLayoutId() {
         return R.layout.activity_alarms;
-    }
-
-    static class AlarmsAdapter extends RecyclerView.Adapter<AlarmViewHolder> {
-        ArrayList<Alarm> alarms;
-
-        public AlarmsAdapter(ArrayList<Alarm> alarms) {
-            this.alarms = alarms;
-        }
-
-        @Override
-        public AlarmViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_alarm, parent, false);
-            return new AlarmViewHolder(v);
-        }
-
-        @Override
-        public void onBindViewHolder(final AlarmViewHolder holder, int position) {
-            Alarm alarm = alarms.get(position);
-            holder.ivType.setRotation(alarm.is_above ? 90 : 270);
-            holder.ivType.setColorFilter(Color.parseColor(!alarm.is_above ? "#ff0000" : "#00ff00"));
-            holder.tvValue.setText(RateUtils.entryToUI(alarm.val, alarm.rate_type));
-            CurrencySource source = SourcesManager.getSource(alarm.source_type);
-            if (source != null) {
-                holder.tvSource.setText(source.getName());
-                holder.tvSource.setTextColor(source.getColor());
-            } else {
-                holder.tvSource.setText("-");
-                holder.tvSource.setTextColor(Color.parseColor("#222222"));
-            }
-
-            holder.vClose.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int pos = holder.getAdapterPosition();
-                    AlarmManager.remove(pos);
-                    notifyItemRemoved(pos);
-                }
-            });
-        }
-
-        @Override
-        public int getItemCount() {
-            return alarms != null ? alarms.size() : 0;
-        }
     }
 
 

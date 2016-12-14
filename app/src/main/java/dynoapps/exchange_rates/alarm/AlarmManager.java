@@ -119,7 +119,7 @@ public class AlarmManager {
                             val = Float.valueOf(str);
                             Alarm alarm = new Alarm();
                             alarm.val = val;
-                            alarm.rate_type = IRate.USD; // // TODO: 13/12/2016
+                            alarm.rate_type = IRate.USD; // TODO: 13/12/2016
                             alarm.is_above = spn_above_below.getSelectedItemPosition() == 1;
                             alarm.source_type = ((CurrencySource) spn_sources.getSelectedItem()).getSourceType();
                             AlarmManager.addAlarm(alarm);
