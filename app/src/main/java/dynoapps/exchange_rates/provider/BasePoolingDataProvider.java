@@ -21,7 +21,6 @@ public abstract class BasePoolingDataProvider<T> implements IPollingSource, Runn
     private int error_count = 0;
     private int success_count = 0;
 
-
     BasePoolingDataProvider(SourceCallback<T> callback) {
         this.callback = callback;
     }
@@ -38,7 +37,7 @@ public abstract class BasePoolingDataProvider<T> implements IPollingSource, Runn
     public abstract int getSourceType();
 
     private AtomicBoolean is_enabled = new AtomicBoolean(false);
-    private AtomicBoolean isWorking = new AtomicBoolean(false);
+    private AtomicBoolean is_working = new AtomicBoolean(false);
 
     @Override
     public void run() {
@@ -48,11 +47,12 @@ public abstract class BasePoolingDataProvider<T> implements IPollingSource, Runn
     @Override
     public void start() {
         is_enabled.set(true);
-        if (isWorking.get())
-        /**
-         Working already. Has a handler callback.
-         */
+        if (is_working.get()) {
+            /**
+             Working already. Has a handler callback.
+             */
             return;
+        }
         postWork(this, 0);
     }
 
@@ -88,15 +88,13 @@ public abstract class BasePoolingDataProvider<T> implements IPollingSource, Runn
     private void cancelWorks() {
         getHandler().removeCallbacks(this);
         cancel();
-        isWorking.set(false);
+        is_working.set(false);
     }
 
     private void postWork(Runnable runnable, long delayed) {
-        isWorking.set(true);
+        is_working.set(true);
         getHandler().postDelayed(runnable, delayed);
-        if (this instanceof YorumlarRateProvider) {
-            L.e(BasePoolingDataProvider.class.getSimpleName(), "postWork : " + delayed + " ms");
-        }
+        L.e(BasePoolingDataProvider.class.getSimpleName(), "- postWork : " + delayed + " ms - " + this.getClass().getSimpleName());
     }
 
 
@@ -118,7 +116,7 @@ public abstract class BasePoolingDataProvider<T> implements IPollingSource, Runn
     void notifyValue(T value) {
         logDurationSuccess();
         success_count++;
-        if (!isWorking.get()) return;
+        if (!is_working.get()) return;
         if (callback != null) {
             callback.onResult(value);
         }
