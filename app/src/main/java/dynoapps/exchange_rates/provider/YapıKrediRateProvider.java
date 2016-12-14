@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import dynoapps.exchange_rates.data.CurrencyType;
 import dynoapps.exchange_rates.model.rates.YapıKrediRate;
 
 /**
@@ -23,6 +24,11 @@ public class YapıKrediRateProvider extends BasePoolingDataProvider<List<YapıKr
     public YapıKrediRateProvider(SourceCallback<List<YapıKrediRate>> callback) {
         super(callback);
         executorService = Executors.newCachedThreadPool();
+    }
+
+    @Override
+    public int getSourceType() {
+        return CurrencyType.YAPIKREDI;
     }
 
     @Override

@@ -2,6 +2,7 @@ package dynoapps.exchange_rates.provider;
 
 import java.util.List;
 
+import dynoapps.exchange_rates.data.CurrencyType;
 import dynoapps.exchange_rates.model.rates.EnparaRate;
 import dynoapps.exchange_rates.network.Api;
 import dynoapps.exchange_rates.network.EnparaService;
@@ -18,6 +19,11 @@ public class EnparaRateProvider extends BasePoolingDataProvider<List<EnparaRate>
 
     public EnparaRateProvider(SourceCallback<List<EnparaRate>> callback) {
         super(callback);
+    }
+
+    @Override
+    public int getSourceType() {
+        return CurrencyType.ENPARA;
     }
 
     @Override

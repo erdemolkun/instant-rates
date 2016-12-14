@@ -2,6 +2,7 @@ package dynoapps.exchange_rates.provider;
 
 import java.util.List;
 
+import dynoapps.exchange_rates.data.CurrencyType;
 import dynoapps.exchange_rates.model.rates.YahooRate;
 import dynoapps.exchange_rates.model.rates.YorumlarRate;
 import dynoapps.exchange_rates.network.Api;
@@ -19,6 +20,11 @@ public class YahooRateProvider extends BasePoolingDataProvider<List<YahooRate>> 
 
     public YahooRateProvider(SourceCallback<List<YahooRate>> callback) {
         super(callback);
+    }
+
+    @Override
+    public int getSourceType() {
+        return CurrencyType.YAHOO;
     }
 
     @Override

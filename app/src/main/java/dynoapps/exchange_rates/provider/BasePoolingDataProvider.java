@@ -35,6 +35,8 @@ public abstract class BasePoolingDataProvider<T> implements IPollingSource, Runn
         return handler;
     }
 
+    public abstract int getSourceType();
+
     private AtomicBoolean is_enabled = new AtomicBoolean(false);
     private AtomicBoolean isWorking = new AtomicBoolean(false);
 

@@ -2,6 +2,7 @@ package dynoapps.exchange_rates.provider;
 
 import java.util.List;
 
+import dynoapps.exchange_rates.data.CurrencyType;
 import dynoapps.exchange_rates.model.rates.DolarTlKurRate;
 import dynoapps.exchange_rates.network.Api;
 import dynoapps.exchange_rates.network.DolarTlKurService;
@@ -18,6 +19,11 @@ public class DolarTlKurRateProvider extends BasePoolingDataProvider<List<DolarTl
 
     public DolarTlKurRateProvider(SourceCallback<List<DolarTlKurRate>> callback) {
         super(callback);
+    }
+
+    @Override
+    public int getSourceType() {
+        return CurrencyType.TLKUR;
     }
 
     @Override

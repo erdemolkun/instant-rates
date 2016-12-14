@@ -2,6 +2,7 @@ package dynoapps.exchange_rates.provider;
 
 import java.util.List;
 
+import dynoapps.exchange_rates.data.CurrencyType;
 import dynoapps.exchange_rates.model.rates.YorumlarRate;
 import dynoapps.exchange_rates.network.Api;
 import dynoapps.exchange_rates.network.YorumlarService;
@@ -18,6 +19,11 @@ public class YorumlarRateProvider extends BasePoolingDataProvider<List<YorumlarR
 
     public YorumlarRateProvider(SourceCallback<List<YorumlarRate>> callback) {
         super(callback);
+    }
+
+    @Override
+    public int getSourceType() {
+        return CurrencyType.YORUMLAR;
     }
 
     @Override

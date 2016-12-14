@@ -27,6 +27,7 @@ import dynoapps.exchange_rates.alarm.Alarm;
 import dynoapps.exchange_rates.alarm.AlarmManager;
 import dynoapps.exchange_rates.alarm.AlarmsHolder;
 import dynoapps.exchange_rates.data.CurrencySource;
+import dynoapps.exchange_rates.data.CurrencyType;
 import dynoapps.exchange_rates.data.RatesHolder;
 import dynoapps.exchange_rates.event.DataSourceUpdate;
 import dynoapps.exchange_rates.event.IntervalUpdate;
@@ -99,17 +100,17 @@ public class RatePollingService extends IntentService {
             providers.add(new YorumlarRateProvider(new ProviderSourceCallbackAdapter<List<YorumlarRate>>() {
                 @Override
                 public void onResult(List<YorumlarRate> rates) {
-                    alarmChecks(rates, CurrencySource.Type.YORUMLAR);
-                    RatesHolder.getInstance().addRate(rates, CurrencySource.Type.YORUMLAR);
-                    EventBus.getDefault().post(new RatesEvent<>(rates, CurrencySource.Type.YORUMLAR));
+                    alarmChecks(rates, CurrencyType.YORUMLAR);
+                    RatesHolder.getInstance().addRate(rates, CurrencyType.YORUMLAR);
+                    EventBus.getDefault().post(new RatesEvent<>(rates, CurrencyType.YORUMLAR));
                 }
             }));
             providers.add(new EnparaRateProvider(new ProviderSourceCallbackAdapter<List<EnparaRate>>() {
                 @Override
                 public void onResult(List<EnparaRate> rates) {
-                    alarmChecks(rates, CurrencySource.Type.ENPARA);
-                    RatesHolder.getInstance().addRate(rates, CurrencySource.Type.ENPARA);
-                    EventBus.getDefault().post(new RatesEvent<>(rates, CurrencySource.Type.ENPARA, System.currentTimeMillis()));
+                    alarmChecks(rates, CurrencyType.ENPARA);
+                    RatesHolder.getInstance().addRate(rates, CurrencyType.ENPARA);
+                    EventBus.getDefault().post(new RatesEvent<>(rates, CurrencyType.ENPARA, System.currentTimeMillis()));
                 }
             }));
 
@@ -117,18 +118,18 @@ public class RatePollingService extends IntentService {
                     new BigparaRateProvider(new ProviderSourceCallbackAdapter<List<BigparaRate>>() {
                         @Override
                         public void onResult(List<BigparaRate> rates) {
-                            alarmChecks(rates, CurrencySource.Type.BIGPARA);
-                            RatesHolder.getInstance().addRate(rates, CurrencySource.Type.BIGPARA);
-                            EventBus.getDefault().post(new RatesEvent<>(rates, CurrencySource.Type.BIGPARA));
+                            alarmChecks(rates, CurrencyType.BIGPARA);
+                            RatesHolder.getInstance().addRate(rates, CurrencyType.BIGPARA);
+                            EventBus.getDefault().post(new RatesEvent<>(rates, CurrencyType.BIGPARA));
                         }
                     }));
 
             providers.add(new DolarTlKurRateProvider(new ProviderSourceCallbackAdapter<List<DolarTlKurRate>>() {
                 @Override
                 public void onResult(List<DolarTlKurRate> rates) {
-                    alarmChecks(rates, CurrencySource.Type.TLKUR);
-                    RatesHolder.getInstance().addRate(rates, CurrencySource.Type.TLKUR);
-                    EventBus.getDefault().post(new RatesEvent<>(rates, CurrencySource.Type.TLKUR));
+                    alarmChecks(rates, CurrencyType.TLKUR);
+                    RatesHolder.getInstance().addRate(rates, CurrencyType.TLKUR);
+                    EventBus.getDefault().post(new RatesEvent<>(rates, CurrencyType.TLKUR));
                 }
             }));
 
@@ -136,17 +137,17 @@ public class RatePollingService extends IntentService {
             providers.add(new YapıKrediRateProvider(new ProviderSourceCallbackAdapter<List<YapıKrediRate>>() {
                 @Override
                 public void onResult(List<YapıKrediRate> rates) {
-                    alarmChecks(rates, CurrencySource.Type.YAPIKREDI);
-                    RatesHolder.getInstance().addRate(rates, CurrencySource.Type.YAPIKREDI);
-                    EventBus.getDefault().post(new RatesEvent<>(rates, CurrencySource.Type.YAPIKREDI));
+                    alarmChecks(rates, CurrencyType.YAPIKREDI);
+                    RatesHolder.getInstance().addRate(rates, CurrencyType.YAPIKREDI);
+                    EventBus.getDefault().post(new RatesEvent<>(rates, CurrencyType.YAPIKREDI));
                 }
             }));
             providers.add(new YahooRateProvider(new ProviderSourceCallbackAdapter<List<YahooRate>>() {
                 @Override
                 public void onResult(List<YahooRate> rates) {
-                    alarmChecks(rates, CurrencySource.Type.YAHOO);
-                    RatesHolder.getInstance().addRate(rates, CurrencySource.Type.YAHOO);
-                    EventBus.getDefault().post(new RatesEvent<>(rates, CurrencySource.Type.YAHOO));
+                    alarmChecks(rates, CurrencyType.YAHOO);
+                    RatesHolder.getInstance().addRate(rates, CurrencyType.YAHOO);
+                    EventBus.getDefault().post(new RatesEvent<>(rates, CurrencyType.YAHOO));
                 }
             }));
         }
@@ -235,6 +236,20 @@ public class RatePollingService extends IntentService {
             stopSelf();
         } else {
             TimeIntervalManager.changeMode(false);
+            // Stop if a provider has no alarm associated.
+            for (BasePoolingDataProvider provider : providers) {
+                int source_type = provider.getSourceType();
+                boolean contains = false;
+                for (Alarm alarm : AlarmManager.getAlarmsHolder().alarms) {
+                    if (alarm.source_type == source_type) {
+                        contains = true;
+                        break;
+                    }
+                }
+                if (!contains) {
+                    provider.stop();
+                }
+            }
         }
     }
 

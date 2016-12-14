@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dynoapps.exchange_rates.data.CurrencySource;
+import dynoapps.exchange_rates.data.CurrencyType;
 import dynoapps.exchange_rates.event.DataSourceUpdate;
 import dynoapps.exchange_rates.interfaces.ValueType;
 import dynoapps.exchange_rates.provider.BasePoolingDataProvider;
@@ -42,22 +43,22 @@ public class SourcesManager {
 
         for (CurrencySource source : currencySources) {
             switch (source.getSourceType()) {
-                case CurrencySource.Type.YORUMLAR:
+                case CurrencyType.YORUMLAR:
                     source.setPollingSource(CollectionUtils.getInstance(providers, YorumlarRateProvider.class));
                     break;
-                case CurrencySource.Type.ENPARA:
+                case CurrencyType.ENPARA:
                     source.setPollingSource(CollectionUtils.getInstance(providers, EnparaRateProvider.class));
                     break;
-                case CurrencySource.Type.BIGPARA:
+                case CurrencyType.BIGPARA:
                     source.setPollingSource(CollectionUtils.getInstance(providers, BigparaRateProvider.class));
                     break;
-                case CurrencySource.Type.TLKUR:
+                case CurrencyType.TLKUR:
                     source.setPollingSource(CollectionUtils.getInstance(providers, DolarTlKurRateProvider.class));
                     break;
-                case CurrencySource.Type.YAPIKREDI:
+                case CurrencyType.YAPIKREDI:
                     source.setPollingSource(CollectionUtils.getInstance(providers, YapıKrediRateProvider.class));
                     break;
-                case CurrencySource.Type.YAHOO:
+                case CurrencyType.YAHOO:
                     source.setPollingSource(CollectionUtils.getInstance(providers, YahooRateProvider.class));
                     break;
             }
@@ -174,12 +175,12 @@ public class SourcesManager {
 
         if (currencySources != null && currencySources.size() > 0) return;
 
-        currencySources.add(new CurrencySource("Yorumlar", CurrencySource.Type.YORUMLAR, R.color.colorYorumlar, true));
-        currencySources.add(new CurrencySource("Enpara", CurrencySource.Type.ENPARA, R.color.colorEnpara, true));
-        currencySources.add(new CurrencySource("Bigpara", CurrencySource.Type.BIGPARA, R.color.colorBigPara, false));
-        currencySources.add(new CurrencySource("TlKur", CurrencySource.Type.TLKUR, R.color.colorDolarTlKur, false));
-        currencySources.add(new CurrencySource("Yapı Kredi", CurrencySource.Type.YAPIKREDI, R.color.colorYapıKredi, false));
-        currencySources.add(new CurrencySource("Yahoo", CurrencySource.Type.YAHOO, R.color.colorYahoo, false));
+        currencySources.add(new CurrencySource("Yorumlar", CurrencyType.YORUMLAR, R.color.colorYorumlar, true));
+        currencySources.add(new CurrencySource("Enpara", CurrencyType.ENPARA, R.color.colorEnpara, true));
+        currencySources.add(new CurrencySource("Bigpara", CurrencyType.BIGPARA, R.color.colorBigPara, false));
+        currencySources.add(new CurrencySource("TlKur", CurrencyType.TLKUR, R.color.colorDolarTlKur, false));
+        currencySources.add(new CurrencySource("Yapı Kredi", CurrencyType.YAPIKREDI, R.color.colorYapıKredi, false));
+        currencySources.add(new CurrencySource("Yahoo", CurrencyType.YAHOO, R.color.colorYahoo, false));
 
         updateSourceStatesFromPrefs();
     }

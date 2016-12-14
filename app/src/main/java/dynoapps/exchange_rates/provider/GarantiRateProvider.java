@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import dynoapps.exchange_rates.data.CurrencyType;
 import dynoapps.exchange_rates.model.rates.GarantiRate;
 import retrofit2.Call;
 
@@ -25,6 +26,11 @@ public class GarantiRateProvider extends BasePoolingDataProvider<List<GarantiRat
     public GarantiRateProvider(SourceCallback<List<GarantiRate>> callback) {
         super(callback);
         executorService = Executors.newCachedThreadPool();
+    }
+
+    @Override
+    public int getSourceType() {
+        return CurrencyType.NOT_SET;//TODO
     }
 
     @Override
