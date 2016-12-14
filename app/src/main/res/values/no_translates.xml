@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tl_string" translatable="false">TL</string>
+    <string name="placeholder_tl" translatable="false">%s TL</string>
+    <string name="euro_dollar_sign" translatable="false">€/$</string>
+    <string name="dollar_sign" translatable="false">$</string>
+    <string name="euro_sign" translatable="false">€</string>
+</resources>

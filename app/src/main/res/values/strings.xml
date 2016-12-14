@@ -15,17 +15,13 @@
     <string name="clear_sure_message">Sure to refresh. All data will be cleared.</string>
     <string name="time_interval">Time Interval</string>
     <string name="select_time_interval">Select Update Interval</string>
-    <string name="placeholder_tl" translatable="false">%s TL</string>
     <string name="select_graph_using_side_menu">Select the graph using side menu</string>
     <string name="sell">Sell</string>
     <string name="buy">Buy</string>
-    <string name="dollar_sign" translatable="false">$</string>
-    <string name="euro_sign" translatable="false">€</string>
     <string name="select_graph_type">Select Graph Type</string>
     <string name="select_at_least_one_source">Select at least one source.</string>
     <string name="remove">Remove</string>
     <string name="remove_source_approve">Remove selected source?</string>
-    <string name="euro_dollar_sign" translatable="false">€/$</string>
     <string name="interval_hint"> • Data update interval <b>%s</b></string>
     <string name="add_alarm">Add Alarm</string>
     <string name="add">Add</string>
@@ -39,6 +35,7 @@
     <string name="graphic">Graphic</string>
     <string name="graph_types">Graph Types</string>
     <string name="others">Diğer</string>
+
     <plurals name="sec_short">
         <item quantity="one">%d sec</item>
         <item quantity="other">%d secs</item>

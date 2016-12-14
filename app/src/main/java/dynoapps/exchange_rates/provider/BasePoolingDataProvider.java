@@ -9,7 +9,7 @@ import dynoapps.exchange_rates.time.TimeIntervalManager;
 import dynoapps.exchange_rates.util.L;
 
 /**
- * Created by erdemmac on 25/11/2016. todo add is enabled state
+ * Created by erdemmac on 25/11/2016.
  */
 
 public abstract class BasePoolingDataProvider<T> implements IPollingSource, Runnable {

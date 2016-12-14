@@ -215,7 +215,7 @@ public class ChartActivity extends BaseActivity {
         lineChart.getAxisRight().setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-                String postFix = rateType == IRate.USD || rateType == IRate.EUR ? " TL" : ""; //todo
+                String postFix = rateType == IRate.USD || rateType == IRate.EUR ? " " + getString(R.string.tl_string) : "";
                 return axisValueFormatter.getFormattedValue(value, axis) + postFix;
             }
         });
