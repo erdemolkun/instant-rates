@@ -21,10 +21,21 @@ import dynoapps.exchange_rates.event.IntervalUpdate;
 public final class TimeIntervalManager {
 
     private static final int DEFAULT_INTERVAL_INDEX = 2;
+    private static final int DEFAULT_INTERVAL_SERVICE_INDEX = 4;
 
-    private static Integer selected_interval_index = getSelectedIndexViaPrefs();
+    private static Integer selected_interval_index_user = getSelectedIndexViaPrefs();
     private static long pref_interval_milis = Prefs.getInterval(App.context());
     private static ArrayList<TimeInterval> intervals;
+
+    private static boolean isUIMode = false;
+
+    private static boolean isUIMode() {
+        return isUIMode;
+    }
+
+    public static void changeMode(boolean isUI) {
+        TimeIntervalManager.isUIMode = isUI;
+    }
 
     private static ArrayList<TimeInterval> getDefaultIntervals() {
         if (intervals == null || intervals.size() == 0) {
@@ -43,13 +54,13 @@ public final class TimeIntervalManager {
 
     private static int temp_selected_item_index = -1;
 
-    public static String getSelection() {
+    public static String getSelectionStr() {
         return getDefaultIntervals().get(getSelectedIndex()).toString();
     }
 
     public static void selectInterval(final Activity activity) {
 
-        final ArrayList<TimeIntervalManager.TimeInterval> timeIntervals = TimeIntervalManager.getDefaultIntervals();
+        final ArrayList<TimeInterval> timeIntervals = TimeIntervalManager.getDefaultIntervals();
         temp_selected_item_index = TimeIntervalManager.getSelectedIndex();
         String[] time_values = new String[timeIntervals.size()];
         for (int i = 0; i < time_values.length; i++) {
@@ -96,56 +107,38 @@ public final class TimeIntervalManager {
     }
 
     private static int getSelectedIndex() {
-        if (selected_interval_index < 0) {
-            return DEFAULT_INTERVAL_INDEX;
+        if (isUIMode()) {
+            if (selected_interval_index_user < 0) {
+                return DEFAULT_INTERVAL_INDEX;
+            }
+            return selected_interval_index_user;
+        } else {
+            return selected_interval_index_user > DEFAULT_INTERVAL_SERVICE_INDEX ? selected_interval_index_user : DEFAULT_INTERVAL_SERVICE_INDEX;
         }
-        return selected_interval_index;
     }
 
 
     public static void setSelectedIndex(int index) {
         if (getDefaultIntervals().size() > index) {
-            selected_interval_index = index;
+            selected_interval_index_user = index;
         } else {
-            selected_interval_index = getDefaultIntervals().size();
+            selected_interval_index_user = getDefaultIntervals().size();
         }
         Prefs.saveInterval(App.context(), getIntervalInMiliseconds());
     }
 
     public static long getIntervalInMiliseconds() {
-        if (selected_interval_index < 0) {
+        if (isUIMode() && selected_interval_index_user < 0) {
             if (pref_interval_milis < 0) {
                 return getDefaultIntervals().get(DEFAULT_INTERVAL_INDEX).to(TimeUnit.MILLISECONDS);
             } else {
                 return pref_interval_milis;
             }
+        } else {
+            return getDefaultIntervals().get(getSelectedIndex()).to(TimeUnit.MILLISECONDS);
         }
-        return getDefaultIntervals().get(selected_interval_index).to(TimeUnit.MILLISECONDS);
+
     }
 
-    static class TimeInterval {
-        TimeInterval(int value, TimeUnit timeUnit) {
-            this.value = value;
-            this.timeUnit = timeUnit;
-        }
 
-        public long to(TimeUnit unit) {
-            return unit.convert(value, timeUnit);
-        }
-
-        @Override
-        public String toString() {
-            if (timeUnit == TimeUnit.SECONDS) {
-                return App.context().getResources().getQuantityString(R.plurals.sec_short, value, value);
-            } else if (timeUnit == TimeUnit.MINUTES) {
-                return App.context().getResources().getQuantityString(R.plurals.min_short, value, value);
-            } else {
-                return value + "";
-            }
-        }
-
-        private TimeUnit timeUnit;
-        private int value;
-
-    }
 }

@@ -6,6 +6,7 @@ import android.os.Looper;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import dynoapps.exchange_rates.time.TimeIntervalManager;
+import dynoapps.exchange_rates.util.L;
 
 /**
  * Created by erdemmac on 25/11/2016. todo add is enabled state
@@ -74,6 +75,7 @@ public abstract class BasePoolingDataProvider<T> implements IPollingSource, Runn
         postWork(this, TimeIntervalManager.getIntervalInMiliseconds());
     }
 
+
     @Override
     public void stop() {
         is_enabled.set(false);
@@ -89,6 +91,9 @@ public abstract class BasePoolingDataProvider<T> implements IPollingSource, Runn
     private void postWork(Runnable runnable, long delayed) {
         isWorking.set(true);
         getHandler().postDelayed(runnable, delayed);
+        if (this instanceof YorumlarRateProvider) {
+            L.e(BasePoolingDataProvider.class.getSimpleName(), "postWork : " + delayed + " ms");
+        }
     }
 
 

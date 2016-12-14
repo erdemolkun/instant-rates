@@ -1,8 +1,8 @@
 package dynoapps.exchange_rates.service;
 
+import android.app.IntentService;
 import android.app.Notification;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Binder;
@@ -13,6 +13,7 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.ContextCompat;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.NoSubscriberEvent;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
@@ -48,17 +49,27 @@ import dynoapps.exchange_rates.provider.ProviderSourceCallbackAdapter;
 import dynoapps.exchange_rates.provider.YahooRateProvider;
 import dynoapps.exchange_rates.provider.YapıKrediRateProvider;
 import dynoapps.exchange_rates.provider.YorumlarRateProvider;
+import dynoapps.exchange_rates.time.TimeIntervalManager;
 import dynoapps.exchange_rates.util.Formatter;
+import dynoapps.exchange_rates.util.L;
 import dynoapps.exchange_rates.util.RateUtils;
 
 /**
  * Created by erdemmac on 05/12/2016.
  */
 
-public class RatePollingService extends Service {
-    ArrayList<BasePoolingDataProvider> providers = new ArrayList<>();
+public class RatePollingService extends IntentService {
+    ArrayList<BasePoolingDataProvider> providers;
 
     private final IBinder mBinder = new SimpleBinder();
+
+    public RatePollingService() {
+        super("RatePollingService");
+    }
+
+    public RatePollingService(String name) {
+        super(name);
+    }
 
     @Nullable
     @Override
@@ -67,63 +78,78 @@ public class RatePollingService extends Service {
     }
 
     @Override
+    protected void onHandleIntent(Intent intent) {
+
+    }
+
+    @Override
     public void onCreate() {
         super.onCreate();
+        L.i(RatePollingService.class.getSimpleName(), "Service onCreate");
         EventBus.getDefault().register(this);
-        if (providers.size() > 0) return;
-        providers.add(new YorumlarRateProvider(new ProviderSourceCallbackAdapter<List<YorumlarRate>>() {
-            @Override
-            public void onResult(List<YorumlarRate> rates) {
-                alarmChecks(rates, CurrencySource.Type.YORUMLAR);
-                RatesHolder.getInstance().addRate(rates, CurrencySource.Type.YORUMLAR);
-                EventBus.getDefault().post(new RatesEvent<>(rates, CurrencySource.Type.YORUMLAR));
+        if (providers == null) {
+            providers = new ArrayList<>();
+        }
+        if (providers.size() > 0) {
+            for (BasePoolingDataProvider provider : providers) {
+                provider.stop();
             }
-        }));
-        providers.add(new EnparaRateProvider(new ProviderSourceCallbackAdapter<List<EnparaRate>>() {
-            @Override
-            public void onResult(List<EnparaRate> rates) {
-                alarmChecks(rates, CurrencySource.Type.ENPARA);
-                RatesHolder.getInstance().addRate(rates, CurrencySource.Type.ENPARA);
-                EventBus.getDefault().post(new RatesEvent<>(rates, CurrencySource.Type.ENPARA, System.currentTimeMillis()));
-            }
-        }));
+        } else {
 
-        providers.add(
-                new BigparaRateProvider(new ProviderSourceCallbackAdapter<List<BigparaRate>>() {
-                    @Override
-                    public void onResult(List<BigparaRate> rates) {
-                        alarmChecks(rates, CurrencySource.Type.BIGPARA);
-                        RatesHolder.getInstance().addRate(rates, CurrencySource.Type.BIGPARA);
-                        EventBus.getDefault().post(new RatesEvent<>(rates, CurrencySource.Type.BIGPARA));
-                    }
-                }));
+            providers.add(new YorumlarRateProvider(new ProviderSourceCallbackAdapter<List<YorumlarRate>>() {
+                @Override
+                public void onResult(List<YorumlarRate> rates) {
+                    alarmChecks(rates, CurrencySource.Type.YORUMLAR);
+                    RatesHolder.getInstance().addRate(rates, CurrencySource.Type.YORUMLAR);
+                    EventBus.getDefault().post(new RatesEvent<>(rates, CurrencySource.Type.YORUMLAR));
+                }
+            }));
+            providers.add(new EnparaRateProvider(new ProviderSourceCallbackAdapter<List<EnparaRate>>() {
+                @Override
+                public void onResult(List<EnparaRate> rates) {
+                    alarmChecks(rates, CurrencySource.Type.ENPARA);
+                    RatesHolder.getInstance().addRate(rates, CurrencySource.Type.ENPARA);
+                    EventBus.getDefault().post(new RatesEvent<>(rates, CurrencySource.Type.ENPARA, System.currentTimeMillis()));
+                }
+            }));
 
-        providers.add(new DolarTlKurRateProvider(new ProviderSourceCallbackAdapter<List<DolarTlKurRate>>() {
-            @Override
-            public void onResult(List<DolarTlKurRate> rates) {
-                alarmChecks(rates, CurrencySource.Type.TLKUR);
-                RatesHolder.getInstance().addRate(rates, CurrencySource.Type.TLKUR);
-                EventBus.getDefault().post(new RatesEvent<>(rates, CurrencySource.Type.TLKUR));
-            }
-        }));
+            providers.add(
+                    new BigparaRateProvider(new ProviderSourceCallbackAdapter<List<BigparaRate>>() {
+                        @Override
+                        public void onResult(List<BigparaRate> rates) {
+                            alarmChecks(rates, CurrencySource.Type.BIGPARA);
+                            RatesHolder.getInstance().addRate(rates, CurrencySource.Type.BIGPARA);
+                            EventBus.getDefault().post(new RatesEvent<>(rates, CurrencySource.Type.BIGPARA));
+                        }
+                    }));
+
+            providers.add(new DolarTlKurRateProvider(new ProviderSourceCallbackAdapter<List<DolarTlKurRate>>() {
+                @Override
+                public void onResult(List<DolarTlKurRate> rates) {
+                    alarmChecks(rates, CurrencySource.Type.TLKUR);
+                    RatesHolder.getInstance().addRate(rates, CurrencySource.Type.TLKUR);
+                    EventBus.getDefault().post(new RatesEvent<>(rates, CurrencySource.Type.TLKUR));
+                }
+            }));
 
 
-        providers.add(new YapıKrediRateProvider(new ProviderSourceCallbackAdapter<List<YapıKrediRate>>() {
-            @Override
-            public void onResult(List<YapıKrediRate> rates) {
-                alarmChecks(rates, CurrencySource.Type.YAPIKREDI);
-                RatesHolder.getInstance().addRate(rates, CurrencySource.Type.YAPIKREDI);
-                EventBus.getDefault().post(new RatesEvent<>(rates, CurrencySource.Type.YAPIKREDI));
-            }
-        }));
-        providers.add(new YahooRateProvider(new ProviderSourceCallbackAdapter<List<YahooRate>>() {
-            @Override
-            public void onResult(List<YahooRate> rates) {
-                alarmChecks(rates, CurrencySource.Type.YAHOO);
-                RatesHolder.getInstance().addRate(rates, CurrencySource.Type.YAHOO);
-                EventBus.getDefault().post(new RatesEvent<>(rates, CurrencySource.Type.YAHOO));
-            }
-        }));
+            providers.add(new YapıKrediRateProvider(new ProviderSourceCallbackAdapter<List<YapıKrediRate>>() {
+                @Override
+                public void onResult(List<YapıKrediRate> rates) {
+                    alarmChecks(rates, CurrencySource.Type.YAPIKREDI);
+                    RatesHolder.getInstance().addRate(rates, CurrencySource.Type.YAPIKREDI);
+                    EventBus.getDefault().post(new RatesEvent<>(rates, CurrencySource.Type.YAPIKREDI));
+                }
+            }));
+            providers.add(new YahooRateProvider(new ProviderSourceCallbackAdapter<List<YahooRate>>() {
+                @Override
+                public void onResult(List<YahooRate> rates) {
+                    alarmChecks(rates, CurrencySource.Type.YAHOO);
+                    RatesHolder.getInstance().addRate(rates, CurrencySource.Type.YAHOO);
+                    EventBus.getDefault().post(new RatesEvent<>(rates, CurrencySource.Type.YAHOO));
+                }
+            }));
+        }
         SourcesManager.init();
         SourcesManager.updateProviders(providers);
         refreshSources();
@@ -192,6 +218,7 @@ public class RatePollingService extends Service {
 
     @Override
     public void onDestroy() {
+        L.i(RatePollingService.class.getSimpleName(), "Service Stopped");
         EventBus.getDefault().unregister(this);
         if (providers != null) {
             for (IPollingSource iPollingSource : providers) {
@@ -201,6 +228,15 @@ public class RatePollingService extends Service {
         super.onDestroy();
     }
 
+    @Subscribe
+    public void onEvent(NoSubscriberEvent callBackEvent) {
+        L.i(RatePollingService.class.getSimpleName(), "NoSubscriberEvent");
+        if (AlarmManager.getAlarmsHolder().alarms.size() <= 0) {
+            stopSelf();
+        } else {
+            TimeIntervalManager.changeMode(false);
+        }
+    }
 
     private void sendNotification(String message, String category) {
 
@@ -232,7 +268,7 @@ public class RatePollingService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        return START_NOT_STICKY;
+        return START_STICKY;
     }
 
     public class SimpleBinder extends Binder {

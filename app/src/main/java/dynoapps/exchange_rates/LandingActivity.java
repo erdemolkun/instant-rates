@@ -100,6 +100,70 @@ public class LandingActivity extends BaseActivity {
     private static final int NAVDRAWER_LAUNCH_DELAY = 250;
 
 
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        setAnimationType(AnimationHelper.FADE_IN);
+        super.onCreate(savedInstanceState);
+        mHandler = new Handler(Looper.getMainLooper());
+        if (getActionBarToolbar() != null) {
+            getActionBarToolbar().setTitle(getTitle());
+        }
+
+        setupNavDrawer();
+
+        TimeIntervalManager.changeMode(true);
+        SourcesManager.init();
+        setUpDataSourceCards();
+        refreshCardItems();
+
+        SparseArray<RatesEvent<BaseRate>> sparseArray = RatesHolder.getInstance().getAllRates();
+        if (sparseArray != null) {
+            for (int i = 0; i < sparseArray.size(); i++) {
+                RatesEvent<BaseRate> ratesEvent = sparseArray.valueAt(i);
+                List<BaseRate> rates = ratesEvent.rates;
+                update(rates, ratesEvent.source_type, false);
+            }
+        }
+
+        if (!isMyServiceRunning(RatePollingService.class)) {
+            Intent intent = new Intent(this, RatePollingService.class);
+            bindService(intent, rateServiceConnection, Context.BIND_AUTO_CREATE);
+            startService(new Intent(this, RatePollingService.class));
+        } else {
+            EventBus.getDefault().post(new IntervalUpdate());
+        }
+        for (CardViewItemParent parent : parentItems) {
+            for (CardViewItem item : parent.items) {
+                item.tvType.setText(SourcesManager.getSourceName(item.source_type, item.value_type));
+            }
+        }
+
+        boolean isHintRemoved = Prefs.isLandingHintClosed();
+        vCloseHint.setVisibility(isHintRemoved ? View.GONE : View.VISIBLE);
+        if (!isHintRemoved) {
+            ivCloseHint.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(final View view) {
+                    Prefs.saveLandingHintState(true);
+                    vCloseHint.animate().alpha(0).setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                                TransitionManager.beginDelayedTransition((ViewGroup) findViewById(R.id.v_main_content));
+                            }
+                            vCloseHint.setVisibility(View.GONE);
+                        }
+                    }).setDuration(400).start();
+                }
+            });
+        }
+
+        tvVersion.setText(AppUtils.getAppVersionForSemver());
+        updateHint();
+
+    }
+
     private void refreshCardItems() {
         ArrayList<CurrencySource> dataSources = SourcesManager.getCurrencySources();
         for (CurrencySource dataSource : dataSources) {
@@ -243,65 +307,6 @@ public class LandingActivity extends BaseActivity {
 
 
         parentItems.add(parentParity);
-
-    }
-
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        setAnimationType(AnimationHelper.FADE_IN);
-        super.onCreate(savedInstanceState);
-        mHandler = new Handler(Looper.getMainLooper());
-        if (getActionBarToolbar() != null) {
-            getActionBarToolbar().setTitle(getTitle());
-        }
-        setupNavDrawer();
-        SourcesManager.init();
-        setUpDataSourceCards();
-        refreshCardItems();
-
-        SparseArray<RatesEvent<BaseRate>> sparseArray = RatesHolder.getInstance().getAllRates();
-        if (sparseArray != null) {
-            for (int i = 0; i < sparseArray.size(); i++) {
-                RatesEvent<BaseRate> ratesEvent = sparseArray.valueAt(i);
-                List<BaseRate> rates = ratesEvent.rates;
-                update(rates, ratesEvent.source_type, false);
-            }
-        }
-
-        if (!isMyServiceRunning(RatePollingService.class)) {
-            Intent intent = new Intent(this, RatePollingService.class);
-            bindService(intent, rateServiceConnection, Context.BIND_AUTO_CREATE);
-            startService(new Intent(this, RatePollingService.class));
-        }
-        for (CardViewItemParent parent : parentItems) {
-            for (CardViewItem item : parent.items) {
-                item.tvType.setText(SourcesManager.getSourceName(item.source_type, item.value_type));
-            }
-        }
-
-        boolean isHintRemoved = Prefs.isLandingHintClosed();
-        vCloseHint.setVisibility(isHintRemoved ? View.GONE : View.VISIBLE);
-        if (!isHintRemoved) {
-            ivCloseHint.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(final View view) {
-                    Prefs.saveLandingHintState(true);
-                    vCloseHint.animate().alpha(0).setListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            super.onAnimationEnd(animation);
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                                TransitionManager.beginDelayedTransition((ViewGroup) findViewById(R.id.v_main_content));
-                            }
-                            vCloseHint.setVisibility(View.GONE);
-                        }
-                    }).setDuration(400).start();
-                }
-            });
-        }
-
-        tvVersion.setText(AppUtils.getAppVersionForSemver());
-        updateHint();
 
     }
 
@@ -476,7 +481,9 @@ public class LandingActivity extends BaseActivity {
             EventBus.getDefault().unregister(this);
         }
         if (isMyServiceRunning(RatePollingService.class)) {
-            stopService(new Intent(this, RatePollingService.class));
+            if (AlarmManager.getAlarmsHolder().alarms.size() <= 0) {
+                stopService(new Intent(this, RatePollingService.class));
+            }
             if (ratePollingService != null) {
                 unbindService(rateServiceConnection);
             }
@@ -552,7 +559,7 @@ public class LandingActivity extends BaseActivity {
     }
 
     private void updateHint() {
-        tvIntervalHint.setText(getString(R.string.interval_hint, TimeIntervalManager.getSelection()));
+        tvIntervalHint.setText(getString(R.string.interval_hint, TimeIntervalManager.getSelectionStr()));
     }
 
 
