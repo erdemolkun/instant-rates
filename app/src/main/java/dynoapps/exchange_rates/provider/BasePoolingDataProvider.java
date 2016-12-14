@@ -57,6 +57,7 @@ public abstract class BasePoolingDataProvider<T> implements IPollingSource, Runn
     }
 
     void fetchAgain(boolean wasError) {
+        if (!is_enabled.get()) return;
         long interval_value = TimeIntervalManager.getIntervalInMiliseconds();
         if (wasError) {
             /**
