@@ -56,6 +56,13 @@ public abstract class BasePoolingDataProvider<T> implements IPollingSource, Runn
         postWork(this, 0);
     }
 
+    @Override
+    public void stop() {
+        is_enabled.set(false);
+        cancelWorks();
+    }
+
+
     void fetchAgain(boolean wasError) {
         if (!is_enabled.get()) return;
         long interval_value = TimeIntervalManager.getIntervalInMiliseconds();
@@ -67,22 +74,14 @@ public abstract class BasePoolingDataProvider<T> implements IPollingSource, Runn
             interval_value = (int) (NEXT_FETCH_ON_ERROR + Math.log(ratio) * NEXT_FETCH_ON_ERROR);
         }
         postWork(this, interval_value);
-
     }
 
-    public void refreshForIntervals() {
+    public void refreshIntervals() {
         cancelWorks();
         if (!is_enabled.get()) {
             return;
         }
         postWork(this, TimeIntervalManager.getIntervalInMiliseconds());
-    }
-
-
-    @Override
-    public void stop() {
-        is_enabled.set(false);
-        cancelWorks();
     }
 
     private void cancelWorks() {

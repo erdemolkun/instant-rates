@@ -54,8 +54,10 @@ public class YahooRateProvider extends BasePoolingDataProvider<List<YahooRate>> 
 
             @Override
             public void onFailure(Call<List<YahooRate>> call, Throwable t) {
-                notifyError();
-                fetchAgain(true);
+                if (!call.isCanceled()) {
+                    notifyError();
+                    fetchAgain(true);
+                }
             }
         });
         lastCall = call;

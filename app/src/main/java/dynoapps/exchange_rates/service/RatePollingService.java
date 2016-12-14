@@ -201,7 +201,7 @@ public class RatePollingService extends IntentService {
     @Subscribe
     public void onEvent(IntervalUpdate event) {
         for (BasePoolingDataProvider provider : providers) {
-            provider.refreshForIntervals();
+            provider.refreshIntervals();
         }
     }
 
