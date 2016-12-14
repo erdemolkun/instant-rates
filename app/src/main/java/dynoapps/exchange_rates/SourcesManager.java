@@ -205,10 +205,6 @@ public class SourcesManager {
                 } catch (Exception ignored) {
                 }
             }
-        } else {
-            for (CurrencySource currencySource : currencySources) {
-                currencySource.setEnabled(true);
-            }
         }
     }
 
