@@ -46,7 +46,7 @@ public abstract class BasePoolingDataProvider<T> implements IPollingSource, Pool
     }
 
     public boolean isEnabled() {
-        return currencySource!=null ? currencySource.isEnabled() : false;
+        return currencySource != null && currencySource.isEnabled();
     }
 
     public abstract int getSourceType();

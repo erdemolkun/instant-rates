@@ -52,7 +52,7 @@ public final class TimeIntervalManager {
         return intervals;
     }
 
-    private static int temp_selected_item_index = -1;
+    private static int user_selected_item_index = -1;
 
     public static String getSelectionStr() {
         return getDefaultIntervals().get(getSelectedIndex()).toString();
@@ -61,17 +61,17 @@ public final class TimeIntervalManager {
     public static void selectInterval(final Activity activity) {
 
         final ArrayList<TimeInterval> timeIntervals = TimeIntervalManager.getDefaultIntervals();
-        temp_selected_item_index = TimeIntervalManager.getSelectedIndex();
+        user_selected_item_index = TimeIntervalManager.getSelectedIndex();
         String[] time_values = new String[timeIntervals.size()];
         for (int i = 0; i < time_values.length; i++) {
             time_values[i] = timeIntervals.get(i).toString();
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 
-        builder.setSingleChoiceItems(time_values, temp_selected_item_index, new DialogInterface.OnClickListener() {
+        builder.setSingleChoiceItems(time_values, user_selected_item_index, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                temp_selected_item_index = i;
+                user_selected_item_index = i;
             }
         });
 
@@ -80,8 +80,10 @@ public final class TimeIntervalManager {
         builder.setPositiveButton(R.string.apply, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                TimeIntervalManager.updateUserInvertalSelection(temp_selected_item_index);
-                EventBus.getDefault().post(new IntervalUpdate());
+                if (user_selected_item_index != TimeIntervalManager.getSelectedIndex()) {
+                    TimeIntervalManager.updateUserInvertalSelection(user_selected_item_index);
+                    EventBus.getDefault().post(new IntervalUpdate());
+                }
             }
         });
 
