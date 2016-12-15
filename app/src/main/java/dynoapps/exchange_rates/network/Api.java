@@ -32,13 +32,7 @@ public class Api {
 
     public static Retrofit getYorumlarApi() {
         if (yorumlarApi == null) {
-            OkHttpClient.Builder builder = new OkHttpClient.Builder();
-            builder.connectTimeout(8, TimeUnit.SECONDS)
-                    .readTimeout(8, TimeUnit.SECONDS);
-            if (PublishSettings.isAlphaOrDeveloper()) {
-                builder.addNetworkInterceptor(new StethoInterceptor());
-            }
-            final OkHttpClient client = builder.build();
+            final OkHttpClient client = builder().build();
             yorumlarApi = new Retrofit.Builder()
                     .client(client)
                     .baseUrl("https://yorumlar.altin.in/")
@@ -51,13 +45,7 @@ public class Api {
 
     public static Retrofit getEnparaApi() {
         if (enparaApi == null) {
-            OkHttpClient.Builder builder = new OkHttpClient.Builder();
-            builder.connectTimeout(8, TimeUnit.SECONDS)
-                    .readTimeout(8, TimeUnit.SECONDS);
-            if (PublishSettings.isAlphaOrDeveloper()) {
-                builder.addNetworkInterceptor(new StethoInterceptor());
-            }
-            final OkHttpClient client = builder.build();
+            final OkHttpClient client = builder().build();
             enparaApi = new Retrofit.Builder()
                     .client(client)
                     .baseUrl("http://www.qnbfinansbank.enpara.com/")
@@ -69,13 +57,7 @@ public class Api {
 
     public static Retrofit getBigparaApi() {
         if (bigparaApi == null) {
-            OkHttpClient.Builder builder = new OkHttpClient.Builder();
-            builder.connectTimeout(8, TimeUnit.SECONDS)
-                    .readTimeout(8, TimeUnit.SECONDS);
-            if (PublishSettings.isAlphaOrDeveloper()) {
-                builder.addNetworkInterceptor(new StethoInterceptor());
-            }
-            final OkHttpClient client = builder.build();
+            final OkHttpClient client = builder().build();
             bigparaApi = new Retrofit.Builder()
                     .baseUrl("http://www.bigpara.com/")
                     .client(client)
@@ -97,13 +79,8 @@ public class Api {
 
     public static Retrofit getYahooApi() {
         if (yahooApi == null) {
-            OkHttpClient.Builder builder = new OkHttpClient.Builder();
-            builder.connectTimeout(8, TimeUnit.SECONDS)
-                    .readTimeout(8, TimeUnit.SECONDS);
-            if (PublishSettings.isAlphaOrDeveloper()) {
-                builder.addNetworkInterceptor(new StethoInterceptor());
-            }
-            final OkHttpClient client = builder.build();
+
+            final OkHttpClient client = builder().build();
             yahooApi = new Retrofit.Builder().
                     client(client).
                     addConverterFactory(new YahooConverter.Factory()).
@@ -135,5 +112,14 @@ public class Api {
         return bloombergApi;
     }
 
+    private static OkHttpClient.Builder builder() {
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        builder.connectTimeout(8, TimeUnit.SECONDS)
+                .readTimeout(8, TimeUnit.SECONDS);
+        if (PublishSettings.isAlphaOrDeveloper()) {
+            builder.addNetworkInterceptor(new StethoInterceptor());
+        }
+        return builder;
+    }
 
 }
