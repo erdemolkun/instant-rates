@@ -88,7 +88,7 @@ public class ChartActivity extends BaseActivity {
     private static final int DATA_COUNT = 20;
 
     private long getVisibleTimeInMilis() {
-        return TimeIntervalManager.getIntervalInMiliseconds() * DATA_COUNT;
+        return TimeIntervalManager.getPollingInterval() * DATA_COUNT;
     }
 
     @Override

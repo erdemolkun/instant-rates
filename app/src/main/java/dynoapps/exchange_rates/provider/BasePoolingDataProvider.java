@@ -71,7 +71,7 @@ public abstract class BasePoolingDataProvider<T> implements IPollingSource, Pool
 
     void fetchAgain(boolean wasError) {
         if (!is_enabled.get()) return;
-        long interval_value = TimeIntervalManager.getIntervalInMiliseconds();
+        long interval_value = TimeIntervalManager.getPollingInterval();
         if (wasError) {
             /**
              * Calculate error interval in logarithmic.
@@ -87,7 +87,7 @@ public abstract class BasePoolingDataProvider<T> implements IPollingSource, Pool
         if (!is_enabled.get()) {
             return;
         }
-        postWork(this, TimeIntervalManager.getIntervalInMiliseconds());
+        postWork(this, TimeIntervalManager.getPollingInterval());
     }
 
     private void cancelWorks() {

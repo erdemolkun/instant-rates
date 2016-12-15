@@ -21,7 +21,7 @@ import dynoapps.exchange_rates.event.IntervalUpdate;
 public final class TimeIntervalManager {
 
     private static final int DEFAULT_INTERVAL_INDEX = 2;
-    private static final int DEFAULT_INTERVAL_SERVICE_INDEX = 4;
+    private static final int INTERVAL_SERVICE_INDEX = 4;
 
     private static Integer selected_interval_index_user = getSelectedIndexViaPrefs();
     private static long pref_interval_milis = Prefs.getInterval(App.context());
@@ -80,7 +80,7 @@ public final class TimeIntervalManager {
         builder.setPositiveButton(R.string.apply, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                TimeIntervalManager.setSelectedIndex(temp_selected_item_index);
+                TimeIntervalManager.updateUserInvertalSelection(temp_selected_item_index);
                 EventBus.getDefault().post(new IntervalUpdate());
             }
         });
@@ -113,21 +113,24 @@ public final class TimeIntervalManager {
             }
             return selected_interval_index_user;
         } else {
-            return selected_interval_index_user > DEFAULT_INTERVAL_SERVICE_INDEX ? selected_interval_index_user : DEFAULT_INTERVAL_SERVICE_INDEX;
+            return selected_interval_index_user > INTERVAL_SERVICE_INDEX ? selected_interval_index_user : INTERVAL_SERVICE_INDEX;
         }
     }
 
 
-    public static void setSelectedIndex(int index) {
+    public static void updateUserInvertalSelection(int index) {
         if (getDefaultIntervals().size() > index) {
             selected_interval_index_user = index;
         } else {
             selected_interval_index_user = getDefaultIntervals().size();
         }
-        Prefs.saveInterval(App.context(), getIntervalInMiliseconds());
+        Prefs.saveInterval(App.context(), getDefaultIntervals().get(selected_interval_index_user).to(TimeUnit.MILLISECONDS));
     }
 
-    public static long getIntervalInMiliseconds() {
+    /**
+     * Returns time interval for polling in  {@link TimeUnit#MILLISECONDS} milisecons
+     */
+    public static long getPollingInterval() {
         if (isUIMode() && selected_interval_index_user < 0) {
             if (pref_interval_milis < 0) {
                 return getDefaultIntervals().get(DEFAULT_INTERVAL_INDEX).to(TimeUnit.MILLISECONDS);
@@ -137,8 +140,5 @@ public final class TimeIntervalManager {
         } else {
             return getDefaultIntervals().get(getSelectedIndex()).to(TimeUnit.MILLISECONDS);
         }
-
     }
-
-
 }
