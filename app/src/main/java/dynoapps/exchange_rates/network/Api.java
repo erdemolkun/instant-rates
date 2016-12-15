@@ -1,7 +1,10 @@
 package dynoapps.exchange_rates.network;
 
+import com.facebook.stetho.okhttp3.StethoInterceptor;
+
 import java.util.concurrent.TimeUnit;
 
+import dynoapps.exchange_rates.PublishSettings;
 import dynoapps.exchange_rates.converters.BigparaConverter;
 import dynoapps.exchange_rates.converters.DolarTlKurAjaxConverter;
 import dynoapps.exchange_rates.converters.EnparaConverter;
@@ -29,10 +32,13 @@ public class Api {
 
     public static Retrofit getYorumlarApi() {
         if (yorumlarApi == null) {
-            final OkHttpClient client = new OkHttpClient.Builder()
-                    .connectTimeout(12, TimeUnit.SECONDS)
-                    .readTimeout(12, TimeUnit.SECONDS)
-                    .build();
+            OkHttpClient.Builder builder = new OkHttpClient.Builder();
+            builder.connectTimeout(12, TimeUnit.SECONDS)
+                    .readTimeout(12, TimeUnit.SECONDS);
+            if (PublishSettings.isAlphaOrDeveloper()) {
+                builder.addNetworkInterceptor(new StethoInterceptor());
+            }
+            final OkHttpClient client = builder.build();
             yorumlarApi = new Retrofit.Builder()
                     .client(client)
                     .baseUrl("https://yorumlar.altin.in/")
@@ -73,8 +79,8 @@ public class Api {
         return dolarTlKurApi;
     }
 
-    public static Retrofit getYahooApi(){
-        if (yahooApi==null){
+    public static Retrofit getYahooApi() {
+        if (yahooApi == null) {
             yahooApi = new Retrofit.Builder().
                     addConverterFactory(new YahooConverter.Factory()).
                     baseUrl("http://finance.yahoo.com/").build();

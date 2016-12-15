@@ -3,6 +3,7 @@ package dynoapps.exchange_rates;
 import android.app.Application;
 import android.content.Context;
 
+import com.facebook.stetho.Stetho;
 import com.orhanobut.logger.AndroidLogTool;
 import com.orhanobut.logger.LogLevel;
 import com.orhanobut.logger.Logger;
@@ -28,6 +29,9 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         appInstance = this;
+        if (PublishSettings.isAlphaOrDeveloper()) {
+            Stetho.initializeWithDefaults(this);
+        }
         Logger.init("ExchangeRates")                 // default PRETTYLOGGER or use just init()
                 .methodCount(0)                 // default 2
                 .hideThreadInfo()               // default shown

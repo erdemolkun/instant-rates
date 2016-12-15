@@ -106,6 +106,10 @@ dependencies {
     compile 'org.jsoup:jsoup:1.10.1'
     compile 'com.github.PhilJay:MPAndroidChart:v3.0.1'
     compile 'com.github.orhanobut:logger:1.12'
+
+    compile 'com.facebook.stetho:stetho:1.4.2'
+    compile 'com.facebook.stetho:stetho-okhttp3:1.4.2'
+
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
     testCompile 'junit:junit:4.12'
 }
