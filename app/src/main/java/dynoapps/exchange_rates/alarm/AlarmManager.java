@@ -80,8 +80,8 @@ public class AlarmManager {
 
         final Spinner spn_above_below = (Spinner) v.findViewById(R.id.spn_above_below);
         ArrayList<String> values = new ArrayList<>();
-        values.add(context.getString(R.string.if_below));
         values.add(context.getString(R.string.if_above));
+        values.add(context.getString(R.string.if_below));
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item, values);
         spn_above_below.setAdapter(arrayAdapter);
         spn_above_below.setSelection(0);
@@ -120,7 +120,7 @@ public class AlarmManager {
                             Alarm alarm = new Alarm();
                             alarm.val = val;
                             alarm.rate_type = IRate.USD; // TODO: 13/12/2016
-                            alarm.is_above = spn_above_below.getSelectedItemPosition() == 1;
+                            alarm.is_above = spn_above_below.getSelectedItemPosition() == 0;
                             alarm.source_type = ((CurrencySource) spn_sources.getSelectedItem()).getSourceType();
                             AlarmManager.addAlarm(alarm);
                         } catch (Exception ex) {
