@@ -61,6 +61,7 @@ import dynoapps.exchange_rates.service.RatePollingService;
 import dynoapps.exchange_rates.time.TimeIntervalManager;
 import dynoapps.exchange_rates.util.AnimationHelper;
 import dynoapps.exchange_rates.util.AppUtils;
+import dynoapps.exchange_rates.util.L;
 import dynoapps.exchange_rates.util.RateUtils;
 import dynoapps.exchange_rates.util.ViewUtils;
 
@@ -118,9 +119,8 @@ public class LandingActivity extends BaseActivity {
         setupNavDrawer();
 
         TimeIntervalManager.changeMode(true);
-        SourcesManager.init();
-        setUpDataSourceCards();
-        refreshCardItems();
+        setUpRateCardViews();
+        refreshCardItemViews();
 
         /**
          * Update with cached rates.
@@ -139,6 +139,8 @@ public class LandingActivity extends BaseActivity {
             bindService(intent, rateServiceConnection, Context.BIND_AUTO_CREATE);
             startService(new Intent(this, RatePollingService.class));
         } else {
+            Intent intent = new Intent(this, RatePollingService.class);
+            bindService(intent, rateServiceConnection, Context.BIND_AUTO_CREATE);
             SourcesManager.update();
             EventBus.getDefault().post(new UpdateTriggerEvent()); // Update data once we open activity again.
             EventBus.getDefault().post(new IntervalUpdate()); // Intervals should be updated on ui mode.
@@ -199,7 +201,7 @@ public class LandingActivity extends BaseActivity {
 
     }
 
-    private void refreshCardItems() {
+    private void refreshCardItemViews() {
         ArrayList<CurrencySource> dataSources = SourcesManager.getCurrencySources();
         for (CurrencySource dataSource : dataSources) {
             boolean isEnabled = dataSource.isEnabled();
@@ -252,7 +254,7 @@ public class LandingActivity extends BaseActivity {
                             currencySource.setEnabled(false);
                         }
                         EventBus.getDefault().post(new DataSourceUpdate());
-                        refreshCardItems();
+                        refreshCardItemViews();
                     }
                 });
 
@@ -316,7 +318,7 @@ public class LandingActivity extends BaseActivity {
 
     }
 
-    private void setUpDataSourceCards() {
+    private void setUpRateCardViews() {
         if (parentItems == null) parentItems = new ArrayList<>();
 
         //#
@@ -529,6 +531,8 @@ public class LandingActivity extends BaseActivity {
     RatePollingService ratePollingService;
     private ServiceConnection rateServiceConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className, IBinder binder) {
+            L.i(LandingActivity.class.getSimpleName(), "onServiceConnected");
+            TimeIntervalManager.changeMode(true);
             ratePollingService = ((RatePollingService.SimpleBinder) binder).getService();
         }
 
@@ -585,7 +589,7 @@ public class LandingActivity extends BaseActivity {
 
     @Subscribe
     public void onEvent(DataSourceUpdate event) {
-        refreshCardItems();
+        refreshCardItemViews();
     }
 
     @Subscribe

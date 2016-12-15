@@ -34,7 +34,7 @@ public final class TimeIntervalManager {
     }
 
     public static void changeMode(boolean isUI) {
-        TimeIntervalManager.isUIMode = isUI;
+        TimeIntervalManager.isUIMode = isUI; // todo review.
     }
 
     private static ArrayList<TimeInterval> getDefaultIntervals() {

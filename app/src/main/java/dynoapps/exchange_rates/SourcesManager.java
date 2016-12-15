@@ -32,16 +32,16 @@ import dynoapps.exchange_rates.util.CollectionUtils;
 
 public class SourcesManager {
 
-    private static ArrayList<CurrencySource> currencySources = new ArrayList<>();
+    private static ArrayList<CurrencySource> currencySources = null;
 
-    public static void init() {
-        if (currencySources.size() > 0) return; // Already initialized
+    private static void init() {
+        if (currencySources != null && currencySources.size() > 0) return; // Already initialized
         initDataSourceSelections();
     }
 
     public static void updateProviders(ArrayList<BasePoolingDataProvider> providers) {
 
-        for (CurrencySource source : currencySources) {
+        for (CurrencySource source : getCurrencySources()) {
             switch (source.getSourceType()) {
                 case CurrencyType.YORUMLAR:
                     source.setPollingSource(CollectionUtils.getInstance(providers, YorumlarRateProvider.class));
@@ -69,7 +69,7 @@ public class SourcesManager {
     private static boolean[] temp_data_source_states;
 
     public static void selectSources(final Activity activity) {
-        final ArrayList<CurrencySource> currencySources = SourcesManager.getCurrencySources();
+        final ArrayList<CurrencySource> currencySources = getCurrencySources();
         temp_data_source_states = new boolean[currencySources.size()];
         for (int i = 0; i < temp_data_source_states.length; i++) {
             temp_data_source_states[i] = currencySources.get(i).isEnabled();
@@ -152,7 +152,7 @@ public class SourcesManager {
     }
 
     public static String getSourceName(int type) {
-        for (CurrencySource source : currencySources) {
+        for (CurrencySource source : getCurrencySources()) {
             if (type == source.getSourceType()) {
                 return source.getName();
             }
@@ -161,11 +161,14 @@ public class SourcesManager {
     }
 
     public static ArrayList<CurrencySource> getCurrencySources() {
+        if (currencySources == null) {
+            init();
+        }
         return currencySources;
     }
 
     public static CurrencySource getSource(int source_type) {
-        for (CurrencySource currencySource : currencySources) {
+        for (CurrencySource currencySource : getCurrencySources()) {
             if (currencySource.getSourceType() == source_type) return currencySource;
         }
         return null;
@@ -173,8 +176,11 @@ public class SourcesManager {
 
     private static void initDataSourceSelections() {
 
+        /**
+         * Initialize once.
+         * */
         if (currencySources != null && currencySources.size() > 0) return;
-
+        currencySources = new ArrayList<>();
         currencySources.add(new CurrencySource("Yorumlar", CurrencyType.YORUMLAR, R.color.colorYorumlar, true));
         currencySources.add(new CurrencySource("Enpara", CurrencyType.ENPARA, R.color.colorEnpara, true));
         currencySources.add(new CurrencySource("Bigpara", CurrencyType.BIGPARA, R.color.colorBigPara, false));
@@ -194,7 +200,7 @@ public class SourcesManager {
         String sources = Prefs.getSources();
         if (!TextUtils.isEmpty(sources)) {
             String[] splits = sources.split(";");
-            for (CurrencySource currencySource : currencySources) {
+            for (CurrencySource currencySource : getCurrencySources()) {
                 currencySource.setEnabled(false);
             }
             for (String str : splits) {
@@ -202,7 +208,7 @@ public class SourcesManager {
                 int source_type_temp;
                 try {
                     source_type_temp = Integer.parseInt(str);
-                    for (CurrencySource currencySource : currencySources) {
+                    for (CurrencySource currencySource : getCurrencySources()) {
                         if (currencySource.getSourceType() == source_type_temp) {
                             currencySource.setEnabled(true);
                         }

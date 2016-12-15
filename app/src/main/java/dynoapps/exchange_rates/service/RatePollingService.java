@@ -97,7 +97,6 @@ public class RatePollingService extends IntentService {
                 provider.stop();
             }
         } else {
-            SourcesManager.init();
             providers.add(new YorumlarRateProvider(new ProviderSourceCallbackAdapter<List<YorumlarRate>>() {
                 @Override
                 public void onResult(List<YorumlarRate> rates) {
