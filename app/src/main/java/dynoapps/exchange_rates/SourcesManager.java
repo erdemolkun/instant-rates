@@ -185,6 +185,11 @@ public class SourcesManager {
         updateSourceStatesFromPrefs();
     }
 
+    public static void update() {
+        initDataSourceSelections();
+        updateSourceStatesFromPrefs();
+    }
+
     private static void updateSourceStatesFromPrefs() {
         String sources = Prefs.getSources();
         if (!TextUtils.isEmpty(sources)) {

@@ -122,6 +122,9 @@ public class LandingActivity extends BaseActivity {
         setUpDataSourceCards();
         refreshCardItems();
 
+        /**
+         * Update with cached rates.
+         * */
         SparseArray<RatesEvent<BaseRate>> sparseArray = RatesHolder.getInstance().getAllRates();
         if (sparseArray != null) {
             for (int i = 0; i < sparseArray.size(); i++) {
@@ -136,6 +139,7 @@ public class LandingActivity extends BaseActivity {
             bindService(intent, rateServiceConnection, Context.BIND_AUTO_CREATE);
             startService(new Intent(this, RatePollingService.class));
         } else {
+            SourcesManager.update();
             EventBus.getDefault().post(new UpdateTriggerEvent()); // Update data once we open activity again.
             EventBus.getDefault().post(new IntervalUpdate()); // Intervals should be updated on ui mode.
         }

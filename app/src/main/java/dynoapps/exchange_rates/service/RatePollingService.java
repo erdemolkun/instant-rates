@@ -97,7 +97,7 @@ public class RatePollingService extends IntentService {
                 provider.stop();
             }
         } else {
-
+            SourcesManager.init();
             providers.add(new YorumlarRateProvider(new ProviderSourceCallbackAdapter<List<YorumlarRate>>() {
                 @Override
                 public void onResult(List<YorumlarRate> rates) {
@@ -152,7 +152,7 @@ public class RatePollingService extends IntentService {
                 }
             }));
         }
-        SourcesManager.init();
+
         SourcesManager.updateProviders(providers);
         refreshSources();
     }
@@ -208,9 +208,10 @@ public class RatePollingService extends IntentService {
 
     @Subscribe
     public void onEvent(UpdateTriggerEvent event) {
-        for (BasePoolingDataProvider provider : providers) {
-            if (provider.isEnabled())
-                provider.run(true);
+        for (CurrencySource currencySource : SourcesManager.getCurrencySources()) {
+            if (currencySource.isEnabled()) {
+                currencySource.getPollingSource().one_shot();
+            }
         }
     }
 

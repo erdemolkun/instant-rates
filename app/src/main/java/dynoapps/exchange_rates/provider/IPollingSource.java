@@ -5,6 +5,9 @@ package dynoapps.exchange_rates.provider;
  */
 
 public interface IPollingSource {
+
+    void one_shot();
+
     void start();
 
     void stop();

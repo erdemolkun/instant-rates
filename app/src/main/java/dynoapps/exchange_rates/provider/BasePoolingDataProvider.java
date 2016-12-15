@@ -5,6 +5,8 @@ import android.os.Looper;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import dynoapps.exchange_rates.SourcesManager;
+import dynoapps.exchange_rates.data.CurrencySource;
 import dynoapps.exchange_rates.interfaces.PoolingRunnable;
 import dynoapps.exchange_rates.time.TimeIntervalManager;
 import dynoapps.exchange_rates.util.L;
@@ -22,8 +24,11 @@ public abstract class BasePoolingDataProvider<T> implements IPollingSource, Pool
     private int error_count = 0;
     private int success_count = 0;
 
+    private CurrencySource currencySource;
+
     BasePoolingDataProvider(SourceCallback<T> callback) {
         this.callback = callback;
+        this.currencySource = SourcesManager.getSource(getSourceType());
     }
 
     private Handler handler;
@@ -35,14 +40,17 @@ public abstract class BasePoolingDataProvider<T> implements IPollingSource, Pool
         return handler;
     }
 
+    @Override
+    public void one_shot() {
+        run(true);
+    }
 
     public boolean isEnabled() {
-        return is_enabled.get();
+        return currencySource!=null ? currencySource.isEnabled() : false;
     }
 
     public abstract int getSourceType();
 
-    private AtomicBoolean is_enabled = new AtomicBoolean(false);
     private AtomicBoolean is_working = new AtomicBoolean(false);
 
     @Override
@@ -52,7 +60,6 @@ public abstract class BasePoolingDataProvider<T> implements IPollingSource, Pool
 
     @Override
     public void start() {
-        is_enabled.set(true);
         if (is_working.get()) {
             /**
              Working already. Has a handler callback.
@@ -64,13 +71,11 @@ public abstract class BasePoolingDataProvider<T> implements IPollingSource, Pool
 
     @Override
     public void stop() {
-        is_enabled.set(false);
         cancelWorks();
     }
 
-
     void fetchAgain(boolean wasError) {
-        if (!is_enabled.get()) return;
+        if (!isEnabled()) return;
         long interval_value = TimeIntervalManager.getPollingInterval();
         if (wasError) {
             /**
@@ -84,7 +89,7 @@ public abstract class BasePoolingDataProvider<T> implements IPollingSource, Pool
 
     public void refreshIntervals() {
         cancelWorks();
-        if (!is_enabled.get()) {
+        if (!isEnabled()) {
             return;
         }
         postWork(this, TimeIntervalManager.getPollingInterval());

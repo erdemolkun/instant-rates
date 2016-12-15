@@ -2,6 +2,7 @@ package dynoapps.exchange_rates.provider;
 
 import java.util.List;
 
+import dynoapps.exchange_rates.data.CurrencySource;
 import dynoapps.exchange_rates.data.CurrencyType;
 import dynoapps.exchange_rates.model.rates.BigparaRate;
 import dynoapps.exchange_rates.network.Api;
