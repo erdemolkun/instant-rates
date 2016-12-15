@@ -33,9 +33,7 @@ public class YorumlarRateProvider extends BasePoolingDataProvider<List<YorumlarR
         }
     }
 
-    @Override
-    public void run() {
-        super.run();
+    private void job(final boolean is_single_run) {
         final YorumlarService yorumlarService = Api.getYorumlarApi().create(YorumlarService.class);
         Call<List<YorumlarRate>> call = yorumlarService.rates("ons");
         call.enqueue(new retrofit2.Callback<List<YorumlarRate>>() {
@@ -44,19 +42,32 @@ public class YorumlarRateProvider extends BasePoolingDataProvider<List<YorumlarR
                 if (response.isSuccessful() && response.body() != null) {
                     List<YorumlarRate> rates = response.body();
                     notifyValue(rates);
-                    fetchAgain(false);
+                    if (!is_single_run)
+                        fetchAgain(false);
                 } else {
                     notifyError();
-                    fetchAgain(true);
+                    if (!is_single_run)
+                        fetchAgain(true);
                 }
             }
 
             @Override
             public void onFailure(Call<List<YorumlarRate>> call, Throwable t) {
                 notifyError();
-                fetchAgain(true);
+                if (!is_single_run)
+                    fetchAgain(true);
             }
         });
         lastCall = call;
+    }
+
+    @Override
+    public void run(boolean is_single_run) {
+        job(is_single_run);
+    }
+
+    @Override
+    public void run() {
+        job(false);
     }
 }

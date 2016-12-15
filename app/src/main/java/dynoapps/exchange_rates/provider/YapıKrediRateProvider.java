@@ -42,12 +42,22 @@ public class YapıKrediRateProvider extends BasePoolingDataProvider<List<YapıKr
         executorService.submit(new Runnable() {
             @Override
             public void run() {
-                jsoupCall();
+                jsoupCall(false);
             }
         });
     }
 
-    private void jsoupCall() {
+    @Override
+    public void run(boolean is_single_run) {
+        executorService.submit(new Runnable() {
+            @Override
+            public void run() {
+                jsoupCall(true);
+            }
+        });
+    }
+
+    private void jsoupCall(boolean is_single_run) {
         try {
             Document doc = Jsoup.connect("https://www.yapikredi.com.tr/yatirimci-kosesi/doviz-bilgileri.aspx/LoadInternetCurrencies")
                     .header("Access-Control-Allow-Origin", "*")
@@ -62,7 +72,7 @@ public class YapıKrediRateProvider extends BasePoolingDataProvider<List<YapıKr
                     for (Element element : elements) {
                         Elements innerElements = element.select("td");
                         YapıKrediRate rate = new YapıKrediRate();
-                        if (innerElements.size()>3) {
+                        if (innerElements.size() > 3) {
                             rate.value_sell = innerElements.get(2).text();
                             rate.value_buy = innerElements.get(3).text();
                             rate.type = innerElements.get(0).text();
@@ -71,16 +81,17 @@ public class YapıKrediRateProvider extends BasePoolingDataProvider<List<YapıKr
                             rates.add(rate);
                         }
                     }
-                }
-                catch (Exception ignored){
+                } catch (Exception ignored) {
 
                 }
             }
             notifyValue(rates);
-            fetchAgain(false);
+            if (!is_single_run)
+                fetchAgain(false);
         } catch (Exception ex) {
             notifyError();
-            fetchAgain(true);
+            if (!is_single_run)
+                fetchAgain(true);
         }
     }
 }

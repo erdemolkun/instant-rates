@@ -22,6 +22,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v4.view.animation.LinearOutSlowInInterpolator;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.transition.TransitionManager;
@@ -50,6 +51,7 @@ import dynoapps.exchange_rates.data.RatesHolder;
 import dynoapps.exchange_rates.event.DataSourceUpdate;
 import dynoapps.exchange_rates.event.IntervalUpdate;
 import dynoapps.exchange_rates.event.RatesEvent;
+import dynoapps.exchange_rates.event.UpdateTriggerEvent;
 import dynoapps.exchange_rates.interfaces.ValueType;
 import dynoapps.exchange_rates.model.rates.AvgRate;
 import dynoapps.exchange_rates.model.rates.BaseRate;
@@ -60,6 +62,7 @@ import dynoapps.exchange_rates.time.TimeIntervalManager;
 import dynoapps.exchange_rates.util.AnimationHelper;
 import dynoapps.exchange_rates.util.AppUtils;
 import dynoapps.exchange_rates.util.RateUtils;
+import dynoapps.exchange_rates.util.ViewUtils;
 
 /**
  * Created by erdemmac on 06/12/2016.
@@ -97,9 +100,11 @@ public class LandingActivity extends BaseActivity {
     @BindView(R.id.tv_interval_hint)
     TextView tvIntervalHint;
 
+    @BindView(R.id.swipe_to_refresh)
+    SwipeRefreshLayout swipeRefreshLayout;
+
     private Handler mHandler;
     private static final int NAVDRAWER_LAUNCH_DELAY = 250;
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -162,6 +167,30 @@ public class LandingActivity extends BaseActivity {
 
         tvVersion.setText(AppUtils.getAppVersionForSemver());
         updateHint();
+
+        swipeRefreshLayout.setColorSchemeResources(
+                R.color.refresh_progress_1,
+                R.color.refresh_progress_2,
+                R.color.refresh_progress_3);
+        swipeRefreshLayout.setEnabled(true);
+        int top = ViewUtils.calculateActionBarSize(this);
+        int progressBarStartMargin = getResources().getDimensionPixelSize(
+                R.dimen.swipe_refresh_progress_bar_start_margin);
+        int progressBarEndMargin = getResources().getDimensionPixelSize(
+                R.dimen.swipe_refresh_progress_bar_end_margin);
+        swipeRefreshLayout.setProgressViewOffset(true, top + progressBarStartMargin, top + progressBarEndMargin);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                EventBus.getDefault().post(new UpdateTriggerEvent());
+                getHandler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                }, 1000);
+            }
+        });
 
     }
 

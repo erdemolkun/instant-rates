@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.util.SparseArray;
 import android.view.Menu;
@@ -44,6 +45,7 @@ import butterknife.BindView;
 import dynoapps.exchange_rates.data.CurrencySource;
 import dynoapps.exchange_rates.data.RatesHolder;
 import dynoapps.exchange_rates.event.RatesEvent;
+import dynoapps.exchange_rates.event.UpdateTriggerEvent;
 import dynoapps.exchange_rates.model.rates.BaseRate;
 import dynoapps.exchange_rates.model.rates.BigparaRate;
 import dynoapps.exchange_rates.model.rates.BuySellRate;
@@ -73,8 +75,8 @@ public class ChartActivity extends BaseActivity {
     @BindView(R.id.line_chart)
     LineChart lineChart;
 
-    @BindView(R.id.v_progress_wheel)
-    View vProgress;
+    @BindView(R.id.swipe_to_refresh)
+    SwipeRefreshLayout swipeRefreshLayout;
 
     private int rateType = IRate.USD;
 
@@ -119,8 +121,6 @@ public class ChartActivity extends BaseActivity {
         startMilis = System.currentTimeMillis();
         initChart();
 
-        vProgress.setVisibility(View.GONE);
-
         SparseArray<RatesEvent<BaseRate>> sparseArray = RatesHolder.getInstance().getAllRates();
         if (sparseArray != null) {
             List<RatesEvent<BaseRate>> cachedEvents = new ArrayList<>();
@@ -138,6 +138,30 @@ public class ChartActivity extends BaseActivity {
                 update(ratesEvent.rates, ratesEvent.fetch_time);
             }
         }
+
+        swipeRefreshLayout.setColorSchemeResources(
+                R.color.refresh_progress_1,
+                R.color.refresh_progress_2,
+                R.color.refresh_progress_3);
+        swipeRefreshLayout.setEnabled(true);
+        int top = ViewUtils.calculateActionBarSize(this);
+        int progressBarStartMargin = getResources().getDimensionPixelSize(
+                R.dimen.swipe_refresh_progress_bar_start_margin);
+        int progressBarEndMargin = getResources().getDimensionPixelSize(
+                R.dimen.swipe_refresh_progress_bar_end_margin);
+        swipeRefreshLayout.setProgressViewOffset(true, top + progressBarStartMargin, top + progressBarEndMargin);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                EventBus.getDefault().post(new UpdateTriggerEvent());
+                getHandler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                }, 1000);
+            }
+        });
     }
 
     @Override

@@ -34,7 +34,11 @@ public class EnparaRateProvider extends BasePoolingDataProvider<List<EnparaRate>
 
     @Override
     public void run() {
-        super.run();
+        run(false);
+    }
+
+    @Override
+    public void run(final boolean is_single_run) {
         final EnparaService enparaService = Api.getEnparaApi().create(EnparaService.class);
         Call<List<EnparaRate>> call = enparaService.rates();
         call.enqueue(new retrofit2.Callback<List<EnparaRate>>() {
@@ -43,17 +47,20 @@ public class EnparaRateProvider extends BasePoolingDataProvider<List<EnparaRate>
                 if (response.isSuccessful() && response.body() != null) {
                     List<EnparaRate> rates = response.body();
                     notifyValue(rates);
-                    fetchAgain(false);
+                    if (!is_single_run)
+                        fetchAgain(false);
                 } else {
                     notifyError();
-                    fetchAgain(true);
+                    if (!is_single_run)
+                        fetchAgain(true);
                 }
             }
 
             @Override
             public void onFailure(Call<List<EnparaRate>> call, Throwable t) {
                 notifyError();
-                fetchAgain(true);
+                if (!is_single_run)
+                    fetchAgain(true);
             }
         });
         lastCall = call;

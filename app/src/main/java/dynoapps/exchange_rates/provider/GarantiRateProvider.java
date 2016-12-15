@@ -42,7 +42,7 @@ public class GarantiRateProvider extends BasePoolingDataProvider<List<GarantiRat
 
     @Override
     public void run() {
-        super.run();
+        super.run(); // todo single run support
         executorService.submit(new Runnable() {
             @Override
             public void run() {
@@ -101,5 +101,10 @@ public class GarantiRateProvider extends BasePoolingDataProvider<List<GarantiRat
             notifyError();
             fetchAgain(true);
         }
+    }
+
+    @Override
+    public void run(boolean is_single_run) {
+
     }
 }

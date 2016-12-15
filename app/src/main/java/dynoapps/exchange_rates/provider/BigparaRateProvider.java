@@ -2,7 +2,6 @@ package dynoapps.exchange_rates.provider;
 
 import java.util.List;
 
-import dynoapps.exchange_rates.data.CurrencySource;
 import dynoapps.exchange_rates.data.CurrencyType;
 import dynoapps.exchange_rates.model.rates.BigparaRate;
 import dynoapps.exchange_rates.network.Api;
@@ -14,7 +13,7 @@ import retrofit2.Response;
  * Created by erdemmac on 25/11/2016.
  */
 
-public class BigparaRateProvider extends BasePoolingDataProvider<List<BigparaRate>> implements Runnable {
+public class BigparaRateProvider extends BasePoolingDataProvider<List<BigparaRate>> {
 
     private Call<List<BigparaRate>> lastCall;
 
@@ -35,7 +34,12 @@ public class BigparaRateProvider extends BasePoolingDataProvider<List<BigparaRat
 
     @Override
     public void run() {
-        super.run();
+        run(false);
+
+    }
+
+    @Override
+    public void run(final boolean is_single_run) {
         final BigparaService bigparaService = Api.getBigparaApi().create(BigparaService.class);
         Call<List<BigparaRate>> call = bigparaService.rates();
         call.enqueue(new retrofit2.Callback<List<BigparaRate>>() {
@@ -44,17 +48,20 @@ public class BigparaRateProvider extends BasePoolingDataProvider<List<BigparaRat
                 if (response.isSuccessful() && response.body() != null) {
                     List<BigparaRate> rates = response.body();
                     notifyValue(rates);
-                    fetchAgain(false);
+                    if (!is_single_run)
+                        fetchAgain(false);
                 } else {
                     notifyError();
-                    fetchAgain(true);
+                    if (!is_single_run)
+                        fetchAgain(true);
                 }
             }
 
             @Override
             public void onFailure(Call<List<BigparaRate>> call, Throwable t) {
                 notifyError();
-                fetchAgain(true);
+                if (!is_single_run)
+                    fetchAgain(true);
             }
         });
         lastCall = call;

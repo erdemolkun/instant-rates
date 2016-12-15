@@ -5,6 +5,8 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -43,6 +45,16 @@ public abstract class BaseActivity extends AppCompatActivity {
             AnimationHelper.doAnimation(this, animationTypeExit, false);
         }
     }
+
+    private Handler handler;
+
+    protected Handler getHandler() {
+        if (handler == null) {
+            handler = new Handler(Looper.getMainLooper());
+        }
+        return handler;
+    }
+
 
     protected void setAnimationType(@AnimationHelper.AnimationType int animationType) {
         this.animationTypeEnter = animationType;

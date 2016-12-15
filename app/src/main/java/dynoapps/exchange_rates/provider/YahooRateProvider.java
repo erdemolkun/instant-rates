@@ -4,7 +4,6 @@ import java.util.List;
 
 import dynoapps.exchange_rates.data.CurrencyType;
 import dynoapps.exchange_rates.model.rates.YahooRate;
-import dynoapps.exchange_rates.model.rates.YorumlarRate;
 import dynoapps.exchange_rates.network.Api;
 import dynoapps.exchange_rates.network.YahooService;
 import retrofit2.Call;
@@ -36,7 +35,11 @@ public class YahooRateProvider extends BasePoolingDataProvider<List<YahooRate>> 
 
     @Override
     public void run() {
-        super.run();
+        run(false);
+    }
+
+    @Override
+    public void run(final boolean is_single_run) {
         final YahooService yahooService = Api.getYahooApi().create(YahooService.class);
         Call<List<YahooRate>> call = yahooService.rates();
         call.enqueue(new retrofit2.Callback<List<YahooRate>>() {
@@ -45,10 +48,12 @@ public class YahooRateProvider extends BasePoolingDataProvider<List<YahooRate>> 
                 if (response.isSuccessful() && response.body() != null) {
                     List<YahooRate> rates = response.body();
                     notifyValue(rates);
-                    fetchAgain(false);
+                    if (!is_single_run)
+                        fetchAgain(false);
                 } else {
                     notifyError();
-                    fetchAgain(true);
+                    if (!is_single_run)
+                        fetchAgain(true);
                 }
             }
 
@@ -56,7 +61,8 @@ public class YahooRateProvider extends BasePoolingDataProvider<List<YahooRate>> 
             public void onFailure(Call<List<YahooRate>> call, Throwable t) {
                 if (!call.isCanceled()) {
                     notifyError();
-                    fetchAgain(true);
+                    if (!is_single_run)
+                        fetchAgain(true);
                 }
             }
         });

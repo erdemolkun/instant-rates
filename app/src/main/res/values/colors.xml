@@ -14,4 +14,9 @@
 
 
     <color name="white">#fff</color>
+
+    <color name="refresh_progress_1">@color/colorPrimary</color>
+    <color name="refresh_progress_2">@color/colorAccent</color>
+    <color name="refresh_progress_3">@color/colorYahoo</color>
+
 </resources>

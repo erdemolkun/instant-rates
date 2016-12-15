@@ -8,4 +8,7 @@
     <dimen name="cards_list_name_width">36dp</dimen>
     <dimen name="drawer_item_height">60dp</dimen>
     <dimen name="drawer_item_menu_text_size">16sp</dimen>
+
+    <dimen name="swipe_refresh_progress_bar_start_margin">-40dp</dimen>
+    <dimen name="swipe_refresh_progress_bar_end_margin">16dp</dimen>
 </resources>

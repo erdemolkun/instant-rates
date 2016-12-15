@@ -5,6 +5,7 @@ import android.os.Looper;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import dynoapps.exchange_rates.interfaces.PoolingRunnable;
 import dynoapps.exchange_rates.time.TimeIntervalManager;
 import dynoapps.exchange_rates.util.L;
 
@@ -12,7 +13,7 @@ import dynoapps.exchange_rates.util.L;
  * Created by erdemmac on 25/11/2016.
  */
 
-public abstract class BasePoolingDataProvider<T> implements IPollingSource, Runnable {
+public abstract class BasePoolingDataProvider<T> implements IPollingSource, PoolingRunnable, Runnable {
 
     private static final int NEXT_FETCH_ON_ERROR = 4000;
 
@@ -32,6 +33,11 @@ public abstract class BasePoolingDataProvider<T> implements IPollingSource, Runn
             handler = new Handler(Looper.getMainLooper());
         }
         return handler;
+    }
+
+
+    public boolean isEnabled() {
+        return is_enabled.get();
     }
 
     public abstract int getSourceType();
@@ -128,4 +134,6 @@ public abstract class BasePoolingDataProvider<T> implements IPollingSource, Runn
             callback.onError();
         }
     }
+
+
 }

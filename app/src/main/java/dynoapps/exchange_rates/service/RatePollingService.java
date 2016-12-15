@@ -32,6 +32,7 @@ import dynoapps.exchange_rates.data.RatesHolder;
 import dynoapps.exchange_rates.event.DataSourceUpdate;
 import dynoapps.exchange_rates.event.IntervalUpdate;
 import dynoapps.exchange_rates.event.RatesEvent;
+import dynoapps.exchange_rates.event.UpdateTriggerEvent;
 import dynoapps.exchange_rates.model.rates.AvgRate;
 import dynoapps.exchange_rates.model.rates.BaseRate;
 import dynoapps.exchange_rates.model.rates.BigparaRate;
@@ -202,6 +203,14 @@ public class RatePollingService extends IntentService {
     public void onEvent(IntervalUpdate event) {
         for (BasePoolingDataProvider provider : providers) {
             provider.refreshIntervals();
+        }
+    }
+
+    @Subscribe
+    public void onEvent(UpdateTriggerEvent event) {
+        for (BasePoolingDataProvider provider : providers) {
+            if (provider.isEnabled())
+                provider.run(true);
         }
     }
 

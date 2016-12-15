@@ -1,47 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:orientation="vertical"
-              android:fitsSystemWindows="true"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
 
+<android.support.v4.widget.SwipeRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/swipe_to_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <include layout="@layout/toolbar_actionbar"/>
-
-    <dynoapps.exchange_rates.ui.ProgressWheel
-            android:id="@+id/v_progress_wheel"
-            android:layout_width="32dp"
-            android:visibility="gone"
-            android:layout_height="32dp"
-            android:layout_gravity="center_horizontal"
-            android:background="@null"
-            android:elevation="2dp"
-            app:matProg_barColor="@color/colorPrimary"
-            app:matProg_barSpinCycleTime="800"
-            app:matProg_barWidth="2dp"
-            app:matProg_circleRadius="26dp"
-            app:matProg_progressIndeterminate="true"
-            app:matProg_spinSpeed="0.7"/>
-
-
-    <TextView
-            android:id="@+id/tv_chart_title"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="12dp"
-            android:layout_marginTop="12dp"
-            android:textSize="14sp"
-            android:textColor="@color/colorPrimary"
-            android:text="@string/dollar_tl_graph"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-    <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/line_chart"
-            android:layout_margin="4dp"
+    <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/chart_height"
-            />
+            android:orientation="vertical"
+            android:layout_height="match_parent">
+
+        <include layout="@layout/toolbar_actionbar"/>
 
 
-</LinearLayout>
+        <TextView
+                android:id="@+id/tv_chart_title"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="12dp"
+                android:layout_marginTop="12dp"
+                android:textSize="14sp"
+                android:textColor="@color/colorPrimary"
+                android:text="@string/dollar_tl_graph"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/line_chart"
+                android:layout_margin="4dp"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/chart_height"
+                />
+    </LinearLayout>
+</android.support.v4.widget.SwipeRefreshLayout>
+

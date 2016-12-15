@@ -35,7 +35,11 @@ public class DolarTlKurRateProvider extends BasePoolingDataProvider<List<DolarTl
 
     @Override
     public void run() {
-        super.run();
+        run(false);
+    }
+
+    @Override
+    public void run(final boolean is_single_run) {
         final DolarTlKurService dolarTlKurService = Api.getDolarTlKurApi().create(DolarTlKurService.class);
         Call<List<DolarTlKurRate>> call = dolarTlKurService.rates("" + System.currentTimeMillis());
         call.enqueue(new retrofit2.Callback<List<DolarTlKurRate>>() {
@@ -44,17 +48,20 @@ public class DolarTlKurRateProvider extends BasePoolingDataProvider<List<DolarTl
                 if (response.isSuccessful() && response.body() != null) {
                     List<DolarTlKurRate> rates = response.body();
                     notifyValue(rates);
-                    fetchAgain(false);
+                    if (!is_single_run)
+                        fetchAgain(false);
                 } else {
                     notifyError();
-                    fetchAgain(true);
+                    if (!is_single_run)
+                        fetchAgain(true);
                 }
             }
 
             @Override
             public void onFailure(Call<List<DolarTlKurRate>> call, Throwable t) {
                 notifyError();
-                fetchAgain(true);
+                if (!is_single_run)
+                    fetchAgain(true);
             }
         });
         lastCall = call;
