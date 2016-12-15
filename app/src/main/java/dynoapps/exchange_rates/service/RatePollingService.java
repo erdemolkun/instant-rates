@@ -166,7 +166,7 @@ public class RatePollingService extends IntentService {
         int size = alarmsHolder.alarms.size();
         while (iterator.hasNext()) {
             Alarm alarm = iterator.next();
-            if (alarm.source_type != source_type) continue;
+            if (alarm.source_type != source_type || !alarm.is_enabled) continue;
             BaseRate baseRateCurrent = RateUtils.getRate(rates, alarm.rate_type);
             RatesEvent ratesEvent = RatesHolder.getInstance().getRates(source_type);
             BaseRate baseRateOld = ratesEvent != null ? RateUtils.getRate(ratesEvent.rates, alarm.rate_type) : null;
@@ -241,7 +241,7 @@ public class RatePollingService extends IntentService {
     @Subscribe
     public void onEvent(NoSubscriberEvent callBackEvent) {
         L.i(RatePollingService.class.getSimpleName(), "NoSubscriberEvent");
-        if (AlarmManager.getAlarmsHolder().alarms.size() <= 0) {
+        if (!AlarmManager.hasAnyActive()) {
             stopSelf();
         } else {
             TimeIntervalManager.changeMode(false);
@@ -250,7 +250,7 @@ public class RatePollingService extends IntentService {
                 int source_type = provider.getSourceType();
                 boolean contains = false;
                 for (Alarm alarm : AlarmManager.getAlarmsHolder().alarms) {
-                    if (alarm.source_type == source_type) {
+                    if (alarm.source_type == source_type && alarm.is_enabled) {
                         contains = true;
                         break;
                     }

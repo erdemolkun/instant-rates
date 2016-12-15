@@ -136,7 +136,8 @@ public class LandingActivity extends BaseActivity {
             bindService(intent, rateServiceConnection, Context.BIND_AUTO_CREATE);
             startService(new Intent(this, RatePollingService.class));
         } else {
-            EventBus.getDefault().post(new IntervalUpdate());
+            EventBus.getDefault().post(new UpdateTriggerEvent()); // Update data once we open activity again.
+            EventBus.getDefault().post(new IntervalUpdate()); // Intervals should be updated on ui mode.
         }
         for (CardViewItemParent parent : parentItems) {
             for (CardViewItem item : parent.items) {
@@ -511,7 +512,7 @@ public class LandingActivity extends BaseActivity {
             EventBus.getDefault().unregister(this);
         }
         if (isMyServiceRunning(RatePollingService.class)) {
-            if (AlarmManager.getAlarmsHolder().alarms.size() <= 0) {
+            if (!AlarmManager.hasAnyActive()) {
                 stopService(new Intent(this, RatePollingService.class));
             }
             if (ratePollingService != null) {

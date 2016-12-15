@@ -141,4 +141,12 @@ public class AlarmManager {
 
     }
 
+    public static boolean hasAnyActive(){
+        if (getAlarmsHolder().alarms.size()<=0)return false;
+        for (Alarm alarm : getAlarmsHolder().alarms){
+            if (alarm.is_enabled)return true;
+        }
+        return false;
+    }
+
 }

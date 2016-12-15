@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,7 @@ class AlarmsAdapter extends UpdatableAdapter<List<Alarm>, AlarmsActivity.AlarmVi
 
     @Override
     public void onBindViewHolder(final AlarmsActivity.AlarmViewHolder holder, int position) {
-        Alarm alarm = alarms.get(position);
+        final Alarm alarm = alarms.get(position);
         holder.ivType.setRotation(alarm.is_above ? 90 : 270);
         holder.ivType.setColorFilter(Color.parseColor(!alarm.is_above ? "#f44336" : "#4CAF50"));
         holder.tvValue.setText(RateUtils.entryToUI(alarm.val, alarm.rate_type));
@@ -53,6 +54,14 @@ class AlarmsAdapter extends UpdatableAdapter<List<Alarm>, AlarmsActivity.AlarmVi
                 int pos = holder.getAdapterPosition();
                 AlarmManager.remove(pos);
                 notifyItemRemoved(pos);
+            }
+        });
+        holder.swAlarm.setChecked(alarm.is_enabled);
+        holder.swAlarm.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                alarm.is_enabled = b;
+                AlarmManager.saveAlarms();
             }
         });
     }

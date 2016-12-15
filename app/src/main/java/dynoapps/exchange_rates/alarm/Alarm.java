@@ -17,7 +17,7 @@ public class Alarm implements Serializable {
     public int rate_type;
 
     /**
-     * {@link dynoapps.exchange_rates.data.CurrencySource.Type}
+     * {@link dynoapps.exchange_rates.data.CurrencyType}
      */
     public int source_type;
 }
