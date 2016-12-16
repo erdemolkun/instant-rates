@@ -16,6 +16,7 @@ import tools.fastlane.screengrab.locale.LocaleTestRule;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -43,8 +44,10 @@ public class JUnit4StyleTests {
 
         // register next activity that need to be monitored.
         Instrumentation.ActivityMonitor activityMonitor = getInstrumentation().addMonitor(LandingActivity.class.getName(), null, false);
+
         //Watch for the timeout
         Activity nextActivity = getInstrumentation().waitForMonitorWithTimeout(activityMonitor, 4000);
+
         // next activity is opened and captured.
         assertNotNull(nextActivity);
 
@@ -55,19 +58,18 @@ public class JUnit4StyleTests {
                 .perform(click());
 
         Screengrab.screenshot("menu_item_alarm", new UiAutomatorScreenshotStrategy());
+        pressBack();
+
+        onView(withId(R.id.menu_time_interval))
+                .perform(click());
+
+        Screengrab.screenshot("menu_item_interval", new UiAutomatorScreenshotStrategy());
+        pressBack();
+
+        onView(withId(R.id.menu_item_sources))
+                .perform(click());
+
+        Screengrab.screenshot("menu_item_sources", new UiAutomatorScreenshotStrategy());
     }
 
-
-    @Test
-    public void testTakeMoreScreenshots() {
-//        onView(withId(R.id.nav_button)).perform(click());
-//
-//        Screengrab.screenshot("anotherActivity");
-//
-//        onView(withId(R.id.show_dialog_button)).perform(click());
-//
-//        Screengrab.screenshot("anotherActivity-dialog");
-
-//        onView(withText(android.R.string.ok)).perform(click());
-    }
 }
