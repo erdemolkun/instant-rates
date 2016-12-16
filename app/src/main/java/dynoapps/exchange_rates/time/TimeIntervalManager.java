@@ -27,14 +27,14 @@ public final class TimeIntervalManager {
     private static long pref_interval_milis = Prefs.getInterval(App.context());
     private static ArrayList<TimeInterval> intervals;
 
-    private static boolean isUIMode = false;
+    private static boolean isAlarmMode = false;
 
-    private static boolean isUIMode() {
-        return isUIMode;
+    private static boolean isAlarmMode() {
+        return isAlarmMode;
     }
 
-    public static void changeMode(boolean isUI) {
-        TimeIntervalManager.isUIMode = isUI; // todo review.
+    public static void setAlarmMode(boolean enabled) {
+        TimeIntervalManager.isAlarmMode = enabled;
     }
 
     private static ArrayList<TimeInterval> getDefaultIntervals() {
@@ -109,7 +109,7 @@ public final class TimeIntervalManager {
     }
 
     private static int getSelectedIndex() {
-        if (isUIMode()) {
+        if (!isAlarmMode()) {
             if (selected_interval_index_user < 0) {
                 return DEFAULT_INTERVAL_INDEX;
             }
@@ -130,10 +130,10 @@ public final class TimeIntervalManager {
     }
 
     /**
-     * Returns time interval for polling in  {@link TimeUnit#MILLISECONDS} milisecons
+     * Returns time interval for polling in  {@link TimeUnit#MILLISECONDS} milliseconds
      */
     public static long getPollingInterval() {
-        if (isUIMode() && selected_interval_index_user < 0) {
+        if (!isAlarmMode() && selected_interval_index_user < 0) {
             if (pref_interval_milis < 0) {
                 return getDefaultIntervals().get(DEFAULT_INTERVAL_INDEX).to(TimeUnit.MILLISECONDS);
             } else {

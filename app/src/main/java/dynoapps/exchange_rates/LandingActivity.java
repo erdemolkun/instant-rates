@@ -5,16 +5,13 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.ActivityManager;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
 import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -57,11 +54,11 @@ import dynoapps.exchange_rates.model.rates.AvgRate;
 import dynoapps.exchange_rates.model.rates.BaseRate;
 import dynoapps.exchange_rates.model.rates.BuySellRate;
 import dynoapps.exchange_rates.model.rates.IRate;
+import dynoapps.exchange_rates.provider.BasePoolingDataProvider;
 import dynoapps.exchange_rates.service.RatePollingService;
 import dynoapps.exchange_rates.time.TimeIntervalManager;
 import dynoapps.exchange_rates.util.AnimationHelper;
 import dynoapps.exchange_rates.util.AppUtils;
-import dynoapps.exchange_rates.util.L;
 import dynoapps.exchange_rates.util.RateUtils;
 import dynoapps.exchange_rates.util.ViewUtils;
 
@@ -118,7 +115,7 @@ public class LandingActivity extends BaseActivity {
 
         setupNavDrawer();
 
-        TimeIntervalManager.changeMode(true);
+        TimeIntervalManager.setAlarmMode(false);
         setUpRateCardViews();
         refreshCardItemViews();
 
@@ -134,17 +131,6 @@ public class LandingActivity extends BaseActivity {
             }
         }
 
-        if (!isMyServiceRunning(RatePollingService.class)) {
-            Intent intent = new Intent(this, RatePollingService.class);
-            bindService(intent, rateServiceConnection, Context.BIND_AUTO_CREATE);
-            startService(new Intent(this, RatePollingService.class));
-        } else {
-            Intent intent = new Intent(this, RatePollingService.class);
-            bindService(intent, rateServiceConnection, Context.BIND_AUTO_CREATE);
-            SourcesManager.update();
-            EventBus.getDefault().post(new UpdateTriggerEvent()); // Update data once we open activity again.
-            EventBus.getDefault().post(new IntervalUpdate()); // Intervals should be updated on ui mode.
-        }
         for (CardViewItemParent parent : parentItems) {
             for (CardViewItem item : parent.items) {
                 item.tvType.setText(SourcesManager.getSourceName(item.source_type, item.value_type));
@@ -198,6 +184,11 @@ public class LandingActivity extends BaseActivity {
                 }, 1000);
             }
         });
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+        EventBus.getDefault().post(new UpdateTriggerEvent()); // Update data immediate once we open activity again.
+        EventBus.getDefault().post(new IntervalUpdate()); // Intervals should be updated on ui mode.
 
     }
 
@@ -364,13 +355,6 @@ public class LandingActivity extends BaseActivity {
         return R.layout.activity_landing;
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (!EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().register(this);
-        }
-    }
 
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
@@ -520,26 +504,18 @@ public class LandingActivity extends BaseActivity {
         if (isMyServiceRunning(RatePollingService.class)) {
             if (!AlarmManager.hasAnyActive()) {
                 stopService(new Intent(this, RatePollingService.class));
-            }
-            if (ratePollingService != null) {
-                unbindService(rateServiceConnection);
+            } else {
+                TimeIntervalManager.setAlarmMode(true);
+                for (CurrencySource source : SourcesManager.getCurrencySources()) {
+                    BasePoolingDataProvider provider = (BasePoolingDataProvider) source.getPollingSource();
+                    if (provider != null) {
+                        provider.stopIfHasAlarm();
+                    }
+                }
             }
         }
         super.onDestroy();
     }
-
-    RatePollingService ratePollingService;
-    private ServiceConnection rateServiceConnection = new ServiceConnection() {
-        public void onServiceConnected(ComponentName className, IBinder binder) {
-            L.i(LandingActivity.class.getSimpleName(), "onServiceConnected");
-            TimeIntervalManager.changeMode(true);
-            ratePollingService = ((RatePollingService.SimpleBinder) binder).getService();
-        }
-
-        public void onServiceDisconnected(ComponentName className) {
-            ratePollingService = null;
-        }
-    };
 
     private void update(List<BaseRate> rates, int source_type, boolean animated) {
         for (CardViewItemParent parent : parentItems) {

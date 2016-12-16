@@ -6,6 +6,8 @@ import android.os.Looper;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import dynoapps.exchange_rates.SourcesManager;
+import dynoapps.exchange_rates.alarm.Alarm;
+import dynoapps.exchange_rates.alarm.AlarmManager;
 import dynoapps.exchange_rates.data.CurrencySource;
 import dynoapps.exchange_rates.interfaces.PoolingRunnable;
 import dynoapps.exchange_rates.time.TimeIntervalManager;
@@ -23,6 +25,8 @@ public abstract class BasePoolingDataProvider<T> implements IPollingSource, Pool
 
     private int error_count = 0;
     private int success_count = 0;
+
+    private AtomicBoolean is_working = new AtomicBoolean(false); // Indicates if a job currently running
 
     private CurrencySource currencySource;
 
@@ -51,7 +55,6 @@ public abstract class BasePoolingDataProvider<T> implements IPollingSource, Pool
 
     public abstract int getSourceType();
 
-    private AtomicBoolean is_working = new AtomicBoolean(false);
 
     @Override
     public void run() {
@@ -66,11 +69,13 @@ public abstract class BasePoolingDataProvider<T> implements IPollingSource, Pool
              */
             return;
         }
+        L.i(BasePoolingDataProvider.class.getSimpleName(), this.getClass().getSimpleName() + " Started");
         postWork(this, 0);
     }
 
     @Override
     public void stop() {
+        L.i(BasePoolingDataProvider.class.getSimpleName(), this.getClass().getSimpleName() + " Stopped");
         cancelWorks();
     }
 
@@ -140,5 +145,19 @@ public abstract class BasePoolingDataProvider<T> implements IPollingSource, Pool
         }
     }
 
+    public boolean stopIfHasAlarm() {
+        boolean contains = false;
+        for (Alarm alarm : AlarmManager.getAlarmsHolder().alarms) {
+            if (alarm.source_type == getSourceType() && alarm.is_enabled) {
+                contains = true;
+                break;
+            }
+        }
+        if (!contains) {
+            stop();
+            return true;
+        }
+        return false;
+    }
 
 }

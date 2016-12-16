@@ -141,10 +141,16 @@ public class AlarmManager {
 
     }
 
-    public static boolean hasAnyActive(){
-        if (getAlarmsHolder().alarms.size()<=0)return false;
-        for (Alarm alarm : getAlarmsHolder().alarms){
-            if (alarm.is_enabled)return true;
+    public static boolean hasAnyActive() {
+        if (getAlarmsHolder().alarms.size() <= 0) return false;
+        for (Alarm alarm : getAlarmsHolder().alarms) {
+            if (alarm.is_enabled) {
+                for (CurrencySource source : SourcesManager.getCurrencySources()) {
+                    if (source.isEnabled() && source.getSourceType() == alarm.source_type) {
+                        return true;
+                    }
+                }
+            }
         }
         return false;
     }

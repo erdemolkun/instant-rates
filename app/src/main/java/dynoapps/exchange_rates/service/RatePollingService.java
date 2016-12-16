@@ -195,11 +195,13 @@ public class RatePollingService extends IntentService {
 
     @Subscribe
     public void onEvent(DataSourceUpdate event) {
+        TimeIntervalManager.setAlarmMode(false);
         refreshSources();
     }
 
     @Subscribe
     public void onEvent(IntervalUpdate event) {
+        TimeIntervalManager.setAlarmMode(false);
         for (BasePoolingDataProvider provider : providers) {
             provider.refreshIntervals();
         }
@@ -207,6 +209,7 @@ public class RatePollingService extends IntentService {
 
     @Subscribe
     public void onEvent(UpdateTriggerEvent event) {
+        TimeIntervalManager.setAlarmMode(false);
         for (CurrencySource currencySource : SourcesManager.getCurrencySources()) {
             if (currencySource.isEnabled()) {
                 currencySource.getPollingSource().one_shot();
@@ -241,25 +244,6 @@ public class RatePollingService extends IntentService {
     @Subscribe
     public void onEvent(NoSubscriberEvent callBackEvent) {
         L.i(RatePollingService.class.getSimpleName(), "NoSubscriberEvent");
-        if (!AlarmManager.hasAnyActive()) {
-            stopSelf();
-        } else {
-            TimeIntervalManager.changeMode(false);
-            // Stop if a provider has no alarm associated.
-            for (BasePoolingDataProvider provider : providers) {
-                int source_type = provider.getSourceType();
-                boolean contains = false;
-                for (Alarm alarm : AlarmManager.getAlarmsHolder().alarms) {
-                    if (alarm.source_type == source_type && alarm.is_enabled) {
-                        contains = true;
-                        break;
-                    }
-                }
-                if (!contains) {
-                    provider.stop();
-                }
-            }
-        }
     }
 
     private void sendNotification(String message, String category) {
