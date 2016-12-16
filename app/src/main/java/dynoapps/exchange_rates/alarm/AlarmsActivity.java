@@ -8,6 +8,7 @@ import android.support.v7.widget.SwitchCompat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -99,7 +100,23 @@ public class AlarmsActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_alarms, menu);
+        SwitchCompat switchCompat = (SwitchCompat) findViewById(R.id.menu_switch);
+        switchCompat.setChecked(AlarmManager.getAlarmsHolder().is_enabled);
+        updateViews(switchCompat.isChecked());
+        switchCompat.jumpDrawablesToCurrentState();
+        switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                AlarmManager.getAlarmsHolder().is_enabled = b;
+                AlarmManager.saveAlarms();
+                updateViews(b);
+            }
+        });
         return true;
+    }
+
+    private void updateViews(boolean is_enabled_alarm) {
+        rvAlarms.setAlpha(is_enabled_alarm ? 1.0f : 0.6f);
     }
 
     @Override

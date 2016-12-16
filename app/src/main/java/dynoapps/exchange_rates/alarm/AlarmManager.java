@@ -138,10 +138,10 @@ public class AlarmManager {
         });
         alertDialog.setCanceledOnTouchOutside(false);
         alertDialog.show();
-
     }
 
     public static boolean hasAnyActive() {
+        if (!getAlarmsHolder().is_enabled) return false;
         if (getAlarmsHolder().alarms.size() <= 0) return false;
         for (Alarm alarm : getAlarmsHolder().alarms) {
             if (alarm.is_enabled) {

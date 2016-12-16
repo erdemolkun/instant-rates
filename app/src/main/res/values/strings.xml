@@ -37,6 +37,7 @@
     <string name="others">Diğer</string>
     <string name="ons_try" translatable="false">ONS/TRY</string>
     <string name="ons">Ons</string>
+    <string name="have_no_alarms">You have no alarms set.</string>
 
     <plurals name="sec_short">
         <item quantity="one">%d sec</item>

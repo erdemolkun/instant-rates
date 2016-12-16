@@ -7,7 +7,7 @@
                 android:layout_height="match_parent">
 
 
-    <include layout="@layout/toolbar_actionbar"/>
+    <include layout="@layout/toolbar_actionbar_with_switch"/>
 
 
     <TextView
@@ -15,12 +15,14 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="12dp"
             android:layout_marginTop="12dp"
-            android:textSize="14sp"
+            android:textSize="18sp"
+            android:maxLines="2"
+            android:padding="12dp"
             android:visibility="gone"
             tools:visibility="visible"
             android:layout_centerInParent="true"
             android:textColor="@color/colorPrimary"
-            android:text="Kayıtlı Alarmınız bulunmamaktadır"
+            android:text="@string/have_no_alarms"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 

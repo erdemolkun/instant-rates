@@ -36,6 +36,7 @@
     <string name="graph_types">Grafik Tipleri</string>
     <string name="others">Diğerleri</string>
     <string name="ons">Ons</string>
+    <string name="have_no_alarms">Kayıtlı Alarmınız bulunmamaktadır</string>
     <plurals name="sec_short">
         <item quantity="one">%d sn</item>
         <item quantity="other">%d sn</item>
