@@ -161,6 +161,38 @@
 
             </HorizontalScrollView>
 
+            <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:scrollbars="none"
+                    android:layout_height="wrap_content">
+
+
+                <LinearLayout
+                        android:id="@+id/v_card_holder_ons"
+                        android:layout_marginTop="4dp"
+                        android:clipToPadding="false"
+                        android:padding="4dp"
+                        android:layout_marginBottom="4dp"
+                        android:layout_width="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_height="wrap_content">
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:text="@string/ons"
+                            android:minWidth="@dimen/cards_list_name_width"
+                            android:textSize="16sp"
+                            android:gravity="center"
+                            android:layout_gravity="center"
+                            android:layout_margin="8dp"
+                            android:layout_height="wrap_content"/>
+
+
+                </LinearLayout>
+
+
+            </HorizontalScrollView>
+
 
         </LinearLayout>
 

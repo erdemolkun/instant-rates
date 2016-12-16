@@ -208,11 +208,13 @@ public class LandingActivity extends BaseActivity {
                     }
                 }
                 if (!foundCard && isEnabled) {
-                    if (dataSource.isAvgType()) {
-                        addCardToParent(parent, ValueType.AVG, dataSource.getSourceType());
-                    } else {
-                        addCardToParent(parent, ValueType.BUY, dataSource.getSourceType());
-                        addCardToParent(parent, ValueType.SELL, dataSource.getSourceType());
+                    if (dataSource.isRateSupported(parent.rate_type)) {
+                        if (dataSource.isAvgType()) {
+                            addCardToParent(parent, ValueType.AVG, dataSource.getSourceType());
+                        } else {
+                            addCardToParent(parent, ValueType.BUY, dataSource.getSourceType());
+                            addCardToParent(parent, ValueType.SELL, dataSource.getSourceType());
+                        }
                     }
                 }
             }
@@ -333,8 +335,14 @@ public class LandingActivity extends BaseActivity {
         parentParity.rate_type = IRate.EUR_USD;
         parentParity.me = (ViewGroup) findViewById(R.id.v_card_holder_parity);
 
-
         parentItems.add(parentParity);
+
+        //#
+        CardViewItemParent parentOns = new CardViewItemParent();
+        parentOns.rate_type = IRate.ONS;
+        parentOns.me = (ViewGroup) findViewById(R.id.v_card_holder_ons);
+
+        parentItems.add(parentOns);
 
     }
 

@@ -16,12 +16,18 @@ public class CurrencySource {
     private boolean enabled;
     private int source_type;
     private int color;
+    private int[] supported_rates;
 
     public CurrencySource(String name, int source_type, @ColorRes int colorRes, boolean enabled) {
+        this(name, source_type, colorRes, enabled, null);
+    }
+
+    public CurrencySource(String name, int source_type, @ColorRes int colorRes, boolean enabled, int[] supported_rates) {
         this.name = name;
         this.source_type = source_type;
         this.enabled = enabled;
         this.color = ContextCompat.getColor(App.context(), colorRes);
+        this.supported_rates = supported_rates;
     }
 
     public int getColor() {
@@ -62,5 +68,14 @@ public class CurrencySource {
                 source_type == CurrencyType.TLKUR || source_type == CurrencyType.YAHOO;
     }
 
-
+    public boolean isRateSupported(int rateType) {
+        if (supported_rates == null) return true;
+        if (supported_rates.length <= 0) return true;
+        for (int i : supported_rates) {
+            if (rateType == i) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

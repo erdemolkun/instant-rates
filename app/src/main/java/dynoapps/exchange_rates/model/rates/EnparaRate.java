@@ -14,12 +14,12 @@ public class EnparaRate extends BuySellRate {
             rateType = USD;
         } else if (plain_type.equals("eur")) {
             rateType = EUR;
-        } else if (plain_type.contains("altın")) {
+        } else if (plain_type.contains("altın (gram)")) {
             rateType = ONS_TRY;
         } else if (plain_type.contains("parite")) {
             rateType = EUR_USD;
         }
-        this.rateType=rateType;
+        this.rateType = rateType;
     }
 
     @Override
@@ -30,6 +30,5 @@ public class EnparaRate extends BuySellRate {
         val = value_buy.replace(" TL", "").replace(",", ".").trim();
         value_buy_real = Float.valueOf(val);
     }
-
 
 }

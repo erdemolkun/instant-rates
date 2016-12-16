@@ -10,7 +10,8 @@ import dynoapps.exchange_rates.util.Formatter;
 
 public abstract class BaseRate implements IConvertable, IRate {
 
-    static Formatter formatter = new Formatter(5);
+    static Formatter formatter5 = new Formatter(5);
+    static Formatter formatter2 = new Formatter(2);
 
     BaseRate() {
         fetchMilis = System.currentTimeMillis();
@@ -27,9 +28,11 @@ public abstract class BaseRate implements IConvertable, IRate {
 
     public String getFormatted(float val) {
         if (rateType == IRate.EUR_USD) {
-            return formatter.format(val);
+            return formatter5.format(val);
+        } else if (rateType == IRate.ONS) {
+            return formatter2.format(val);
         } else {
-            return App.context().getString(R.string.placeholder_tl, formatter.format(val));
+            return App.context().getString(R.string.placeholder_tl, formatter5.format(val));
         }
     }
 }

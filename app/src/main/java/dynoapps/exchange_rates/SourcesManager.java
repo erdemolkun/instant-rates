@@ -17,6 +17,7 @@ import dynoapps.exchange_rates.data.CurrencySource;
 import dynoapps.exchange_rates.data.CurrencyType;
 import dynoapps.exchange_rates.event.DataSourceUpdate;
 import dynoapps.exchange_rates.interfaces.ValueType;
+import dynoapps.exchange_rates.model.rates.IRate;
 import dynoapps.exchange_rates.provider.BasePoolingDataProvider;
 import dynoapps.exchange_rates.provider.BigparaRateProvider;
 import dynoapps.exchange_rates.provider.DolarTlKurRateProvider;
@@ -181,12 +182,17 @@ public class SourcesManager {
          * */
         if (currencySources != null && currencySources.size() > 0) return;
         currencySources = new ArrayList<>();
-        currencySources.add(new CurrencySource("Yorumlar", CurrencyType.YORUMLAR, R.color.colorYorumlar, true));
-        currencySources.add(new CurrencySource("Enpara", CurrencyType.ENPARA, R.color.colorEnpara, true));
-        currencySources.add(new CurrencySource("Bigpara", CurrencyType.BIGPARA, R.color.colorBigPara, false));
-        currencySources.add(new CurrencySource("TlKur", CurrencyType.TLKUR, R.color.colorDolarTlKur, false));
-        currencySources.add(new CurrencySource("Yapı Kredi", CurrencyType.YAPIKREDI, R.color.colorYapıKredi, false));
-        currencySources.add(new CurrencySource("Yahoo", CurrencyType.YAHOO, R.color.colorYahoo, false));
+        int[] only_usd_try = {IRate.USD};
+        int[] usd_eur_parity = {IRate.USD, IRate.EUR, IRate.EUR_USD};
+        int[] yorumlar_supported = {IRate.USD, IRate.EUR, IRate.EUR_USD, IRate.ONS};
+        int[] enpara_supported = {IRate.USD, IRate.EUR, IRate.EUR_USD, IRate.ONS_TRY};
+        int[] yapıkredi_supported = {IRate.USD, IRate.EUR, IRate.ONS_TRY};
+        currencySources.add(new CurrencySource("Yorumlar", CurrencyType.YORUMLAR, R.color.colorYorumlar, true, yorumlar_supported));
+        currencySources.add(new CurrencySource("Enpara", CurrencyType.ENPARA, R.color.colorEnpara, true, enpara_supported));
+        currencySources.add(new CurrencySource("Bigpara", CurrencyType.BIGPARA, R.color.colorBigPara, false, only_usd_try));
+        currencySources.add(new CurrencySource("TlKur", CurrencyType.TLKUR, R.color.colorDolarTlKur, false,yorumlar_supported));
+        currencySources.add(new CurrencySource("Yapı Kredi", CurrencyType.YAPIKREDI, R.color.colorYapıKredi, false, yapıkredi_supported));
+        currencySources.add(new CurrencySource("Yahoo", CurrencyType.YAHOO, R.color.colorYahoo, false, usd_eur_parity));
 
         updateSourceStatesFromPrefs();
     }
