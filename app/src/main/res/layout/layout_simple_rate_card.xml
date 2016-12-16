@@ -5,11 +5,11 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="wrap_content"
         app:cardBackgroundColor="#f1f1f1"
-        app:cardCornerRadius="4dp"
+        app:cardCornerRadius="6dp"
         tools:showIn="@layout/activity_landing"
         android:layout_gravity="center_horizontal"
         android:foreground="?selectableItemBackground"
-        app:cardElevation="2dp"
+        app:cardElevation="4dp"
         android:layout_margin="6dp"
         android:layout_height="wrap_content">
 

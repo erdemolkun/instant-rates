@@ -48,3 +48,5 @@ production/
 app-build.properties
 captures/
 projectFilesBackup/
+
+fastlane/metadata

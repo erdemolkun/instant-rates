@@ -6,6 +6,7 @@
               android:layout_height="match_parent">
 
     <ImageView
+            android:id="@+id/iv_splash"
             android:src="@drawable/ic_splash"
             android:layout_gravity="center"
             android:layout_width="wrap_content"
