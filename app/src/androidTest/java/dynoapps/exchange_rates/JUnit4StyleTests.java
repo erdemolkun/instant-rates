@@ -11,6 +11,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import tools.fastlane.screengrab.Screengrab;
+import tools.fastlane.screengrab.UiAutomatorScreenshotStrategy;
 import tools.fastlane.screengrab.locale.LocaleTestRule;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
@@ -35,6 +36,7 @@ public class JUnit4StyleTests {
 
     @Test
     public void testTakeScreenshot() {
+
         onView(withId(R.id.iv_splash)).check(matches(isDisplayed()));
 
         Screengrab.screenshot("splash_activity");
@@ -42,7 +44,7 @@ public class JUnit4StyleTests {
         // register next activity that need to be monitored.
         Instrumentation.ActivityMonitor activityMonitor = getInstrumentation().addMonitor(LandingActivity.class.getName(), null, false);
         //Watch for the timeout
-        Activity nextActivity = getInstrumentation().waitForMonitorWithTimeout(activityMonitor, 5000);
+        Activity nextActivity = getInstrumentation().waitForMonitorWithTimeout(activityMonitor, 4000);
         // next activity is opened and captured.
         assertNotNull(nextActivity);
 
@@ -52,7 +54,7 @@ public class JUnit4StyleTests {
         onView(withId(R.id.menu_add_alarm))
                 .perform(click());
 
-        Screengrab.screenshot("menu_item_alarm");
+        Screengrab.screenshot("menu_item_alarm", new UiAutomatorScreenshotStrategy());
     }
 
 
