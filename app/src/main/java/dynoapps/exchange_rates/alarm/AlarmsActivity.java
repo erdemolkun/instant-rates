@@ -2,11 +2,11 @@ package dynoapps.exchange_rates.alarm;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -35,6 +35,9 @@ public class AlarmsActivity extends BaseActivity {
 
     @BindView(R.id.tv_no_alarm)
     TextView tvNoAlarm;
+
+    @BindView(R.id.fab_add_alarm)
+    FloatingActionButton fabAddAlarm;
 
     AlarmsAdapter adapter;
 
@@ -69,6 +72,13 @@ public class AlarmsActivity extends BaseActivity {
                 super.onItemRangeRemoved(positionStart, itemCount);
             }
         });
+
+        fabAddAlarm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlarmManager.addAlarmDialog(AlarmsActivity.this);
+            }
+        });
     }
 
     @Override
@@ -99,7 +109,7 @@ public class AlarmsActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_alarms, menu);
+        //getMenuInflater().inflate(R.menu.menu_alarms, menu);
         SwitchCompat switchCompat = (SwitchCompat) findViewById(R.id.menu_switch);
         switchCompat.setChecked(AlarmManager.getAlarmsHolder().is_enabled);
         updateViews(switchCompat.isChecked());
@@ -119,15 +129,15 @@ public class AlarmsActivity extends BaseActivity {
         rvAlarms.setAlpha(is_enabled_alarm ? 1.0f : 0.6f);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.menu_add_alarm) {
-            AlarmManager.addAlarm(this);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        int id = item.getItemId();
+//        if (id == R.id.menu_add_alarm) {
+//            AlarmManager.addAlarmDialog(this);
+//            return true;
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
 
     static class AlarmViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.iv_alarm_type)

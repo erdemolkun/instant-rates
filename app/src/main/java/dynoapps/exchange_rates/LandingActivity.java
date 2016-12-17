@@ -602,7 +602,7 @@ public class LandingActivity extends BaseActivity {
             SourcesManager.selectSources(this);
             return true;
         } else if (id == R.id.menu_add_alarm) {
-            AlarmManager.addAlarm(this);
+            AlarmManager.addAlarmDialog(this);
             return true;
         }
         return super.onOptionsItemSelected(item);

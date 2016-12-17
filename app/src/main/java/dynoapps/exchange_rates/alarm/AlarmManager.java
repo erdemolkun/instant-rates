@@ -33,9 +33,9 @@ public class AlarmManager {
 
     public static final int MAX_ALARM_COUNT = 12;
 
-    public static AlarmsHolder alarmsHolder;
+    private static AlarmsHolder alarmsHolder;
 
-    public static boolean addAlarm(Alarm alarm) {
+    private static boolean addAlarm(Alarm alarm) {
         alarmsHolder = getAlarmsHolder();
         if (alarmsHolder.alarms == null)
             alarmsHolder.alarms = new ArrayList<>();
@@ -75,7 +75,7 @@ public class AlarmManager {
         Prefs.saveAlarms(alarms_json);
     }
 
-    public static void addAlarm(final Context context) {
+    public static void addAlarmDialog(final Context context) {
         final View v = LayoutInflater.from(context).inflate(R.layout.layout_alarm_selection, null);
 
         final Spinner spn_above_below = (Spinner) v.findViewById(R.id.spn_above_below);
