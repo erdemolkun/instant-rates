@@ -62,6 +62,7 @@ public class AlarmManager {
             }
             if (alarmsHolder == null) {
                 alarmsHolder = new AlarmsHolder(new ArrayList<Alarm>());
+                alarmsHolder.is_enabled = true;
             }
 
         }
