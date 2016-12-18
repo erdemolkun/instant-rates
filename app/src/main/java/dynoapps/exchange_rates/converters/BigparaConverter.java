@@ -53,8 +53,8 @@ public class BigparaConverter implements Converter<ResponseBody, List<BaseRate>>
 
         ArrayList<Element> elements =  Jsoup.parse(responseBody, HOST).select("#content").select(".kurdetail").select(".kurbox");
 
-        String val_sell = elements.get(1).select(".avg_val").text();
-        String val_buy = elements.get(2).select(".avg_val").text();
+        String val_buy = elements.get(1).select(".value").text();
+        String val_sell = elements.get(2).select(".value").text();
 
         BuySellRate buySellRate = new BigparaRate();
         buySellRate.value_sell =val_sell;
