@@ -58,7 +58,9 @@ public class YorumlarRateProvider extends BasePoolingProvider<List<YorumlarRate>
                     fetchAgain(true);
             }
         });
-        lastCall = call;
+        if (!is_single_run) {
+            lastCall = call;
+        }
     }
 
     @Override

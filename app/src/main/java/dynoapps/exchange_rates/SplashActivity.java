@@ -17,7 +17,9 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.ButterKnife;
+import dynoapps.exchange_rates.event.IntervalUpdate;
 import dynoapps.exchange_rates.event.RatesEvent;
+import dynoapps.exchange_rates.event.UpdateTriggerEvent;
 import dynoapps.exchange_rates.service.RatePollingService;
 import dynoapps.exchange_rates.time.TimeIntervalManager;
 import dynoapps.exchange_rates.util.L;
@@ -57,6 +59,7 @@ public class SplashActivity extends AppCompatActivity {
             Intent intent = new Intent(this, RatePollingService.class);
             bindService(intent, rateServiceConnection, Context.BIND_AUTO_CREATE);
             SourcesManager.update();
+            EventBus.getDefault().post(new IntervalUpdate(true)); // Intervals should be updated on ui mode.
         }
     }
 

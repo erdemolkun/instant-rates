@@ -106,12 +106,12 @@ public abstract class BasePoolingProvider<T> implements IPollingSource, PoolingR
         postWork(this, interval_value);
     }
 
-    public void refreshIntervals() {
+    public void refreshIntervals(boolean immediate_shot) {
         cancelWorks();
         if (!isEnabled()) {
             return;
         }
-        postWork(this, TimeIntervalManager.getPollingInterval());
+        postWork(this, immediate_shot ? 0 : TimeIntervalManager.getPollingInterval());
     }
 
     private void cancelWorks() {

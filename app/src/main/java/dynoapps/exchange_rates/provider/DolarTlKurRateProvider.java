@@ -64,6 +64,8 @@ public class DolarTlKurRateProvider extends BasePoolingProvider<List<DolarTlKurR
                     fetchAgain(true);
             }
         });
-        lastCall = call;
+        if (!is_single_run) {
+            lastCall = call;
+        }
     }
 }

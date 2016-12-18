@@ -158,7 +158,7 @@ public class LandingActivity extends BaseActivity {
             });
         }
 
-        tvVersion.setText(AppUtils.getAppVersionForSemver());
+        tvVersion.setText(AppUtils.getPlainVersion());
         updateHint();
 
         swipeRefreshLayout.setColorSchemeResources(
@@ -187,9 +187,6 @@ public class LandingActivity extends BaseActivity {
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
-        EventBus.getDefault().post(new UpdateTriggerEvent()); // Update data immediate once we open activity again.
-        EventBus.getDefault().post(new IntervalUpdate()); // Intervals should be updated on ui mode.
-
     }
 
     private void refreshCardItemViews() {

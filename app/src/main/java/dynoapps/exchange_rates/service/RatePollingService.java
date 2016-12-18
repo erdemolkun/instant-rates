@@ -203,7 +203,7 @@ public class RatePollingService extends IntentService {
     public void onEvent(IntervalUpdate event) {
         TimeIntervalManager.setAlarmMode(false);
         for (BasePoolingProvider provider : providers) {
-            provider.refreshIntervals();
+            provider.refreshIntervals(event.is_immediate);
         }
     }
 

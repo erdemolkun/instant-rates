@@ -38,26 +38,32 @@ public class AppUtils {
         return pInfo.versionName;
     }
 
+    public static String getPlainVersion(){
+        String version= getAppVersion();
+        if (TextUtils.isEmpty(version)) return "";
+        return version.split(" ")[0];
+    }
+
     /**
      * Converts to http://semver.org/ standards.
      */
     public static String getAppVersionForSemver() {
         String appVersion = getAppVersion();
-        return versionSemverCompat(appVersion);
+        return versionSemverCompat(appVersion,3);
     }
 
 
-    public static String versionSemverCompat(String version) {
+    public static String versionSemverCompat(String version,int max_digit) {
         if (TextUtils.isEmpty(version)) return "";
         else {
             String firstPart = version.split(" ")[0];
             String[] splittedSemVer = firstPart.split("\\.");
             ArrayList<String> parts = new ArrayList<>();
             Collections.addAll(parts, splittedSemVer);
-            for (int i = parts.size(); i < 3; i++) {
+            for (int i = parts.size(); i < max_digit; i++) {
                 parts.add("0");
             }
-            List<String> limitedParts = parts.subList(0, 3);
+            List<String> limitedParts = parts.subList(0, max_digit);
             return TextUtils.join(".", limitedParts);
         }
     }

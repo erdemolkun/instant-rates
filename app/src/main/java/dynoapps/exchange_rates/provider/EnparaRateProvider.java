@@ -63,6 +63,8 @@ public class EnparaRateProvider extends BasePoolingProvider<List<EnparaRate>> {
                     fetchAgain(true);
             }
         });
-        lastCall = call;
+        if (!is_single_run) {
+            lastCall = call;
+        }
     }
 }

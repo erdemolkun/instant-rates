@@ -82,7 +82,7 @@ public final class TimeIntervalManager {
             public void onClick(DialogInterface dialog, int which) {
                 if (user_selected_item_index != TimeIntervalManager.getSelectedIndex()) {
                     TimeIntervalManager.updateUserInvertalSelection(user_selected_item_index);
-                    EventBus.getDefault().post(new IntervalUpdate());
+                    EventBus.getDefault().post(new IntervalUpdate(false));
                 }
             }
         });

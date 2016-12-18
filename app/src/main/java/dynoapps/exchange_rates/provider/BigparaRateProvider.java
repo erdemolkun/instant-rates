@@ -64,6 +64,8 @@ public class BigparaRateProvider extends BasePoolingProvider<List<BigparaRate>> 
                     fetchAgain(true);
             }
         });
-        lastCall = call;
+        if (!is_single_run) {
+            lastCall = call;
+        }
     }
 }

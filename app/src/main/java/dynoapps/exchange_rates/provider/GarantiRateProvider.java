@@ -72,7 +72,9 @@ public class GarantiRateProvider extends BasePoolingProvider<List<GarantiRate>> 
 //                fetchAgain(true);
 //            }
 //        });
-//        lastCall = call;
+//        if (!is_single_run) {
+//            lastCall = call;
+//        }
     }
 
     private void jsoupCall() {
