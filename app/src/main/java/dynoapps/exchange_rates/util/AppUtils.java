@@ -38,8 +38,8 @@ public class AppUtils {
         return pInfo.versionName;
     }
 
-    public static String getPlainVersion(){
-        String version= getAppVersion();
+    public static String getPlainVersion() {
+        String version = getAppVersion();
         if (TextUtils.isEmpty(version)) return "";
         return version.split(" ")[0];
     }
@@ -49,11 +49,11 @@ public class AppUtils {
      */
     public static String getAppVersionForSemver() {
         String appVersion = getAppVersion();
-        return versionSemverCompat(appVersion,3);
+        return versionSemverCompat(appVersion, 3);
     }
 
 
-    public static String versionSemverCompat(String version,int max_digit) {
+    public static String versionSemverCompat(String version, int max_digit) {
         if (TextUtils.isEmpty(version)) return "";
         else {
             String firstPart = version.split(" ")[0];

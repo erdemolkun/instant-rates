@@ -13,11 +13,9 @@ public class YahooRate extends AvgRate {
         int rateType = UNKNOWN;
         if (type.contains("USDTRY")) {
             rateType = USD;
-        }
-        else if (type.contains("EURTRY")) {
+        } else if (type.contains("EURTRY")) {
             rateType = EUR;
-        }
-        else if (type.contains("EURUSD")) {
+        } else if (type.contains("EURUSD")) {
             rateType = EUR_USD;
         }
         this.rateType = rateType;

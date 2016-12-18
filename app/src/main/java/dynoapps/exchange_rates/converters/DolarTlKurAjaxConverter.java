@@ -41,10 +41,8 @@ public class DolarTlKurAjaxConverter implements Converter<ResponseBody, List<Bas
 
 
     /**
-     * Sample response body
-     *
-     * <p> USDTRY:3.4560: EURTRY:3.6623: EURUSD:1.0595: XAUUSD:1187.34: GBPTRY:4.2978: CHFTRY:3.4122: SARTRY:0.9216: 16:33:31
-     * </p>
+     * Sample response body <p> <p> USDTRY:3.4560: EURTRY:3.6623: EURUSD:1.0595: XAUUSD:1187.34:
+     * GBPTRY:4.2978: CHFTRY:3.4122: SARTRY:0.9216: 16:33:31 </p>
      **/
     @Override
     public List<BaseRate> convert(ResponseBody value) throws IOException {
@@ -56,7 +54,7 @@ public class DolarTlKurAjaxConverter implements Converter<ResponseBody, List<Bas
             if (splitsMoney.length > 0) {
                 for (String singleSplit : splitsMoney) {
                     String[] splits = singleSplit.split(":"); // ysi Type not supported
-                    if (splits.length ==2) {
+                    if (splits.length == 2) {
                         DolarTlKurRate rate = new DolarTlKurRate();
                         rate.type = splits[0];
                         rate.avg_val = splits[1];

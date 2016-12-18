@@ -48,8 +48,8 @@ public class PublishSettings {
     }
 
     /**
-     * Returns release rate_type by extracting build rate_type from version name. Build Type extracted from
-     * application versionNameSuffix
+     * Returns release rate_type by extracting build rate_type from version name. Build Type
+     * extracted from application versionNameSuffix
      */
     private static ReleaseTypes getReleaseTypeByVersionName() {
         PackageInfo pInfo;

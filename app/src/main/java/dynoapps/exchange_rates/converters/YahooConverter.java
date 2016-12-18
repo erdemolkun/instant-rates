@@ -10,7 +10,6 @@ import java.util.List;
 
 import dynoapps.exchange_rates.model.rates.BaseRate;
 import dynoapps.exchange_rates.model.rates.YahooRate;
-import dynoapps.exchange_rates.model.rates.YorumlarRate;
 import okhttp3.ResponseBody;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
@@ -42,11 +41,8 @@ public class YahooConverter implements Converter<ResponseBody, List<BaseRate>> {
 
 
     /**
-     * Sample response body
-     *
-     * <p> "USDTRY=X",3.4837,"12/9/2016","11:45pm"
-           "EURTRY=X",3.6767,"12/9/2016","10:30pm"
-     * </p>
+     * Sample response body <p> <p> "USDTRY=X",3.4837,"12/9/2016","11:45pm"
+     * "EURTRY=X",3.6767,"12/9/2016","10:30pm" </p>
      **/
     @Override
     public List<BaseRate> convert(ResponseBody value) throws IOException {
@@ -60,7 +56,7 @@ public class YahooConverter implements Converter<ResponseBody, List<BaseRate>> {
                     String[] splits = singleSplit.split(","); // ysi Type not supported
                     if (splits.length > 2) {
                         YahooRate rate = new YahooRate();
-                        rate.type = splits[0].replace("\"","");
+                        rate.type = splits[0].replace("\"", "");
                         rate.avg_val = splits[1];
                         //rate.time = splits[2];
                         rate.toRateType();

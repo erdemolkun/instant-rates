@@ -16,17 +16,14 @@ public abstract class BuySellRate extends BaseRate {
     @Override
     public void toRateType() {
         int rateType = UNKNOWN;
-        String plain_type = type.replace("\n","");
-        if (plain_type.equals("USD")){
+        String plain_type = type.replace("\n", "");
+        if (plain_type.equals("USD")) {
             rateType = USD;
-        }
-        else if (plain_type.equals("EUR")){
+        } else if (plain_type.equals("EUR")) {
             rateType = EUR;
-        }
-        else if (plain_type.contains("altın")){
+        } else if (plain_type.contains("altın")) {
             rateType = ONS_TRY;
-        }
-        else if (plain_type.contains("parite")){
+        } else if (plain_type.contains("parite")) {
             rateType = EUR_USD;
         }
         this.rateType = rateType;
@@ -34,10 +31,10 @@ public abstract class BuySellRate extends BaseRate {
 
     @Override
     public void setRealValues() {
-        String val = value_sell.replace(" TL","").replace(",",".").trim();
+        String val = value_sell.replace(" TL", "").replace(",", ".").trim();
         value_sell_real = Float.valueOf(val);
 
-        val = value_buy.replace(" TL","").replace(",",".").trim();
+        val = value_buy.replace(" TL", "").replace(",", ".").trim();
         value_buy_real = Float.valueOf(val);
     }
 

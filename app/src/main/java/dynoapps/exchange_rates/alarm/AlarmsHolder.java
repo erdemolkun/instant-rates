@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class AlarmsHolder implements Serializable {
     public ArrayList<Alarm> alarms;
-    public boolean is_enabled= true;
+    public boolean is_enabled = true;
 
     AlarmsHolder(ArrayList<Alarm> alarms) {
         this.alarms = alarms;

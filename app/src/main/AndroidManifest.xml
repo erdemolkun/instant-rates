@@ -53,8 +53,9 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".service.RatePollingService"
-                 android:exported="false"/>
+        <service
+                android:name=".service.RatePollingService"
+                android:exported="false"/>
     </application>
 
 </manifest>

@@ -63,7 +63,7 @@ public abstract class BasePoolingProvider<T> implements IPollingSource, PoolingR
 
     @Override
     public void start() {
-        if (!isEnabled()){
+        if (!isEnabled()) {
             /**
              * Double check :)
              * */
@@ -75,7 +75,7 @@ public abstract class BasePoolingProvider<T> implements IPollingSource, PoolingR
              */
             return;
         }
-        if (is_started.get()){
+        if (is_started.get()) {
             /**
              * No need to start again.
              * */
