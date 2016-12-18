@@ -27,6 +27,7 @@ public abstract class BasePoolingProvider<T> implements IPollingSource, PoolingR
     private int success_count = 0;
 
     private AtomicBoolean is_working = new AtomicBoolean(false); // Indicates if a job currently running
+    private AtomicBoolean is_started = new AtomicBoolean(false); // Indicates if a job currently running
 
     private CurrencySource currencySource;
 
@@ -55,7 +56,6 @@ public abstract class BasePoolingProvider<T> implements IPollingSource, PoolingR
 
     public abstract int getSourceType();
 
-
     @Override
     public void run() {
         logDurationStart();
@@ -63,20 +63,34 @@ public abstract class BasePoolingProvider<T> implements IPollingSource, PoolingR
 
     @Override
     public void start() {
+        if (!isEnabled()){
+            /**
+             * Double check :)
+             * */
+            return;
+        }
         if (is_working.get()) {
             /**
              Working already. Has a handler callback.
              */
             return;
         }
+        if (is_started.get()){
+            /**
+             * No need to start again.
+             * */
+            return;
+        }
         L.i(BasePoolingProvider.class.getSimpleName(), this.getClass().getSimpleName() + " Started");
         postWork(this, 0);
+        is_started.set(true);
     }
 
     @Override
     public void stop() {
         L.i(BasePoolingProvider.class.getSimpleName(), this.getClass().getSimpleName() + " Stopped");
         cancelWorks();
+        is_started.set(false);
     }
 
     void fetchAgain(boolean wasError) {
