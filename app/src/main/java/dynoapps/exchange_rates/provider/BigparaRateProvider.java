@@ -2,7 +2,6 @@ package dynoapps.exchange_rates.provider;
 
 import java.util.List;
 
-import dynoapps.exchange_rates.data.CurrencySource;
 import dynoapps.exchange_rates.data.CurrencyType;
 import dynoapps.exchange_rates.model.rates.BigparaRate;
 import dynoapps.exchange_rates.network.Api;
@@ -14,7 +13,7 @@ import retrofit2.Response;
  * Created by erdemmac on 25/11/2016.
  */
 
-public class BigparaRateProvider extends BasePoolingDataProvider<List<BigparaRate>> {
+public class BigparaRateProvider extends BasePoolingProvider<List<BigparaRate>> {
 
     private Call<List<BigparaRate>> lastCall;
 

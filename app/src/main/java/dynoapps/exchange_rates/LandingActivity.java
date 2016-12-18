@@ -54,7 +54,7 @@ import dynoapps.exchange_rates.model.rates.AvgRate;
 import dynoapps.exchange_rates.model.rates.BaseRate;
 import dynoapps.exchange_rates.model.rates.BuySellRate;
 import dynoapps.exchange_rates.model.rates.IRate;
-import dynoapps.exchange_rates.provider.BasePoolingDataProvider;
+import dynoapps.exchange_rates.provider.BasePoolingProvider;
 import dynoapps.exchange_rates.service.RatePollingService;
 import dynoapps.exchange_rates.time.TimeIntervalManager;
 import dynoapps.exchange_rates.util.AnimationHelper;
@@ -515,7 +515,7 @@ public class LandingActivity extends BaseActivity {
             } else {
                 TimeIntervalManager.setAlarmMode(true);
                 for (CurrencySource source : SourcesManager.getCurrencySources()) {
-                    BasePoolingDataProvider provider = (BasePoolingDataProvider) source.getPollingSource();
+                    BasePoolingProvider provider = (BasePoolingProvider) source.getPollingSource();
                     if (provider != null) {
                         provider.stopIfHasAlarm();
                     }

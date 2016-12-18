@@ -18,7 +18,7 @@ import dynoapps.exchange_rates.data.CurrencyType;
 import dynoapps.exchange_rates.event.DataSourceUpdate;
 import dynoapps.exchange_rates.interfaces.ValueType;
 import dynoapps.exchange_rates.model.rates.IRate;
-import dynoapps.exchange_rates.provider.BasePoolingDataProvider;
+import dynoapps.exchange_rates.provider.BasePoolingProvider;
 import dynoapps.exchange_rates.provider.BigparaRateProvider;
 import dynoapps.exchange_rates.provider.DolarTlKurRateProvider;
 import dynoapps.exchange_rates.provider.EnparaRateProvider;
@@ -40,7 +40,7 @@ public class SourcesManager {
         initDataSourceSelections();
     }
 
-    public static void updateProviders(ArrayList<BasePoolingDataProvider> providers) {
+    public static void updateProviders(ArrayList<BasePoolingProvider> providers) {
 
         for (CurrencySource source : getCurrencySources()) {
             switch (source.getSourceType()) {

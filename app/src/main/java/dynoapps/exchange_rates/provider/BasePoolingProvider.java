@@ -17,7 +17,7 @@ import dynoapps.exchange_rates.util.L;
  * Created by erdemmac on 25/11/2016.
  */
 
-public abstract class BasePoolingDataProvider<T> implements IPollingSource, PoolingRunnable, Runnable {
+public abstract class BasePoolingProvider<T> implements IPollingSource, PoolingRunnable, Runnable {
 
     private static final int NEXT_FETCH_ON_ERROR = 4000;
 
@@ -30,7 +30,7 @@ public abstract class BasePoolingDataProvider<T> implements IPollingSource, Pool
 
     private CurrencySource currencySource;
 
-    BasePoolingDataProvider(SourceCallback<T> callback) {
+    BasePoolingProvider(SourceCallback<T> callback) {
         this.callback = callback;
         this.currencySource = SourcesManager.getSource(getSourceType());
     }
@@ -69,13 +69,13 @@ public abstract class BasePoolingDataProvider<T> implements IPollingSource, Pool
              */
             return;
         }
-        L.i(BasePoolingDataProvider.class.getSimpleName(), this.getClass().getSimpleName() + " Started");
+        L.i(BasePoolingProvider.class.getSimpleName(), this.getClass().getSimpleName() + " Started");
         postWork(this, 0);
     }
 
     @Override
     public void stop() {
-        L.i(BasePoolingDataProvider.class.getSimpleName(), this.getClass().getSimpleName() + " Stopped");
+        L.i(BasePoolingProvider.class.getSimpleName(), this.getClass().getSimpleName() + " Stopped");
         cancelWorks();
     }
 
@@ -109,7 +109,7 @@ public abstract class BasePoolingDataProvider<T> implements IPollingSource, Pool
     private void postWork(Runnable runnable, long delayed) {
         is_working.set(true);
         getHandler().postDelayed(runnable, delayed);
-        L.e(BasePoolingDataProvider.class.getSimpleName(), "- postWork : " + delayed + " ms - " + this.getClass().getSimpleName());
+        L.e(BasePoolingProvider.class.getSimpleName(), "- postWork : " + delayed + " ms - " + this.getClass().getSimpleName());
     }
 
 

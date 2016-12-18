@@ -17,7 +17,7 @@ import dynoapps.exchange_rates.model.rates.YapıKrediRate;
  * Created by erdemmac on 25/11/2016.
  */
 
-public class YapıKrediRateProvider extends BasePoolingDataProvider<List<YapıKrediRate>> {
+public class YapıKrediRateProvider extends BasePoolingProvider<List<YapıKrediRate>> {
 
     private ExecutorService executorService;
 

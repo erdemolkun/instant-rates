@@ -13,7 +13,7 @@ import retrofit2.Response;
  * Created by erdemmac on 25/11/2016.
  */
 
-public class EnparaRateProvider extends BasePoolingDataProvider<List<EnparaRate>> {
+public class EnparaRateProvider extends BasePoolingProvider<List<EnparaRate>> {
 
     private Call<List<EnparaRate>> lastCall;
 

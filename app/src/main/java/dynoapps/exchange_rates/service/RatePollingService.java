@@ -42,7 +42,7 @@ import dynoapps.exchange_rates.model.rates.EnparaRate;
 import dynoapps.exchange_rates.model.rates.YahooRate;
 import dynoapps.exchange_rates.model.rates.YapıKrediRate;
 import dynoapps.exchange_rates.model.rates.YorumlarRate;
-import dynoapps.exchange_rates.provider.BasePoolingDataProvider;
+import dynoapps.exchange_rates.provider.BasePoolingProvider;
 import dynoapps.exchange_rates.provider.BigparaRateProvider;
 import dynoapps.exchange_rates.provider.DolarTlKurRateProvider;
 import dynoapps.exchange_rates.provider.EnparaRateProvider;
@@ -61,7 +61,7 @@ import dynoapps.exchange_rates.util.RateUtils;
  */
 
 public class RatePollingService extends IntentService {
-    ArrayList<BasePoolingDataProvider> providers;
+    ArrayList<BasePoolingProvider> providers;
 
     private final IBinder mBinder = new SimpleBinder();
 
@@ -93,7 +93,7 @@ public class RatePollingService extends IntentService {
             providers = new ArrayList<>();
         }
         if (providers.size() > 0) {
-            for (BasePoolingDataProvider provider : providers) {
+            for (BasePoolingProvider provider : providers) {
                 provider.stop();
             }
         } else {
@@ -202,7 +202,7 @@ public class RatePollingService extends IntentService {
     @Subscribe
     public void onEvent(IntervalUpdate event) {
         TimeIntervalManager.setAlarmMode(false);
-        for (BasePoolingDataProvider provider : providers) {
+        for (BasePoolingProvider provider : providers) {
             provider.refreshIntervals();
         }
     }

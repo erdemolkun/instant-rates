@@ -13,7 +13,7 @@ import retrofit2.Response;
  * Created by erdemmac on 25/11/2016.
  */
 
-public class YorumlarRateProvider extends BasePoolingDataProvider<List<YorumlarRate>> {
+public class YorumlarRateProvider extends BasePoolingProvider<List<YorumlarRate>> {
 
     private Call<List<YorumlarRate>> lastCall;
 

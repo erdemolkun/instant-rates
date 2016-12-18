@@ -13,7 +13,7 @@ import retrofit2.Response;
  * Created by erdemmac on 25/11/2016.
  */
 
-public class YahooRateProvider extends BasePoolingDataProvider<List<YahooRate>> {
+public class YahooRateProvider extends BasePoolingProvider<List<YahooRate>> {
 
     private Call<List<YahooRate>> lastCall;
 
