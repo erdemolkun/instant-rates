@@ -2,6 +2,7 @@ package dynoapps.exchange_rates.provider;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Message;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -20,6 +21,8 @@ import dynoapps.exchange_rates.util.L;
 public abstract class BasePoolingProvider<T> implements IPollingSource, PoolingRunnable, Runnable {
 
     private static final int NEXT_FETCH_ON_ERROR = 4000;
+
+    private static final int MESSAGE_WHAT_FETCH = 1;
 
     private SourceCallback<T> callback;
 
@@ -40,7 +43,15 @@ public abstract class BasePoolingProvider<T> implements IPollingSource, PoolingR
 
     private Handler getHandler() {
         if (handler == null) {
-            handler = new Handler(Looper.getMainLooper());
+            handler = new Handler(Looper.getMainLooper()) {
+                @Override
+                public void handleMessage(Message msg) {
+                    super.handleMessage(msg);
+                    if (msg.what == MESSAGE_WHAT_FETCH) {
+                        run();
+                    }
+                }
+            };
         }
         return handler;
     }
@@ -82,7 +93,7 @@ public abstract class BasePoolingProvider<T> implements IPollingSource, PoolingR
             return;
         }
         L.i(BasePoolingProvider.class.getSimpleName(), this.getClass().getSimpleName() + " Started");
-        postWork(this, 0);
+        postWork(0);
         is_started.set(true);
     }
 
@@ -103,7 +114,7 @@ public abstract class BasePoolingProvider<T> implements IPollingSource, PoolingR
             float ratio = (error_count / (float) (success_count <= 0 ? 1 : success_count));
             interval_value = (int) (NEXT_FETCH_ON_ERROR + Math.log(ratio) * NEXT_FETCH_ON_ERROR);
         }
-        postWork(this, interval_value);
+        postWork(interval_value);
     }
 
     public void refreshIntervals(boolean immediate_shot) {
@@ -111,35 +122,35 @@ public abstract class BasePoolingProvider<T> implements IPollingSource, PoolingR
         if (!isEnabled()) {
             return;
         }
-        postWork(this, immediate_shot ? 0 : TimeIntervalManager.getPollingInterval());
+        postWork(immediate_shot ? 0 : TimeIntervalManager.getPollingInterval());
     }
 
     private void cancelWorks() {
-        getHandler().removeCallbacks(this);
+        getHandler().removeMessages(MESSAGE_WHAT_FETCH);
         cancel();
         is_working.set(false);
     }
 
-    private void postWork(Runnable runnable, long delayed) {
+    private void postWork(long delayed) {
         is_working.set(true);
-        getHandler().postDelayed(runnable, delayed);
+        getHandler().sendEmptyMessageDelayed(1, delayed);
         L.e(BasePoolingProvider.class.getSimpleName(), "- postWork : " + delayed + " ms - " + this.getClass().getSimpleName());
     }
 
 
-    private long last_call_start_milis = -1;
+    private long last_call_start_millis = -1;
     private int average_duration = 0;
 
     private void logDurationSuccess() {
-        if (last_call_start_milis < 0) return;
+        if (last_call_start_millis < 0) return;
         long current_milis = System.currentTimeMillis();
         average_duration = (int)
-                (average_duration * success_count + (current_milis - last_call_start_milis)) / (success_count + 1);
+                (average_duration * success_count + (current_milis - last_call_start_millis)) / (success_count + 1);
 
     }
 
     private void logDurationStart() {
-        last_call_start_milis = System.currentTimeMillis();
+        last_call_start_millis = System.currentTimeMillis();
     }
 
     void notifyValue(T value) {
@@ -152,7 +163,7 @@ public abstract class BasePoolingProvider<T> implements IPollingSource, PoolingR
     }
 
     void notifyError() {
-        last_call_start_milis = -1;
+        last_call_start_millis = -1;
         error_count++;
         if (callback != null) {
             callback.onError();
