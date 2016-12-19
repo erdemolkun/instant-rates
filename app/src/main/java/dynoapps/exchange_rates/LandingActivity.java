@@ -9,12 +9,16 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.ColorRes;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v4.view.animation.LinearOutSlowInInterpolator;
@@ -41,7 +45,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import dynoapps.exchange_rates.alarm.AlarmManager;
 import dynoapps.exchange_rates.alarm.AlarmsActivity;
 import dynoapps.exchange_rates.data.CurrencySource;
@@ -75,20 +78,20 @@ public class LandingActivity extends BaseActivity {
     ActionBarDrawerToggle toggle;
 
     @BindView(R.id.v_drawer_item_usd)
-    View vDrawerItemUsd;
+    TextView tvDrawerItemUsd;
 
     @BindView(R.id.v_drawer_item_eur)
-    View vDrawerItemEur;
+    TextView tvDrawerItemEur;
 
 
     @BindView(R.id.v_drawer_item_eur_usd)
-    View vDrawerItemEurUsd;
+    TextView tvDrawerItemEurUsd;
 
     @BindView(R.id.v_drawer_item_ons)
-    View vDrawerItemOns;
+    TextView tvDrawerItemOns;
 
     @BindView(R.id.v_drawer_item_alarms)
-    View vDrawerItemAlarms;
+    TextView tvDrawerItemAlarms;
 
     @BindView(R.id.v_landing_side_menu_hint_close)
     ImageView ivCloseHint;
@@ -368,7 +371,7 @@ public class LandingActivity extends BaseActivity {
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        vDrawerItemUsd.setOnClickListener(new View.OnClickListener() {
+        tvDrawerItemUsd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 doLeftMenuWork(new Runnable() {
@@ -383,7 +386,7 @@ public class LandingActivity extends BaseActivity {
             }
         });
 
-        vDrawerItemEur.setOnClickListener(new View.OnClickListener() {
+        tvDrawerItemEur.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 doLeftMenuWork(new Runnable() {
@@ -397,7 +400,7 @@ public class LandingActivity extends BaseActivity {
             }
         });
 
-        vDrawerItemEurUsd.setOnClickListener(new View.OnClickListener() {
+        tvDrawerItemEurUsd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 doLeftMenuWork(new Runnable() {
@@ -411,7 +414,7 @@ public class LandingActivity extends BaseActivity {
             }
         });
 
-        vDrawerItemOns.setOnClickListener(new View.OnClickListener() {
+        tvDrawerItemOns.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 doLeftMenuWork(new Runnable() {
@@ -425,7 +428,7 @@ public class LandingActivity extends BaseActivity {
             }
         });
 
-        vDrawerItemAlarms.setOnClickListener(new View.OnClickListener() {
+        tvDrawerItemAlarms.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 doLeftMenuWork(new Runnable() {
@@ -437,6 +440,20 @@ public class LandingActivity extends BaseActivity {
                 });
             }
         });
+        tintSideMenuItem(tvDrawerItemUsd, R.color.colorPrimary);
+        tintSideMenuItem(tvDrawerItemEur, R.color.colorPrimary);
+        tintSideMenuItem(tvDrawerItemEurUsd, R.color.colorPrimary);
+        tintSideMenuItem(tvDrawerItemOns, R.color.colorPrimary);
+        tintSideMenuItem(tvDrawerItemAlarms, R.color.colorPrimary);
+
+    }
+
+    private void tintSideMenuItem(TextView tv, @ColorRes int color) {
+        Drawable drawable = tv.getCompoundDrawables()[0];
+        drawable = DrawableCompat.wrap(drawable);
+        DrawableCompat.setTint(drawable, ContextCompat.getColor(this, color));
+        DrawableCompat.setTintMode(drawable, PorterDuff.Mode.SRC_ATOP);
+        tv.setCompoundDrawables(drawable, null, null, null);
     }
 
     /**

@@ -26,5 +26,16 @@
         <item name="android:windowExitAnimation">@anim/fade_out_medium</item>
     </style>
 
+    <style name="side_item_style">
+        <item name="android:paddingStart">24dp</item>
+        <item name="android:paddingLeft">24dp</item>
+        <item name="android:textSize">@dimen/drawer_item_menu_text_size</item>
+        <item name="android:minHeight">@dimen/drawer_item_height</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textColor">?colorPrimaryDark</item>
+        <item name="android:background">?selectableItemBackground</item>
+        <item name="android:drawablePadding">16dp</item>
+    </style>
+
 
 </resources>
