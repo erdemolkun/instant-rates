@@ -41,6 +41,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import dynoapps.exchange_rates.alarm.AlarmManager;
 import dynoapps.exchange_rates.alarm.AlarmsActivity;
 import dynoapps.exchange_rates.data.CurrencySource;
@@ -82,6 +83,9 @@ public class LandingActivity extends BaseActivity {
 
     @BindView(R.id.v_drawer_item_eur_usd)
     View vDrawerItemEurUsd;
+
+    @BindView(R.id.v_drawer_item_ons)
+    View vDrawerItemOns;
 
     @BindView(R.id.v_drawer_item_alarms)
     View vDrawerItemAlarms;
@@ -401,6 +405,20 @@ public class LandingActivity extends BaseActivity {
                     public void run() {
                         Intent i = new Intent(LandingActivity.this, ChartActivity.class);
                         i.putExtra(ChartActivity.EXTRA_RATE_TYPE, IRate.EUR_USD);
+                        startActivity(i);
+                    }
+                });
+            }
+        });
+
+        vDrawerItemOns.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                doLeftMenuWork(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent i = new Intent(LandingActivity.this, ChartActivity.class);
+                        i.putExtra(ChartActivity.EXTRA_RATE_TYPE, IRate.ONS);
                         startActivity(i);
                     }
                 });

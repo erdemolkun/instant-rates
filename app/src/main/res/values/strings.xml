@@ -32,12 +32,13 @@
     <string name="if_below">If below value</string>
     <string name="if_above">If above value</string>
     <string name="alarms">Alarms</string>
-    <string name="graphic">Graphic</string>
+    <string name="graphic">Graph</string>
     <string name="graph_types">Graph Types</string>
     <string name="others">Others</string>
     <string name="ons_try" translatable="false">ONS/TRY</string>
     <string name="ons">Ons</string>
     <string name="have_no_alarms">You have no alarms set.</string>
+    <string name="ons_dollar_grapsh">Ons / Dollar Graph</string>
 
     <plurals name="sec_short">
         <item quantity="one">%d sec</item>

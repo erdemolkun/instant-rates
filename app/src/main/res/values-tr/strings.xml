@@ -37,6 +37,7 @@
     <string name="others">Diğerleri</string>
     <string name="ons">Ons</string>
     <string name="have_no_alarms">Kayıtlı Alarmınız bulunmamaktadır</string>
+    <string name="ons_dollar_grapsh">Ons / Dolar Grafiği</string>
     <plurals name="sec_short">
         <item quantity="one">%d sn</item>
         <item quantity="other">%d sn</item>

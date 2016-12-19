@@ -103,6 +103,9 @@ public class ChartActivity extends BaseActivity {
         } else if (rateType == IRate.EUR_USD) {
             title = getString(R.string.euro_usd_graph);
         }
+        else if (rateType == IRate.ONS) {
+            title = getString(R.string.ons_dollar_grapsh);
+        }
         tvTitle.setText(title);
 
         setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
