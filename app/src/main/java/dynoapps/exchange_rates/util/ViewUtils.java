@@ -5,7 +5,12 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Point;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
@@ -14,6 +19,7 @@ import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.TextView;
 
 import dynoapps.exchange_rates.App;
 import dynoapps.exchange_rates.R;
@@ -26,6 +32,15 @@ public class ViewUtils {
 
     private static final int[] RES_IDS_ACTION_BAR_SIZE = {R.attr.actionBarSize};
 
+
+    public static void tint(TextView tv, @ColorRes int color) {
+        if (tv == null || CollectionUtils.size(tv.getCompoundDrawables()) <= 0) return;
+        Drawable drawable = tv.getCompoundDrawables()[0];
+        if (drawable == null) return;
+        drawable = DrawableCompat.wrap(drawable).mutate();
+        drawable.setColorFilter(ContextCompat.getColor(tv.getContext(), color), PorterDuff.Mode.SRC_ATOP);
+        tv.setCompoundDrawables(drawable, null, null, null);
+    }
 
     public static int getStatusBarHeight(@NonNull Context context) {
         int result = 0;

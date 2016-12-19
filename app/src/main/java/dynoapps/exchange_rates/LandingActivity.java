@@ -63,6 +63,7 @@ import dynoapps.exchange_rates.service.RatePollingService;
 import dynoapps.exchange_rates.time.TimeIntervalManager;
 import dynoapps.exchange_rates.util.AnimationHelper;
 import dynoapps.exchange_rates.util.AppUtils;
+import dynoapps.exchange_rates.util.CollectionUtils;
 import dynoapps.exchange_rates.util.RateUtils;
 import dynoapps.exchange_rates.util.ViewUtils;
 
@@ -440,20 +441,12 @@ public class LandingActivity extends BaseActivity {
                 });
             }
         });
-        tintSideMenuItem(tvDrawerItemUsd, R.color.colorPrimary);
-        tintSideMenuItem(tvDrawerItemEur, R.color.colorPrimary);
-        tintSideMenuItem(tvDrawerItemEurUsd, R.color.colorPrimary);
-        tintSideMenuItem(tvDrawerItemOns, R.color.colorPrimary);
-        tintSideMenuItem(tvDrawerItemAlarms, R.color.colorPrimary);
+        ViewUtils.tint(tvDrawerItemUsd, R.color.colorPrimary);
+        ViewUtils.tint(tvDrawerItemEur, R.color.colorPrimary);
+        ViewUtils.tint(tvDrawerItemEurUsd, R.color.colorPrimary);
+        ViewUtils.tint(tvDrawerItemOns, R.color.colorPrimary);
+        ViewUtils.tint(tvDrawerItemAlarms, R.color.colorPrimary);
 
-    }
-
-    private void tintSideMenuItem(TextView tv, @ColorRes int color) {
-        Drawable drawable = tv.getCompoundDrawables()[0];
-        drawable = DrawableCompat.wrap(drawable).mutate();
-        DrawableCompat.setTint(drawable, ContextCompat.getColor(this, color));
-        DrawableCompat.setTintMode(drawable, PorterDuff.Mode.SRC_ATOP);
-        tv.setCompoundDrawables(drawable, null, null, null);
     }
 
     /**
