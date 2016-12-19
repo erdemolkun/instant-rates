@@ -39,6 +39,7 @@
     <string name="have_no_alarms">Kayıtlı Alarmınız bulunmamaktadır</string>
     <string name="ons_dollar_grapsh">Ons / Dolar Grafiği</string>
     <string name="max_alarm_message">En fazla % alarm ekleyebilirsiniz.</string>
+    <string name="rate_types">Tipler</string>
     <plurals name="sec_short">
         <item quantity="one">%d sn</item>
         <item quantity="other">%d sn</item>

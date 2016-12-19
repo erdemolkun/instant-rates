@@ -9,6 +9,7 @@ import android.text.InputFilter;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,10 +25,10 @@ import dynoapps.exchange_rates.R;
 import dynoapps.exchange_rates.SourcesManager;
 import dynoapps.exchange_rates.data.CurrencySource;
 import dynoapps.exchange_rates.event.AlarmUpdateEvent;
-import dynoapps.exchange_rates.model.rates.IRate;
 import dynoapps.exchange_rates.util.CollectionUtils;
 import dynoapps.exchange_rates.util.DecimalDigitsInputFilter;
 import dynoapps.exchange_rates.util.InputFilterMinMax;
+import dynoapps.exchange_rates.util.RateUtils;
 
 /**
  * Created by erdemmac on 13/12/2016.
@@ -78,6 +79,16 @@ public class AlarmManager {
         Prefs.saveAlarms(alarms_json);
     }
 
+    static class RateValuePair {
+        public int rate_type;
+        public String name;
+
+        @Override
+        public String toString() {
+            return name;
+        }
+    }
+
     public static void addAlarmDialog(final Context context) {
         if (CollectionUtils.size(getAlarmsHolder().alarms) >= AlarmManager.MAX_ALARM_COUNT) {
             Toast.makeText(context, context.getString(R.string.max_alarm_message, AlarmManager.MAX_ALARM_COUNT), Toast.LENGTH_SHORT).show();
@@ -95,6 +106,8 @@ public class AlarmManager {
         spn_above_below.setSelection(0);
 
 
+        final Spinner spn_rate_types = (Spinner) v.findViewById(R.id.spn_rate_types);
+        final View rate_types_view = v.findViewById(R.id.v_alarm_types);
         final Spinner spn_sources = (Spinner) v.findViewById(R.id.spn_source_types);
         ArrayList<CurrencySource> sources = new ArrayList<>();
         for (CurrencySource source : SourcesManager.getCurrencySources()) {
@@ -104,8 +117,43 @@ public class AlarmManager {
         }
         ArrayAdapter<CurrencySource> sourceArrayAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item, sources);
         spn_sources.setAdapter(sourceArrayAdapter);
-        spn_sources.setSelection(0);
 
+        spn_sources.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                CurrencySource currencySource = (CurrencySource) parent.getSelectedItem();
+                ArrayList<RateValuePair> rateValuePairs = new ArrayList<>();
+                if (currencySource != null) {
+                    int[] supported_ones = currencySource.getSupportedRates();
+                    if (supported_ones.length > 0) {
+                        for (int val : supported_ones) {
+                            RateValuePair rateValuePair = new RateValuePair();
+                            rateValuePair.name = RateUtils.rateName(val);
+                            rateValuePair.rate_type = val;
+                            if (!TextUtils.isEmpty(rateValuePair.name)) {
+                                rateValuePairs.add(rateValuePair);
+                            }
+                        }
+                    }
+                }
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//                    TransitionManager.beginDelayedTransition((ViewGroup) v);
+//                }
+                if (!CollectionUtils.isNullOrEmpty(rateValuePairs)) {
+                    spn_rate_types.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item, rateValuePairs));
+                    rate_types_view.setVisibility(View.VISIBLE);
+                } else {
+                    rate_types_view.setVisibility(View.GONE);
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        spn_sources.setSelection(0);
 
         final AlertDialog alertDialog = new AlertDialog.Builder(context).setIcon(R.drawable.ic_splash).
                 setTitle(R.string.add_alarm)
@@ -127,12 +175,12 @@ public class AlarmManager {
                             val = Float.valueOf(str);
                             Alarm alarm = new Alarm();
                             alarm.val = val;
-                            alarm.rate_type = IRate.USD; // TODO: 13/12/2016
                             alarm.is_above = spn_above_below.getSelectedItemPosition() == 0;
                             alarm.source_type = ((CurrencySource) spn_sources.getSelectedItem()).getSourceType();
+                            alarm.rate_type = ((RateValuePair) spn_rate_types.getSelectedItem()).rate_type;
                             AlarmManager.addAlarm(alarm);
                         } catch (Exception ex) {
-
+                            // todo any error is blocked here
                         }
                         if (val == null) {
                             Toast.makeText(context, R.string.check_value, Toast.LENGTH_SHORT).show();

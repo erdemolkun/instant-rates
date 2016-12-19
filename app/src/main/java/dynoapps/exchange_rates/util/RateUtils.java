@@ -28,4 +28,17 @@ public class RateUtils {
                 App.context().getString(R.string.placeholder_tl, "" + entry) : "" + entry;
         return val;
     }
+
+    public static String rateName(int rate_type) {
+        if (rate_type == IRate.EUR) {
+            return "EUR"; // todo refactor with side menu names.
+        } else if (rate_type == IRate.USD) {
+            return "USD";
+        } else if (rate_type == IRate.EUR_USD) {
+            return "EUR_USD";
+        } else if (rate_type == IRate.ONS) {
+            return "ONS";
+        }
+        return "";
+    }
 }

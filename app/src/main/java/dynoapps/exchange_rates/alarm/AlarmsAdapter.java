@@ -40,8 +40,9 @@ class AlarmsAdapter extends UpdatableAdapter<List<Alarm>, AlarmsActivity.AlarmVi
     public void onBindViewHolder(final AlarmsActivity.AlarmViewHolder holder, int position) {
         final Alarm alarm = alarms.get(position);
         holder.ivType.setRotation(alarm.is_above ? 90 : 270);
-        holder.ivType.setColorFilter(Color.parseColor(!alarm.is_above ? "#f44336" : "#4CAF50"));
+        holder.ivType.setColorFilter(Color.parseColor(!alarm.is_above ? "#f44336" : "#4CAF50"));//todo move to colors.
         holder.tvValue.setText(RateUtils.entryToUI(alarm.val, alarm.rate_type));
+        holder.tvRateType.setText(RateUtils.rateName(alarm.rate_type));
         CurrencySource source = SourcesManager.getSource(alarm.source_type);
         if (source != null) {
             holder.tvSource.setText(source.getName());
@@ -64,7 +65,7 @@ class AlarmsAdapter extends UpdatableAdapter<List<Alarm>, AlarmsActivity.AlarmVi
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 alarm.is_enabled = b;
-                EventBus.getDefault().post(new AlarmUpdateEvent(true,true));
+                EventBus.getDefault().post(new AlarmUpdateEvent(true, true));
                 AlarmManager.persistAlarms();
             }
         });

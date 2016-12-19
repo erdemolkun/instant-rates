@@ -16,7 +16,7 @@ public class CurrencySource {
     private boolean enabled;
     private int source_type;
     private int color;
-    private int[] supported_rates;
+    private int[] supported_rates=new int[0];
 
     public CurrencySource(String name, int source_type, @ColorRes int colorRes, boolean enabled) {
         this(name, source_type, colorRes, enabled, null);
@@ -28,6 +28,10 @@ public class CurrencySource {
         this.enabled = enabled;
         this.color = ContextCompat.getColor(App.context(), colorRes);
         this.supported_rates = supported_rates;
+    }
+
+    public int[] getSupportedRates() {
+        return supported_rates;
     }
 
     public int getColor() {

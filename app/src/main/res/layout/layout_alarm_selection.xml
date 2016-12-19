@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:padding="16dp"
@@ -42,8 +43,31 @@
             android:overlapAnchor="false"
             android:id="@+id/spn_source_types"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    <LinearLayout
+            android:id="@+id/v_alarm_types"
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:orientation="vertical"
             android:layout_height="wrap_content">
 
-    </Spinner>
+        <TextView
+                android:layout_marginTop="8dp"
+                android:layout_width="wrap_content"
+                android:textSize="12sp"
+                android:text="@string/rate_types"
+                android:textColor="?colorAccent"
+                android:layout_height="wrap_content"/>
+
+        <Spinner
+                android:layout_marginTop="2dp"
+                android:overlapAnchor="false"
+                android:id="@+id/spn_rate_types"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+    </LinearLayout>
+
 
 </LinearLayout>
