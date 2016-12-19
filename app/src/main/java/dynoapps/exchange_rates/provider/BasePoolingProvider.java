@@ -94,7 +94,7 @@ public abstract class BasePoolingProvider<T> implements IPollingSource, PoolingR
     }
 
     void fetchAgain(boolean wasError) {
-        if (!isEnabled()) return;
+        if (!isEnabled() && !is_started.get()) return;
         long interval_value = TimeIntervalManager.getPollingInterval();
         if (wasError) {
             /**
