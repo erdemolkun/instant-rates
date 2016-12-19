@@ -67,8 +67,8 @@ android {
         applicationId "dynoapps.exchange_rates"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 1904
-        versionName "0.1.9.4"
+        versionCode getBuildVersionCode()
+        versionName getBuildVersionName()
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -127,4 +127,55 @@ dependencies {
     androidTestCompile 'com.android.support.test:rules:0.5'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
     androidTestCompile 'org.hamcrest:hamcrest-library:1.3'
+}
+
+def getPropertiesFile() {
+    return file("${project.rootDir}/gradle.properties")
+}
+
+def getBuildVersionName() {
+    Properties properties = new Properties();
+    def propsFile = getPropertiesFile()
+    if (propsFile.canRead()) {
+
+        properties.load(propsFile.newDataInputStream());
+        def major = properties.getProperty("versionMajor") as String
+        def minor = properties.getProperty("versionMinor") as String
+        def patch = properties.getProperty("versionPatch") as String
+        def build = properties.getProperty("versionBuild") as String
+        def suffix = properties.get("versionSuffix") != null ? properties.getProperty("versionSuffix") : "" as String
+        println "Suffix : " + suffix
+        def version = major + "." + minor
+        if (!build.equals("0")) {
+            version += "." + patch + "." + build
+        } else if (!patch.equals("0")) {
+            version += "." + patch;
+        }
+        return version + suffix;
+
+    } else {
+        throw new GradleException("Versionname : unable to find gradle.properties file : \n" + propsFile.absolutePath)
+    }
+}
+
+def getBuildVersionCode() {
+
+    Properties properties = new Properties();
+    def propsFile = getPropertiesFile()
+
+    if (propsFile.canRead()) {
+        properties.load(propsFile.newDataInputStream());
+
+        def major = properties.getProperty("versionMajor") as int
+        def minor = properties.getProperty("versionMinor") as int
+        def patch = properties.getProperty("versionPatch") as int
+        def build = properties.getProperty("versionBuild") as int
+        def suffix = properties.get("versionSuffix") != null ? properties.getProperty("versionSuffix") : "" as String
+        String[] suffixSplited = suffix.tokenize(".")
+        int suffixInt = suffixSplited.size() > 1 ? suffixSplited[1] as int : 0 as int
+        return (major * 1000000 + minor * 10000 + patch * 100 + build + suffixInt) as int
+    } else {
+        println 'unable to find gradle.properties file'
+        throw new GradleException("Versioncode : unable to find gradle.properties file : " + propsFile.absolutePath)
+    }
 }
