@@ -82,7 +82,7 @@ public class AlarmManager {
     public static void addAlarmDialog(final Context context) {
         final View v = LayoutInflater.from(context).inflate(R.layout.layout_alarm_selection, null);
         EditText etAlarm = (EditText) v.findViewById(R.id.et_alarm_value);
-        etAlarm.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(2), new InputFilterMinMax(1, 5)});
+        etAlarm.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(3), new InputFilterMinMax(1, 5)});
         final Spinner spn_above_below = (Spinner) v.findViewById(R.id.spn_above_below);
         ArrayList<String> values = new ArrayList<>();
         values.add(context.getString(R.string.if_above));

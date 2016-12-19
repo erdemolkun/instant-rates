@@ -5,7 +5,6 @@
                                     android:layout_width="wrap_content"
                                     app:cardBackgroundColor="#f1f1f1"
                                     app:cardCornerRadius="2dp"
-                                    tools:showIn="@layout/activity_landing"
                                     android:layout_gravity="center_horizontal"
                                     android:foreground="?selectableItemBackground"
                                     app:cardElevation="4dp"
@@ -26,13 +25,14 @@
                 tools:text="Enpara"
                 android:padding="3dp"
                 android:textSize="13sp"
+                android:textColor="?colorPrimary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
         <TextView
                 android:id="@+id/tv_rate_value"
                 tools:text="3,45 TL"
-                android:textSize="14sp"
+                android:textSize="15sp"
                 android:textStyle="bold"
                 android:textColor="@color/colorAccent"
                 android:layout_width="wrap_content"
