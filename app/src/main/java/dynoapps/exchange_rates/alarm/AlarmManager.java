@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
+import android.text.InputFilter;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,8 @@ import dynoapps.exchange_rates.SourcesManager;
 import dynoapps.exchange_rates.data.CurrencySource;
 import dynoapps.exchange_rates.event.AlarmUpdateEvent;
 import dynoapps.exchange_rates.model.rates.IRate;
+import dynoapps.exchange_rates.util.DecimalDigitsInputFilter;
+import dynoapps.exchange_rates.util.InputFilterMinMax;
 
 /**
  * Created by erdemmac on 13/12/2016.
@@ -78,7 +81,8 @@ public class AlarmManager {
 
     public static void addAlarmDialog(final Context context) {
         final View v = LayoutInflater.from(context).inflate(R.layout.layout_alarm_selection, null);
-
+        EditText etAlarm = (EditText) v.findViewById(R.id.et_alarm_value);
+        etAlarm.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(2), new InputFilterMinMax(1, 5)});
         final Spinner spn_above_below = (Spinner) v.findViewById(R.id.spn_above_below);
         ArrayList<String> values = new ArrayList<>();
         values.add(context.getString(R.string.if_above));
@@ -113,7 +117,7 @@ public class AlarmManager {
 
                     @Override
                     public void onClick(View view) {
-                        EditText etValue = (EditText) v.findViewById(R.id.et_value);
+                        EditText etValue = (EditText) v.findViewById(R.id.et_alarm_value);
                         String str = etValue.getText().toString();
                         Float val = null;
                         try {

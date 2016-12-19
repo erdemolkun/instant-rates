@@ -67,8 +67,8 @@ android {
         applicationId "dynoapps.exchange_rates"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 1903
-        versionName "0.1.9.3"
+        versionCode 1904
+        versionName "0.1.9.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

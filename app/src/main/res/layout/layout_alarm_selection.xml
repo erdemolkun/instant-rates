@@ -10,7 +10,7 @@
             android:layout_height="wrap_content">
 
         <EditText
-                android:id="@+id/et_value"
+                android:id="@+id/et_alarm_value"
                 android:textSize="16sp"
                 android:minHeight="44dp"
                 android:hint="@string/enter_value"
