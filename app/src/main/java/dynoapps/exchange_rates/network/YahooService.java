@@ -12,6 +12,6 @@ import retrofit2.http.GET;
 
 public interface YahooService {
 
-    @GET("d/quotes.csv?e=.csv&f=sl1d1t1&s=USDTRY=X,EURTRY=X,EURUSD=X")
+    @GET("d/quotes.csv?e=.csv&f=sl1d1t1&s=USDTRY=X,EURTRY=X,EURUSD=X,GC=F")
     Call<List<YahooRate>> rates();
 }

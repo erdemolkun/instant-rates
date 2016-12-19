@@ -17,6 +17,8 @@ public class YahooRate extends AvgRate {
             rateType = EUR;
         } else if (type.contains("EURUSD")) {
             rateType = EUR_USD;
+        } else if (type.contains("GC")) {
+            rateType = ONS;
         }
         this.rateType = rateType;
     }
