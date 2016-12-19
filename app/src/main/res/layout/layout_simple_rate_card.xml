@@ -15,9 +15,9 @@
     <LinearLayout
             android:layout_width="wrap_content"
             android:orientation="vertical"
-            android:minHeight="60dp"
+            android:minHeight="64dp"
             android:padding="6dp"
-            android:minWidth="80dp"
+            android:minWidth="88dp"
             android:gravity="center"
             android:layout_height="wrap_content">
 
