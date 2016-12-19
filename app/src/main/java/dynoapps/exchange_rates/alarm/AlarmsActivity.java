@@ -102,6 +102,12 @@ public class AlarmsActivity extends BaseActivity {
     @Subscribe
     public void onEvent(AlarmUpdateEvent event) {
         adapter.notifyDataSetChanged();
+        if (!event.is_update && event.is_added) {
+            if (!AlarmManager.getAlarmsHolder().is_enabled) {
+                AlarmManager.getAlarmsHolder().is_enabled = true;
+                swAlarmState.setChecked(true);
+            }
+        }
     }
 
     @Override
@@ -119,7 +125,7 @@ public class AlarmsActivity extends BaseActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 AlarmManager.getAlarmsHolder().is_enabled = b;
-                AlarmManager.saveAlarms();
+                AlarmManager.persistAlarms();
                 updateViews(b);
             }
         });

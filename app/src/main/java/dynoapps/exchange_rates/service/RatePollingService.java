@@ -29,6 +29,7 @@ import dynoapps.exchange_rates.alarm.AlarmsHolder;
 import dynoapps.exchange_rates.data.CurrencySource;
 import dynoapps.exchange_rates.data.CurrencyType;
 import dynoapps.exchange_rates.data.RatesHolder;
+import dynoapps.exchange_rates.event.AlarmUpdateEvent;
 import dynoapps.exchange_rates.event.DataSourceUpdate;
 import dynoapps.exchange_rates.event.IntervalUpdate;
 import dynoapps.exchange_rates.event.RatesEvent;
@@ -189,7 +190,8 @@ public class RatePollingService extends IntentService {
             }
         }
         if (size != alarmsHolder.alarms.size()) {
-            AlarmManager.saveAlarms();
+            EventBus.getDefault().post(new AlarmUpdateEvent(false, false));
+            AlarmManager.persistAlarms();
         }
     }
 

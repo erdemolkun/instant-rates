@@ -7,12 +7,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import dynoapps.exchange_rates.R;
 import dynoapps.exchange_rates.SourcesManager;
 import dynoapps.exchange_rates.data.CurrencySource;
+import dynoapps.exchange_rates.event.AlarmUpdateEvent;
 import dynoapps.exchange_rates.ui.widget.recyclerview.UpdatableAdapter;
 import dynoapps.exchange_rates.util.RateUtils;
 
@@ -61,7 +64,8 @@ class AlarmsAdapter extends UpdatableAdapter<List<Alarm>, AlarmsActivity.AlarmVi
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 alarm.is_enabled = b;
-                AlarmManager.saveAlarms();
+                EventBus.getDefault().post(new AlarmUpdateEvent(true,true));
+                AlarmManager.persistAlarms();
             }
         });
     }

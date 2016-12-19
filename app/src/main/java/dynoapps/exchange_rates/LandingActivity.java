@@ -450,7 +450,7 @@ public class LandingActivity extends BaseActivity {
 
     private void tintSideMenuItem(TextView tv, @ColorRes int color) {
         Drawable drawable = tv.getCompoundDrawables()[0];
-        drawable = DrawableCompat.wrap(drawable);
+        drawable = DrawableCompat.wrap(drawable).mutate();
         DrawableCompat.setTint(drawable, ContextCompat.getColor(this, color));
         DrawableCompat.setTintMode(drawable, PorterDuff.Mode.SRC_ATOP);
         tv.setCompoundDrawables(drawable, null, null, null);

@@ -42,13 +42,15 @@ public class AlarmManager {
     private static boolean addAlarm(Alarm alarm) {
         alarmsHolder = getAlarmsHolder();
         alarmsHolder.alarms.add(alarm);
-        saveAlarms();
+        EventBus.getDefault().post(new AlarmUpdateEvent(true, false));
+        persistAlarms();
         return true;
     }
 
     public static void remove(int index) {
         getAlarmsHolder().alarms.remove(index);
-        saveAlarms();
+        EventBus.getDefault().post(new AlarmUpdateEvent(false, false));
+        persistAlarms();
     }
 
     public static AlarmsHolder getAlarmsHolder() {
@@ -71,8 +73,7 @@ public class AlarmManager {
     }
 
 
-    public static void saveAlarms() {
-        EventBus.getDefault().post(new AlarmUpdateEvent());
+    public static void persistAlarms() {
         String alarms_json = new GsonBuilder().create().toJson(alarmsHolder);
         Prefs.saveAlarms(alarms_json);
     }
@@ -84,7 +85,7 @@ public class AlarmManager {
         }
         final View v = LayoutInflater.from(context).inflate(R.layout.layout_alarm_selection, null);
         EditText etAlarm = (EditText) v.findViewById(R.id.et_alarm_value);
-        etAlarm.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(3), new InputFilterMinMax(1, 5)});
+        etAlarm.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(3), new InputFilterMinMax(1, 4.999)});
         final Spinner spn_above_below = (Spinner) v.findViewById(R.id.spn_above_below);
         ArrayList<String> values = new ArrayList<>();
         values.add(context.getString(R.string.if_above));

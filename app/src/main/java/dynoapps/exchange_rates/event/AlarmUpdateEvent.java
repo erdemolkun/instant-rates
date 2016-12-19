@@ -5,4 +5,11 @@ package dynoapps.exchange_rates.event;
  */
 
 public class AlarmUpdateEvent {
+    public boolean is_added;
+    public boolean is_update;
+
+    public AlarmUpdateEvent(boolean is_added, boolean is_update) {
+        this.is_added = is_added;
+        this.is_update = is_update;
+    }
 }
