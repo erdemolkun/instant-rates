@@ -25,6 +25,7 @@ import dynoapps.exchange_rates.SourcesManager;
 import dynoapps.exchange_rates.data.CurrencySource;
 import dynoapps.exchange_rates.event.AlarmUpdateEvent;
 import dynoapps.exchange_rates.model.rates.IRate;
+import dynoapps.exchange_rates.util.CollectionUtils;
 import dynoapps.exchange_rates.util.DecimalDigitsInputFilter;
 import dynoapps.exchange_rates.util.InputFilterMinMax;
 
@@ -34,16 +35,12 @@ import dynoapps.exchange_rates.util.InputFilterMinMax;
 
 public class AlarmManager {
 
-    public static final int MAX_ALARM_COUNT = 12;
+    public static final int MAX_ALARM_COUNT = 10;
 
     private static AlarmsHolder alarmsHolder;
 
     private static boolean addAlarm(Alarm alarm) {
         alarmsHolder = getAlarmsHolder();
-        if (alarmsHolder.alarms == null)
-            alarmsHolder.alarms = new ArrayList<>();
-        if (alarmsHolder.alarms.size() >= MAX_ALARM_COUNT)
-            return false;
         alarmsHolder.alarms.add(alarm);
         saveAlarms();
         return true;
@@ -65,6 +62,7 @@ public class AlarmManager {
             }
             if (alarmsHolder == null) {
                 alarmsHolder = new AlarmsHolder(new ArrayList<Alarm>());
+                alarmsHolder.alarms = new ArrayList<>();
                 alarmsHolder.is_enabled = true;
             }
 
@@ -80,6 +78,10 @@ public class AlarmManager {
     }
 
     public static void addAlarmDialog(final Context context) {
+        if (CollectionUtils.size(getAlarmsHolder().alarms) >= AlarmManager.MAX_ALARM_COUNT) {
+            Toast.makeText(context, context.getString(R.string.max_alarm_message, AlarmManager.MAX_ALARM_COUNT), Toast.LENGTH_SHORT).show();
+            return;
+        }
         final View v = LayoutInflater.from(context).inflate(R.layout.layout_alarm_selection, null);
         EditText etAlarm = (EditText) v.findViewById(R.id.et_alarm_value);
         etAlarm.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(3), new InputFilterMinMax(1, 5)});

@@ -36,7 +36,7 @@ public class SourcesManager {
     private static ArrayList<CurrencySource> currencySources = null;
 
     private static void init() {
-        if (currencySources != null && currencySources.size() > 0) return; // Already initialized
+        if (CollectionUtils.size(currencySources) > 0) return; // Already initialized
         initDataSourceSelections();
     }
 
@@ -180,7 +180,7 @@ public class SourcesManager {
         /**
          * Initialize once.
          * */
-        if (currencySources != null && currencySources.size() > 0) return;
+        if (CollectionUtils.size(currencySources) > 0) return;
         currencySources = new ArrayList<>();
         int[] only_usd_try = {IRate.USD};
         int[] usd_eur_parity = {IRate.USD, IRate.EUR, IRate.EUR_USD};

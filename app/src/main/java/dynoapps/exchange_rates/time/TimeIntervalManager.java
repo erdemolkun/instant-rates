@@ -13,6 +13,7 @@ import dynoapps.exchange_rates.App;
 import dynoapps.exchange_rates.Prefs;
 import dynoapps.exchange_rates.R;
 import dynoapps.exchange_rates.event.IntervalUpdate;
+import dynoapps.exchange_rates.util.CollectionUtils;
 
 /**
  * Created by erdemmac on 03/12/2016.
@@ -38,7 +39,7 @@ public final class TimeIntervalManager {
     }
 
     private static ArrayList<TimeInterval> getDefaultIntervals() {
-        if (intervals == null || intervals.size() == 0) {
+        if (CollectionUtils.isNullOrEmpty(intervals)) {
             intervals = new ArrayList<>();
             intervals.add(new TimeInterval(3, TimeUnit.SECONDS));
             intervals.add(new TimeInterval(5, TimeUnit.SECONDS));
@@ -62,7 +63,7 @@ public final class TimeIntervalManager {
 
         final ArrayList<TimeInterval> timeIntervals = TimeIntervalManager.getDefaultIntervals();
         user_selected_item_index = TimeIntervalManager.getSelectedIndex();
-        String[] time_values = new String[timeIntervals.size()];
+        String[] time_values = new String[CollectionUtils.size(timeIntervals)];
         for (int i = 0; i < time_values.length; i++) {
             time_values[i] = timeIntervals.get(i).toString();
         }
@@ -121,10 +122,10 @@ public final class TimeIntervalManager {
 
 
     public static void updateUserInvertalSelection(int index) {
-        if (getDefaultIntervals().size() > index) {
+        if (CollectionUtils.size(getDefaultIntervals()) > index) {
             selected_interval_index_user = index;
         } else {
-            selected_interval_index_user = getDefaultIntervals().size();
+            selected_interval_index_user = CollectionUtils.size(getDefaultIntervals());
         }
         Prefs.saveInterval(App.context(), getDefaultIntervals().get(selected_interval_index_user).to(TimeUnit.MILLISECONDS));
     }

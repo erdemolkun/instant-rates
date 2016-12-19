@@ -39,6 +39,7 @@
     <string name="ons">Ons</string>
     <string name="have_no_alarms">You have no alarms set.</string>
     <string name="ons_dollar_grapsh">Ons / Dollar Graph</string>
+    <string name="max_alarm_message">En fazla % alarm ekleyebilirsiniz.</string>
 
     <plurals name="sec_short">
         <item quantity="one">%d sec</item>

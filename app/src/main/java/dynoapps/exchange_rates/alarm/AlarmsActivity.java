@@ -23,6 +23,7 @@ import dynoapps.exchange_rates.BaseActivity;
 import dynoapps.exchange_rates.R;
 import dynoapps.exchange_rates.event.AlarmUpdateEvent;
 import dynoapps.exchange_rates.util.AnimationHelper;
+import dynoapps.exchange_rates.util.CollectionUtils;
 
 /**
  * Created by erdemmac on 13/12/2016.
@@ -38,6 +39,8 @@ public class AlarmsActivity extends BaseActivity {
 
     @BindView(R.id.fab_add_alarm)
     FloatingActionButton fabAddAlarm;
+
+    private SwitchCompat swAlarmState;
 
     AlarmsAdapter adapter;
 
@@ -55,7 +58,7 @@ public class AlarmsActivity extends BaseActivity {
         });
 
         ArrayList<Alarm> alarms = AlarmManager.getAlarmsHolder().alarms;
-        tvNoAlarm.setVisibility(alarms.size() <= 0 ? View.VISIBLE : View.GONE);
+        tvNoAlarm.setVisibility(CollectionUtils.size(alarms) <= 0 ? View.VISIBLE : View.GONE);
         rvAlarms.setLayoutManager(new LinearLayoutManager(this));
         adapter = new AlarmsAdapter(alarms);
         rvAlarms.setAdapter(adapter);
@@ -106,15 +109,13 @@ public class AlarmsActivity extends BaseActivity {
         return R.layout.activity_alarms;
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //getMenuInflater().inflate(R.menu.menu_alarms, menu);
-        SwitchCompat switchCompat = (SwitchCompat) findViewById(R.id.menu_switch);
-        switchCompat.setChecked(AlarmManager.getAlarmsHolder().is_enabled);
-        updateViews(switchCompat.isChecked());
-        switchCompat.jumpDrawablesToCurrentState();
-        switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        swAlarmState = (SwitchCompat) findViewById(R.id.menu_switch);
+        swAlarmState.setChecked(AlarmManager.getAlarmsHolder().is_enabled);
+        swAlarmState.jumpDrawablesToCurrentState();
+        swAlarmState.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 AlarmManager.getAlarmsHolder().is_enabled = b;
@@ -122,22 +123,14 @@ public class AlarmsActivity extends BaseActivity {
                 updateViews(b);
             }
         });
+        updateViews(swAlarmState.isChecked());
         return true;
     }
 
     private void updateViews(boolean is_enabled_alarm) {
-        rvAlarms.setAlpha(is_enabled_alarm ? 1.0f : 0.6f);
+        rvAlarms.setAlpha(is_enabled_alarm ? 1.0f : 0.5f);
     }
 
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        int id = item.getItemId();
-//        if (id == R.id.menu_add_alarm) {
-//            AlarmManager.addAlarmDialog(this);
-//            return true;
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
 
     static class AlarmViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.iv_alarm_type)
