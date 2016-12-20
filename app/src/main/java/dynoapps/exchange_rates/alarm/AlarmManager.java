@@ -96,7 +96,7 @@ public class AlarmManager {
         }
         final View v = LayoutInflater.from(context).inflate(R.layout.layout_alarm_selection, null);
         EditText etAlarm = (EditText) v.findViewById(R.id.et_alarm_value);
-        etAlarm.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(3), new InputFilterMinMax(1, 4.999)});
+        etAlarm.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(3), new InputFilterMinMax(1, 2000)});
         final Spinner spn_above_below = (Spinner) v.findViewById(R.id.spn_above_below);
         ArrayList<String> values = new ArrayList<>();
         values.add(context.getString(R.string.if_above));
@@ -155,7 +155,7 @@ public class AlarmManager {
         });
         spn_sources.setSelection(0);
 
-        final AlertDialog alertDialog = new AlertDialog.Builder(context,R.style.AppTheme_AlertDialog).setIcon(R.drawable.ic_splash).
+        final AlertDialog alertDialog = new AlertDialog.Builder(context, R.style.AppTheme_AlertDialog).setIcon(R.drawable.ic_splash).
                 setTitle(R.string.add_alarm)
                 .setView(v)
                 .setNegativeButton(R.string.dismiss, null)
