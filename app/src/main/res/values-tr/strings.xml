@@ -27,8 +27,8 @@
     <string name="add">Ekle</string>
     <string name="enter_value">Değer Giriniz</string>
     <string name="check_value">Değeri Kontrol Ediniz</string>
-    <string name="is_below_value">%s değerininin altına indi</string>
-    <string name="is_above_val">%s değerininin üstüne çıktı</string>
+    <string name="is_below_value">%s %s değerininin altına indi</string>
+    <string name="is_above_val">%s %s değerininin üstüne çıktı</string>
     <string name="if_below">Değerinden Küçükse</string>
     <string name="if_above">Değerinden Büyükse</string>
     <string name="alarms">Alarmlar</string>
