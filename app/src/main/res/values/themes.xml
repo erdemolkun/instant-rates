@@ -42,4 +42,16 @@
     <style name="ActionBarPopupThemeOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
 
+    <style name="AppTheme.AlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <!--&lt;!&ndash; Used for the buttons &ndash;&gt;-->
+        <item name="colorAccent">@color/colorAccent</item>
+        <!--&lt;!&ndash; Used for the title and text &ndash;&gt;-->
+        <!--<item name="android:textColorPrimary">@color/theme_primary</item>-->
+        <!--&lt;!&ndash; Used for the background &ndash;&gt;-->
+        <!--<item name="android:background">@color/white</item>-->
+
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+
+
 </resources>

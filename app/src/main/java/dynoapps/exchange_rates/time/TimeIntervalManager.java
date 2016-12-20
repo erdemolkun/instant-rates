@@ -67,7 +67,7 @@ public final class TimeIntervalManager {
         for (int i = 0; i < time_values.length; i++) {
             time_values[i] = timeIntervals.get(i).toString();
         }
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity,R.style.AppTheme_AlertDialog);
 
         builder.setSingleChoiceItems(time_values, user_selected_item_index, new DialogInterface.OnClickListener() {
             @Override

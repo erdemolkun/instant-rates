@@ -9,23 +9,18 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.ColorRes;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v4.view.animation.LinearOutSlowInInterpolator;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.transition.TransitionManager;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -63,7 +58,7 @@ import dynoapps.exchange_rates.service.RatePollingService;
 import dynoapps.exchange_rates.time.TimeIntervalManager;
 import dynoapps.exchange_rates.util.AnimationHelper;
 import dynoapps.exchange_rates.util.AppUtils;
-import dynoapps.exchange_rates.util.CollectionUtils;
+import dynoapps.exchange_rates.util.DialogUtils;
 import dynoapps.exchange_rates.util.RateUtils;
 import dynoapps.exchange_rates.util.ViewUtils;
 
@@ -240,26 +235,23 @@ public class LandingActivity extends BaseActivity {
         v.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(LandingActivity.this);
-                builder.setCancelable(true);
-                builder.setTitle(R.string.remove);
-                builder.setMessage(R.string.remove_source_approve);
-                builder.setPositiveButton(R.string.sure, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        CurrencySource currencySource = SourcesManager.getSource(source_type);
-                        if (currencySource != null) {
-                            currencySource.setEnabled(false);
-                        }
-                        EventBus.getDefault().post(new DataSourceUpdate());
-                        refreshCardItemViews();
-                    }
-                });
-
-                builder.setNegativeButton(R.string.ignore, null);
-                AlertDialog dialog = builder.create();
-                dialog.getWindow().setWindowAnimations(R.style.DialogAnimationFade);
-                dialog.show();
+                DialogUtils.getDialogBuilder(LandingActivity.this).
+                        title(R.string.remove).message(R.string.remove_source_approve).
+                        positive(R.string.sure).negative(R.string.ignore)
+                        .listener(new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (which == DialogInterface.BUTTON_POSITIVE) {
+                                    CurrencySource currencySource = SourcesManager.getSource(source_type);
+                                    if (currencySource != null) {
+                                        currencySource.setEnabled(false);
+                                    }
+                                    EventBus.getDefault().post(new DataSourceUpdate());
+                                    refreshCardItemViews();
+                                }
+                            }
+                        }).
+                        show();
                 return true;
             }
         });

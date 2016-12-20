@@ -102,8 +102,7 @@ public class ChartActivity extends BaseActivity {
             title = getString(R.string.euro_tl_graph);
         } else if (rateType == IRate.EUR_USD) {
             title = getString(R.string.euro_usd_graph);
-        }
-        else if (rateType == IRate.ONS) {
+        } else if (rateType == IRate.ONS) {
             title = getString(R.string.ons_dollar_grapsh);
         }
         tvTitle.setText(title);
@@ -320,7 +319,7 @@ public class ChartActivity extends BaseActivity {
             return true;
         } else if (id == R.id.menu_item_refresh) {
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AppTheme_AlertDialog);
             builder.setCancelable(true);
             builder.setTitle(R.string.refresh);
             builder.setMessage(R.string.clear_sure_message);
