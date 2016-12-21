@@ -46,6 +46,12 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        App.getInstance().sendAnalyticsScreenName(this);
+    }
+
     private Handler handler;
 
     protected Handler getHandler() {
