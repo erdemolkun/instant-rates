@@ -161,7 +161,7 @@ public class LandingActivity extends BaseActivity {
             });
         }
 
-        tvVersion.setText(AppUtils.getPlainVersion());
+        tvVersion.setText("v" + AppUtils.getPlainVersion());
         updateHint();
 
         swipeRefreshLayout.setColorSchemeResources(
