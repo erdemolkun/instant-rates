@@ -1,5 +1,7 @@
 package dynoapps.exchange_rates.model.rates;
 
+import dynoapps.exchange_rates.interfaces.ValueType;
+
 /**
  * Created by erdemmac on 24/11/2016.
  */
@@ -39,4 +41,13 @@ public abstract class BuySellRate extends BaseRate {
     }
 
 
+    @Override
+    public float getValue(int value_type) {
+        if (value_type == ValueType.BUY) {
+            return value_buy_real;
+        } else if (value_type == ValueType.SELL) {
+            return value_sell_real;
+        }
+        return 0.0f;
+    }
 }

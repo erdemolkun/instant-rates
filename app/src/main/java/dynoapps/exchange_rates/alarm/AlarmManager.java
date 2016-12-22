@@ -2,6 +2,7 @@ package dynoapps.exchange_rates.alarm;
 
 import com.google.gson.GsonBuilder;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
@@ -27,6 +28,7 @@ import dynoapps.exchange_rates.data.CurrencySource;
 import dynoapps.exchange_rates.event.AlarmUpdateEvent;
 import dynoapps.exchange_rates.util.CollectionUtils;
 import dynoapps.exchange_rates.util.DecimalDigitsInputFilter;
+import dynoapps.exchange_rates.util.Formatter;
 import dynoapps.exchange_rates.util.InputFilterMinMax;
 import dynoapps.exchange_rates.util.RateUtils;
 
@@ -90,17 +92,24 @@ public class AlarmManager {
     }
 
     public static void addAlarmDialog(final Context context) {
-        addAlarmDialog(context, -1);
+        addAlarmDialog(context, -1, null);
     }
 
-    public static void addAlarmDialog(final Context context, int source_type) {
+    private static Formatter formatter = new Formatter(3);
+
+    public static void addAlarmDialog(final Context context, int source_type, Float default_value) {
         if (CollectionUtils.size(getAlarmsHolder().alarms) >= AlarmManager.MAX_ALARM_COUNT) {
             Toast.makeText(context, context.getString(R.string.max_alarm_message, AlarmManager.MAX_ALARM_COUNT), Toast.LENGTH_SHORT).show();
             return;
         }
-        final View v = LayoutInflater.from(context).inflate(R.layout.layout_alarm_selection, null);
+        @SuppressLint("InflateParams") final View v = LayoutInflater.from(context).inflate(R.layout.layout_alarm_selection, null);
         EditText etAlarm = (EditText) v.findViewById(R.id.et_alarm_value);
         etAlarm.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(3), new InputFilterMinMax(1, 2000)});
+        if (default_value != null) {
+            String val = formatter.format(default_value);
+            etAlarm.setText(val);
+            etAlarm.setSelection(etAlarm.getText().length());
+        }
         final Spinner spn_above_below = (Spinner) v.findViewById(R.id.spn_above_below);
         ArrayList<String> values = new ArrayList<>();
         values.add(context.getString(R.string.if_above));

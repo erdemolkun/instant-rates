@@ -13,4 +13,6 @@ public interface IRate {
     int EUR_USD = 5;
 
     int getRateType();
+
+    float getValue(int value_type);
 }

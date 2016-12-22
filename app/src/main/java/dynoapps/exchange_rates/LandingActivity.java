@@ -221,7 +221,7 @@ public class LandingActivity extends BaseActivity {
         }
     }
 
-    private void addCardToParent(final CardViewItemParent parent, int value_type, final int source_type) {
+    private void addCardToParent(final CardViewItemParent parent, final int value_type, final int source_type) {
         LayoutInflater.from(this).inflate(R.layout.layout_simple_rate_card, parent.me, true);
         View v = parent.me.getChildAt(parent.me.getChildCount() - 1);
         v.setOnClickListener(new View.OnClickListener() {
@@ -252,7 +252,9 @@ public class LandingActivity extends BaseActivity {
 //                            }
 //                        }).
 //                        show();
-                AlarmManager.addAlarmDialog(LandingActivity.this,source_type);
+                RatesEvent ratesEvent = RatesHolder.getInstance().getRates(source_type);
+                BaseRate rate = ratesEvent != null ? RateUtils.getRate(ratesEvent.rates, parent.rate_type) : null;
+                AlarmManager.addAlarmDialog(LandingActivity.this,source_type,rate!=null ? rate.getValue(value_type) : null);
                 return true;
             }
         });

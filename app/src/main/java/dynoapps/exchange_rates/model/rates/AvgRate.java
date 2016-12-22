@@ -7,4 +7,11 @@ package dynoapps.exchange_rates.model.rates;
 public abstract class AvgRate extends BaseRate {
     public String avg_val;
     public float avg_val_real;
+
+    @Override
+    public float getValue(int value_type) {
+        return avg_val_real;
+    }
 }
+
+
