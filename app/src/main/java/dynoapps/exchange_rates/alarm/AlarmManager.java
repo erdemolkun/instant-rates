@@ -90,6 +90,10 @@ public class AlarmManager {
     }
 
     public static void addAlarmDialog(final Context context) {
+        addAlarmDialog(context, -1);
+    }
+
+    public static void addAlarmDialog(final Context context, int source_type) {
         if (CollectionUtils.size(getAlarmsHolder().alarms) >= AlarmManager.MAX_ALARM_COUNT) {
             Toast.makeText(context, context.getString(R.string.max_alarm_message, AlarmManager.MAX_ALARM_COUNT), Toast.LENGTH_SHORT).show();
             return;
@@ -109,15 +113,21 @@ public class AlarmManager {
         final Spinner spn_rate_types = (Spinner) v.findViewById(R.id.spn_rate_types);
         final View rate_types_view = v.findViewById(R.id.v_alarm_types);
         final Spinner spn_sources = (Spinner) v.findViewById(R.id.spn_source_types);
+
         ArrayList<CurrencySource> sources = new ArrayList<>();
+        int selected_source_index = 0;
+        int i = 0;
         for (CurrencySource source : SourcesManager.getCurrencySources()) {
             if (source.isEnabled()) {
+                if (source.getSourceType() == source_type) {
+                    selected_source_index = i;
+                }
                 sources.add(source);
+                i++;
             }
         }
         ArrayAdapter<CurrencySource> sourceArrayAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item, sources);
         spn_sources.setAdapter(sourceArrayAdapter);
-
         spn_sources.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -153,7 +163,7 @@ public class AlarmManager {
 
             }
         });
-        spn_sources.setSelection(0);
+        spn_sources.setSelection(selected_source_index);
 
         final AlertDialog alertDialog = new AlertDialog.Builder(context, R.style.AppTheme_AlertDialog).setIcon(R.drawable.ic_splash).
                 setTitle(R.string.add_alarm)
