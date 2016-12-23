@@ -39,7 +39,7 @@
     <string name="ons">Ons</string>
     <string name="have_no_alarms">You have no alarms set.</string>
     <string name="ons_dollar_grapsh">Ons / Dollar Graph</string>
-    <string name="max_alarm_message">You can add max %s alarms</string>
+    <string name="max_alarm_message">You can add max %d alarms</string>
     <string name="rate_types">Types</string>
 
     <plurals name="sec_short">

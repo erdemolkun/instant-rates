@@ -41,7 +41,7 @@ class AlarmsAdapter extends UpdatableAdapter<List<Alarm>, AlarmsActivity.AlarmVi
         final Alarm alarm = alarms.get(position);
         holder.ivType.setRotation(alarm.is_above ? 90 : 270);
         holder.ivType.setColorFilter(Color.parseColor(!alarm.is_above ? "#f44336" : "#4CAF50"));//todo move to colors.
-        holder.tvValue.setText(RateUtils.entryToUI(alarm.val, alarm.rate_type));
+        holder.tvValue.setText(RateUtils.valToUI(alarm.val, alarm.rate_type));
         holder.tvRateType.setText(RateUtils.rateName(alarm.rate_type));
         CurrencySource source = SourcesManager.getSource(alarm.source_type);
         if (source != null) {

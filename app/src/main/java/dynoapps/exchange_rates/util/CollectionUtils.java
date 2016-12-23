@@ -15,6 +15,7 @@ public class CollectionUtils {
         }
         return null;
     }
+
     public static <E> int size(List<E> list) {
         return list == null ? 0 : list.size();
     }

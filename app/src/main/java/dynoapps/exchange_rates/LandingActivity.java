@@ -6,7 +6,6 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.ActivityManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
@@ -58,7 +57,6 @@ import dynoapps.exchange_rates.service.RatePollingService;
 import dynoapps.exchange_rates.time.TimeIntervalManager;
 import dynoapps.exchange_rates.util.AnimationHelper;
 import dynoapps.exchange_rates.util.AppUtils;
-import dynoapps.exchange_rates.util.DialogUtils;
 import dynoapps.exchange_rates.util.RateUtils;
 import dynoapps.exchange_rates.util.ViewUtils;
 
@@ -254,7 +252,7 @@ public class LandingActivity extends BaseActivity {
 //                        show();
                 RatesEvent ratesEvent = RatesHolder.getInstance().getRates(source_type);
                 BaseRate rate = ratesEvent != null ? RateUtils.getRate(ratesEvent.rates, parent.rate_type) : null;
-                AlarmManager.addAlarmDialog(LandingActivity.this,source_type,rate!=null ? rate.getValue(value_type) : null);
+                AlarmManager.addAlarmDialog(LandingActivity.this, source_type, rate != null ? rate.getValue(value_type) : null);
                 return true;
             }
         });

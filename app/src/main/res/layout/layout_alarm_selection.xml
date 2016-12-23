@@ -15,6 +15,7 @@
                 android:textSize="16sp"
                 android:minHeight="44dp"
                 android:hint="@string/enter_value"
+                android:digits="0123456789.,"
                 android:inputType="numberDecimal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>

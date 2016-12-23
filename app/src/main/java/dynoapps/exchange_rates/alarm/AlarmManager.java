@@ -104,12 +104,13 @@ public class AlarmManager {
         }
         @SuppressLint("InflateParams") final View v = LayoutInflater.from(context).inflate(R.layout.layout_alarm_selection, null);
         EditText etAlarm = (EditText) v.findViewById(R.id.et_alarm_value);
-        etAlarm.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(3), new InputFilterMinMax(1, 2000)});
+
         if (default_value != null) {
             String val = formatter.format(default_value);
             etAlarm.setText(val);
             etAlarm.setSelection(etAlarm.getText().length());
         }
+        etAlarm.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(4), new InputFilterMinMax(1, 2000)});
         final Spinner spn_above_below = (Spinner) v.findViewById(R.id.spn_above_below);
         ArrayList<String> values = new ArrayList<>();
         values.add(context.getString(R.string.if_above));
@@ -117,7 +118,6 @@ public class AlarmManager {
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item, values);
         spn_above_below.setAdapter(arrayAdapter);
         spn_above_below.setSelection(0);
-
 
         final Spinner spn_rate_types = (Spinner) v.findViewById(R.id.spn_rate_types);
         final View rate_types_view = v.findViewById(R.id.v_alarm_types);

@@ -29,6 +29,7 @@
 
     <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_alarms"
+            android:paddingTop="4dp"
             android:layout_marginTop="?actionBarSize"
             tools:listitem="@layout/item_alarm"
             android:layout_width="match_parent"

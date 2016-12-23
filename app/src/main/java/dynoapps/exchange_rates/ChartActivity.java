@@ -25,7 +25,6 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.DefaultAxisValueFormatter;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.IDataSet;
@@ -234,12 +233,10 @@ public class ChartActivity extends BaseActivity {
 
         });
 
-        final IAxisValueFormatter axisValueFormatter = new DefaultAxisValueFormatter(3);
         lineChart.getAxisRight().setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-                String postFix = rateType == IRate.USD || rateType == IRate.EUR ? " " + getString(R.string.tl_string) : "";
-                return axisValueFormatter.getFormattedValue(value, axis) + postFix;
+                return RateUtils.valToUI(value, rateType);
             }
         });
         lineChart.setScaleEnabled(false);
@@ -295,7 +292,7 @@ public class ChartActivity extends BaseActivity {
         // content (user-interface)
         @Override
         public void refreshContent(Entry e, Highlight highlight) {
-            String val = RateUtils.entryToUI(e.getY(), rateType);
+            String val = RateUtils.valToUI(e.getY(), rateType);
             tvMarker.setText(val); // set the entry-value as the display text
         }
     }

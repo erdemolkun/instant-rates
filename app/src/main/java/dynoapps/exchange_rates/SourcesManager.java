@@ -79,7 +79,7 @@ public class SourcesManager {
         for (int i = 0; i < currencySources.size(); i++) {
             data_set_names[i] = currencySources.get(i).getName();
         }
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity,R.style.AppTheme_AlertDialog);
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity, R.style.AppTheme_AlertDialog);
 
         builder.setMultiChoiceItems(data_set_names, temp_data_source_states, new DialogInterface.OnMultiChoiceClickListener() {
             @Override

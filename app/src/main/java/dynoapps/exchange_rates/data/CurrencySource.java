@@ -16,7 +16,7 @@ public class CurrencySource {
     private boolean enabled;
     private int source_type;
     private int color;
-    private int[] supported_rates=new int[0];
+    private int[] supported_rates = new int[0];
 
     public CurrencySource(String name, int source_type, @ColorRes int colorRes, boolean enabled) {
         this(name, source_type, colorRes, enabled, null);
