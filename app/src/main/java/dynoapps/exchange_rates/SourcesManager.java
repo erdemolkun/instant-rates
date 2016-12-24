@@ -183,16 +183,15 @@ public class SourcesManager {
         if (CollectionUtils.size(currencySources) > 0) return;
         currencySources = new ArrayList<>();
         int[] only_usd_try = {IRate.USD};
-        int[] usd_eur_parity = {IRate.USD, IRate.EUR, IRate.EUR_USD};
-        int[] yorumlar_supported = {IRate.USD, IRate.EUR, IRate.EUR_USD, IRate.ONS};
+        int[] altin_in_supported = {IRate.USD, IRate.EUR, IRate.EUR_USD, IRate.ONS};
         int[] enpara_supported = {IRate.USD, IRate.EUR, IRate.EUR_USD, IRate.ONS_TRY};
         int[] yapıkredi_supported = {IRate.USD, IRate.EUR, IRate.ONS_TRY};
-        currencySources.add(new CurrencySource("Yorumlar", CurrencyType.YORUMLAR, R.color.colorYorumlar, true, yorumlar_supported));
+        currencySources.add(new CurrencySource("Altın.in", CurrencyType.YORUMLAR, R.color.colorYorumlar, true, altin_in_supported));
         currencySources.add(new CurrencySource("Enpara", CurrencyType.ENPARA, R.color.colorEnpara, true, enpara_supported));
         currencySources.add(new CurrencySource("Bigpara", CurrencyType.BIGPARA, R.color.colorBigPara, false, only_usd_try));
-        currencySources.add(new CurrencySource("TlKur", CurrencyType.TLKUR, R.color.colorDolarTlKur, false, yorumlar_supported));
+        currencySources.add(new CurrencySource("TlKur", CurrencyType.TLKUR, R.color.colorDolarTlKur, false, altin_in_supported));
         currencySources.add(new CurrencySource("Yapı Kredi", CurrencyType.YAPIKREDI, R.color.colorYapıKredi, false, yapıkredi_supported));
-        currencySources.add(new CurrencySource("Yahoo", CurrencyType.YAHOO, R.color.colorYahoo, false, yorumlar_supported));
+        currencySources.add(new CurrencySource("Yahoo", CurrencyType.YAHOO, R.color.colorYahoo, false, altin_in_supported));
 
         updateSourceStatesFromPrefs();
     }
