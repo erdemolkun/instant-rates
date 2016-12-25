@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -111,13 +112,9 @@ public class AlarmManager {
             etAlarm.setSelection(etAlarm.getText().length());
         }
         etAlarm.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(4), new InputFilterMinMax(1, 2000)});
-        final Spinner spn_above_below = (Spinner) v.findViewById(R.id.spn_above_below);
-        ArrayList<String> values = new ArrayList<>();
-        values.add(context.getString(R.string.if_above));
-        values.add(context.getString(R.string.if_below));
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item, values);
-        spn_above_below.setAdapter(arrayAdapter);
-        spn_above_below.setSelection(0);
+        final RadioGroup rgAlarm = (RadioGroup) v.findViewById(R.id.rg_alarm);
+        rgAlarm.check(R.id.rb_above);
+
 
         final Spinner spn_rate_types = (Spinner) v.findViewById(R.id.spn_rate_types);
         final View rate_types_view = v.findViewById(R.id.v_alarm_types);
@@ -194,7 +191,7 @@ public class AlarmManager {
                             val = Float.valueOf(str);
                             Alarm alarm = new Alarm();
                             alarm.val = val;
-                            alarm.is_above = spn_above_below.getSelectedItemPosition() == 0;
+                            alarm.is_above = rgAlarm.getCheckedRadioButtonId()==R.id.rb_above;
                             alarm.source_type = ((CurrencySource) spn_sources.getSelectedItem()).getSourceType();
                             alarm.rate_type = ((RateValuePair) spn_rate_types.getSelectedItem()).rate_type;
                             AlarmManager.addAlarm(alarm);
