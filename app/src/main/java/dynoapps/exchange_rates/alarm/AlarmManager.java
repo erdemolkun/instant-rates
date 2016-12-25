@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.text.InputFilter;
 import android.text.TextUtils;
@@ -29,7 +30,6 @@ import dynoapps.exchange_rates.data.CurrencySource;
 import dynoapps.exchange_rates.event.AlarmUpdateEvent;
 import dynoapps.exchange_rates.util.CollectionUtils;
 import dynoapps.exchange_rates.util.DecimalDigitsInputFilter;
-import dynoapps.exchange_rates.util.Formatter;
 import dynoapps.exchange_rates.util.InputFilterMinMax;
 import dynoapps.exchange_rates.util.RateUtils;
 
@@ -82,6 +82,9 @@ public class AlarmManager {
         Prefs.saveAlarms(alarms_json);
     }
 
+    /**
+     * Used for spinner item models.
+     */
     static class RateValuePair {
         public int rate_type;
         public String name;
@@ -93,12 +96,10 @@ public class AlarmManager {
     }
 
     public static void addAlarmDialog(final Context context) {
-        addAlarmDialog(context, -1, null);
+        addAlarmDialog(context, -1, -1, null);
     }
 
-    private static Formatter formatter = new Formatter(3);
-
-    public static void addAlarmDialog(final Context context, int source_type, Float default_value) {
+    public static void addAlarmDialog(@NonNull final Context context, int source_type, int rate_type, Float default_value) {
         if (CollectionUtils.size(getAlarmsHolder().alarms) >= AlarmManager.MAX_ALARM_COUNT) {
             Toast.makeText(context, context.getString(R.string.max_alarm_message, AlarmManager.MAX_ALARM_COUNT), Toast.LENGTH_SHORT).show();
             return;
@@ -107,7 +108,7 @@ public class AlarmManager {
         EditText etAlarm = (EditText) v.findViewById(R.id.et_alarm_value);
 
         if (default_value != null) {
-            String val = formatter.format(default_value);
+            String val = RateUtils.valToUI(default_value, rate_type);
             etAlarm.setText(val);
             etAlarm.setSelection(etAlarm.getText().length());
         }
@@ -191,7 +192,7 @@ public class AlarmManager {
                             val = Float.valueOf(str);
                             Alarm alarm = new Alarm();
                             alarm.val = val;
-                            alarm.is_above = rgAlarm.getCheckedRadioButtonId()==R.id.rb_above;
+                            alarm.is_above = rgAlarm.getCheckedRadioButtonId() == R.id.rb_above;
                             alarm.source_type = ((CurrencySource) spn_sources.getSelectedItem()).getSourceType();
                             alarm.rate_type = ((RateValuePair) spn_rate_types.getSelectedItem()).rate_type;
                             AlarmManager.addAlarm(alarm);

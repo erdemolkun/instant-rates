@@ -252,7 +252,11 @@ public class LandingActivity extends BaseActivity {
 //                        show();
                 RatesEvent ratesEvent = RatesHolder.getInstance().getRates(source_type);
                 BaseRate rate = ratesEvent != null ? RateUtils.getRate(ratesEvent.rates, parent.rate_type) : null;
-                AlarmManager.addAlarmDialog(LandingActivity.this, source_type, rate != null ? rate.getValue(value_type) : null);
+                if (rate != null) {
+                    AlarmManager.addAlarmDialog(LandingActivity.this, source_type, rate.getRateType(), rate.getValue(value_type));
+                } else {
+                    AlarmManager.addAlarmDialog(LandingActivity.this);
+                }
                 return true;
             }
         });
