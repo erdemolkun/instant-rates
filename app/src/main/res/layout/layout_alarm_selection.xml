@@ -30,7 +30,7 @@
             android:layout_marginTop="8dp"
             android:orientation="horizontal">
 
-        <android.support.v7.widget.AppCompatRadioButton
+        <RadioButton
                 android:id="@+id/rb_above"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -42,7 +42,7 @@
                 android:text="@string/if_above"
                 android:textSize="16sp"/>
 
-        <android.support.v7.widget.AppCompatRadioButton
+        <RadioButton
                 android:id="@+id/rb_below"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
