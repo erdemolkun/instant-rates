@@ -20,4 +20,8 @@ public class Alarm implements Serializable {
      * {@link dynoapps.exchange_rates.data.CurrencyType}
      */
     public int source_type;
+
+    public static int getPushId(Alarm alarm) {
+        return alarm.rate_type * 100 + alarm.source_type;
+    }
 }

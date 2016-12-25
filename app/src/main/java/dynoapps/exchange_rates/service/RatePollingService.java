@@ -183,10 +183,12 @@ public class RatePollingService extends IntentService {
             }
             if (alarm.is_above && val_current > alarm.val && val_old <= alarm.val) {
                 iterator.remove();
-                sendNotification(getString(R.string.is_above_val, RateUtils.rateName(alarm.rate_type), formatter.format(alarm.val)), "increasing");
+                sendNotification(getString(R.string.is_above_val, RateUtils.rateName(alarm.rate_type),
+                        formatter.format(alarm.val)), "increasing", Alarm.getPushId(alarm));
             } else if (!alarm.is_above && val_current < alarm.val && val_old >= alarm.val) {
                 iterator.remove();
-                sendNotification(getString(R.string.is_below_value, RateUtils.rateName(alarm.rate_type), formatter.format(alarm.val)), "decreasing");
+                sendNotification(getString(R.string.is_below_value, RateUtils.rateName(alarm.rate_type),
+                        formatter.format(alarm.val)), "decreasing", Alarm.getPushId(alarm));
             }
         }
         if (size != alarmsHolder.alarms.size()) {
@@ -248,7 +250,7 @@ public class RatePollingService extends IntentService {
         L.i(RatePollingService.class.getSimpleName(), "NoSubscriberEvent");
     }
 
-    private void sendNotification(String message, String category) {
+    private void sendNotification(String message, String category, int id) {
 
         Intent pushIntent = new Intent(this, LandingActivity.class);
         pushIntent.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
@@ -273,7 +275,7 @@ public class RatePollingService extends IntentService {
         mBuilder.setAutoCancel(true);
         Notification notification = mBuilder.build();
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
-        notificationManagerCompat.notify(category, 1, notification);
+        notificationManagerCompat.notify(category, id, notification);
     }
 
     @Override
