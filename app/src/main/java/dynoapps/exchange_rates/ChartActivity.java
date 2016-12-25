@@ -236,7 +236,7 @@ public class ChartActivity extends BaseActivity {
         lineChart.getAxisRight().setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-                return RateUtils.valToUI(value, rateType);
+                return RateUtils.valueToUI(value, rateType);
             }
         });
         lineChart.setScaleEnabled(false);
@@ -292,7 +292,7 @@ public class ChartActivity extends BaseActivity {
         // content (user-interface)
         @Override
         public void refreshContent(Entry e, Highlight highlight) {
-            String val = RateUtils.valToUI(e.getY(), rateType);
+            String val = RateUtils.valueToUI(e.getY(), rateType);
             tvMarker.setText(val); // set the entry-value as the display text
         }
     }

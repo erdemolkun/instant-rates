@@ -27,13 +27,22 @@ public class RateUtils {
         return null;
     }
 
-    public static String valToUI(float val, int rateType) {
+    public static String valueToUI(float val, int rateType) {
+        String formatted = formatValue(val, rateType);
         if (rateType == IRate.EUR_USD) {
-            return formatter5.format(val);
+            return formatted;
         } else if (rateType == IRate.ONS) {
-            return App.context().getString(R.string.placeholder_dollar, formatter2.format(val));
+            return App.context().getString(R.string.placeholder_dollar, formatted);
         } else {
-            return App.context().getString(R.string.placeholder_tl, formatter5.format(val));
+            return App.context().getString(R.string.placeholder_tl, formatted);
+        }
+    }
+
+    public static String formatValue(float val, int rateType) {
+        if (rateType == IRate.ONS) {
+            return formatter2.format(val);
+        } else {
+            return formatter5.format(val);
         }
     }
 

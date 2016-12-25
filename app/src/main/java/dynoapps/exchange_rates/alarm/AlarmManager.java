@@ -108,7 +108,7 @@ public class AlarmManager {
         EditText etAlarm = (EditText) v.findViewById(R.id.et_alarm_value);
 
         if (default_value != null) {
-            String val = RateUtils.valToUI(default_value, rate_type);
+            String val = RateUtils.formatValue(default_value, rate_type);
             etAlarm.setText(val);
             etAlarm.setSelection(etAlarm.getText().length());
         }

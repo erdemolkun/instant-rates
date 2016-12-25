@@ -22,6 +22,6 @@ public abstract class BaseRate implements IConvertable, IRate {
     }
 
     public String getFormatted(float val) {
-        return RateUtils.valToUI(val, rateType);
+        return RateUtils.valueToUI(val, rateType);
     }
 }
