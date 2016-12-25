@@ -101,12 +101,15 @@ public class AlarmsActivity extends BaseActivity {
 
     @Subscribe
     public void onEvent(AlarmUpdateEvent event) {
-        adapter.notifyDataSetChanged();
         if (!event.is_update && event.is_added) {
+            adapter.addData(event.alarm);
             if (!AlarmManager.getAlarmsHolder().is_enabled) {
                 AlarmManager.getAlarmsHolder().is_enabled = true;
                 swAlarmState.setChecked(true);
             }
+        }
+        else{
+            adapter.notifyDataSetChanged();
         }
     }
 

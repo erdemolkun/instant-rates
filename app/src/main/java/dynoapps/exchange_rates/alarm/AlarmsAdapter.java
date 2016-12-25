@@ -27,7 +27,16 @@ class AlarmsAdapter extends UpdatableAdapter<List<Alarm>, AlarmsActivity.AlarmVi
     private List<Alarm> alarms;
 
     AlarmsAdapter(ArrayList<Alarm> alarms) {
-        this.alarms = alarms;
+        this.alarms = new ArrayList<>();
+        for (Alarm al : alarms) {
+            this.alarms.add(al);
+        }
+    }
+
+    public void addData(Alarm alarm) {
+        if (this.alarms == null) this.alarms = new ArrayList<>();
+        this.alarms.add(alarm);
+        notifyDataSetChanged();
     }
 
     @Override
@@ -56,16 +65,18 @@ class AlarmsAdapter extends UpdatableAdapter<List<Alarm>, AlarmsActivity.AlarmVi
             @Override
             public void onClick(View view) {
                 int pos = holder.getAdapterPosition();
-                AlarmManager.remove(pos);
+                AlarmsAdapter.this.alarms.remove(pos);
                 notifyItemRemoved(pos);
+                AlarmManager.remove(pos);
             }
         });
         holder.swAlarm.setChecked(alarm.is_enabled);
         holder.swAlarm.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                AlarmManager.getAlarmsHolder().alarms.get(holder.getAdapterPosition()).is_enabled = b;
                 alarm.is_enabled = b;
-                EventBus.getDefault().post(new AlarmUpdateEvent(true, true));
+                EventBus.getDefault().post(new AlarmUpdateEvent(null, true, true));
                 AlarmManager.persistAlarms();
             }
         });

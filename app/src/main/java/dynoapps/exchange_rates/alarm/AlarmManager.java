@@ -46,14 +46,14 @@ public class AlarmManager {
     private static boolean addAlarm(Alarm alarm) {
         alarmsHolder = getAlarmsHolder();
         alarmsHolder.alarms.add(alarm);
-        EventBus.getDefault().post(new AlarmUpdateEvent(true, false));
+        EventBus.getDefault().post(new AlarmUpdateEvent(alarm,true, false));
         persistAlarms();
         return true;
     }
 
     public static void remove(int index) {
         getAlarmsHolder().alarms.remove(index);
-        EventBus.getDefault().post(new AlarmUpdateEvent(false, false));
+        EventBus.getDefault().post(new AlarmUpdateEvent(null,false, false));
         persistAlarms();
     }
 

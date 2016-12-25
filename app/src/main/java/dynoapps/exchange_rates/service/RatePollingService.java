@@ -192,7 +192,7 @@ public class RatePollingService extends IntentService {
             }
         }
         if (size != alarmsHolder.alarms.size()) {
-            EventBus.getDefault().post(new AlarmUpdateEvent(false, false));
+            EventBus.getDefault().post(new AlarmUpdateEvent(null,false, false));
             AlarmManager.persistAlarms();
         }
     }
