@@ -44,11 +44,10 @@ public final class TimeIntervalManager {
             intervals.add(new TimeInterval(3, TimeUnit.SECONDS));
             intervals.add(new TimeInterval(5, TimeUnit.SECONDS));
             intervals.add(new TimeInterval(10, TimeUnit.SECONDS));
+            intervals.add(new TimeInterval(15, TimeUnit.SECONDS));
             intervals.add(new TimeInterval(20, TimeUnit.SECONDS));
             intervals.add(new TimeInterval(30, TimeUnit.SECONDS));
             intervals.add(new TimeInterval(1, TimeUnit.MINUTES));
-            intervals.add(new TimeInterval(2, TimeUnit.MINUTES));
-            intervals.add(new TimeInterval(3, TimeUnit.MINUTES));
         }
         return intervals;
     }
