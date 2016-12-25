@@ -19,8 +19,8 @@
 
     <RelativeLayout
             android:orientation="vertical"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp"
             android:layout_width="match_parent"
             android:layout_height="64dp">
 
@@ -96,10 +96,10 @@
                 android:id="@+id/v_alarm_close"
                 android:padding="6dp"
                 android:background="?selectableItemBackgroundBorderless"
-                android:tint="@android:color/holo_red_dark"
                 android:layout_width="wrap_content"
+                android:layout_alignParentTop="true"
                 android:contentDescription="@string/remove"
-                android:src="@drawable/ic_cancel_black_24dp"
+                android:src="@drawable/ic_close_black_16dp"
                 android:layout_height="wrap_content"/>
 
 
