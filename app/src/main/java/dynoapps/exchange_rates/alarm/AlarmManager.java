@@ -46,14 +46,14 @@ public class AlarmManager {
     private static boolean addAlarm(Alarm alarm) {
         alarmsHolder = getAlarmsHolder();
         alarmsHolder.alarms.add(alarm);
-        EventBus.getDefault().post(new AlarmUpdateEvent(alarm,true, false));
+        EventBus.getDefault().post(new AlarmUpdateEvent(alarm, true, false));
         persistAlarms();
         return true;
     }
 
     public static void remove(int index) {
         getAlarmsHolder().alarms.remove(index);
-        EventBus.getDefault().post(new AlarmUpdateEvent(null,false, false));
+        EventBus.getDefault().post(new AlarmUpdateEvent(null, false, false));
         persistAlarms();
     }
 
@@ -99,7 +99,7 @@ public class AlarmManager {
         addAlarmDialog(context, -1, -1, null);
     }
 
-    public static void addAlarmDialog(@NonNull final Context context, int source_type, int rate_type, Float default_value) {
+    public static void addAlarmDialog(@NonNull final Context context, int source_type, final int rate_type, Float default_value) {
         if (CollectionUtils.size(getAlarmsHolder().alarms) >= AlarmManager.MAX_ALARM_COUNT) {
             Toast.makeText(context, context.getString(R.string.max_alarm_message, AlarmManager.MAX_ALARM_COUNT), Toast.LENGTH_SHORT).show();
             return;
@@ -140,29 +140,30 @@ public class AlarmManager {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 CurrencySource currencySource = (CurrencySource) parent.getSelectedItem();
                 ArrayList<RateValuePair> rateValuePairs = new ArrayList<>();
+                int selected_rate_index = -1;
                 if (currencySource != null) {
                     int[] supported_ones = currencySource.getSupportedRates();
-                    if (supported_ones.length > 0) {
-                        for (int val : supported_ones) {
-                            RateValuePair rateValuePair = new RateValuePair();
-                            rateValuePair.name = RateUtils.rateName(val);
-                            rateValuePair.rate_type = val;
-                            if (!TextUtils.isEmpty(rateValuePair.name)) {
-                                rateValuePairs.add(rateValuePair);
+
+                    for (int i = 0; i < supported_ones.length; i++) {
+                        int val = supported_ones[i];
+                        RateValuePair rateValuePair = new RateValuePair();
+                        rateValuePair.name = RateUtils.rateName(val);
+                        rateValuePair.rate_type = val;
+                        if (!TextUtils.isEmpty(rateValuePair.name)) {
+                            rateValuePairs.add(rateValuePair);
+                            if (rate_type == val) {
+                                selected_rate_index = i;
                             }
                         }
                     }
                 }
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-//                    TransitionManager.beginDelayedTransition((ViewGroup) v);
-//                }
                 if (!CollectionUtils.isNullOrEmpty(rateValuePairs)) {
                     spn_rate_types.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item, rateValuePairs));
                     rate_types_view.setVisibility(View.VISIBLE);
                 } else {
                     rate_types_view.setVisibility(View.GONE);
                 }
-
+                spn_rate_types.setSelection(Math.max(0, selected_rate_index));
             }
 
             @Override
