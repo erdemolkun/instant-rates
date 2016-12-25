@@ -44,28 +44,29 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
-        <TextView
-                tools:text="ONS"
+        <ImageView
                 android:layout_centerVertical="true"
                 android:layout_marginStart="12dp"
                 android:layout_marginLeft="12dp"
                 android:layout_toRightOf="@+id/iv_alarm_type"
                 android:layout_toEndOf="@+id/iv_alarm_type"
-                android:id="@+id/tv_alarm_rate_type"
+                android:id="@+id/iv_alarm_rate_type"
                 android:textSize="16sp"
+                android:tint="?colorPrimary"
                 android:textStyle="bold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                tools:src="@drawable/ic_dollar"
+                android:layout_width="24dp"
+                android:layout_height="24dp"/>
 
         <TextView
                 tools:text="3,45"
                 android:layout_centerVertical="true"
                 android:layout_marginStart="12dp"
                 android:layout_marginLeft="12dp"
-                android:layout_toRightOf="@+id/tv_alarm_rate_type"
-                android:layout_toEndOf="@+id/tv_alarm_rate_type"
+                android:layout_toRightOf="@+id/iv_alarm_rate_type"
+                android:layout_toEndOf="@+id/iv_alarm_rate_type"
                 android:id="@+id/tv_alarm_val"
-                android:textSize="16sp"
+                android:textSize="18sp"
                 android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>

@@ -1,5 +1,7 @@
 package dynoapps.exchange_rates.util;
 
+import android.support.annotation.DrawableRes;
+
 import java.util.List;
 
 import dynoapps.exchange_rates.App;
@@ -46,5 +48,20 @@ public class RateUtils {
             return "ONS";
         }
         return "";
+    }
+
+    public static
+    @DrawableRes
+    int getRateIcon(int rateType) {
+        if (rateType == IRate.EUR) {
+            return R.drawable.ic_euro;
+        } else if (rateType == IRate.ONS) {
+            return R.drawable.ic_gold;
+        } else if (rateType == IRate.USD) {
+            return R.drawable.ic_dollar;
+        } else if (rateType == IRate.EUR_USD) {
+            return R.drawable.ic_exchange_eur_usd;
+        }
+        return -1;
     }
 }
