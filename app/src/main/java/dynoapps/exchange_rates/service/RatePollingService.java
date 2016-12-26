@@ -54,6 +54,7 @@ import dynoapps.exchange_rates.provider.YahooRateProvider;
 import dynoapps.exchange_rates.provider.YapıKrediRateProvider;
 import dynoapps.exchange_rates.provider.YorumlarRateProvider;
 import dynoapps.exchange_rates.time.TimeIntervalManager;
+import dynoapps.exchange_rates.util.CollectionUtils;
 import dynoapps.exchange_rates.util.Formatter;
 import dynoapps.exchange_rates.util.L;
 import dynoapps.exchange_rates.util.RateUtils;
@@ -162,41 +163,45 @@ public class RatePollingService extends IntentService {
     private static Formatter formatter5 = new Formatter(5, 1);
 
     private <T extends BaseRate> void alarmChecks(List<T> rates, int source_type) {
-        if (rates == null) return;
-        AlarmsHolder alarmsHolder = AlarmManager.getAlarmsHolder();
-        Iterator<Alarm> iterator = alarmsHolder.alarms.iterator();
-        int size = alarmsHolder.alarms.size();
-        while (iterator.hasNext()) {
-            Alarm alarm = iterator.next();
-            if (alarm.source_type != source_type || !alarm.is_enabled) continue;
-            BaseRate baseRateCurrent = RateUtils.getRate(rates, alarm.rate_type);
-            RatesEvent ratesEvent = RatesHolder.getInstance().getRates(source_type);
-            BaseRate baseRateOld = ratesEvent != null ? RateUtils.getRate(ratesEvent.rates, alarm.rate_type) : null;
+        if (CollectionUtils.isNullOrEmpty(rates)) return;
+        try {
+            AlarmsHolder alarmsHolder = AlarmManager.getAlarmsHolder();
+            Iterator<Alarm> iterator = alarmsHolder.alarms.iterator();
+            int size = alarmsHolder.alarms.size();
+            while (iterator.hasNext()) {
+                Alarm alarm = iterator.next();
+                if (alarm.source_type != source_type || !alarm.is_enabled) continue;
+                BaseRate baseRateCurrent = RateUtils.getRate(rates, alarm.rate_type);
+                RatesEvent ratesEvent = RatesHolder.getInstance().getRates(source_type);
+                BaseRate baseRateOld = ratesEvent != null ? RateUtils.getRate(ratesEvent.rates, alarm.rate_type) : null;
 
-            if (baseRateCurrent == null || baseRateOld == null) continue;
-            float val_current = 0.0f;
-            float val_old = 0.0f;
-            if (baseRateCurrent instanceof AvgRate) {
-                val_current = ((AvgRate) baseRateCurrent).avg_val_real;
-                val_old = ((AvgRate) baseRateOld).avg_val_real;
-            } else if (baseRateCurrent instanceof BuySellRate) {
-                val_current = ((BuySellRate) baseRateCurrent).value_sell_real;
-                val_old = ((BuySellRate) baseRateOld).value_sell_real;
+                if (baseRateCurrent == null || baseRateOld == null) continue;
+                float val_current = 0.0f;
+                float val_old = 0.0f;
+                if (baseRateCurrent instanceof AvgRate) {
+                    val_current = ((AvgRate) baseRateCurrent).avg_val_real;
+                    val_old = ((AvgRate) baseRateOld).avg_val_real;
+                } else if (baseRateCurrent instanceof BuySellRate) {
+                    val_current = ((BuySellRate) baseRateCurrent).value_sell_real;
+                    val_old = ((BuySellRate) baseRateOld).value_sell_real;
+                }
+                String val = alarm.rate_type == IRate.ONS ? formatter2.format(alarm.val) : formatter5.format(alarm.val);
+                if (alarm.is_above && val_current > alarm.val && val_old <= alarm.val) {
+                    iterator.remove();
+                    sendNotification(getString(R.string.is_above_val, RateUtils.rateName(alarm.rate_type),
+                            val), "increasing", Alarm.getPushId(alarm));
+                } else if (!alarm.is_above && val_current < alarm.val && val_old >= alarm.val) {
+                    iterator.remove();
+                    sendNotification(getString(R.string.is_below_value, RateUtils.rateName(alarm.rate_type),
+                            val), "decreasing", Alarm.getPushId(alarm));
+                }
             }
-            String val = alarm.rate_type == IRate.ONS ? formatter2.format(alarm.val) : formatter5.format(alarm.val);
-            if (alarm.is_above && val_current > alarm.val && val_old <= alarm.val) {
-                iterator.remove();
-                sendNotification(getString(R.string.is_above_val, RateUtils.rateName(alarm.rate_type),
-                        val), "increasing", Alarm.getPushId(alarm));
-            } else if (!alarm.is_above && val_current < alarm.val && val_old >= alarm.val) {
-                iterator.remove();
-                sendNotification(getString(R.string.is_below_value, RateUtils.rateName(alarm.rate_type),
-                        val), "decreasing", Alarm.getPushId(alarm));
+            if (size != alarmsHolder.alarms.size()) {
+                EventBus.getDefault().post(new AlarmUpdateEvent(null, false, false));
+                AlarmManager.persistAlarms();
             }
-        }
-        if (size != alarmsHolder.alarms.size()) {
-            EventBus.getDefault().post(new AlarmUpdateEvent(null, false, false));
-            AlarmManager.persistAlarms();
+        } catch (Exception ex) {
+            L.ex(ex);
         }
     }
 

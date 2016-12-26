@@ -5,7 +5,6 @@ import android.text.TextUtils;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.text.ParseException;
 import java.util.List;
 
 import dynoapps.exchange_rates.App;
@@ -18,8 +17,8 @@ import dynoapps.exchange_rates.model.rates.IRate;
  */
 
 public class RateUtils {
-    private static Formatter formatter2 = new Formatter(2);
-    private static Formatter formatter5 = new Formatter(5);
+    private static Formatter formatter2 = new Formatter(2,0);
+    private static Formatter formatter5 = new Formatter(5,2);
 
     public static <T extends BaseRate> T getRate(List<T> rates, int rateType) {
         if (rates == null) return null;
@@ -84,13 +83,16 @@ public class RateUtils {
         DecimalFormatSymbols symbols = new DecimalFormatSymbols();
         symbols.setDecimalSeparator(DecimalFormatSymbols.getInstance().getDecimalSeparator());
         symbols.setGroupingSeparator(DecimalFormatSymbols.getInstance().getGroupingSeparator());
-        DecimalFormat format = new DecimalFormat("###,###,###,##0.####");
+        DecimalFormat format = new DecimalFormat("###,###,###,##0.#####");
         format.setDecimalFormatSymbols(symbols);
         try {
             return format.parse(str).floatValue();
-        } catch (ParseException e) {
+        } catch (Exception e) {
+            try {
+                return Float.parseFloat(str);
+            } catch (Exception ex) {
 
-
+            }
         }
         return null;
     }

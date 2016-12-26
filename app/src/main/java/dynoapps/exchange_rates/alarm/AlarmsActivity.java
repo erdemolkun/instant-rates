@@ -107,8 +107,7 @@ public class AlarmsActivity extends BaseActivity {
                 AlarmManager.getAlarmsHolder().is_enabled = true;
                 swAlarmState.setChecked(true);
             }
-        }
-        else{
+        } else {
             adapter.notifyDataSetChanged();
         }
     }
@@ -137,13 +136,14 @@ public class AlarmsActivity extends BaseActivity {
     }
 
     private void updateViews(boolean is_enabled_alarm) {
-        rvAlarms.setAlpha(is_enabled_alarm ? 1.0f : 0.5f);
+        rvAlarms.setAlpha(is_enabled_alarm ? 1.0f : 0.4f);
     }
 
 
     static class AlarmViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.iv_alarm_type)
         ImageView ivType;
+
         @BindView(R.id.tv_alarm_val)
         TextView tvValue;
 
@@ -159,7 +159,7 @@ public class AlarmsActivity extends BaseActivity {
         @BindView(R.id.sw_alarm)
         SwitchCompat swAlarm;
 
-        public AlarmViewHolder(View itemView) {
+        AlarmViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
