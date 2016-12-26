@@ -1,0 +1,45 @@
+#
+# Build configuration for Circle CI
+#
+
+general:
+    artifacts:
+        - /home/ubuntu/instant-rates/app/build/outputs/apk/
+
+machine:
+    timezone:
+        Europe/Istanbul # Set the timezone
+    environment:
+        ANDROID_HOME: /usr/local/android-sdk-linux
+        GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError"'
+    java:
+        version: oraclejdk8
+
+
+
+#Pull any submodules
+checkout:
+  post:
+    - git submodule init
+    - git submodule update
+
+dependencies:
+  pre:
+    - ( sleep 5 && while [ 1 ]; do sleep 1; echo y; done ) | android update sdk --no-ui --all --filter "tools,platform-tools,android-25,extra-google-m2repository,extra-android-m2repository,extra-android-support"
+    - echo y | android update sdk --no-ui --all --filter "build-tools-25.0.1"
+
+
+test:
+    override:
+        - (./gradlew testAlphaUnitTest):
+            timeout: 360
+
+
+
+#Deploy when tests pass
+deployment:
+    develop: # Alpha builds.
+      branch: develop
+      commands:
+        - ./gradlew assembleAlpha --stacktrace
+
