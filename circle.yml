@@ -41,5 +41,5 @@ deployment:
     develop: # Alpha builds.
       branch: develop
       commands:
-        - ./gradlew assembleAlpha --stacktrace
+        - ./gradlew assembleDebug --stacktrace
 
