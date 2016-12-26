@@ -159,7 +159,7 @@ public class RatePollingService extends IntentService {
     }
 
     private static Formatter formatter2 = new Formatter(3, 0);
-    private static Formatter formatter5 = new Formatter(5, 2);
+    private static Formatter formatter5 = new Formatter(5, 1);
 
     private <T extends BaseRate> void alarmChecks(List<T> rates, int source_type) {
         if (rates == null) return;

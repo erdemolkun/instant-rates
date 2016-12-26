@@ -12,12 +12,13 @@
     <application
             android:name=".App"
             android:allowBackup="true"
+            android:configChanges="locale"
             android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
         <activity
-                android:configChanges="orientation|screenSize"
+                android:configChanges="orientation|screenSize|locale"
                 android:name=".ChartActivity"
                 android:label="@string/graphic"
                 android:theme="@style/AppTheme"
@@ -26,7 +27,7 @@
         </activity>
 
         <activity
-                android:configChanges="orientation|screenSize"
+                android:configChanges="orientation|screenSize|locale"
                 android:name=".alarm.AlarmsActivity"
                 android:label="@string/alarms"
                 android:theme="@style/AppTheme"
@@ -35,7 +36,7 @@
         </activity>
 
         <activity
-                android:configChanges="orientation|screenSize"
+                android:configChanges="orientation|screenSize|locale"
                 android:name=".LandingActivity"
                 android:launchMode="singleTask"
                 android:theme="@style/AppTheme.WithDrawer"
@@ -43,7 +44,7 @@
 
         </activity>
         <activity
-                android:configChanges="orientation|screenSize"
+                android:configChanges="orientation|screenSize|locale"
                 android:name=".SplashActivity"
                 android:screenOrientation="portrait">
             <intent-filter>

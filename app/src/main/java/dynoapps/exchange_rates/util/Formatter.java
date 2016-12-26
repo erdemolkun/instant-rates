@@ -24,8 +24,7 @@ public class Formatter {
         numberFormat = DecimalFormat.getInstance(Locale.getDefault());
         numberFormat.setMaximumFractionDigits(digits);
         numberFormat.setMinimumFractionDigits(min_digits);
-        numberFormat.setMinimumIntegerDigits(2);
-
+        numberFormat.setMinimumIntegerDigits(1);
     }
 
     public String format(float value) {
