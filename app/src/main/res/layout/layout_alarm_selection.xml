@@ -26,7 +26,8 @@
     <RadioGroup
             android:id="@+id/rg_alarm"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
+            android:layout_height="wrap_content"
+            android:minHeight="60dp"
             android:layout_marginTop="8dp"
             android:orientation="horizontal">
 
@@ -38,9 +39,13 @@
                 android:background="@drawable/bg_checkbox_alarm"
                 android:button="@null"
                 android:gravity="center"
-                android:maxLines="1"
+                android:maxLines="2"
                 android:text="@string/if_above"
-                android:textSize="16sp"/>
+                android:textSize="14sp"/>
+
+        <Space
+                android:layout_width="4dp"
+                android:layout_height="match_parent"/>
 
         <RadioButton
                 android:id="@+id/rb_below"
@@ -49,16 +54,16 @@
                 android:layout_weight="1"
                 android:background="@drawable/bg_checkbox_alarm"
                 android:button="@null"
-                android:maxLines="1"
+                android:maxLines="2"
                 android:gravity="center"
                 android:text="@string/if_below"
-                android:textSize="16sp"/>
+                android:textSize="14sp"/>
 
 
     </RadioGroup>
 
     <TextView
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="12dp"
             android:layout_width="wrap_content"
             android:textSize="12sp"
             android:text="@string/sources"
