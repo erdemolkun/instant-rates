@@ -40,6 +40,7 @@ import dynoapps.exchange_rates.model.rates.BigparaRate;
 import dynoapps.exchange_rates.model.rates.BuySellRate;
 import dynoapps.exchange_rates.model.rates.DolarTlKurRate;
 import dynoapps.exchange_rates.model.rates.EnparaRate;
+import dynoapps.exchange_rates.model.rates.IRate;
 import dynoapps.exchange_rates.model.rates.YahooRate;
 import dynoapps.exchange_rates.model.rates.YapıKrediRate;
 import dynoapps.exchange_rates.model.rates.YorumlarRate;
@@ -157,7 +158,8 @@ public class RatePollingService extends IntentService {
         refreshSources();
     }
 
-    private static Formatter formatter = new Formatter(3);
+    private static Formatter formatter2 = new Formatter(3, 0);
+    private static Formatter formatter5 = new Formatter(5, 2);
 
     private <T extends BaseRate> void alarmChecks(List<T> rates, int source_type) {
         if (rates == null) return;
@@ -181,18 +183,19 @@ public class RatePollingService extends IntentService {
                 val_current = ((BuySellRate) baseRateCurrent).value_sell_real;
                 val_old = ((BuySellRate) baseRateOld).value_sell_real;
             }
+            String val = alarm.rate_type == IRate.ONS ? formatter2.format(alarm.val) : formatter5.format(alarm.val);
             if (alarm.is_above && val_current > alarm.val && val_old <= alarm.val) {
                 iterator.remove();
                 sendNotification(getString(R.string.is_above_val, RateUtils.rateName(alarm.rate_type),
-                        formatter.format(alarm.val)), "increasing", Alarm.getPushId(alarm));
+                        val), "increasing", Alarm.getPushId(alarm));
             } else if (!alarm.is_above && val_current < alarm.val && val_old >= alarm.val) {
                 iterator.remove();
                 sendNotification(getString(R.string.is_below_value, RateUtils.rateName(alarm.rate_type),
-                        formatter.format(alarm.val)), "decreasing", Alarm.getPushId(alarm));
+                        val), "decreasing", Alarm.getPushId(alarm));
             }
         }
         if (size != alarmsHolder.alarms.size()) {
-            EventBus.getDefault().post(new AlarmUpdateEvent(null,false, false));
+            EventBus.getDefault().post(new AlarmUpdateEvent(null, false, false));
             AlarmManager.persistAlarms();
         }
     }

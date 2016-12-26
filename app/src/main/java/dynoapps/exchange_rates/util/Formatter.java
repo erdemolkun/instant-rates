@@ -10,11 +10,21 @@ import java.util.Locale;
 
 public class Formatter {
 
-    NumberFormat numberFormat;
+    private NumberFormat numberFormat;
 
     public Formatter(int digits) {
         numberFormat = DecimalFormat.getInstance(Locale.getDefault());
         numberFormat.setMaximumFractionDigits(digits);
+        numberFormat.setMinimumFractionDigits(digits);
+        numberFormat.setMinimumIntegerDigits(1);
+
+    }
+
+    public Formatter(int digits, int min_digits) {
+        numberFormat = DecimalFormat.getInstance(Locale.getDefault());
+        numberFormat.setMaximumFractionDigits(digits);
+        numberFormat.setMinimumFractionDigits(min_digits);
+        numberFormat.setMinimumIntegerDigits(2);
 
     }
 

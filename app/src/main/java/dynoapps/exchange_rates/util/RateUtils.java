@@ -1,7 +1,11 @@
 package dynoapps.exchange_rates.util;
 
 import android.support.annotation.DrawableRes;
+import android.text.TextUtils;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.ParseException;
 import java.util.List;
 
 import dynoapps.exchange_rates.App;
@@ -72,5 +76,22 @@ public class RateUtils {
             return R.drawable.ic_exchange_eur_usd;
         }
         return -1;
+    }
+
+    public static Float toFloat(String str) {
+        if (TextUtils.isEmpty(str)) return null;
+        str = str.trim();
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+        symbols.setDecimalSeparator(DecimalFormatSymbols.getInstance().getDecimalSeparator());
+        symbols.setGroupingSeparator(DecimalFormatSymbols.getInstance().getGroupingSeparator());
+        DecimalFormat format = new DecimalFormat("###,###,###,##0.####");
+        format.setDecimalFormatSymbols(symbols);
+        try {
+            return format.parse(str).floatValue();
+        } catch (ParseException e) {
+
+
+        }
+        return null;
     }
 }

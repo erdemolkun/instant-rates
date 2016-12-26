@@ -32,6 +32,7 @@ import dynoapps.exchange_rates.ui.SimpleSpinnerAdapter;
 import dynoapps.exchange_rates.util.CollectionUtils;
 import dynoapps.exchange_rates.util.DecimalDigitsInputFilter;
 import dynoapps.exchange_rates.util.InputFilterMinMax;
+import dynoapps.exchange_rates.util.L;
 import dynoapps.exchange_rates.util.RateUtils;
 
 /**
@@ -134,7 +135,7 @@ public class AlarmManager {
                 i++;
             }
         }
-        ArrayAdapter<CurrencySource> sourceArrayAdapter = new SimpleSpinnerAdapter<>(context,sources); //new ArrayAdapter<>(context, R.layout.item_spinner_dropdown, sources);
+        ArrayAdapter<CurrencySource> sourceArrayAdapter = new SimpleSpinnerAdapter<>(context, sources); //new ArrayAdapter<>(context, R.layout.item_spinner_dropdown, sources);
         spn_sources.setAdapter(sourceArrayAdapter);
         spn_sources.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -191,7 +192,7 @@ public class AlarmManager {
                         String str = etValue.getText().toString();
                         Float val = null;
                         try {
-                            val = Float.valueOf(str);
+                            val = RateUtils.toFloat(str);
                             Alarm alarm = new Alarm();
                             alarm.val = val;
                             alarm.is_above = rgAlarm.getCheckedRadioButtonId() == R.id.rb_above;
@@ -199,7 +200,7 @@ public class AlarmManager {
                             alarm.rate_type = ((RateValuePair) spn_rate_types.getSelectedItem()).rate_type;
                             AlarmManager.addAlarm(alarm);
                         } catch (Exception ex) {
-                            // todo any error is blocked here
+                            L.i(AlarmManager.class.getSimpleName(), "Alarm Convert Exception");
                         }
                         if (val == null) {
                             Toast.makeText(context, R.string.check_value, Toast.LENGTH_SHORT).show();
