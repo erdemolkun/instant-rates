@@ -28,6 +28,7 @@ import dynoapps.exchange_rates.R;
 import dynoapps.exchange_rates.SourcesManager;
 import dynoapps.exchange_rates.data.CurrencySource;
 import dynoapps.exchange_rates.event.AlarmUpdateEvent;
+import dynoapps.exchange_rates.ui.SimpleSpinnerAdapter;
 import dynoapps.exchange_rates.util.CollectionUtils;
 import dynoapps.exchange_rates.util.DecimalDigitsInputFilter;
 import dynoapps.exchange_rates.util.InputFilterMinMax;
@@ -133,7 +134,7 @@ public class AlarmManager {
                 i++;
             }
         }
-        ArrayAdapter<CurrencySource> sourceArrayAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item, sources);
+        ArrayAdapter<CurrencySource> sourceArrayAdapter = new SimpleSpinnerAdapter<>(context,sources); //new ArrayAdapter<>(context, R.layout.item_spinner_dropdown, sources);
         spn_sources.setAdapter(sourceArrayAdapter);
         spn_sources.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -158,7 +159,7 @@ public class AlarmManager {
                     }
                 }
                 if (!CollectionUtils.isNullOrEmpty(rateValuePairs)) {
-                    spn_rate_types.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item, rateValuePairs));
+                    spn_rate_types.setAdapter(new SimpleSpinnerAdapter<>(context, rateValuePairs));
                     rate_types_view.setVisibility(View.VISIBLE);
                 } else {
                     rate_types_view.setVisibility(View.GONE);
