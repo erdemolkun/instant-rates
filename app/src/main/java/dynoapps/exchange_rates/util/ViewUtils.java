@@ -38,7 +38,8 @@ public class ViewUtils {
         Drawable drawable = tv.getCompoundDrawables()[0];
         if (drawable == null) return;
         drawable = DrawableCompat.wrap(drawable).mutate();
-        drawable.setColorFilter(ContextCompat.getColor(tv.getContext(), color), PorterDuff.Mode.SRC_ATOP);
+        DrawableCompat.setTint(drawable,ContextCompat.getColor(tv.getContext(), color));
+        //drawable.setColorFilter(ContextCompat.getColor(tv.getContext(), color), PorterDuff.Mode.SRC_ATOP);
         tv.setCompoundDrawables(drawable, null, null, null);
     }
 
