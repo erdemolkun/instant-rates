@@ -5,7 +5,7 @@
                                                   android:layout_gravity="start"
                                                   android:layout_width="@dimen/nav_drawer_width"
                                                   android:fillViewport="true"
-                                                  android:background="@color/background_material_light"
+                                                  android:background="@color/color_material_grey_50"
                                                   android:layout_height="match_parent">
 
     <RelativeLayout
@@ -29,6 +29,7 @@
             <LinearLayout
                     android:layout_alignParentBottom="true"
                     android:layout_toRightOf="@+id/iv_drawer_header_logo"
+                    android:layout_toEndOf="@+id/iv_drawer_header_logo"
                     android:orientation="vertical"
                     android:layout_marginStart="8dp"
                     android:layout_marginLeft="8dp"

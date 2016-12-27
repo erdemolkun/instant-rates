@@ -115,7 +115,7 @@ public class ChartActivity extends BaseActivity {
         });
 
         white = ContextCompat.getColor(getApplicationContext(), android.R.color.white);
-        chart_text_color = ContextCompat.getColor(getApplicationContext(), android.R.color.white);
+        chart_text_color = ContextCompat.getColor(getApplicationContext(), android.R.color.black);
         startMilis = System.currentTimeMillis();
         initChart();
 
@@ -381,12 +381,12 @@ public class ChartActivity extends BaseActivity {
         LineDataSet set = new LineDataSet(null, name);
         set.setCubicIntensity(0.1f);
         set.setDrawCircleHole(false);
+        set.setCircleColor(chart_text_color);
         set.setLineWidth(2f);
         set.setCircleRadius(2.5f);
         set.setDrawCircles(true);
 
 
-        set.setCircleColor(white);
         set.setHighLightColor(Color.rgb(155, 155, 155));
         set.setAxisDependency(YAxis.AxisDependency.LEFT);
         set.setColor(color);

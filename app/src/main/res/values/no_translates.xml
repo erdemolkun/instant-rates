@@ -6,4 +6,5 @@
     <string name="euro_dollar_sign" translatable="false">€/$</string>
     <string name="dollar_sign" translatable="false">$</string>
     <string name="euro_sign" translatable="false">€</string>
+    <string name="version_placeholder" translatable="false">v %s</string>
 </resources>

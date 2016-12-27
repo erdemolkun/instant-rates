@@ -1,7 +1,5 @@
 package dynoapps.exchange_rates;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.ActivityManager;
@@ -27,7 +25,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -87,12 +84,6 @@ public class LandingActivity extends BaseActivity {
     @BindView(R.id.v_drawer_item_alarms)
     TextView tvDrawerItemAlarms;
 
-    @BindView(R.id.v_landing_side_menu_hint_close)
-    ImageView ivCloseHint;
-
-    @BindView(R.id.v_landing_side_menu_hint)
-    View vCloseHint;
-
     @BindView(R.id.v_navdrawer_version)
     TextView tvVersion;
 
@@ -138,28 +129,7 @@ public class LandingActivity extends BaseActivity {
             }
         }
 
-        boolean isHintRemoved = Prefs.isLandingHintClosed();
-        vCloseHint.setVisibility(isHintRemoved ? View.GONE : View.VISIBLE);
-        if (!isHintRemoved) {
-            ivCloseHint.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(final View view) {
-                    Prefs.saveLandingHintState(true);
-                    vCloseHint.animate().alpha(0).setListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            super.onAnimationEnd(animation);
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                                TransitionManager.beginDelayedTransition((ViewGroup) findViewById(R.id.v_main_content));
-                            }
-                            vCloseHint.setVisibility(View.GONE);
-                        }
-                    }).setDuration(400).start();
-                }
-            });
-        }
-
-        tvVersion.setText("v" + AppUtils.getPlainVersion());
+        tvVersion.setText(getString(R.string.version_placeholder, AppUtils.getPlainVersion()));
         updateHint();
 
         swipeRefreshLayout.setColorSchemeResources(

@@ -15,10 +15,8 @@
     <string name="clear_sure_message">Sure to refresh. All data will be cleared.</string>
     <string name="time_interval">Time Interval</string>
     <string name="select_time_interval">Select Update Interval</string>
-    <string name="select_graph_using_side_menu">Select the graph using side menu</string>
     <string name="sell">Sell</string>
     <string name="buy">Buy</string>
-    <string name="select_graph_type">Select Graph Type</string>
     <string name="select_at_least_one_source">Select at least one source.</string>
     <string name="remove">Remove</string>
     <string name="remove_source_approve">Remove selected source?</string>

@@ -20,37 +20,8 @@
 
             <include layout="@layout/toolbar_actionbar"/>
 
-            <LinearLayout
-                    android:id="@+id/v_landing_side_menu_hint"
-                    android:layout_width="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginTop="8dp"
-                    android:gravity="center_vertical"
-                    android:layout_height="wrap_content">
 
-                <TextView
-                        android:layout_marginStart="60dp"
-                        android:layout_marginLeft="60dp"
-                        android:textSize="14sp"
-                        android:gravity="center_vertical"
-                        android:textColor="@color/colorPrimary"
-                        android:text="@string/select_graph_using_side_menu"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-
-                <ImageView
-                        android:id="@+id/v_landing_side_menu_hint_close"
-                        android:padding="8dp"
-                        android:background="?selectableItemBackgroundBorderless"
-                        android:tint="@android:color/holo_red_dark"
-                        android:layout_width="wrap_content"
-                        android:src="@drawable/ic_cancel_black_24dp"
-                        android:layout_height="wrap_content"/>
-
-            </LinearLayout>
-
-            <TextView
+        <TextView
                     android:id="@+id/tv_interval_hint"
                     tools:text="@string/interval_hint"
                     android:paddingTop="12dp"

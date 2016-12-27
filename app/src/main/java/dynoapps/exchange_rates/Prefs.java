@@ -42,14 +42,6 @@ public class Prefs {
         editor.apply();
     }
 
-    public static void saveLandingHintState(boolean closed) {
-        saveBoolean(LANDING_HINT_STATE, closed);
-    }
-
-    public static boolean isLandingHintClosed() {
-        return getPrefs(App.context()).getBoolean(LANDING_HINT_STATE, false);
-    }
-
     public static long getInterval(Context context) {
         return getPrefs(context).getLong(INTERVAL, -1);
     }

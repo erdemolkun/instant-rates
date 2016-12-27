@@ -15,10 +15,8 @@
     <string name="clear_sure_message">Yenilemek istediğinize emin misiniz? Varolan veriler silinecek.</string>
     <string name="time_interval">Zaman Aralığı</string>
     <string name="select_time_interval">Güncelleme Sıklığını Seçiniz</string>
-    <string name="select_graph_using_side_menu">Yan menüden istediğiniz grafiği seçiniz</string>
     <string name="sell">Satış</string>
     <string name="buy">Alış</string>
-    <string name="select_graph_type">Grafik Tipini Seçiniz</string>
     <string name="select_at_least_one_source">En az bir kaynak seçmelisiniz</string>
     <string name="remove">Kaldır</string>
     <string name="remove_source_approve">Seçili kaynağı kaldır?</string>
