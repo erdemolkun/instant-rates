@@ -82,7 +82,7 @@ public class ChartActivity extends BaseActivity {
     private long startMilis;
     SimpleDateFormat hourFormatter = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
     private int white;
-    private int black;
+    private int chart_text_color;
 
     private static final int DATA_COUNT = 20;
 
@@ -115,7 +115,7 @@ public class ChartActivity extends BaseActivity {
         });
 
         white = ContextCompat.getColor(getApplicationContext(), android.R.color.white);
-        black = ContextCompat.getColor(getApplicationContext(), android.R.color.black);
+        chart_text_color = ContextCompat.getColor(getApplicationContext(), android.R.color.white);
         startMilis = System.currentTimeMillis();
         initChart();
 
@@ -259,7 +259,7 @@ public class ChartActivity extends BaseActivity {
 
         Legend legend = lineChart.getLegend();
         legend.setTextSize(13);
-        legend.setTextColor(black);
+        legend.setTextColor(chart_text_color);
         legend.setYOffset(6);
         legend.setForm(Legend.LegendForm.CIRCLE);
         legend.setWordWrapEnabled(true);
@@ -271,8 +271,8 @@ public class ChartActivity extends BaseActivity {
         lineChart.setMarker(customMarkerView);
 
         lineChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
-        lineChart.getXAxis().setTextColor(black);
-        lineChart.getAxisRight().setTextColor(black);
+        lineChart.getXAxis().setTextColor(chart_text_color);
+        lineChart.getAxisRight().setTextColor(chart_text_color);
 
     }
 
@@ -386,7 +386,7 @@ public class ChartActivity extends BaseActivity {
         set.setDrawCircles(true);
 
 
-        set.setCircleColor(color);
+        set.setCircleColor(white);
         set.setHighLightColor(Color.rgb(155, 155, 155));
         set.setAxisDependency(YAxis.AxisDependency.LEFT);
         set.setColor(color);

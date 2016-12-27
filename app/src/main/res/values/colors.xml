@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#455A64</color>
     <color name="colorAccent">#FFB300</color>
 
-    <color name="colorGraph">@color/background_material_light</color>
+    <color name="colorGraph">#1b1c35</color>
     <color name="colorEnpara">#aa51a0</color><!--170, 81, 160-->
     <color name="colorYorumlar">#f1c15a</color>
     <color name="colorDolarTlKur">#76ff03</color>

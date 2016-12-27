@@ -5,7 +5,7 @@
                                                   android:layout_gravity="start"
                                                   android:layout_width="@dimen/nav_drawer_width"
                                                   android:fillViewport="true"
-                                                  android:background="@color/colorGraph"
+                                                  android:background="@color/background_material_light"
                                                   android:layout_height="match_parent">
 
     <RelativeLayout
