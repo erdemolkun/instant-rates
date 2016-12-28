@@ -19,8 +19,9 @@ public class InputFilterMinMax implements InputFilter {
     @Override
     public CharSequence filter(CharSequence source, int i, int i2, Spanned spanned, int i3, int i4) {
         try {
-            double input = Double.parseDouble(spanned.toString() + source.toString());
-            if (isInRange(min, max, input)) {
+            String str = spanned.toString() + source.toString();
+            Float input = RateUtils.toFloat(str);
+            if (input != null && isInRange(min, max, input)) {
                 return null;
             }
         } catch (NumberFormatException nfe) {
