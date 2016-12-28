@@ -381,7 +381,7 @@ public class ChartActivity extends BaseActivity {
         LineDataSet set = new LineDataSet(null, name);
         set.setCubicIntensity(0.1f);
         set.setDrawCircleHole(false);
-        set.setCircleColor(chart_text_color);
+        set.setCircleColor(color);
         set.setLineWidth(2f);
         set.setCircleRadius(2.5f);
         set.setDrawCircles(true);

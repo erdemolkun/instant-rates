@@ -2,7 +2,7 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
-    <dimen name="chart_height">240dp</dimen>
+    <dimen name="chart_height">288dp</dimen>
 
     <dimen name="keyline_2">72dp</dimen>
     <dimen name="cards_list_name_width">36dp</dimen>
