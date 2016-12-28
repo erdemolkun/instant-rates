@@ -36,7 +36,14 @@ class AlarmsAdapter extends UpdatableAdapter<List<Alarm>, AlarmsActivity.AlarmVi
     public void addData(Alarm alarm) {
         if (this.alarms == null) this.alarms = new ArrayList<>();
         this.alarms.add(alarm);
-        notifyDataSetChanged();
+        notifyItemInserted(alarms.size());
+    }
+
+    public void addData(ArrayList<Alarm> alarms) {
+        if (this.alarms == null) this.alarms = new ArrayList<>();
+        final int insertRangeStart = getItemCount();
+        this.alarms.addAll(alarms);
+        notifyItemRangeInserted(insertRangeStart, getItemCount());
     }
 
     @Override

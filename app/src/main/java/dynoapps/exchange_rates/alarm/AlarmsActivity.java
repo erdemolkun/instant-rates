@@ -22,8 +22,8 @@ import butterknife.ButterKnife;
 import dynoapps.exchange_rates.BaseActivity;
 import dynoapps.exchange_rates.R;
 import dynoapps.exchange_rates.event.AlarmUpdateEvent;
+import dynoapps.exchange_rates.ui.SlideInItemAnimator;
 import dynoapps.exchange_rates.util.AnimationHelper;
-import dynoapps.exchange_rates.util.CollectionUtils;
 
 /**
  * Created by erdemmac on 13/12/2016.
@@ -57,9 +57,9 @@ public class AlarmsActivity extends BaseActivity {
             }
         });
 
-        ArrayList<Alarm> alarms = AlarmManager.getAlarmsHolder().alarms;
-        tvNoAlarm.setVisibility(CollectionUtils.size(alarms) <= 0 ? View.VISIBLE : View.GONE);
+        ArrayList<Alarm> alarms = new ArrayList<>();
         rvAlarms.setLayoutManager(new LinearLayoutManager(this));
+        rvAlarms.setItemAnimator(new SlideInItemAnimator());
         adapter = new AlarmsAdapter(alarms);
         rvAlarms.setAdapter(adapter);
         adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
@@ -74,6 +74,12 @@ public class AlarmsActivity extends BaseActivity {
                 tvNoAlarm.setVisibility(adapter.getItemCount() <= 0 ? View.VISIBLE : View.GONE);
                 super.onItemRangeRemoved(positionStart, itemCount);
             }
+
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                tvNoAlarm.setVisibility(adapter.getItemCount() <= 0 ? View.VISIBLE : View.GONE);
+                super.onItemRangeInserted(positionStart, itemCount);
+            }
         });
 
         fabAddAlarm.setOnClickListener(new View.OnClickListener() {
@@ -82,6 +88,12 @@ public class AlarmsActivity extends BaseActivity {
                 AlarmManager.addAlarmDialog(AlarmsActivity.this);
             }
         });
+    }
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        adapter.addData(AlarmManager.getAlarmsHolder().alarms);
     }
 
     @Override
@@ -108,7 +120,7 @@ public class AlarmsActivity extends BaseActivity {
                 swAlarmState.setChecked(true);
             }
         } else {
-            adapter.notifyDataSetChanged();
+            //adapter.notifyDataSetChanged();
         }
     }
 
