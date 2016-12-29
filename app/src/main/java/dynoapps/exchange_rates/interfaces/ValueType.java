@@ -5,6 +5,7 @@ package dynoapps.exchange_rates.interfaces;
  */
 
 public interface ValueType {
+    int NONE = -1;
     int BUY = 1;
     int SELL = 2;
     int AVG = 3;

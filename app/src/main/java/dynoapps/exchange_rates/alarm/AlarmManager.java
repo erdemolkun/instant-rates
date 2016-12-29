@@ -28,6 +28,7 @@ import dynoapps.exchange_rates.R;
 import dynoapps.exchange_rates.SourcesManager;
 import dynoapps.exchange_rates.data.CurrencySource;
 import dynoapps.exchange_rates.event.AlarmUpdateEvent;
+import dynoapps.exchange_rates.interfaces.ValueType;
 import dynoapps.exchange_rates.ui.SimpleSpinnerAdapter;
 import dynoapps.exchange_rates.util.CollectionUtils;
 import dynoapps.exchange_rates.util.DecimalDigitsInputFilter;
@@ -98,10 +99,10 @@ public class AlarmManager {
     }
 
     public static void addAlarmDialog(final Context context) {
-        addAlarmDialog(context, -1, -1, null);
+        addAlarmDialog(context, -1, -1,ValueType.NONE, null);
     }
 
-    public static void addAlarmDialog(@NonNull final Context context, int source_type, final int rate_type, Float default_value) {
+    public static void addAlarmDialog(@NonNull final Context context, int source_type, final int rate_type, final int value_type, Float default_value) {
         if (CollectionUtils.size(getAlarmsHolder().alarms) >= AlarmManager.MAX_ALARM_COUNT) {
             Toast.makeText(context, context.getString(R.string.max_alarm_message, AlarmManager.MAX_ALARM_COUNT), Toast.LENGTH_SHORT).show();
             return;
@@ -198,6 +199,7 @@ public class AlarmManager {
                             alarm.is_above = rgAlarm.getCheckedRadioButtonId() == R.id.rb_above;
                             alarm.source_type = ((CurrencySource) spn_sources.getSelectedItem()).getSourceType();
                             alarm.rate_type = ((RateValuePair) spn_rate_types.getSelectedItem()).rate_type;
+                            alarm.value_type = value_type;
                             AlarmManager.addAlarm(alarm);
                         } catch (Exception ex) {
                             L.i(AlarmManager.class.getSimpleName(), "Alarm Convert Exception");

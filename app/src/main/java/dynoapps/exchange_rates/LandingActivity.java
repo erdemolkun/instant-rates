@@ -203,27 +203,10 @@ public class LandingActivity extends BaseActivity {
         v.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-//                DialogUtils.getDialogBuilder(LandingActivity.this).
-//                        title(R.string.remove).message(R.string.remove_source_approve).
-//                        positive(R.string.sure).negative(R.string.ignore)
-//                        .listener(new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                if (which == DialogInterface.BUTTON_POSITIVE) {
-//                                    CurrencySource currencySource = SourcesManager.getSource(source_type);
-//                                    if (currencySource != null) {
-//                                        currencySource.setEnabled(false);
-//                                    }
-//                                    EventBus.getDefault().post(new DataSourceUpdate());
-//                                    refreshCardItemViews();
-//                                }
-//                            }
-//                        }).
-//                        show();
                 RatesEvent ratesEvent = RatesHolder.getInstance().getRates(source_type);
                 BaseRate rate = ratesEvent != null ? RateUtils.getRate(ratesEvent.rates, parent.rate_type) : null;
                 if (rate != null) {
-                    AlarmManager.addAlarmDialog(LandingActivity.this, source_type, rate.getRateType(), rate.getValue(value_type));
+                    AlarmManager.addAlarmDialog(LandingActivity.this, source_type, rate.getRateType(), value_type ,rate.getValue(value_type));
                 } else {
                     AlarmManager.addAlarmDialog(LandingActivity.this);
                 }

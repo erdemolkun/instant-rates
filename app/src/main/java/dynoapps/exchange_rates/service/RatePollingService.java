@@ -34,6 +34,7 @@ import dynoapps.exchange_rates.event.DataSourceUpdate;
 import dynoapps.exchange_rates.event.IntervalUpdate;
 import dynoapps.exchange_rates.event.RatesEvent;
 import dynoapps.exchange_rates.event.UpdateTriggerEvent;
+import dynoapps.exchange_rates.interfaces.ValueType;
 import dynoapps.exchange_rates.model.rates.AvgRate;
 import dynoapps.exchange_rates.model.rates.BaseRate;
 import dynoapps.exchange_rates.model.rates.BigparaRate;
@@ -182,8 +183,13 @@ public class RatePollingService extends IntentService {
                     val_current = ((AvgRate) baseRateCurrent).avg_val_real;
                     val_old = ((AvgRate) baseRateOld).avg_val_real;
                 } else if (baseRateCurrent instanceof BuySellRate) {
-                    val_current = ((BuySellRate) baseRateCurrent).value_sell_real;
-                    val_old = ((BuySellRate) baseRateOld).value_sell_real;
+                    if (alarm.value_type != ValueType.NONE) {
+                        val_current = baseRateCurrent.getValue(alarm.value_type);
+                        val_old = baseRateOld.getValue(alarm.value_type);
+                    } else {
+                        val_current = ((BuySellRate) baseRateCurrent).value_sell_real;
+                        val_old = ((BuySellRate) baseRateOld).value_sell_real;
+                    }
                 }
                 String val = alarm.rate_type == IRate.ONS ? formatter2.format(alarm.val) : formatter5.format(alarm.val);
                 if (alarm.is_above && val_current > alarm.val && val_old <= alarm.val) {
