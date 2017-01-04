@@ -99,7 +99,7 @@ public class AlarmManager {
     }
 
     public static void addAlarmDialog(final Context context) {
-        addAlarmDialog(context, -1, -1,ValueType.NONE, null);
+        addAlarmDialog(context, -1, -1, ValueType.NONE, null);
     }
 
     public static void addAlarmDialog(@NonNull final Context context, int source_type, final int rate_type, final int value_type, Float default_value) {
@@ -115,7 +115,7 @@ public class AlarmManager {
             etAlarm.setText(val);
             etAlarm.setSelection(etAlarm.getText().length());
         }
-        etAlarm.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(4), new InputFilterMinMax(1, 2000)});
+        etAlarm.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(4), new InputFilterMinMax(1, 10000)});
         final RadioGroup rgAlarm = (RadioGroup) v.findViewById(R.id.rg_alarm);
         rgAlarm.check(R.id.rb_above);
 
