@@ -6,7 +6,7 @@ package dynoapps.exchange_rates.data;
 
 public interface CurrencyType {
     int NOT_SET = 0;
-    int YORUMLAR = 1;
+    int ALTININ = 1;
     int ENPARA = 2;
     int BIGPARA = 3;
     int TLKUR = 4;

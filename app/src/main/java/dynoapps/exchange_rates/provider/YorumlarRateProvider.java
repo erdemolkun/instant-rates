@@ -23,7 +23,7 @@ public class YorumlarRateProvider extends BasePoolingProvider<List<YorumlarRate>
 
     @Override
     public int getSourceType() {
-        return CurrencyType.YORUMLAR;
+        return CurrencyType.ALTININ;
     }
 
     @Override
