@@ -118,6 +118,7 @@ public class AlarmsActivity extends BaseActivity {
             if (!AlarmManager.getAlarmsHolder().is_enabled) {
                 AlarmManager.getAlarmsHolder().is_enabled = true;
                 swAlarmState.setChecked(true);
+                AlarmManager.persistAlarms();
             }
         } else {
             //adapter.notifyDataSetChanged();
