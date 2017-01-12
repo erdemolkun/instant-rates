@@ -49,6 +49,11 @@ public class AlarmManager {
     private static boolean addAlarm(Alarm alarm) {
         alarmsHolder = getAlarmsHolder();
         alarmsHolder.alarms.add(alarm);
+
+        if (!getAlarmsHolder().is_enabled) {
+            getAlarmsHolder().is_enabled = true;
+        }
+
         EventBus.getDefault().post(new AlarmUpdateEvent(alarm, true, false));
         persistAlarms();
         return true;

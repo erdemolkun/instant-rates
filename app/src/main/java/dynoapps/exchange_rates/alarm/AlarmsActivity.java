@@ -40,7 +40,7 @@ public class AlarmsActivity extends BaseActivity {
     @BindView(R.id.fab_add_alarm)
     FloatingActionButton fabAddAlarm;
 
-    private SwitchCompat swAlarmState;
+    SwitchCompat swAlarmState;
 
     AlarmsAdapter adapter;
 
@@ -115,11 +115,7 @@ public class AlarmsActivity extends BaseActivity {
     public void onEvent(AlarmUpdateEvent event) {
         if (!event.is_update && event.is_added) {
             adapter.addData(event.alarm);
-            if (!AlarmManager.getAlarmsHolder().is_enabled) {
-                AlarmManager.getAlarmsHolder().is_enabled = true;
-                swAlarmState.setChecked(true);
-                AlarmManager.persistAlarms();
-            }
+            updateViews();
         } else {
             //adapter.notifyDataSetChanged();
         }
@@ -141,15 +137,15 @@ public class AlarmsActivity extends BaseActivity {
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 AlarmManager.getAlarmsHolder().is_enabled = b;
                 AlarmManager.persistAlarms();
-                updateViews(b);
+                updateViews();
             }
         });
-        updateViews(swAlarmState.isChecked());
+        updateViews();
         return true;
     }
 
-    private void updateViews(boolean is_enabled_alarm) {
-        rvAlarms.setAlpha(is_enabled_alarm ? 1.0f : 0.4f);
+    private void updateViews() {
+        rvAlarms.setAlpha(AlarmManager.getAlarmsHolder().is_enabled ? 1.0f : 0.4f);
     }
 
 
