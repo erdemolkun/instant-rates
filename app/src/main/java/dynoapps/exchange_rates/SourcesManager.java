@@ -44,7 +44,7 @@ public class SourcesManager {
 
         for (CurrencySource source : getCurrencySources()) {
             switch (source.getSourceType()) {
-                case CurrencyType.YORUMLAR:
+                case CurrencyType.ALTININ:
                     source.setPollingSource(CollectionUtils.getInstance(providers, YorumlarRateProvider.class));
                     break;
                 case CurrencyType.ENPARA:
@@ -186,7 +186,7 @@ public class SourcesManager {
         int[] altin_in_supported = {IRate.USD, IRate.EUR, IRate.EUR_USD, IRate.ONS};
         int[] enpara_supported = {IRate.USD, IRate.EUR, IRate.EUR_USD, IRate.ONS_TRY};
         int[] yapıkredi_supported = {IRate.USD, IRate.EUR, IRate.ONS_TRY};
-        currencySources.add(new CurrencySource("Altın.in", CurrencyType.YORUMLAR, R.color.colorYorumlar, true, altin_in_supported));
+        currencySources.add(new CurrencySource("Altın.in", CurrencyType.ALTININ, R.color.colorYorumlar, true, altin_in_supported));
         currencySources.add(new CurrencySource("Enpara", CurrencyType.ENPARA, R.color.colorEnpara, true, enpara_supported));
         currencySources.add(new CurrencySource("Bigpara", CurrencyType.BIGPARA, R.color.colorBigPara, false, only_usd_try));
         currencySources.add(new CurrencySource("TlKur", CurrencyType.TLKUR, R.color.colorDolarTlKur, false, altin_in_supported));

@@ -68,7 +68,7 @@ public class CurrencySource {
     }
 
     public boolean isAvgType() {
-        return source_type == CurrencyType.YORUMLAR ||
+        return source_type == CurrencyType.ALTININ ||
                 source_type == CurrencyType.TLKUR || source_type == CurrencyType.YAHOO;
     }
 

@@ -104,9 +104,9 @@ public class RatePollingService extends IntentService {
             providers.add(new YorumlarRateProvider(new ProviderSourceCallbackAdapter<List<YorumlarRate>>() {
                 @Override
                 public void onResult(List<YorumlarRate> rates) {
-                    alarmChecks(rates, CurrencyType.YORUMLAR);
-                    RatesHolder.getInstance().addRate(rates, CurrencyType.YORUMLAR);
-                    EventBus.getDefault().post(new RatesEvent<>(rates, CurrencyType.YORUMLAR));
+                    alarmChecks(rates, CurrencyType.ALTININ);
+                    RatesHolder.getInstance().addRate(rates, CurrencyType.ALTININ);
+                    EventBus.getDefault().post(new RatesEvent<>(rates, CurrencyType.ALTININ));
                 }
             }));
             providers.add(new EnparaRateProvider(new ProviderSourceCallbackAdapter<List<EnparaRate>>() {
