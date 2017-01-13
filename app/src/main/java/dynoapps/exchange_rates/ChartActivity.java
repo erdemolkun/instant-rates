@@ -247,7 +247,7 @@ public class ChartActivity extends BaseActivity {
         }
     }
 
-    private void update(List<BaseRate> rates, long fetch_time_millis) {
+    private synchronized void update(List<BaseRate> rates, long fetch_time_millis) {
         /*
         ** TODO find index via source manager.
         */
