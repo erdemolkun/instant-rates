@@ -171,28 +171,28 @@ public class ChartActivity extends BaseActivity {
         }
     }
 
-    private void update(List<BaseRate> rates, long fetchMilis) {
+    private void update(List<BaseRate> rates, long fetchMillis) {
         /*
         ** TODO find index via source manager.
         */
         BaseRate rateUsd = RateUtils.getRate(rates, rateType);
         if (rateUsd != null) {
             if (rateUsd instanceof YorumlarRate) {
-                addEntry(((YorumlarRate) rateUsd).val_real_avg, 0, fetchMilis);
+                addEntry(((YorumlarRate) rateUsd).val_real_avg, 0, fetchMillis);
             } else if (rateUsd instanceof EnparaRate) {
-                addEntry(((EnparaRate) rateUsd).value_sell_real, 1, fetchMilis);
-                addEntry(((EnparaRate) rateUsd).value_buy_real, 2, fetchMilis);
+                addEntry(((EnparaRate) rateUsd).value_sell_real, 1, fetchMillis);
+                addEntry(((EnparaRate) rateUsd).value_buy_real, 2, fetchMillis);
             } else if (rateUsd instanceof BigparaRate) {
-                addEntry(((BuySellRate) rateUsd).value_sell_real, 3, fetchMilis);
+                addEntry(((BuySellRate) rateUsd).value_sell_real, 3, fetchMillis);
             } else if (rateUsd instanceof DolarTlKurRate) {
-                addEntry(((DolarTlKurRate) rateUsd).val_real_avg, 4, fetchMilis);
+                addEntry(((DolarTlKurRate) rateUsd).val_real_avg, 4, fetchMillis);
             } else if (rateUsd instanceof YapıKrediRate) {
-                addEntry(((YapıKrediRate) rateUsd).value_sell_real, 5, fetchMilis);
-                addEntry(((YapıKrediRate) rateUsd).value_buy_real, 6, fetchMilis);
+                addEntry(((YapıKrediRate) rateUsd).value_sell_real, 5, fetchMillis);
+                addEntry(((YapıKrediRate) rateUsd).value_buy_real, 6, fetchMillis);
             } else if (rateUsd instanceof YahooRate) {
-                addEntry(((YahooRate) rateUsd).val_real_avg, 7, fetchMilis);
+                addEntry(((YahooRate) rateUsd).val_real_avg, 7, fetchMillis);
             } else if (rateUsd instanceof ParaGarantiRate) {
-                addEntry(((ParaGarantiRate) rateUsd).val_real_avg, 8, fetchMilis);
+                addEntry(((ParaGarantiRate) rateUsd).val_real_avg, 8, fetchMillis);
             }
         }
     }
