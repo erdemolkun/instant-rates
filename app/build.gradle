@@ -82,6 +82,7 @@ android {
             proguardFile 'proguard-appcompat-v7.pro'
             proguardFile 'proguard-android-java.pro'
             proguardFile 'proguard-square-retrofit2.pro'
+            proguardFile 'proguard-simple-xml.pro'
             proguardFile 'proguard-rules.pro'
             proguardFile 'proguard-project-app.pro'
             proguardFile 'proguard-support-design.pro'
@@ -107,7 +108,7 @@ dependencies {
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
 
-    compile ('com.squareup.retrofit2:converter-simplexml:2.1.0') {
+    compile('com.squareup.retrofit2:converter-simplexml:2.1.0') {
         exclude group: 'xpp3', module: 'xpp3'
         exclude group: 'stax', module: 'stax-api'
         exclude group: 'stax', module: 'stax'
