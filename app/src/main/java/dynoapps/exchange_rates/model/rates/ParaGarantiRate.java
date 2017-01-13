@@ -3,31 +3,29 @@ package dynoapps.exchange_rates.model.rates;
 import android.text.TextUtils;
 
 import org.simpleframework.xml.Element;
+import org.simpleframework.xml.Root;
+
+import dynoapps.exchange_rates.util.RateUtils;
 
 /**
  * Created by erdemmac on 24/11/2016.
  */
 
+@Root(name = "STOCK")
 public class ParaGarantiRate extends AvgRate implements IConvertable {
     // todo
     public String time;
 
     @Override
     public void toRateType() {
-        if (TextUtils.isEmpty(type)) rateType = UNKNOWN;
+        if (TextUtils.isEmpty(symbol)) rateType = UNKNOWN;
         int rateType = UNKNOWN;
-        switch (type) {
-            case "dolar_guncelle":
+        switch (symbol) {
+            case "KUSD":
                 rateType = USD;
                 break;
-            case "euro_guncelle":
+            case "KEUR":
                 rateType = EUR;
-                break;
-            case "parite_guncelle":
-                rateType = EUR_USD;
-                break;
-            case "ons_guncelle":
-                rateType = ONS;
                 break;
         }
         this.rateType = rateType;
@@ -36,13 +34,14 @@ public class ParaGarantiRate extends AvgRate implements IConvertable {
     @Override
     public void setRealValues() {
         if (rateType == UNKNOWN) return;
-        String val = avg_val.replace("\'", "").replace("$", "").trim();
-        avg_val_real = Float.valueOf(val);
+        String val = last.replace("\'", "").replace("$", "").trim();
+        Float real_val = RateUtils.toFloat(val);
+        avg_val_real = real_val!=null ? real_val : 0.0f;
     }
 
     @Override
     public String toString() {
-        return type.split("_")[0] + " -> : " + avg_val_real + " : Time -> " + time.replace("\'", "");
+        return "SYMBOL : " + symbol + " Value : " + last;
     }
 
 
@@ -51,5 +50,18 @@ public class ParaGarantiRate extends AvgRate implements IConvertable {
 
     @Element(name = "LAST", required = false)
     public String last;
+
+
+    @Element(name = "DESC", required = false)
+    public String desc;
+
+    @Element(name = "PERNC", required = false)
+    public String pernc;
+
+    @Element(name = "LAST_MOD", required = false)
+    public String last_mod;
+
+    @Element(name = "PERNC_NUMBER", required = false)
+    public String pern_number;
 
 }

@@ -14,6 +14,6 @@ import dynoapps.exchange_rates.model.rates.ParaGarantiRate;
 @Root(name = "ICPIYASA", strict = false)
 public class ParagarantiResponse {
 
-    @ElementList(name = "STOCK", inline = true)
+    @ElementList(entry = "STOCK", inline = true)
     public List<ParaGarantiRate> rates;
 }

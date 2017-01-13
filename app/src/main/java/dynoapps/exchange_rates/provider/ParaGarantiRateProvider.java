@@ -43,6 +43,10 @@ public class ParaGarantiRateProvider extends BasePoolingProvider<List<ParaGarant
                 if (response.isSuccessful() && response.body() != null) {
                     ParagarantiResponse paragarantiResponse = response.body();
                     List<ParaGarantiRate> rates = paragarantiResponse.rates;
+                    for (ParaGarantiRate rate : rates){
+                        rate.toRateType();
+                        rate.setRealValues();
+                    }
                     notifyValue(rates);
                     if (!is_single_run)
                         fetchAgain(false);
