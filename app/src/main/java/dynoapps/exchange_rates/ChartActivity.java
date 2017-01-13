@@ -163,46 +163,6 @@ public class ChartActivity extends BaseActivity {
         });
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (!EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().register(this);
-        }
-    }
-
-    private void update(List<BaseRate> rates, long fetchMillis) {
-        /*
-        ** TODO find index via source manager.
-        */
-        BaseRate rateUsd = RateUtils.getRate(rates, rateType);
-        if (rateUsd != null) {
-            if (rateUsd instanceof YorumlarRate) {
-                addEntry(((YorumlarRate) rateUsd).val_real_avg, 0, fetchMillis);
-            } else if (rateUsd instanceof EnparaRate) {
-                addEntry(((EnparaRate) rateUsd).value_sell_real, 1, fetchMillis);
-                addEntry(((EnparaRate) rateUsd).value_buy_real, 2, fetchMillis);
-            } else if (rateUsd instanceof BigparaRate) {
-                addEntry(((BuySellRate) rateUsd).value_sell_real, 3, fetchMillis);
-            } else if (rateUsd instanceof DolarTlKurRate) {
-                addEntry(((DolarTlKurRate) rateUsd).val_real_avg, 4, fetchMillis);
-            } else if (rateUsd instanceof YapıKrediRate) {
-                addEntry(((YapıKrediRate) rateUsd).value_sell_real, 5, fetchMillis);
-                addEntry(((YapıKrediRate) rateUsd).value_buy_real, 6, fetchMillis);
-            } else if (rateUsd instanceof YahooRate) {
-                addEntry(((YahooRate) rateUsd).val_real_avg, 7, fetchMillis);
-            } else if (rateUsd instanceof ParaGarantiRate) {
-                addEntry(((ParaGarantiRate) rateUsd).val_real_avg, 8, fetchMillis);
-            }
-        }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(RatesEvent ratesEvent) {
-        List<BaseRate> rates = ratesEvent.rates;
-        update(rates, ratesEvent.fetch_time);
-    }
-
     private void initChart() {
 //        Description description = new Description();
 //        description.setTextSize(12f);
@@ -252,11 +212,11 @@ public class ChartActivity extends BaseActivity {
         LineData data = lineChart.getData();
         ArrayList<CurrencySource> sources = SourcesManager.getCurrencySources();
         for (CurrencySource source : sources) {
-            if (!source.isAvgType()) {
+            if (source.isAvgType()) {
+                data.addDataSet(createDataSet(source.getColor(), source.getName()));
+            } else {
                 data.addDataSet(createDataSet(source.getColor(), source.getName() + " " + getString(R.string.sell)));
                 data.addDataSet(createDataSet(source.getColor(), source.getName() + " " + getString(R.string.buy)));
-            } else {
-                data.addDataSet(createDataSet(source.getColor(), source.getName()));
             }
         }
 
@@ -277,6 +237,46 @@ public class ChartActivity extends BaseActivity {
         lineChart.getXAxis().setTextColor(chart_text_color);
         lineChart.getAxisRight().setTextColor(chart_text_color);
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+    }
+
+    private void update(List<BaseRate> rates, long fetch_time_millis) {
+        /*
+        ** TODO find index via source manager.
+        */
+        BaseRate rate = RateUtils.getRate(rates, rateType);
+        if (rate != null) {
+            if (rate instanceof YorumlarRate) {
+                addEntry(((YorumlarRate) rate).val_real_avg, 0, fetch_time_millis);
+            } else if (rate instanceof EnparaRate) {
+                addEntry(((EnparaRate) rate).value_sell_real, 1, fetch_time_millis);
+                addEntry(((EnparaRate) rate).value_buy_real, 2, fetch_time_millis);
+            } else if (rate instanceof BigparaRate) {
+                addEntry(((BuySellRate) rate).value_sell_real, 3, fetch_time_millis);
+            } else if (rate instanceof DolarTlKurRate) {
+                addEntry(((DolarTlKurRate) rate).val_real_avg, 4, fetch_time_millis);
+            } else if (rate instanceof YapıKrediRate) {
+                addEntry(((YapıKrediRate) rate).value_sell_real, 5, fetch_time_millis);
+                addEntry(((YapıKrediRate) rate).value_buy_real, 6, fetch_time_millis);
+            } else if (rate instanceof YahooRate) {
+                addEntry(((YahooRate) rate).val_real_avg, 7, fetch_time_millis);
+            } else if (rate instanceof ParaGarantiRate) {
+                addEntry(((ParaGarantiRate) rate).val_real_avg, 8, fetch_time_millis);
+            }
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(RatesEvent ratesEvent) {
+        List<BaseRate> rates = ratesEvent.rates;
+        update(rates, ratesEvent.fetch_time);
     }
 
     @SuppressLint("ViewConstructor")
@@ -306,7 +306,6 @@ public class ChartActivity extends BaseActivity {
         getMenuInflater().inflate(R.menu.menu_chart, menu);
         return true;
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
