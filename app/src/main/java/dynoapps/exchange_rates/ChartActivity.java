@@ -51,6 +51,7 @@ import dynoapps.exchange_rates.model.rates.BuySellRate;
 import dynoapps.exchange_rates.model.rates.DolarTlKurRate;
 import dynoapps.exchange_rates.model.rates.EnparaRate;
 import dynoapps.exchange_rates.model.rates.IRate;
+import dynoapps.exchange_rates.model.rates.ParaGarantiRate;
 import dynoapps.exchange_rates.model.rates.YahooRate;
 import dynoapps.exchange_rates.model.rates.YapıKrediRate;
 import dynoapps.exchange_rates.model.rates.YorumlarRate;
@@ -190,6 +191,8 @@ public class ChartActivity extends BaseActivity {
                 addEntry(((YapıKrediRate) rateUsd).value_buy_real, 6, fetchMilis);
             } else if (rateUsd instanceof YahooRate) {
                 addEntry(((YahooRate) rateUsd).avg_val_real, 7, fetchMilis);
+            } else if (rateUsd instanceof ParaGarantiRate) {
+                addEntry(((ParaGarantiRate) rateUsd).avg_val_real, 8, fetchMilis);
             }
         }
     }
