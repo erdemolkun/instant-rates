@@ -260,15 +260,16 @@ public class ChartActivity extends BaseActivity {
                 addEntry(((EnparaRate) rate).value_buy_real, 2, fetch_time_millis);
             } else if (rate instanceof BigparaRate) {
                 addEntry(((BuySellRate) rate).value_sell_real, 3, fetch_time_millis);
+                addEntry(((BuySellRate) rate).value_buy_real, 4, fetch_time_millis);
             } else if (rate instanceof DolarTlKurRate) {
-                addEntry(((DolarTlKurRate) rate).val_real_avg, 4, fetch_time_millis);
+                addEntry(((DolarTlKurRate) rate).val_real_avg, 5, fetch_time_millis);
             } else if (rate instanceof YapıKrediRate) {
-                addEntry(((YapıKrediRate) rate).value_sell_real, 5, fetch_time_millis);
-                addEntry(((YapıKrediRate) rate).value_buy_real, 6, fetch_time_millis);
+                addEntry(((YapıKrediRate) rate).value_sell_real, 6, fetch_time_millis);
+                addEntry(((YapıKrediRate) rate).value_buy_real, 7, fetch_time_millis);
             } else if (rate instanceof YahooRate) {
-                addEntry(((YahooRate) rate).val_real_avg, 7, fetch_time_millis);
+                addEntry(((YahooRate) rate).val_real_avg, 8, fetch_time_millis);
             } else if (rate instanceof ParaGarantiRate) {
-                addEntry(((ParaGarantiRate) rate).val_real_avg, 8, fetch_time_millis);
+                addEntry(((ParaGarantiRate) rate).val_real_avg, 9, fetch_time_millis);
             }
         }
     }
