@@ -191,8 +191,8 @@ public class RatePollingService extends IntentService {
                 float val_current = 0.0f;
                 float val_old = 0.0f;
                 if (baseRateCurrent instanceof AvgRate) {
-                    val_current = ((AvgRate) baseRateCurrent).avg_val_real;
-                    val_old = ((AvgRate) baseRateOld).avg_val_real;
+                    val_current = ((AvgRate) baseRateCurrent).val_real_avg;
+                    val_old = ((AvgRate) baseRateOld).val_real_avg;
                 } else if (baseRateCurrent instanceof BuySellRate) {
                     if (alarm.value_type != ValueType.NONE) {
                         val_current = baseRateCurrent.getValue(alarm.value_type);

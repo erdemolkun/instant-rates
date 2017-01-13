@@ -26,6 +26,6 @@ public class YahooRate extends AvgRate {
     @Override
     public void setRealValues() {
         if (rateType == UNKNOWN) return;
-        avg_val_real = Float.valueOf(avg_val);
+        val_real_avg = Float.valueOf(avg_val);
     }
 }

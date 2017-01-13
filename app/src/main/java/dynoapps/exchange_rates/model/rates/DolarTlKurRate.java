@@ -34,12 +34,12 @@ public class DolarTlKurRate extends AvgRate implements IConvertable {
     public void setRealValues() {
         if (rateType == UNKNOWN) return;
         String val = avg_val.replace("\'", "").replace("$", "").trim();
-        avg_val_real = Float.valueOf(val);
+        val_real_avg = Float.valueOf(val);
     }
 
     @Override
     public String toString() {
-        return type.split("_")[0] + " -> : " + avg_val_real;
+        return type.split("_")[0] + " -> : " + val_real_avg;
     }
 
 }

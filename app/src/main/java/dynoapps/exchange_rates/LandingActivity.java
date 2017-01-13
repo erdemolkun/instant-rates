@@ -514,7 +514,7 @@ public class LandingActivity extends BaseActivity {
                                 val = baseRate.getFormatted(((BuySellRate) baseRate).value_buy_real);
                             }
                         } else if (baseRate instanceof AvgRate) {
-                            val = baseRate.getFormatted(((AvgRate) baseRate).avg_val_real);
+                            val = baseRate.getFormatted(((AvgRate) baseRate).val_real_avg);
                         }
                         item.tvValue.setText(val);
                         if (animated)

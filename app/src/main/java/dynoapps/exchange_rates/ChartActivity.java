@@ -178,21 +178,21 @@ public class ChartActivity extends BaseActivity {
         BaseRate rateUsd = RateUtils.getRate(rates, rateType);
         if (rateUsd != null) {
             if (rateUsd instanceof YorumlarRate) {
-                addEntry(((YorumlarRate) rateUsd).avg_val_real, 0, fetchMilis);
+                addEntry(((YorumlarRate) rateUsd).val_real_avg, 0, fetchMilis);
             } else if (rateUsd instanceof EnparaRate) {
                 addEntry(((EnparaRate) rateUsd).value_sell_real, 1, fetchMilis);
                 addEntry(((EnparaRate) rateUsd).value_buy_real, 2, fetchMilis);
             } else if (rateUsd instanceof BigparaRate) {
                 addEntry(((BuySellRate) rateUsd).value_sell_real, 3, fetchMilis);
             } else if (rateUsd instanceof DolarTlKurRate) {
-                addEntry(((DolarTlKurRate) rateUsd).avg_val_real, 4, fetchMilis);
+                addEntry(((DolarTlKurRate) rateUsd).val_real_avg, 4, fetchMilis);
             } else if (rateUsd instanceof YapıKrediRate) {
                 addEntry(((YapıKrediRate) rateUsd).value_sell_real, 5, fetchMilis);
                 addEntry(((YapıKrediRate) rateUsd).value_buy_real, 6, fetchMilis);
             } else if (rateUsd instanceof YahooRate) {
-                addEntry(((YahooRate) rateUsd).avg_val_real, 7, fetchMilis);
+                addEntry(((YahooRate) rateUsd).val_real_avg, 7, fetchMilis);
             } else if (rateUsd instanceof ParaGarantiRate) {
-                addEntry(((ParaGarantiRate) rateUsd).avg_val_real, 8, fetchMilis);
+                addEntry(((ParaGarantiRate) rateUsd).val_real_avg, 8, fetchMilis);
             }
         }
     }
