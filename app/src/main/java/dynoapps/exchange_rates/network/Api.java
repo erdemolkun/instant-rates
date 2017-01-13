@@ -14,6 +14,7 @@ import dynoapps.exchange_rates.converters.YorumlarConverter;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
 
 /**
  * Created by erdemmac on 21/10/2016.
@@ -28,7 +29,21 @@ public class Api {
     private static Retrofit dolarTlKurApi;
     private static Retrofit garantiApi;
     private static Retrofit yahooApi;
+    private static Retrofit paraGarantiApi;
 
+
+    public static Retrofit getParaGarantiApi() {
+        if (paraGarantiApi == null) {
+            final OkHttpClient client = builder().build();
+            paraGarantiApi = new Retrofit.Builder()
+                    .client(client)
+                    .baseUrl("https://realtime.paragaranti.com/")
+                    .addConverterFactory(SimpleXmlConverterFactory.create())
+                    .build();
+        }
+        return paraGarantiApi;
+
+    }
 
     public static Retrofit getYorumlarApi() {
         if (yorumlarApi == null) {

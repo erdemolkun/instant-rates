@@ -12,5 +12,6 @@ public interface CurrencyType {
     int TLKUR = 4;
     int YAPIKREDI = 5;
     int YAHOO = 6;
+    int PARAGARANTI = 7;
 
 }

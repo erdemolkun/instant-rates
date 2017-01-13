@@ -106,6 +106,13 @@ dependencies {
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+
+    compile ('com.squareup.retrofit2:converter-simplexml:2.1.0') {
+        exclude group: 'xpp3', module: 'xpp3'
+        exclude group: 'stax', module: 'stax-api'
+        exclude group: 'stax', module: 'stax'
+    }
+
     compile 'com.jakewharton:butterknife:8.4.0'
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'org.jsoup:jsoup:1.10.1'

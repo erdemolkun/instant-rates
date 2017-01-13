@@ -42,6 +42,7 @@ import dynoapps.exchange_rates.model.rates.BuySellRate;
 import dynoapps.exchange_rates.model.rates.DolarTlKurRate;
 import dynoapps.exchange_rates.model.rates.EnparaRate;
 import dynoapps.exchange_rates.model.rates.IRate;
+import dynoapps.exchange_rates.model.rates.ParaGarantiRate;
 import dynoapps.exchange_rates.model.rates.YahooRate;
 import dynoapps.exchange_rates.model.rates.YapıKrediRate;
 import dynoapps.exchange_rates.model.rates.YorumlarRate;
@@ -50,6 +51,7 @@ import dynoapps.exchange_rates.provider.BigparaRateProvider;
 import dynoapps.exchange_rates.provider.DolarTlKurRateProvider;
 import dynoapps.exchange_rates.provider.EnparaRateProvider;
 import dynoapps.exchange_rates.provider.IPollingSource;
+import dynoapps.exchange_rates.provider.ParaGarantiRateProvider;
 import dynoapps.exchange_rates.provider.ProviderSourceCallbackAdapter;
 import dynoapps.exchange_rates.provider.YahooRateProvider;
 import dynoapps.exchange_rates.provider.YapıKrediRateProvider;
@@ -154,6 +156,15 @@ public class RatePollingService extends IntentService {
                     EventBus.getDefault().post(new RatesEvent<>(rates, CurrencyType.YAHOO));
                 }
             }));
+
+            providers.add(new ParaGarantiRateProvider(new ProviderSourceCallbackAdapter<List<ParaGarantiRate>>() {
+                @Override
+                public void onResult(List<ParaGarantiRate> rates) {
+                    alarmChecks(rates, CurrencyType.PARAGARANTI);
+                    RatesHolder.getInstance().addRate(rates, CurrencyType.PARAGARANTI);
+                    EventBus.getDefault().post(new RatesEvent<>(rates, CurrencyType.PARAGARANTI));
+                }
+            }));
         }
 
         SourcesManager.updateProviders(providers);
@@ -239,6 +250,7 @@ public class RatePollingService extends IntentService {
         ArrayList<CurrencySource> currencySources = SourcesManager.getCurrencySources();
         for (CurrencySource currencySource : currencySources) {
             IPollingSource iPollingSource = currencySource.getPollingSource();
+            if (iPollingSource == null) return;
             if (currencySource.isEnabled()) {
                 iPollingSource.start();
             } else {

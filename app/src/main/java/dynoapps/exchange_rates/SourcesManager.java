@@ -22,6 +22,7 @@ import dynoapps.exchange_rates.provider.BasePoolingProvider;
 import dynoapps.exchange_rates.provider.BigparaRateProvider;
 import dynoapps.exchange_rates.provider.DolarTlKurRateProvider;
 import dynoapps.exchange_rates.provider.EnparaRateProvider;
+import dynoapps.exchange_rates.provider.ParaGarantiRateProvider;
 import dynoapps.exchange_rates.provider.YahooRateProvider;
 import dynoapps.exchange_rates.provider.YapıKrediRateProvider;
 import dynoapps.exchange_rates.provider.YorumlarRateProvider;
@@ -44,6 +45,9 @@ public class SourcesManager {
 
         for (CurrencySource source : getCurrencySources()) {
             switch (source.getSourceType()) {
+                case CurrencyType.PARAGARANTI:
+                    source.setPollingSource(CollectionUtils.getInstance(providers, ParaGarantiRateProvider.class));
+                    break;
                 case CurrencyType.ALTININ:
                     source.setPollingSource(CollectionUtils.getInstance(providers, YorumlarRateProvider.class));
                     break;
@@ -184,6 +188,7 @@ public class SourcesManager {
         currencySources = new ArrayList<>();
         int[] only_usd_try = {IRate.USD};
         int[] altin_in_supported = {IRate.USD, IRate.EUR, IRate.EUR_USD, IRate.ONS};
+        int[] paragaranti_supported = {IRate.USD, IRate.EUR, IRate.EUR_USD, IRate.ONS};
         int[] enpara_supported = {IRate.USD, IRate.EUR, IRate.EUR_USD, IRate.ONS_TRY};
         int[] yapıkredi_supported = {IRate.USD, IRate.EUR, IRate.ONS_TRY};
         currencySources.add(new CurrencySource("Altın.in", CurrencyType.ALTININ, R.color.colorYorumlar, true, altin_in_supported));
@@ -192,6 +197,7 @@ public class SourcesManager {
         currencySources.add(new CurrencySource("TlKur", CurrencyType.TLKUR, R.color.colorDolarTlKur, false, altin_in_supported));
         currencySources.add(new CurrencySource("Yapı Kredi", CurrencyType.YAPIKREDI, R.color.colorYapıKredi, false, yapıkredi_supported));
         currencySources.add(new CurrencySource("Yahoo", CurrencyType.YAHOO, R.color.colorYahoo, false, altin_in_supported));
+        currencySources.add(new CurrencySource("Paragaranti", CurrencyType.PARAGARANTI, R.color.colorParagaranti, false, paragaranti_supported)); // update supported ones
 
         updateSourceStatesFromPrefs();
     }
