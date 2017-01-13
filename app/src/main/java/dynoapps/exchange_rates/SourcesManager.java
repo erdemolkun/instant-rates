@@ -188,7 +188,7 @@ public class SourcesManager {
         currencySources = new ArrayList<>();
         int[] only_usd_try = {IRate.USD};
         int[] altin_in_supported = {IRate.USD, IRate.EUR, IRate.EUR_USD, IRate.ONS};
-        int[] paragaranti_supported = {IRate.USD, IRate.EUR};
+        int[] paragaranti_supported = {IRate.USD, IRate.EUR, IRate.EUR_USD};
         int[] enpara_supported = {IRate.USD, IRate.EUR, IRate.EUR_USD, IRate.ONS_TRY};
         int[] yapıkredi_supported = {IRate.USD, IRate.EUR, IRate.ONS_TRY};
         currencySources.add(new CurrencySource("Altın.in", CurrencyType.ALTININ, R.color.colorYorumlar, true, altin_in_supported));

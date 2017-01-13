@@ -27,6 +27,9 @@ public class ParaGarantiRate extends AvgRate implements IConvertable {
             case "KEUR":
                 rateType = EUR;
                 break;
+            case "EUR":
+                rateType = EUR_USD;
+                break;
         }
         this.rateType = rateType;
     }
@@ -36,7 +39,7 @@ public class ParaGarantiRate extends AvgRate implements IConvertable {
         if (rateType == UNKNOWN) return;
         String val = last.replace("\'", "").replace("$", "").trim();
         Float real_val = RateUtils.toFloat(val);
-        avg_val_real = real_val!=null ? real_val : 0.0f;
+        avg_val_real = real_val != null ? real_val : 0.0f;
     }
 
     @Override
