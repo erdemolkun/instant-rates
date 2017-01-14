@@ -20,8 +20,6 @@
     <color name="refresh_progress_2">@color/colorAccent</color>
     <color name="refresh_progress_3">@color/colorYahoo</color>
 
-    <color name="softYellow">#FFD17B</color>
-
     <color name="color_material_grey_50">#fffafafa</color>
 
 </resources>

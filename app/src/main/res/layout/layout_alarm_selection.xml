@@ -22,7 +22,6 @@
                 android:layout_height="wrap_content"/>
     </android.support.design.widget.TextInputLayout>
 
-
     <RadioGroup
             android:id="@+id/rg_alarm"
             android:layout_width="match_parent"
@@ -38,6 +37,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/bg_checkbox_alarm"
                 android:button="@null"
+                tools:checked="true"
                 android:gravity="center"
                 android:maxLines="2"
                 android:text="@string/if_above"
