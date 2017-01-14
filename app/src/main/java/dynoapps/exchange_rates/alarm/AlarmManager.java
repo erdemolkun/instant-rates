@@ -8,8 +8,10 @@ import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -115,14 +117,30 @@ public class AlarmManager {
             return;
         }
         @SuppressLint("InflateParams") final View v = LayoutInflater.from(context).inflate(R.layout.layout_alarm_selection, null);
-        EditText etAlarm = (EditText) v.findViewById(R.id.et_alarm_value);
-
+        final EditText etAlarm = (EditText) v.findViewById(R.id.et_alarm_value);
+        final TextInputLayout tilValue = (TextInputLayout) v.findViewById(R.id.til_alarm_value);
         if (default_value != null) {
             String val = RateUtils.formatValue(default_value, rate_type);
             etAlarm.setText(val);
             etAlarm.setSelection(etAlarm.getText().length());
         }
         etAlarm.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(4), new InputFilterMinMax(1, 10000)});
+        etAlarm.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                tilValue.setError(null);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
         final RadioGroup rgAlarm = (RadioGroup) v.findViewById(R.id.rg_alarm);
         rgAlarm.check(R.id.rb_above);
 
@@ -195,9 +213,7 @@ public class AlarmManager {
 
                     @Override
                     public void onClick(View view) {
-                        EditText etValue = (EditText) v.findViewById(R.id.et_alarm_value);
-                        TextInputLayout tilValue = (TextInputLayout) v.findViewById(R.id.til_alarm_value);
-                        String str = etValue.getText().toString();
+                        String str = etAlarm.getText().toString();
                         Float val = null;
                         try {
                             val = RateUtils.toFloat(str);
