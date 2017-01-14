@@ -177,7 +177,8 @@ public class ChartActivity extends BaseActivity {
         // add an empty data object
         lineChart.setData(new LineData());
 //        mChart.getXAxis().setDrawLabels(false);
-        lineChart.getXAxis().setDrawGridLines(true);
+        lineChart.getXAxis().setDrawGridLines(false);
+        lineChart.getAxisRight().setDrawGridLines(true);
 
         lineChart.getXAxis().setLabelCount(4);
 //        lineChart.getAxisRight().setAxisMaximum(3.48f);
