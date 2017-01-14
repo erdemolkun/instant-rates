@@ -17,10 +17,7 @@ public class CurrencySource {
     private int source_type;
     private int color;
     private int[] supported_rates = new int[0];
-
-    public CurrencySource(String name, int source_type, @ColorRes int colorRes, boolean enabled) {
-        this(name, source_type, colorRes, enabled, null);
-    }
+    private int chartIndex = 0;
 
     public CurrencySource(String name, int source_type, @ColorRes int colorRes, boolean enabled, int[] supported_rates) {
         this.name = name;
@@ -28,6 +25,14 @@ public class CurrencySource {
         this.enabled = enabled;
         this.color = ContextCompat.getColor(App.context(), colorRes);
         this.supported_rates = supported_rates;
+    }
+
+    public int getChartIndex() {
+        return chartIndex;
+    }
+
+    public void setChartIndex(int chartIndex) {
+        this.chartIndex = chartIndex;
     }
 
     public int[] getSupportedRates() {

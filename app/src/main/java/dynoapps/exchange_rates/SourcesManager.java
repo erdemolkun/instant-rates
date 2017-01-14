@@ -198,7 +198,11 @@ public class SourcesManager {
         currencySources.add(new CurrencySource("Yapı Kredi", CurrencyType.YAPIKREDI, R.color.colorYapıKredi, false, yapıkredi_supported));
         currencySources.add(new CurrencySource("Yahoo", CurrencyType.YAHOO, R.color.colorYahoo, false, altin_in_supported));
         currencySources.add(new CurrencySource("Paragaranti", CurrencyType.PARAGARANTI, R.color.colorParagaranti, false, paragaranti_supported)); // update supported ones
-
+        int index = 0;
+        for (CurrencySource source : currencySources) {
+            source.setChartIndex(index);
+            index += source.isAvgType() ? 1 : 2;
+        }
         updateSourceStatesFromPrefs();
     }
 
