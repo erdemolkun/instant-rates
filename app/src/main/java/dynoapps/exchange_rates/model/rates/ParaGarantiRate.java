@@ -13,8 +13,6 @@ import dynoapps.exchange_rates.util.RateUtils;
 
 @Root(name = "STOCK")
 public class ParaGarantiRate extends AvgRate implements IConvertable {
-    // todo
-    public String time;
 
     @Override
     public void toRateType() {
@@ -53,7 +51,6 @@ public class ParaGarantiRate extends AvgRate implements IConvertable {
 
     @Element(name = "LAST", required = false)
     public String last;
-
 
     @Element(name = "DESC", required = false)
     public String desc;
