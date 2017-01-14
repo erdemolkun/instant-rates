@@ -15,7 +15,7 @@
                 android:textSize="16sp"
                 android:minHeight="44dp"
                 android:hint="@string/enter_value"
-                android:digits="0123456789.,"
+                android:digits="@string/digits_for_decimal"
                 android:imeOptions="actionDone"
                 android:inputType="numberDecimal"
                 android:layout_width="match_parent"
@@ -26,7 +26,8 @@
             android:id="@+id/rg_alarm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="60dp"
+            android:minHeight="48dp"
+            android:gravity="center_vertical"
             android:layout_marginTop="8dp"
             android:orientation="horizontal">
 
@@ -35,27 +36,19 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/bg_checkbox_alarm"
-                android:button="@null"
                 tools:checked="true"
-                android:gravity="center"
+                android:gravity="center_vertical"
                 android:maxLines="2"
                 android:text="@string/if_above"
                 android:textSize="14sp"/>
-
-        <Space
-                android:layout_width="4dp"
-                android:layout_height="match_parent"/>
 
         <RadioButton
                 android:id="@+id/rb_below"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/bg_checkbox_alarm"
-                android:button="@null"
                 android:maxLines="2"
-                android:gravity="center"
+                android:gravity="center_vertical"
                 android:text="@string/if_below"
                 android:textSize="14sp"/>
 

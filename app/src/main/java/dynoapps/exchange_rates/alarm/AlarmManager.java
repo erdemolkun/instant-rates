@@ -123,8 +123,7 @@ public class AlarmManager {
         etAlarm.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(4), new InputFilterMinMax(1, 10000)});
         final RadioGroup rgAlarm = (RadioGroup) v.findViewById(R.id.rg_alarm);
         rgAlarm.check(R.id.rb_above);
-
-
+        
         final Spinner spn_rate_types = (Spinner) v.findViewById(R.id.spn_rate_types);
         final View rate_types_view = v.findViewById(R.id.v_alarm_types);
         final Spinner spn_sources = (Spinner) v.findViewById(R.id.spn_source_types);

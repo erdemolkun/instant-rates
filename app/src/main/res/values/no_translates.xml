@@ -7,4 +7,5 @@
     <string name="dollar_sign" translatable="false">$</string>
     <string name="euro_sign" translatable="false">€</string>
     <string name="version_placeholder" translatable="false">v %s</string>
+    <string name="digits_for_decimal" translatable="false">0123456789.,</string>
 </resources>
