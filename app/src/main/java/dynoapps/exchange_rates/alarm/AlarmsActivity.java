@@ -153,6 +153,9 @@ public class AlarmsActivity extends BaseActivity {
         @BindView(R.id.iv_alarm_type)
         ImageView ivType;
 
+        @BindView(R.id.tv_alarm_type_hint)
+        TextView tvTypeHint;
+
         @BindView(R.id.tv_alarm_val)
         TextView tvValue;
 

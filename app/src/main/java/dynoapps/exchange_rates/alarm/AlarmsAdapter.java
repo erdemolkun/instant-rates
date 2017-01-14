@@ -1,7 +1,7 @@
 package dynoapps.exchange_rates.alarm;
 
-import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +12,7 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.ArrayList;
 import java.util.List;
 
+import dynoapps.exchange_rates.App;
 import dynoapps.exchange_rates.R;
 import dynoapps.exchange_rates.SourcesManager;
 import dynoapps.exchange_rates.data.CurrencySource;
@@ -56,7 +57,10 @@ class AlarmsAdapter extends UpdatableAdapter<List<Alarm>, AlarmsActivity.AlarmVi
     public void onBindViewHolder(final AlarmsActivity.AlarmViewHolder holder, int position) {
         final Alarm alarm = alarms.get(position);
         holder.ivType.setRotation(alarm.is_above ? 90 : 270);
-        holder.ivType.setColorFilter(Color.parseColor(!alarm.is_above ? "#f44336" : "#4CAF50"));//todo move to colors.
+        holder.ivType.setColorFilter(ContextCompat.getColor(App.context(), alarm.is_above ?
+                android.R.color.holo_green_light :
+                android.R.color.holo_red_light));
+        holder.tvTypeHint.setText(alarm.is_above ? R.string.if_above : R.string.if_below);
         holder.tvValue.setText(RateUtils.valueToUI(alarm.val, alarm.rate_type));
         holder.ivRateType.setImageResource(RateUtils.getRateIcon(alarm.rate_type));
         CurrencySource source = SourcesManager.getSource(alarm.source_type);
@@ -65,7 +69,7 @@ class AlarmsAdapter extends UpdatableAdapter<List<Alarm>, AlarmsActivity.AlarmVi
             holder.tvSource.setTextColor(source.getColor());
         } else {
             holder.tvSource.setText("-");
-            holder.tvSource.setTextColor(Color.parseColor("#222222"));
+            holder.tvSource.setTextColor(ContextCompat.getColor(App.context(), R.color.colorPrimary));
         }
 
         holder.vClose.setOnClickListener(new View.OnClickListener() {

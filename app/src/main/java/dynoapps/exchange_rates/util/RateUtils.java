@@ -30,7 +30,8 @@ public class RateUtils {
         return null;
     }
 
-    public static String valueToUI(float val, int rateType) {
+    public static String valueToUI(Float val, int rateType) {
+        if (val==null)return "";
         String formatted = formatValue(val, rateType);
         if (rateType == IRate.EUR_USD) {
             return formatted;

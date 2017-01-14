@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.text.InputFilter;
 import android.text.TextUtils;
@@ -23,6 +24,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 
+import dynoapps.exchange_rates.App;
 import dynoapps.exchange_rates.Prefs;
 import dynoapps.exchange_rates.R;
 import dynoapps.exchange_rates.SourcesManager;
@@ -123,7 +125,7 @@ public class AlarmManager {
         etAlarm.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(4), new InputFilterMinMax(1, 10000)});
         final RadioGroup rgAlarm = (RadioGroup) v.findViewById(R.id.rg_alarm);
         rgAlarm.check(R.id.rb_above);
-        
+
         final Spinner spn_rate_types = (Spinner) v.findViewById(R.id.spn_rate_types);
         final View rate_types_view = v.findViewById(R.id.v_alarm_types);
         final Spinner spn_sources = (Spinner) v.findViewById(R.id.spn_source_types);
@@ -194,21 +196,25 @@ public class AlarmManager {
                     @Override
                     public void onClick(View view) {
                         EditText etValue = (EditText) v.findViewById(R.id.et_alarm_value);
+                        TextInputLayout tilValue = (TextInputLayout) v.findViewById(R.id.til_alarm_value);
                         String str = etValue.getText().toString();
                         Float val = null;
                         try {
                             val = RateUtils.toFloat(str);
-                            Alarm alarm = new Alarm();
-                            alarm.val = val;
-                            alarm.is_above = rgAlarm.getCheckedRadioButtonId() == R.id.rb_above;
-                            alarm.source_type = ((CurrencySource) spn_sources.getSelectedItem()).getSourceType();
-                            alarm.rate_type = ((RateValuePair) spn_rate_types.getSelectedItem()).rate_type;
-                            alarm.value_type = value_type;
-                            AlarmManager.addAlarm(alarm);
+                            if (val != null) {
+                                Alarm alarm = new Alarm();
+                                alarm.val = val;
+                                alarm.is_above = rgAlarm.getCheckedRadioButtonId() == R.id.rb_above;
+                                alarm.source_type = ((CurrencySource) spn_sources.getSelectedItem()).getSourceType();
+                                alarm.rate_type = ((RateValuePair) spn_rate_types.getSelectedItem()).rate_type;
+                                alarm.value_type = value_type;
+                                AlarmManager.addAlarm(alarm);
+                            }
                         } catch (Exception ex) {
                             L.i(AlarmManager.class.getSimpleName(), "Alarm Convert Exception");
                         }
                         if (val == null) {
+                            tilValue.setError(App.context().getString(R.string.check_value));
                             Toast.makeText(context, R.string.check_value, Toast.LENGTH_SHORT).show();
                             return;
                         }
