@@ -12,7 +12,8 @@ Instant Rates is an android application showing instant rate values for usd,euro
 
 
 <p align="center">
-    <img width=320px src="playstore/screens/en/splash.png" alt="Splash"/>
+    <img width=320px src="playstore/screens/splash.png" alt="Splash"/>
+    <img width=320px src="playstore/screens/tr/side_menu.png" alt="Side Menu"/>
     <img width=320px src="playstore/screens/en/landing_page.png" alt="Home Scren"/>
     <img width=320px src="playstore/screens/en/alarm.png" alt="Add Alarm"/>
     <img width=320px src="playstore/screens/en/alarms.png" alt="Alarms"/>
