@@ -1,19 +1,17 @@
-<html>
-  
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <title>Instant Rates</title>
 
-   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Instant Rates</title>
+  <link rel="stylesheet" href="stylesheets/styles.css">
 
-    <link rel="stylesheet" href="stylesheets/styles.css">
-
-    <!-- Owl Carousel Assets -->
-    <link href="owl-carousel/owl.carousel.css" rel="stylesheet">
-    <link href="owl-carousel/owl.theme.css" rel="stylesheet">
+  <!-- Owl Carousel Assets -->
+  <link href="owl-carousel/owl.carousel.css" rel="stylesheet">
+  <link href="owl-carousel/owl.theme.css" rel="stylesheet">
 
 
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
@@ -42,19 +40,19 @@
 
 
 
-<body>
+  <body>
 
-<script src="assets/js/jquery-1.9.1.min.js"></script> 
-<script src="owl-carousel/owl.carousel.js"></script>
+    <script src="assets/js/jquery-1.9.1.min.js"></script> 
+    <script src="owl-carousel/owl.carousel.js"></script>
 
-<style>
-    body {
-      margin:0px;
-      padding: 0;
-    }
+    <style>
+      body {
+        margin:0px;
+        padding: 0;
+      }
 
 
-  #div-footer{
+      .div-footer{
         display: flex;
         padding: 32px;
         margin-bottom: 32px;
@@ -62,19 +60,19 @@
         justify-content: center;
         align-items: center;
         flex-direction: column;
-    }
-    #h1-title{
-      color: #fff;
-      margin: 0;
-      margin-top: 16px;
-    }
+      }
+      h1{
+        color: #fff;
+        margin: 0;
+        margin-top: 16px;
+      }
 
-    
-    #img-icon{
-      
-    }
 
-    #owl-item .item{
+      .img-icon{
+
+      }
+
+      #owl-item .item{
         display: block;
         cursor: pointer;
         margin: 5px;
@@ -83,64 +81,63 @@
         border-radius: 3px;
         text-align: center;
         -webkit-tap-highlight-color: rgba(255, 255, 255, 0); 
-    }
+      }
 
-    #owl-item .item img {
-      max-width: 95%;
-    }
-    #owl-item .item:hover{
-      background: #ccc;
-    }
-    
-    .version {
-      position: absolute;
-      top: 16px;
-      right: 16px;
-      color: #fff
-    }
+      #owl-item .item img {
+        max-width: 95%;
+      }
+      #owl-item .item:hover{
+        background: #ccc;
+      }
 
-  </style>
+      .version {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        color: #fff
+      }
+
+    </style>
 
 
 
-  <div id="div-footer">
-    <img id="img-icon" src="playstore/store_icon_white.png" width="96px" height="96px" alt="Icon"/>    
-    <h1 id="h1-title">Instant Rates</h1>
-    <a class="version" href="https://play.google.com/store/apps/details?id=dynoapps.exchange_rates">v0.3.3</a>
-  </div>
+    <div class="div-footer">
+      <img class="img-icon" src="playstore/store_icon_white.png" width="96px" height="96px" alt="Icon"/>    
+      <h1>Instant Rates</h1>
+      <a class="version" href="https://play.google.com/store/apps/details?id=dynoapps.exchange_rates">v0.3.3</a>
+    </div>
 
+
+    <div id="owl-item">
+
+      <div class="item"><img src="playstore/screens/splash.png" alt="Splash" Image"></div>
+      <div class="item"><img src="playstore/screens/en/landing_page.png" alt="Home Scren" Image"></div>
+      <div class="item"><img src="playstore/screens/tr/side_menu.png" alt="Side Menu" Image"></div>
+      <div class="item"><img src="playstore/screens/en/alarm.png" alt="Add Alarm" Image"></div>
+      <div class="item"><img src="playstore/screens/en/alarms.png" alt="Alarms" Image"></div>
+      <div class="item"><img src="playstore/screens/en/source_selection.png" alt="Source Selection" Image"></div>
+      <div class="item"><img src="playstore/screens/en/interval_selection.png" alt="Interval Selection"></div>
+
+    </div>
+
+    <script src="javascripts/scale.fix.js"></script>
+    <script type="text/javascript">
+
+      $(document).ready(function() {
+
+        $("#owl-item").owlCarousel({
+
+        autoPlay: 3000, //Set AutoPlay to 3 seconds
+
+        items : 4,
+        itemsDesktop : [1199,3],
+        itemsDesktopSmall : [979,3],
+        navigation:true,
+
+    });
+
+      });
+    </script>
+  </body>
   
-  <div id="owl-item">
-          
-    <div class="item"><img src="playstore/screens/splash.png" alt="Splash" Image"></div>
-    <div class="item"><img src="playstore/screens/en/landing_page.png" alt="Home Scren" Image"></div>
-    <div class="item"><img src="playstore/screens/tr/side_menu.png" alt="Side Menu" Image"></div>
-    <div class="item"><img src="playstore/screens/en/alarm.png" alt="Add Alarm" Image"></div>
-    <div class="item"><img src="playstore/screens/en/alarms.png" alt="Alarms" Image"></div>
-    <div class="item"><img src="playstore/screens/en/source_selection.png" alt="Source Selection" Image"></div>
-    <div class="item"><img src="playstore/screens/en/interval_selection.png" alt="Interval Selection"></div>
-  
-
-  </div>
-
-<script src="javascripts/scale.fix.js"></script>
-<script type="text/javascript">
-  
-  $(document).ready(function() {
- 
-  $("#owl-item").owlCarousel({
- 
-      autoPlay: 3000, //Set AutoPlay to 3 seconds
- 
-      items : 4,
-      itemsDesktop : [1199,3],
-      itemsDesktopSmall : [979,3],
-      navigation:true,
- 
-  });
- 
-});
-</script>
-</body>
-  
-</html>
+  </html>
