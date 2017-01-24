@@ -11,7 +11,7 @@ public class GarantiRate extends AvgRate implements IConvertable {
     @Override
     public void toRateType() {
         if (TextUtils.isEmpty(type)) rateType = UNKNOWN;
-        int rateType = UNKNOWN;
+        @RateDef int rateType = UNKNOWN;
         switch (type) {
             case "USD":
                 rateType = USD;

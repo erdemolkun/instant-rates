@@ -78,7 +78,9 @@ public class ChartActivity extends BaseActivity {
     @BindView(R.id.swipe_to_refresh)
     SwipeRefreshLayout swipeRefreshLayout;
 
-    private int rateType = IRate.USD;
+    private
+    @IRate.RateDef
+    int rateType = IRate.USD;
 
     private long startMilis;
     SimpleDateFormat hourFormatter = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());

@@ -13,7 +13,10 @@ public abstract class BaseRate implements IConvertable, IRate {
     }
 
     public long fetchMilis;
-    protected int rateType;
+
+    protected
+    @RateDef
+    int rateType;
     public String type;
 
     @Override

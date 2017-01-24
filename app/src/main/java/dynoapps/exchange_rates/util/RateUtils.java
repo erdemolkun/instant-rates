@@ -17,10 +17,10 @@ import dynoapps.exchange_rates.model.rates.IRate;
  */
 
 public class RateUtils {
-    private static Formatter formatter2 = new Formatter(2,0);
-    private static Formatter formatter5 = new Formatter(5,2);
+    private static Formatter formatter2 = new Formatter(2, 0);
+    private static Formatter formatter5 = new Formatter(5, 2);
 
-    public static <T extends BaseRate> T getRate(List<T> rates, int rateType) {
+    public static <T extends BaseRate> T getRate(List<T> rates, @IRate.RateDef int rateType) {
         if (rates == null) return null;
         for (T rate : rates) {
             if (rate.getRateType() == rateType) {
@@ -30,8 +30,8 @@ public class RateUtils {
         return null;
     }
 
-    public static String valueToUI(Float val, int rateType) {
-        if (val==null)return "";
+    public static String valueToUI(Float val, @IRate.RateDef int rateType) {
+        if (val == null) return "";
         String formatted = formatValue(val, rateType);
         if (rateType == IRate.EUR_USD) {
             return formatted;
