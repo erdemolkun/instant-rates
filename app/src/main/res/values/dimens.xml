@@ -5,7 +5,6 @@
     <dimen name="chart_height">288dp</dimen>
 
     <dimen name="keyline_2">72dp</dimen>
-    <dimen name="cards_list_name_width">36dp</dimen>
     <dimen name="drawer_item_height">60dp</dimen>
     <dimen name="drawer_item_menu_text_size">16sp</dimen>
 

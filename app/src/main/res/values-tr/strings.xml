@@ -38,12 +38,5 @@
     <string name="ons_dollar_grapsh">Ons / Dolar Grafiği</string>
     <string name="max_alarm_message">En fazla %d alarm ekleyebilirsiniz.</string>
     <string name="rate_types">Tipler</string>
-    <plurals name="sec_short">
-        <item quantity="one">%d sn</item>
-        <item quantity="other">%d sn</item>
-    </plurals>
-    <plurals name="min_short">
-        <item quantity="one">%d dk</item>
-        <item quantity="other">%d dk</item>
-    </plurals>
+
 </resources>

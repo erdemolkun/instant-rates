@@ -1,0 +1,10 @@
+<resources>
+    <plurals name="sec_short">
+        <item quantity="one">%d sec</item>
+        <item quantity="other">%d secs</item>
+    </plurals>
+    <plurals name="min_short">
+        <item quantity="one">%d min</item>
+        <item quantity="other">%d mins</item>
+    </plurals>
+</resources>

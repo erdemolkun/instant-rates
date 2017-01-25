@@ -40,12 +40,4 @@
     <string name="max_alarm_message">You can add max %d alarms</string>
     <string name="rate_types">Types</string>
 
-    <plurals name="sec_short">
-        <item quantity="one">%d sec</item>
-        <item quantity="other">%d secs</item>
-    </plurals>
-    <plurals name="min_short">
-        <item quantity="one">%d min</item>
-        <item quantity="other">%d mins</item>
-    </plurals>
 </resources>
