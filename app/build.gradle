@@ -1,6 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.neenbedankt.android-apt'
-
 
 repositories {
     maven { url "https://jitpack.io" }
@@ -15,10 +13,6 @@ buildscript {
         maven { url "https://jitpack.io" }
 
     }
-    dependencies {
-        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
-    }
-
 }
 
 // set flag whether we are on a build server
@@ -127,7 +121,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
-    apt 'com.jakewharton:butterknife-compiler:8.5.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.0'
     testCompile 'junit:junit:4.12'
 
 
