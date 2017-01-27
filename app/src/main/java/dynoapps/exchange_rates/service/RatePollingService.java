@@ -205,11 +205,11 @@ public class RatePollingService extends IntentService {
                 String val = alarm.rate_type == IRate.ONS ? formatter2.format(alarm.val) : formatter5.format(alarm.val);
                 if (alarm.is_above && val_current > alarm.val && val_old <= alarm.val) {
                     iterator.remove();
-                    sendNotification(getString(R.string.is_above_val, RateUtils.rateName(alarm.rate_type),
+                    sendNotification(getString(R.string.is_above_val, SourcesManager.getSourceName(alarm.source_type), RateUtils.rateName(alarm.rate_type),
                             val), "increasing", Alarm.getPushId(alarm));
                 } else if (!alarm.is_above && val_current < alarm.val && val_old >= alarm.val) {
                     iterator.remove();
-                    sendNotification(getString(R.string.is_below_value, RateUtils.rateName(alarm.rate_type),
+                    sendNotification(getString(R.string.is_below_value, SourcesManager.getSourceName(alarm.source_type), RateUtils.rateName(alarm.rate_type),
                             val), "decreasing", Alarm.getPushId(alarm));
                 }
             }

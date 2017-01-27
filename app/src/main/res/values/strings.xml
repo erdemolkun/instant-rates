@@ -25,8 +25,8 @@
     <string name="add">Add</string>
     <string name="enter_value">Enter Value</string>
     <string name="check_value">Check Value</string>
-    <string name="is_below_value">%1$s value drop below %2$s</string>
-    <string name="is_above_val">%1$s value reached above %2$s</string>
+    <string name="is_below_value">%1$s %2$s value drop below %3$s</string>
+    <string name="is_above_val">%1$s %2$s value reached above %3$s</string>
     <string name="if_below">If below value</string>
     <string name="if_above">If above value</string>
     <string name="alarms">Alarms</string>
