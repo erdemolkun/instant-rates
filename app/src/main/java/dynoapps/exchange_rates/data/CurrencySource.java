@@ -14,14 +14,14 @@ public class CurrencySource {
     private IPollingSource iPollingSource;
     private String name;
     private boolean enabled;
-    private int source_type;
+    private int type;
     private int color;
     private int[] supported_rates = new int[0];
     private int chartIndex = 0;
 
-    public CurrencySource(String name, int source_type, @ColorRes int colorRes, boolean enabled, int[] supported_rates) {
+    public CurrencySource(String name, int type, @ColorRes int colorRes, boolean enabled, int[] supported_rates) {
         this.name = name;
-        this.source_type = source_type;
+        this.type = type;
         this.enabled = enabled;
         this.color = ContextCompat.getColor(App.context(), colorRes);
         this.supported_rates = supported_rates;
@@ -43,8 +43,8 @@ public class CurrencySource {
         return color;
     }
 
-    public int getSourceType() {
-        return source_type;
+    public int getType() {
+        return type;
     }
 
     public String getName() {
@@ -73,8 +73,8 @@ public class CurrencySource {
     }
 
     public boolean isAvgType() {
-        return source_type == CurrencyType.ALTININ || source_type == CurrencyType.PARAGARANTI ||
-                source_type == CurrencyType.TLKUR || source_type == CurrencyType.YAHOO;
+        return type == CurrencyType.ALTININ || type == CurrencyType.PARAGARANTI ||
+                type == CurrencyType.TLKUR || type == CurrencyType.YAHOO;
     }
 
     public boolean isRateSupported(int rateType) {

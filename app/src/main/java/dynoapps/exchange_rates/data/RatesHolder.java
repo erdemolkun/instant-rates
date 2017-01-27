@@ -2,6 +2,7 @@ package dynoapps.exchange_rates.data;
 
 import android.util.SparseArray;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import dynoapps.exchange_rates.event.RatesEvent;
@@ -23,6 +24,8 @@ import dynoapps.exchange_rates.model.rates.BaseRate;
 
 public class RatesHolder {
 
+    private static final int MAX_RATES_COUNT = 10;
+
     private static RatesHolder instance;
 
     public static RatesHolder getInstance() {
@@ -31,32 +34,38 @@ public class RatesHolder {
         return instance;
     }
 
-    private SparseArray<RatesEvent> ratesArray;
+    private SparseArray<List<RatesEvent>> rateEventsSparse;
 
-    public RatesEvent getRates(int source_type) {
-        if (ratesArray != null && ratesArray.get(source_type, null) != null) {
-            return ratesArray.get(source_type);
+    public RatesEvent getLatestEvent(int source_type) {
+        if (rateEventsSparse != null && rateEventsSparse.get(source_type, null) != null) {
+            List<RatesEvent> events = rateEventsSparse.get(source_type);
+            return events.get(events.size() - 1);
         }
         return null;
     }
 
-    public SparseArray<RatesEvent> getAllRates() {
-        return ratesArray;
-    }
-
     public <T extends BaseRate> void addRate(List<T> rates, long fetchTime, int type) {
-        if (ratesArray == null) {
-            ratesArray = new SparseArray<>();
+        if (rateEventsSparse == null) {
+            rateEventsSparse = new SparseArray<>();
         }
-
-        ratesArray.put(type, new RatesEvent<>(rates, type, fetchTime));
+        RatesEvent ratesEvent = new RatesEvent<>(rates, type, fetchTime);
+        List<RatesEvent> ratesEvents = rateEventsSparse.get(type);
+        if (ratesEvents == null) ratesEvents = new ArrayList<>();
+        ratesEvents.add(ratesEvent);
+        if (ratesEvents.size() > MAX_RATES_COUNT) {
+            ratesEvents.remove(0);
+        }
+        rateEventsSparse.put(type, ratesEvents);
     }
 
     public <T extends BaseRate> void addRate(List<T> rates, int type) {
-        if (ratesArray == null) {
-            ratesArray = new SparseArray<>();
+        if (rateEventsSparse == null) {
+            rateEventsSparse = new SparseArray<>();
         }
-
-        ratesArray.put(type, new RatesEvent<>(rates, type, System.currentTimeMillis()));
+        RatesEvent ratesEvent = new RatesEvent<>(rates, type, System.currentTimeMillis());
+        List<RatesEvent> ratesEvents = rateEventsSparse.get(type);
+        if (ratesEvents == null) ratesEvents = new ArrayList<>();
+        ratesEvents.add(ratesEvent);
+        rateEventsSparse.put(type, ratesEvents);
     }
 }

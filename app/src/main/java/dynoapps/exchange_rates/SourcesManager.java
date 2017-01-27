@@ -44,7 +44,7 @@ public class SourcesManager {
     public static void updateProviders(ArrayList<BasePoolingProvider> providers) {
 
         for (CurrencySource source : getCurrencySources()) {
-            switch (source.getSourceType()) {
+            switch (source.getType()) {
                 case CurrencyType.PARAGARANTI:
                     source.setPollingSource(CollectionUtils.getInstance(providers, ParaGarantiRateProvider.class));
                     break;
@@ -136,7 +136,7 @@ public class SourcesManager {
         for (int i = 0; i < currencySources.size(); i++) {
             CurrencySource currencySource = currencySources.get(i);
             if (currencySource.isEnabled()) {
-                sources += currencySource.getSourceType() + ";";
+                sources += currencySource.getType() + ";";
             }
         }
         Prefs.saveSources(sources);
@@ -158,7 +158,7 @@ public class SourcesManager {
 
     public static String getSourceName(int type) {
         for (CurrencySource source : getCurrencySources()) {
-            if (type == source.getSourceType()) {
+            if (type == source.getType()) {
                 return source.getName();
             }
         }
@@ -174,7 +174,7 @@ public class SourcesManager {
 
     public static CurrencySource getSource(int source_type) {
         for (CurrencySource currencySource : getCurrencySources()) {
-            if (currencySource.getSourceType() == source_type) return currencySource;
+            if (currencySource.getType() == source_type) return currencySource;
         }
         return null;
     }
@@ -224,7 +224,7 @@ public class SourcesManager {
                 try {
                     source_type_temp = Integer.parseInt(str);
                     for (CurrencySource currencySource : getCurrencySources()) {
-                        if (currencySource.getSourceType() == source_type_temp) {
+                        if (currencySource.getType() == source_type_temp) {
                             currencySource.setEnabled(true);
                         }
                     }

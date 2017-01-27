@@ -153,7 +153,7 @@ public class AlarmManager {
         int i = 0;
         for (CurrencySource source : SourcesManager.getCurrencySources()) {
             if (source.isEnabled()) {
-                if (source.getSourceType() == source_type) {
+                if (source.getType() == source_type) {
                     selected_source_index = i;
                 }
                 sources.add(source);
@@ -221,7 +221,7 @@ public class AlarmManager {
                                 Alarm alarm = new Alarm();
                                 alarm.val = val;
                                 alarm.is_above = rgAlarm.getCheckedRadioButtonId() == R.id.rb_above;
-                                alarm.source_type = ((CurrencySource) spn_sources.getSelectedItem()).getSourceType();
+                                alarm.source_type = ((CurrencySource) spn_sources.getSelectedItem()).getType();
                                 alarm.rate_type = ((RateValuePair) spn_rate_types.getSelectedItem()).rate_type;
                                 alarm.value_type = value_type;
                                 AlarmManager.addAlarm(alarm);
@@ -250,7 +250,7 @@ public class AlarmManager {
         for (Alarm alarm : getAlarmsHolder().alarms) {
             if (alarm.is_enabled) {
                 for (CurrencySource source : SourcesManager.getCurrencySources()) {
-                    if (source.isEnabled() && source.getSourceType() == alarm.source_type) {
+                    if (source.isEnabled() && source.getType() == alarm.source_type) {
                         return true;
                     }
                 }

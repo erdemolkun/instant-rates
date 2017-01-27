@@ -63,7 +63,7 @@ import dynoapps.exchange_rates.util.L;
 import dynoapps.exchange_rates.util.RateUtils;
 
 /**
- * Created by erdemmac on 05/12/2016.
+ * Created by Erdem OLKUN , 05/12/2016
  */
 
 public class RatePollingService extends IntentService {
@@ -184,7 +184,7 @@ public class RatePollingService extends IntentService {
                 Alarm alarm = iterator.next();
                 if (alarm.source_type != source_type || !alarm.is_enabled) continue;
                 BaseRate baseRateCurrent = RateUtils.getRate(rates, alarm.rate_type);
-                RatesEvent ratesEvent = RatesHolder.getInstance().getRates(source_type);
+                RatesEvent ratesEvent = RatesHolder.getInstance().getLatestEvent(source_type);
                 BaseRate baseRateOld = ratesEvent != null ? RateUtils.getRate(ratesEvent.rates, alarm.rate_type) : null;
 
                 if (baseRateCurrent == null || baseRateOld == null) continue;

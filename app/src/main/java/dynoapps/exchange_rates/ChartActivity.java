@@ -10,7 +10,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
-import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -131,22 +130,20 @@ public class ChartActivity extends BaseActivity {
         startMilis = System.currentTimeMillis();
         initChart();
 
-        SparseArray<RatesEvent> sparseArray = RatesHolder.getInstance().getAllRates();
-        if (sparseArray != null) {
-            List<RatesEvent<BaseRate>> cachedEvents = new ArrayList<>();
-            for (int i = 0; i < sparseArray.size(); i++) {
-                RatesEvent<BaseRate> ratesEvent = sparseArray.valueAt(i);
-                CurrencySource currencySource = SourcesManager.getSource(ratesEvent.source_type);
-                if (currencySource != null && currencySource.isEnabled()) {
-                    if (ratesEvent.fetch_time < startMilis) {
-                        startMilis = ratesEvent.fetch_time;
-                    }
-                    cachedEvents.add(ratesEvent);
+
+        List<RatesEvent<BaseRate>> cachedEvents = new ArrayList<>();
+        for (CurrencySource currencySource : SourcesManager.getCurrencySources()) {
+            if (currencySource != null && currencySource.isEnabled()) {
+                RatesEvent ratesEvent = RatesHolder.getInstance().getLatestEvent(currencySource.getType());
+                if (ratesEvent == null) continue;
+                if (ratesEvent.fetch_time < startMilis) {
+                    startMilis = ratesEvent.fetch_time;
                 }
+                cachedEvents.add(ratesEvent);
             }
-            for (RatesEvent<BaseRate> ratesEvent : cachedEvents) {
-                update(ratesEvent.rates, ratesEvent.source_type, ratesEvent.fetch_time);
-            }
+        }
+        for (RatesEvent<BaseRate> ratesEvent : cachedEvents) {
+            update(ratesEvent.rates, ratesEvent.source_type, ratesEvent.fetch_time);
         }
 
         swipeRefreshLayout.setColorSchemeResources(

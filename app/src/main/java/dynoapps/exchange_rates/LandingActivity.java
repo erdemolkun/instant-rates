@@ -113,12 +113,13 @@ public class LandingActivity extends BaseActivity {
         /**
          * Update with cached rates.
          * */
-        SparseArray<RatesEvent> sparseArray = RatesHolder.getInstance().getAllRates();
-        if (sparseArray != null) {
-            for (int i = 0; i < sparseArray.size(); i++) {
-                RatesEvent<BaseRate> ratesEvent = sparseArray.valueAt(i);
-                List<BaseRate> rates = ratesEvent.rates;
-                update(rates, ratesEvent.source_type, false);
+
+        for (CurrencySource currencySource : SourcesManager.getCurrencySources()) {
+            if (currencySource != null && currencySource.isEnabled()) {
+                RatesEvent ratesEvent = RatesHolder.getInstance().getLatestEvent(currencySource.getType());
+                if (ratesEvent!=null) {
+                    update(ratesEvent.rates, ratesEvent.source_type, false);
+                }
             }
         }
 
@@ -169,7 +170,7 @@ public class LandingActivity extends BaseActivity {
                 }
                 boolean foundCard = false;
                 for (CardViewItem item : parent.items) {
-                    if (item.source_type == dataSource.getSourceType()) {
+                    if (item.source_type == dataSource.getType()) {
                         item.card.setVisibility(isEnabled ? View.VISIBLE : View.GONE);
                         foundCard = true;
                     }
@@ -177,10 +178,10 @@ public class LandingActivity extends BaseActivity {
                 if (!foundCard && isEnabled) {
                     if (dataSource.isRateSupported(parent.rate_type)) {
                         if (dataSource.isAvgType()) {
-                            addCardToParent(parent, ValueType.AVG, dataSource.getSourceType());
+                            addCardToParent(parent, ValueType.AVG, dataSource.getType());
                         } else {
-                            addCardToParent(parent, ValueType.BUY, dataSource.getSourceType());
-                            addCardToParent(parent, ValueType.SELL, dataSource.getSourceType());
+                            addCardToParent(parent, ValueType.BUY, dataSource.getType());
+                            addCardToParent(parent, ValueType.SELL, dataSource.getType());
                         }
                     }
                 }
@@ -202,7 +203,7 @@ public class LandingActivity extends BaseActivity {
         v.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                RatesEvent ratesEvent = RatesHolder.getInstance().getRates(source_type);
+                RatesEvent ratesEvent = RatesHolder.getInstance().getLatestEvent(source_type);
                 BaseRate rate = ratesEvent != null ? RateUtils.getRate(ratesEvent.rates, parent.rate_type) : null;
                 if (rate != null) {
                     AlarmManager.addAlarmDialog(LandingActivity.this, source_type, rate.getRateType(), value_type, rate.getValue(value_type));
@@ -258,7 +259,7 @@ public class LandingActivity extends BaseActivity {
         int value_type;
 
         /**
-         * Refers to {@link CurrencySource#getSourceType()}
+         * Refers to {@link CurrencySource#getType()}
          */
         int source_type;
 
