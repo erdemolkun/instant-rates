@@ -113,7 +113,7 @@ public class LandingActivity extends BaseActivity {
         /**
          * Update with cached rates.
          * */
-        SparseArray<RatesEvent<BaseRate>> sparseArray = RatesHolder.getInstance().getAllRates();
+        SparseArray<RatesEvent> sparseArray = RatesHolder.getInstance().getAllRates();
         if (sparseArray != null) {
             for (int i = 0; i < sparseArray.size(); i++) {
                 RatesEvent<BaseRate> ratesEvent = sparseArray.valueAt(i);

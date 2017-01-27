@@ -131,7 +131,7 @@ public class ChartActivity extends BaseActivity {
         startMilis = System.currentTimeMillis();
         initChart();
 
-        SparseArray<RatesEvent<BaseRate>> sparseArray = RatesHolder.getInstance().getAllRates();
+        SparseArray<RatesEvent> sparseArray = RatesHolder.getInstance().getAllRates();
         if (sparseArray != null) {
             List<RatesEvent<BaseRate>> cachedEvents = new ArrayList<>();
             for (int i = 0; i < sparseArray.size(); i++) {

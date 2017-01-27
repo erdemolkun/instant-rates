@@ -9,10 +9,7 @@ import dynoapps.exchange_rates.util.RateUtils;
 public abstract class BaseRate implements IConvertable, IRate {
 
     BaseRate() {
-        fetchTime = System.currentTimeMillis();
     }
-
-    public long fetchTime;
 
     protected
     @RateDef

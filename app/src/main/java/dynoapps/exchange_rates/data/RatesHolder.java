@@ -21,7 +21,7 @@ import dynoapps.exchange_rates.model.rates.BaseRate;
  * the License.
  */
 
-public class RatesHolder<T extends BaseRate> {
+public class RatesHolder {
 
     private static RatesHolder instance;
 
@@ -31,28 +31,28 @@ public class RatesHolder<T extends BaseRate> {
         return instance;
     }
 
-    private SparseArray<RatesEvent<T>> ratesArray;
+    private SparseArray<RatesEvent> ratesArray;
 
-    public RatesEvent<T> getRates(int source_type) {
+    public RatesEvent getRates(int source_type) {
         if (ratesArray != null && ratesArray.get(source_type, null) != null) {
             return ratesArray.get(source_type);
         }
         return null;
     }
 
-    public SparseArray<RatesEvent<T>> getAllRates() {
+    public SparseArray<RatesEvent> getAllRates() {
         return ratesArray;
     }
 
-    public void addRate(List<T> rates, long fetchMilis, int type) {
+    public <T extends BaseRate> void addRate(List<T> rates, long fetchTime, int type) {
         if (ratesArray == null) {
             ratesArray = new SparseArray<>();
         }
 
-        ratesArray.put(type, new RatesEvent<>(rates, type, fetchMilis));
+        ratesArray.put(type, new RatesEvent<>(rates, type, fetchTime));
     }
 
-    public void addRate(List<T> rates, int type) {
+    public <T extends BaseRate> void addRate(List<T> rates, int type) {
         if (ratesArray == null) {
             ratesArray = new SparseArray<>();
         }
