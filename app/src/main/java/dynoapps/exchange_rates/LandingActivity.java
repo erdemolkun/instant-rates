@@ -74,7 +74,6 @@ public class LandingActivity extends BaseActivity {
     @BindView(R.id.v_drawer_item_eur)
     TextView tvDrawerItemEur;
 
-
     @BindView(R.id.v_drawer_item_eur_usd)
     TextView tvDrawerItemEurUsd;
 
@@ -206,9 +205,9 @@ public class LandingActivity extends BaseActivity {
                 RatesEvent ratesEvent = RatesHolder.getInstance().getRates(source_type);
                 BaseRate rate = ratesEvent != null ? RateUtils.getRate(ratesEvent.rates, parent.rate_type) : null;
                 if (rate != null) {
-                    AlarmManager.addAlarmDialog(LandingActivity.this, source_type, rate.getRateType(), value_type ,rate.getValue(value_type));
+                    AlarmManager.addAlarmDialog(LandingActivity.this, source_type, rate.getRateType(), value_type, rate.getValue(value_type));
                 } else {
-                    AlarmManager.addAlarmDialog(LandingActivity.this);
+                    AlarmManager.addAlarmDialog(LandingActivity.this, source_type, parent.rate_type, value_type, null);
                 }
                 return true;
             }
