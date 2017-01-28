@@ -1,0 +1,41 @@
+#
+# Build configuration for Circle CI
+#
+
+general:
+    artifacts:
+        - /home/ubuntu/starbucks-android/app/build/outputs/apk/
+    branches:
+      ignore:
+      - gh-pages # list of branches to ignore
+
+machine:
+    timezone:
+        Europe/Istanbul # Set the timezone
+    environment:
+        ANDROID_HOME: /usr/local/android-sdk-linux
+        GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError"'
+    java:
+        version: oraclejdk8
+
+
+
+dependencies:
+  pre:
+    - ( sleep 5 && while [ 1 ]; do sleep 1; echo y; done ) | android update sdk --no-ui --all --filter "tools,platform-tools,android-25,extra-google-m2repository,extra-android-m2repository,extra-android-support"
+    - echo y | android update sdk --no-ui --all --filter "build-tools-25.0.2"
+
+
+test:
+    override:
+        - (./gradlew testAlphaUnitTest):
+            timeout: 360
+
+
+#Deploy when tests pass
+deployment:
+    develop: # Alpha builds.
+      branch: develop
+      commands:
+        - ./gradlew assembleAlpha --stacktrace
+
