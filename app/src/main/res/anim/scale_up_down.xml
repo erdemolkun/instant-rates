@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+     android:interpolator="@android:interpolator/fast_out_slow_in"
+     android:shareInterpolator="true"
+     android:ordering="together">
+    <objectAnimator
+            android:valueType="floatType"
+            android:propertyName="scaleX"
+            android:valueFrom="1"
+            android:duration="1200"
+            android:repeatMode="reverse"
+            android:repeatCount="infinite"
+            android:valueTo="1.08"/>
+
+    <objectAnimator
+            android:duration="1200"
+            android:valueType="floatType"
+            android:propertyName="scaleY"
+            android:valueFrom="1"
+            android:repeatMode="reverse"
+            android:repeatCount="infinite"
+            android:valueTo="1.08"/>
+
+    <objectAnimator
+            android:duration="1200"
+            android:valueFrom="0"
+            android:valueType="floatType"
+            android:propertyName="rotationZ"
+            android:repeatMode="reverse"
+            android:repeatCount="infinite"
+            android:valueTo="45"/>
+
+    <objectAnimator
+            android:duration="1200"
+            android:pivotX="50%"
+            android:pivotY="50%"
+            android:valueType="floatType"
+            android:propertyName="translateY"
+            android:valueFrom="0"
+            android:repeatMode="reverse"
+            android:repeatCount="infinite"
+            android:valueTo="-12"/>
+
+    <!--<objectAnimator-->
+    <!--android:valueType="floatType"-->
+    <!--android:duration="600"-->
+    <!--android:propertyName="rotation"-->
+    <!--android:valueFrom="0"-->
+    <!--android:repeatMode="reverse"-->
+    <!--android:repeatCount="infinite"-->
+    <!--android:valueTo="30"/>-->
+
+</set>

@@ -5,12 +5,16 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.drawable.Animatable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.ImageView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -59,6 +63,12 @@ public class SplashActivity extends AppCompatActivity {
             bindService(intent, rateServiceConnection, Context.BIND_AUTO_CREATE);
             SourcesManager.update();
             EventBus.getDefault().post(new IntervalUpdate(true)); // Intervals should be updated on ui mode.
+        }
+
+        ImageView ivLogo = (ImageView) findViewById(R.id.iv_splash);
+        Drawable drawable = ivLogo.getDrawable();
+        if (drawable instanceof Animatable) {
+            ((Animatable) drawable).start();
         }
     }
 

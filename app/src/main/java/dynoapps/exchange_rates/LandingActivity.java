@@ -6,6 +6,8 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Animatable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,6 +27,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -105,6 +108,12 @@ public class LandingActivity extends BaseActivity {
         }
 
         setupNavDrawer();
+
+        ImageView ivLogo = (ImageView) findViewById(R.id.iv_drawer_header_logo);
+        Drawable drawable = ivLogo.getDrawable();
+        if (drawable instanceof Animatable) {
+            ((Animatable) drawable).start();
+        }
 
         TimeIntervalManager.setAlarmMode(false);
         setUpRateCardViews();

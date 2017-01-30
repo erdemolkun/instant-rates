@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+                 android:drawable="@drawable/ic_store_icon_24dp">
+
+    <target
+            android:name="wing_1"
+            android:animation="@anim/scale_up_down"/>
+    <target
+            android:name="wing_2"
+            android:animation="@anim/scale_up_down"/>
+</animated-vector>
