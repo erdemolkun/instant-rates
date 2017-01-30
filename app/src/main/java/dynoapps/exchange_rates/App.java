@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatDelegate;
 import android.text.TextUtils;
 
 import com.facebook.stetho.Stetho;
@@ -23,6 +24,9 @@ import java.util.HashMap;
  */
 
 public class App extends Application {
+    static {
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+    }
     private static final String PROPERTY_ID = "UA-58111264-6";
     private static App appInstance;
 

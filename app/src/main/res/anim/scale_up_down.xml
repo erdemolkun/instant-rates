@@ -26,10 +26,10 @@
             android:duration="1200"
             android:valueFrom="0"
             android:valueType="floatType"
-            android:propertyName="rotationZ"
+            android:propertyName="rotationY"
             android:repeatMode="reverse"
             android:repeatCount="infinite"
-            android:valueTo="45"/>
+            android:valueTo="-45"/>
 
     <objectAnimator
             android:duration="1200"
@@ -42,13 +42,5 @@
             android:repeatCount="infinite"
             android:valueTo="-12"/>
 
-    <!--<objectAnimator-->
-    <!--android:valueType="floatType"-->
-    <!--android:duration="600"-->
-    <!--android:propertyName="rotation"-->
-    <!--android:valueFrom="0"-->
-    <!--android:repeatMode="reverse"-->
-    <!--android:repeatCount="infinite"-->
-    <!--android:valueTo="30"/>-->
 
 </set>

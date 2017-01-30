@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.support.annotation.Nullable;
+import android.support.graphics.drawable.AnimatedVectorDrawableCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
@@ -28,7 +29,8 @@ import dynoapps.exchange_rates.time.TimeIntervalManager;
 import dynoapps.exchange_rates.util.L;
 
 /**
- * Created by erdemmac on 03/12/2016.
+ * Created by Erdem OLKUN , 03/12/2016
+ *
  */
 
 public class SplashActivity extends AppCompatActivity {
@@ -64,12 +66,11 @@ public class SplashActivity extends AppCompatActivity {
             SourcesManager.update();
             EventBus.getDefault().post(new IntervalUpdate(true)); // Intervals should be updated on ui mode.
         }
-
-        ImageView ivLogo = (ImageView) findViewById(R.id.iv_splash);
-        Drawable drawable = ivLogo.getDrawable();
-        if (drawable instanceof Animatable) {
-            ((Animatable) drawable).start();
-        }
+//        ImageView ivLogo = (ImageView) findViewById(R.id.iv_splash);
+//        Drawable drawable = ivLogo.getDrawable();
+//        if (drawable instanceof Animatable) {
+//            ((Animatable) drawable).start();
+//        }
     }
 
 

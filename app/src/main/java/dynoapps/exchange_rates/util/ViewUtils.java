@@ -2,11 +2,12 @@ package dynoapps.exchange_rates.util;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Point;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.StateListDrawable;
 import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
@@ -26,7 +27,8 @@ import dynoapps.exchange_rates.R;
 
 
 /**
- * Created by eolkun on 6.2.2015.
+ * Created by Erdem OLKUN , 6.2.2015
+ *
  */
 public class ViewUtils {
 
@@ -38,7 +40,16 @@ public class ViewUtils {
         Drawable drawable = tv.getCompoundDrawables()[0];
         if (drawable == null) return;
         drawable = DrawableCompat.wrap(drawable).mutate();
-        DrawableCompat.setTint(drawable,ContextCompat.getColor(tv.getContext(), color));
+        if (drawable instanceof StateListDrawable) {
+            //drawable = drawable.getCurrent().mutate();
+
+            ColorStateList colorStateList = new ColorStateList(new int[1][1],new int[]{color});
+            DrawableCompat.setTintList(drawable,colorStateList);
+//            DrawableCompat.setTint(drawable, ContextCompat.getColor(tv.getContext(), color));
+//            drawable.getCurrent().setColorFilter(ContextCompat.getColor(tv.getContext(),color), PorterDuff.Mode.SRC_ATOP);
+        }
+
+        DrawableCompat.setTint(drawable, ContextCompat.getColor(tv.getContext(), color));
         //drawable.setColorFilter(ContextCompat.getColor(tv.getContext(), color), PorterDuff.Mode.SRC_ATOP);
         tv.setCompoundDrawables(drawable, null, null, null);
     }
