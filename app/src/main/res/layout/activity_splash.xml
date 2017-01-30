@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_height="match_parent"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
                 android:gravity="center"
                 android:clipToPadding="false"
                 android:clipChildren="false"
@@ -10,8 +10,8 @@
     <android.support.v7.widget.AppCompatImageView
             android:id="@+id/iv_splash"
             android:layout_centerInParent="true"
-            android:scaleType="fitCenter"
-            app:srcCompat="@drawable/avd_wings"
+            android:scaleType="centerCrop"
+            tools:src="@drawable/avd_wings"
             android:layout_width="128dp"
             android:clipToPadding="false"
             android:layout_height="128dp"/>

@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
+import android.support.graphics.drawable.AnimatedVectorDrawableCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
@@ -21,7 +22,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.transition.TransitionManager;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -110,9 +110,16 @@ public class LandingActivity extends BaseActivity {
         setupNavDrawer();
 
         ImageView ivLogo = (ImageView) findViewById(R.id.iv_drawer_header_logo);
-        Drawable drawable = ivLogo.getDrawable();
-        if (drawable instanceof Animatable) {
-            ((Animatable) drawable).start();
+//        Drawable drawable = ivLogo.getDrawable();
+//        if (drawable instanceof Animatable) {
+//            ((Animatable) drawable).start();
+//        }
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+            AnimatedVectorDrawableCompat animatedVectorDrawableCompat = AnimatedVectorDrawableCompat.create(this, R.drawable.avd_wings);
+            ivLogo.setImageDrawable(animatedVectorDrawableCompat);
+            animatedVectorDrawableCompat.start();
+        } else {
+            ivLogo.setImageResource(R.drawable.ic_store_icon_24dp);
         }
 
         TimeIntervalManager.setAlarmMode(false);
@@ -126,7 +133,7 @@ public class LandingActivity extends BaseActivity {
         for (CurrencySource currencySource : SourcesManager.getCurrencySources()) {
             if (currencySource != null && currencySource.isEnabled()) {
                 RatesEvent ratesEvent = RatesHolder.getInstance().getLatestEvent(currencySource.getType());
-                if (ratesEvent!=null) {
+                if (ratesEvent != null) {
                     update(ratesEvent.rates, ratesEvent.source_type, false);
                 }
             }

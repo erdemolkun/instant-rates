@@ -2,7 +2,6 @@
 
 <dynoapps.exchange_rates.ui.ScrimInsetsScrollView xmlns:android="http://schemas.android.com/apk/res/android"
                                                   xmlns:tools="http://schemas.android.com/tools"
-                                                  xmlns:app="http://schemas.android.com/apk/res-auto"
                                                   android:layout_gravity="start"
                                                   android:layout_width="@dimen/nav_drawer_width"
                                                   android:fillViewport="true"
@@ -25,7 +24,7 @@
                     android:id="@+id/iv_drawer_header_logo"
                     android:layout_width="44dp"
                     android:layout_height="44dp"
-                    app:srcCompat="@drawable/avd_wings"/>
+                    tools:src="@drawable/ic_store_icon_24dp"/>
 
             <LinearLayout
                     android:layout_alignParentBottom="true"
@@ -76,8 +75,8 @@
 
             <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/v_drawer_item_usd"
-                    android:drawableLeft="@drawable/ic_wrapped_dollar"
-                    android:drawableStart="@drawable/ic_wrapped_dollar"
+                    android:drawableLeft="@drawable/ic_dollar"
+                    android:drawableStart="@drawable/ic_dollar"
                     android:layout_width="match_parent"
                     android:text="USD"
                     android:layout_height="wrap_content"
@@ -86,8 +85,8 @@
             <TextView
                     android:id="@+id/v_drawer_item_eur"
                     style="@style/side_item_style"
-                    android:drawableLeft="@drawable/ic_wrapped_eur"
-                    android:drawableStart="@drawable/ic_wrapped_eur"
+                    android:drawableLeft="@drawable/ic_euro"
+                    android:drawableStart="@drawable/ic_euro"
                     android:layout_width="match_parent"
                     android:text="EURO"
                     android:layout_height="wrap_content"/>
@@ -96,8 +95,8 @@
                     android:id="@+id/v_drawer_item_eur_usd"
                     style="@style/side_item_style"
                     android:layout_width="match_parent"
-                    android:drawableLeft="@drawable/ic_wrapped_euro_usd"
-                    android:drawableStart="@drawable/ic_wrapped_euro_usd"
+                    android:drawableLeft="@drawable/ic_exchange_eur_usd"
+                    android:drawableStart="@drawable/ic_exchange_eur_usd"
                     android:text="EURO / USD"
                     android:layout_height="wrap_content"/>
 
@@ -106,8 +105,8 @@
                     style="@style/side_item_style"
                     android:layout_width="match_parent"
                     android:text="ONS"
-                    android:drawableLeft="@drawable/ic_wrapped_gold"
-                    android:drawableStart="@drawable/ic_wrapped_gold"
+                    android:drawableLeft="@drawable/ic_gold"
+                    android:drawableStart="@drawable/ic_gold"
                     android:layout_height="wrap_content"/>
 
             <ImageView
@@ -126,8 +125,8 @@
 
             <TextView
                     android:id="@+id/v_drawer_item_alarms"
-                    android:drawableLeft="@drawable/ic_wrapped_add_alarm"
-                    android:drawableStart="@drawable/ic_wrapped_add_alarm"
+                    android:drawableLeft="@drawable/ic_add_alarm_white_24dp"
+                    android:drawableStart="@drawable/ic_add_alarm_white_24dp"
                     style="@style/side_item_style"
                     android:layout_width="match_parent"
                     android:text="@string/alarms"

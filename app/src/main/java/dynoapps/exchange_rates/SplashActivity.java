@@ -5,16 +5,15 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.graphics.drawable.Animatable;
-import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.graphics.drawable.AnimatedVectorDrawableCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.widget.ImageView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -30,7 +29,6 @@ import dynoapps.exchange_rates.util.L;
 
 /**
  * Created by Erdem OLKUN , 03/12/2016
- *
  */
 
 public class SplashActivity extends AppCompatActivity {
@@ -66,11 +64,19 @@ public class SplashActivity extends AppCompatActivity {
             SourcesManager.update();
             EventBus.getDefault().post(new IntervalUpdate(true)); // Intervals should be updated on ui mode.
         }
-//        ImageView ivLogo = (ImageView) findViewById(R.id.iv_splash);
+        ImageView ivLogo = (ImageView) findViewById(R.id.iv_splash);
 //        Drawable drawable = ivLogo.getDrawable();
 //        if (drawable instanceof Animatable) {
 //            ((Animatable) drawable).start();
 //        }
+
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+            AnimatedVectorDrawableCompat animatedVectorDrawableCompat = AnimatedVectorDrawableCompat.create(this, R.drawable.avd_wings);
+            ivLogo.setImageDrawable(animatedVectorDrawableCompat);
+            animatedVectorDrawableCompat.start();
+        } else {
+            ivLogo.setImageResource(R.drawable.ic_store_icon_24dp);
+        }
     }
 
 
