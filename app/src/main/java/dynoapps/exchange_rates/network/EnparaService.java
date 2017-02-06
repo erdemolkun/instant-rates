@@ -3,6 +3,7 @@ package dynoapps.exchange_rates.network;
 import java.util.List;
 
 import dynoapps.exchange_rates.model.rates.EnparaRate;
+import io.reactivex.Observable;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
@@ -17,6 +18,6 @@ public interface EnparaService {
             "Content-Type:text/html; charset=utf-8"
     })
     @GET("doviz-kur-bilgileri/doviz-altin-kurlari.aspx")
-    Call<List<EnparaRate>> rates();
+    Observable<List<EnparaRate>> rates();
 
 }

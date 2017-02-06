@@ -1,6 +1,7 @@
 package dynoapps.exchange_rates.network;
 
 import com.facebook.stetho.okhttp3.StethoInterceptor;
+import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
 import java.util.concurrent.TimeUnit;
 
@@ -65,6 +66,7 @@ public class Api {
                     .client(client)
                     .baseUrl("http://www.qnbfinansbank.enpara.com/")
                     .addConverterFactory(new EnparaConverter.Factory())
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .build();
         }
         return enparaApi;
