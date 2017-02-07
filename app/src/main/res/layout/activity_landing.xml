@@ -18,7 +18,7 @@
                 android:orientation="vertical"
                 android:layout_height="wrap_content">
 
-            <android.support.v4.widget.SwipeRefreshLayout
+            <dynoapps.exchange_rates.ui.CustomSwipeToRefresh
                     android:id="@+id/swipe_to_refresh"
                     android:paddingTop="?actionBarSize"
                     android:layout_width="match_parent"
@@ -169,7 +169,7 @@
 
                 </LinearLayout>
 
-            </android.support.v4.widget.SwipeRefreshLayout>
+            </dynoapps.exchange_rates.ui.CustomSwipeToRefresh>
 
             <include layout="@layout/toolbar_actionbar"/>
 
