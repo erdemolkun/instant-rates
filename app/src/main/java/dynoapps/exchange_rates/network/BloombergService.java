@@ -18,4 +18,10 @@ public interface BloombergService {
     @GET("dynamics/updateDynamicData")
     Call<DynamicDataResponse> getDynamicData();
 
+    @Headers({
+            "Content-Type:text/html"
+    })
+    @GET("index/updsec")
+    Call<String> getUpdsec();
+
 }

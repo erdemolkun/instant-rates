@@ -19,7 +19,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.transition.TransitionManager;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -117,7 +116,7 @@ public class LandingActivity extends BaseActivity {
         for (CurrencySource currencySource : SourcesManager.getCurrencySources()) {
             if (currencySource != null && currencySource.isEnabled()) {
                 RatesEvent ratesEvent = RatesHolder.getInstance().getLatestEvent(currencySource.getType());
-                if (ratesEvent!=null) {
+                if (ratesEvent != null) {
                     update(ratesEvent.rates, ratesEvent.source_type, false);
                 }
             }
@@ -396,6 +395,7 @@ public class LandingActivity extends BaseActivity {
         ViewUtils.tint(tvDrawerItemEurUsd, R.color.colorPrimary);
         ViewUtils.tint(tvDrawerItemOns, R.color.colorPrimary);
         ViewUtils.tint(tvDrawerItemAlarms, R.color.colorPrimary);
+
 
     }
 

@@ -35,7 +35,6 @@ public class BigparaRateProvider extends BasePoolingProvider<List<BigparaRate>> 
     @Override
     public void run() {
         run(false);
-
     }
 
     @Override
