@@ -98,12 +98,12 @@ dependencies {
 
     compile 'com.google.android.gms:play-services-analytics:10.2.0'
 
-    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'com.squareup.retrofit2:retrofit:2.2.0'
     compile 'com.google.code.gson:gson:2.8.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.2.0'
     compile 'com.squareup.okhttp3:logging-interceptor:3.6.0'
 
-    compile('com.squareup.retrofit2:converter-simplexml:2.1.0') {
+    compile('com.squareup.retrofit2:converter-simplexml:2.2.0') {
         exclude group: 'xpp3', module: 'xpp3'
         exclude group: 'stax', module: 'stax-api'
         exclude group: 'stax', module: 'stax'
@@ -119,7 +119,7 @@ dependencies {
     compile 'com.facebook.stetho:stetho-okhttp3:1.4.2'
 
 
-    androidTestCompile('tools.fastlane:screengrab:0.5.6', {
+    androidTestCompile('tools.fastlane:screengrab:1.0.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
