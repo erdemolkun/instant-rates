@@ -20,7 +20,6 @@ Instant Rates is an android application showing instant rate values for usd,euro
     <img width=320px src="playstore/screens/en/source_selection.png" alt="Source Selection"/>
     <img width=320px src="playstore/screens/en/interval_selection.png" alt="Interval Selection"/>
 </p>
-----------------
 
 <p align="center">
     <a href="https://play.google.com/store/apps/details?id=dynoapps.exchange_rates">
