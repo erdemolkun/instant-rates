@@ -20,7 +20,7 @@ def isCi = "true".equals(System.getenv("CI"))
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    buildToolsVersion "25.0.3"
     signingConfigs {
         debug {
             keyAlias 'androiddebugkey'
