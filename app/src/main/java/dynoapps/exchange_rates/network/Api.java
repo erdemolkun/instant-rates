@@ -1,6 +1,5 @@
 package dynoapps.exchange_rates.network;
 
-import com.facebook.stetho.okhttp3.StethoInterceptor;
 
 import java.util.concurrent.TimeUnit;
 
@@ -131,9 +130,9 @@ public class Api {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.connectTimeout(8, TimeUnit.SECONDS)
                 .readTimeout(8, TimeUnit.SECONDS);
-        if (PublishSettings.isAlphaOrDeveloper()) {
-            builder.addNetworkInterceptor(new StethoInterceptor());
-        }
+//        if (PublishSettings.isAlphaOrDeveloper()) {
+//            builder.addNetworkInterceptor(new StethoInterceptor());
+//        }
         return builder;
     }
 
