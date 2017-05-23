@@ -16,7 +16,7 @@ buildscript {
 }
 
 // set flag whether we are on a build server
-def isCi = "true".equals(System.getenv("CI"))
+def isCi = "true" == System.getenv("CI")
 
 android {
     compileSdkVersion 25
@@ -96,7 +96,7 @@ dependencies {
     compile 'com.android.support:design:25.3.1'
 
 
-    compile 'com.google.android.gms:play-services-analytics:10.2.4'
+    compile 'com.google.android.gms:play-services-analytics:10.2.6'
 
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
     compile 'com.google.code.gson:gson:2.8.0'
@@ -115,9 +115,8 @@ dependencies {
     compile 'com.github.PhilJay:MPAndroidChart:v3.0.2'
     compile 'com.github.orhanobut:logger:1.12'
 
-//    compile 'com.facebook.stetho:stetho:1.5.0'
-//    compile 'com.facebook.stetho:stetho-okhttp3:1.5.0'
-
+    compile 'com.facebook.stetho:stetho:1.5.0'
+    compile 'com.facebook.stetho:stetho-okhttp3:1.5.0'
 
     androidTestCompile('tools.fastlane:screengrab:1.0.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
