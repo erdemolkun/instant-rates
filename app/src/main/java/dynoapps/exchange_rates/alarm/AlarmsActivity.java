@@ -16,6 +16,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -93,7 +95,9 @@ public class AlarmsActivity extends BaseActivity {
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        adapter.addData(AlarmManager.getAlarmsHolder().alarms);
+        List<Alarm> sorted_alarms = AlarmManager.getAlarmsHolder().alarms;
+        Collections.sort(sorted_alarms, Alarm.COMPARATOR);
+        adapter.addData(sorted_alarms);
     }
 
     @Override

@@ -9,6 +9,7 @@ import android.widget.CompoundButton;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +19,7 @@ import dynoapps.exchange_rates.SourcesManager;
 import dynoapps.exchange_rates.data.CurrencySource;
 import dynoapps.exchange_rates.event.AlarmUpdateEvent;
 import dynoapps.exchange_rates.ui.widget.recyclerview.UpdatableAdapter;
+import dynoapps.exchange_rates.util.CollectionUtils;
 import dynoapps.exchange_rates.util.RateUtils;
 
 /**
@@ -34,13 +36,25 @@ class AlarmsAdapter extends UpdatableAdapter<List<Alarm>, AlarmsActivity.AlarmVi
         }
     }
 
-    public void addData(Alarm alarm) {
-        if (this.alarms == null) this.alarms = new ArrayList<>();
-        this.alarms.add(alarm);
-        notifyItemInserted(alarms.size());
+    private int getToAddIndex(Alarm alarm) {
+        if (CollectionUtils.isNullOrEmpty(alarms)) return 0;
+        for (int i = 0; i < alarms.size(); i++) {
+            Alarm innerAlarm = alarms.get(i);
+            if (Alarm.COMPARATOR.compare(alarm, innerAlarm) < 0) {
+                return Math.max(0,i);
+            }
+        }
+        return CollectionUtils.size(alarms);
     }
 
-    public void addData(ArrayList<Alarm> alarms) {
+    public void addData(Alarm alarm) {
+        if (this.alarms == null) this.alarms = new ArrayList<>();
+        int index  = getToAddIndex(alarm);
+        this.alarms.add(index,alarm);
+        notifyItemInserted(index);
+    }
+
+    public void addData(List<Alarm> alarms) {
         if (this.alarms == null) this.alarms = new ArrayList<>();
         final int insertRangeStart = getItemCount();
         this.alarms.addAll(alarms);
