@@ -1,5 +1,6 @@
 package dynoapps.exchange_rates.converters;
 
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import java.io.IOException;
@@ -45,10 +46,10 @@ public class YahooConverter implements Converter<ResponseBody, List<BaseRate>> {
      * "EURTRY=X",3.6767,"12/9/2016","10:30pm" </p>
      **/
     @Override
-    public List<BaseRate> convert(ResponseBody value) throws IOException {
+    public List<BaseRate> convert(@NonNull ResponseBody value) throws IOException {
 
         ArrayList<BaseRate> rates = new ArrayList<>();
-        String responseBody = value != null ? value.string() : null;
+        String responseBody = value.string();
         if (!TextUtils.isEmpty(responseBody)) {
             String[] splitsMoney = responseBody.split("\n");
             if (splitsMoney.length > 0) {

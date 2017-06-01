@@ -81,16 +81,18 @@ public class RateUtils {
     public static Float toFloat(String str) {
         if (TextUtils.isEmpty(str)) return null;
         str = str.trim();
-        DecimalFormatSymbols symbols = new DecimalFormatSymbols();
-        symbols.setDecimalSeparator(DecimalFormatSymbols.getInstance().getDecimalSeparator());
-        symbols.setGroupingSeparator(DecimalFormatSymbols.getInstance().getGroupingSeparator());
-        DecimalFormat format = new DecimalFormat("###,###,###,##0.#####");
-        format.setDecimalFormatSymbols(symbols);
+
         try {
-            return format.parse(str).floatValue();
+            return Float.parseFloat(str);
         } catch (Exception e) {
             try {
-                return Float.parseFloat(str);
+                DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+                symbols.setDecimalSeparator(DecimalFormatSymbols.getInstance().getDecimalSeparator());
+                symbols.setGroupingSeparator(DecimalFormatSymbols.getInstance().getGroupingSeparator());
+                DecimalFormat format = new DecimalFormat("###,###,###,##0.#####");
+                format.setDecimalFormatSymbols(symbols);
+                return format.parse(str).floatValue();
+
             } catch (Exception ex) {
 
             }

@@ -1,5 +1,7 @@
 package dynoapps.exchange_rates.provider;
 
+import android.support.annotation.NonNull;
+
 import java.util.List;
 
 import dynoapps.exchange_rates.data.CurrencyType;
@@ -44,7 +46,7 @@ public class YahooRateProvider extends BasePoolingProvider<List<YahooRate>> {
         Call<List<YahooRate>> call = yahooService.rates();
         call.enqueue(new retrofit2.Callback<List<YahooRate>>() {
             @Override
-            public void onResponse(Call<List<YahooRate>> call, Response<List<YahooRate>> response) {
+            public void onResponse(@NonNull Call<List<YahooRate>> call, @NonNull Response<List<YahooRate>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<YahooRate> rates = response.body();
                     notifyValue(rates);
@@ -58,7 +60,7 @@ public class YahooRateProvider extends BasePoolingProvider<List<YahooRate>> {
             }
 
             @Override
-            public void onFailure(Call<List<YahooRate>> call, Throwable t) {
+            public void onFailure(@NonNull Call<List<YahooRate>> call, @NonNull Throwable t) {
                 if (!call.isCanceled()) {
                     notifyError();
                     if (!is_single_run)

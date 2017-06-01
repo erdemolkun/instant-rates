@@ -9,7 +9,6 @@ import android.widget.CompoundButton;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.text.Collator;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,7 +40,7 @@ class AlarmsAdapter extends UpdatableAdapter<List<Alarm>, AlarmsActivity.AlarmVi
         for (int i = 0; i < alarms.size(); i++) {
             Alarm innerAlarm = alarms.get(i);
             if (Alarm.COMPARATOR.compare(alarm, innerAlarm) < 0) {
-                return Math.max(0,i);
+                return Math.max(0, i);
             }
         }
         return CollectionUtils.size(alarms);
@@ -49,8 +48,8 @@ class AlarmsAdapter extends UpdatableAdapter<List<Alarm>, AlarmsActivity.AlarmVi
 
     public void addData(Alarm alarm) {
         if (this.alarms == null) this.alarms = new ArrayList<>();
-        int index  = getToAddIndex(alarm);
-        this.alarms.add(index,alarm);
+        int index = getToAddIndex(alarm);
+        this.alarms.add(index, alarm);
         notifyItemInserted(index);
     }
 
