@@ -10,9 +10,11 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
-import com.orhanobut.logger.AndroidLogTool;
-import com.orhanobut.logger.LogLevel;
+import com.facebook.stetho.Stetho;
+import com.orhanobut.logger.AndroidLogAdapter;
+import com.orhanobut.logger.FormatStrategy;
 import com.orhanobut.logger.Logger;
+import com.orhanobut.logger.PrettyFormatStrategy;
 
 import java.util.HashMap;
 
@@ -41,12 +43,21 @@ public class App extends Application {
 //        if (PublishSettings.isAlphaOrDeveloper()) {
 //            Stetho.initializeWithDefaults(this);
 //        }
-        Logger.init("ExchangeRates")                 // default PRETTYLOGGER or use just init()
-                .methodCount(0)                 // default 2
-                .hideThreadInfo()               // default shown
-                .logLevel(PublishSettings.isAlphaOrDeveloper() ? LogLevel.FULL : LogLevel.NONE)        // default LogLevel.FULL
-                .methodOffset(2)                // default 0
-                .logTool(new AndroidLogTool()); // custom log tool, optional
+
+        FormatStrategy formatStrategy = PrettyFormatStrategy.newBuilder()
+                .showThreadInfo(false)  // (Optional) Whether to show thread info or not. Default true
+                .methodCount(0)         // (Optional) How many method line to show. Default 2
+                .methodOffset(2)        // (Optional) Hides internal method calls up to offset. Default 5
+                .tag("ExchangeRates")   // (Optional) Global tag for every log. Default PRETTY_LOGGER
+                .build();
+
+
+        Logger.addLogAdapter(new AndroidLogAdapter(formatStrategy) {
+            @Override
+            public boolean isLoggable(int priority, String tag) {
+                return PublishSettings.isAlphaOrDeveloper();
+            }
+        });
 
     }
 
