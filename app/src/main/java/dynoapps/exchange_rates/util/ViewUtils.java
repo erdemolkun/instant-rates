@@ -5,20 +5,17 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Point;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.TextView;
 
 import dynoapps.exchange_rates.App;
@@ -38,7 +35,7 @@ public class ViewUtils {
         Drawable drawable = tv.getCompoundDrawables()[0];
         if (drawable == null) return;
         drawable = DrawableCompat.wrap(drawable).mutate();
-        DrawableCompat.setTint(drawable,ContextCompat.getColor(tv.getContext(), color));
+        DrawableCompat.setTint(drawable, ContextCompat.getColor(tv.getContext(), color));
         //drawable.setColorFilter(ContextCompat.getColor(tv.getContext(), color), PorterDuff.Mode.SRC_ATOP);
         tv.setCompoundDrawables(drawable, null, null, null);
     }
@@ -143,22 +140,6 @@ public class ViewUtils {
         return (int) size;
     }
 
-    public static boolean canScrollUp(View view) {
-        if (android.os.Build.VERSION.SDK_INT < 14) {
-            if (view instanceof AbsListView) {
-                final AbsListView absListView = (AbsListView) view;
-                return absListView.getChildCount() > 0
-                        && (absListView.getFirstVisiblePosition() > 0 || absListView
-                        .getChildAt(0).getTop() < absListView.getPaddingTop());
-            } else {
-                return view.getScrollY() > 0;
-            }
-        } else {
-            return ViewCompat.canScrollVertically(view, -1);
-        }
-    }
-
-
     public static Point getScreenSize(@NonNull Activity activity) {
         Display display = activity.getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -166,18 +147,5 @@ public class ViewUtils {
         return size;
     }
 
-    public static void setMargins(View v, int l, int t, int r, int b) {
-        if (v.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
-            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
-            p.setMargins(l, t, r, b);
-            v.requestLayout();
-        }
-    }
-
-
-    public static int getScreenHeight(@NonNull Activity activity) {
-        Point size = getScreenSize(activity);
-        return size.y;
-    }
 
 }
