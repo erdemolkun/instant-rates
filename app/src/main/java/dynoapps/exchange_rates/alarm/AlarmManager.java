@@ -1,7 +1,5 @@
 package dynoapps.exchange_rates.alarm;
 
-import com.google.gson.GsonBuilder;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -22,11 +20,15 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.gson.GsonBuilder;
+
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 
 import dynoapps.exchange_rates.App;
+import dynoapps.exchange_rates.AppDatabase;
+import dynoapps.exchange_rates.AppExecutors;
 import dynoapps.exchange_rates.Prefs;
 import dynoapps.exchange_rates.R;
 import dynoapps.exchange_rates.SourcesManager;
@@ -46,7 +48,7 @@ import dynoapps.exchange_rates.util.RateUtils;
 
 public class AlarmManager {
 
-    public static final int MAX_ALARM_COUNT = 10;
+    private static final int MAX_ALARM_COUNT = 10;
 
     private static AlarmsHolder alarmsHolder;
 
@@ -57,7 +59,6 @@ public class AlarmManager {
         if (!getAlarmsHolder().is_enabled) {
             getAlarmsHolder().is_enabled = true;
         }
-
         EventBus.getDefault().post(new AlarmUpdateEvent(alarm, true, false));
         persistAlarms();
         return true;
@@ -85,7 +86,27 @@ public class AlarmManager {
             }
 
         }
+
         return alarmsHolder;
+    }
+
+    private static AppExecutors appExecutors;
+
+    private static void saveToDao(final Context context, final Alarm alarm) {
+        if (appExecutors == null) appExecutors = new AppExecutors();
+        appExecutors.diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                final long id = AppDatabase.getInstance(App.context()).alarm().insert(alarm);
+                // notify on the main thread
+                appExecutors.mainThread().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                      Toast.makeText(context,"Save With ID : "+id,Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+        });
     }
 
 
@@ -141,12 +162,12 @@ public class AlarmManager {
 
             }
         });
-        final RadioGroup rgAlarm = (RadioGroup) v.findViewById(R.id.rg_alarm);
+        final RadioGroup rgAlarm = v.findViewById(R.id.rg_alarm);
         rgAlarm.check(R.id.rb_above);
 
-        final Spinner spn_rate_types = (Spinner) v.findViewById(R.id.spn_rate_types);
+        final Spinner spn_rate_types = v.findViewById(R.id.spn_rate_types);
         final View rate_types_view = v.findViewById(R.id.v_alarm_types);
-        final Spinner spn_sources = (Spinner) v.findViewById(R.id.spn_source_types);
+        final Spinner spn_sources = v.findViewById(R.id.spn_source_types);
 
         ArrayList<CurrencySource> sources = new ArrayList<>();
         int selected_source_index = 0;
@@ -225,6 +246,7 @@ public class AlarmManager {
                                 alarm.rate_type = ((RateValuePair) spn_rate_types.getSelectedItem()).rate_type;
                                 alarm.value_type = value_type;
                                 AlarmManager.addAlarm(alarm);
+                                saveToDao(context,alarm);
                             }
                         } catch (Exception ex) {
                             L.i(AlarmManager.class.getSimpleName(), "Alarm Convert Exception");
