@@ -1,6 +1,8 @@
 package dynoapps.exchange_rates.converters;
 
 
+import android.support.annotation.NonNull;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -58,7 +60,7 @@ public class EnparaConverter implements Converter<ResponseBody, List<BaseRate>> 
 
 
     @Override
-    public List<BaseRate> convert(ResponseBody value) throws IOException {
+    public List<BaseRate> convert(@NonNull ResponseBody value) throws IOException {
 
         ArrayList<BaseRate> rates = new ArrayList<>();
         String responseBody = value != null ? value.string() : null;

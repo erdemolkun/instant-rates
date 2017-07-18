@@ -3,7 +3,9 @@ package dynoapps.exchange_rates.network;
 
 import java.util.List;
 
+import dynoapps.exchange_rates.model.rates.EnparaRate;
 import dynoapps.exchange_rates.model.rates.YorumlarRate;
+import io.reactivex.Observable;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
@@ -19,6 +21,6 @@ public interface YorumlarService {
             "Content-Type:text/html; Charset=iso-8859-9"
     })
     @GET("guncel.asp")
-    Call<List<YorumlarRate>> rates(@Query("ajax") String type);
+    Observable<List<YorumlarRate>> rates(@Query("ajax") String type);
 
 }

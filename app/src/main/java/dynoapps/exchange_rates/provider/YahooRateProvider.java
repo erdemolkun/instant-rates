@@ -1,15 +1,15 @@
 package dynoapps.exchange_rates.provider;
 
-import android.support.annotation.NonNull;
-
 import java.util.List;
 
 import dynoapps.exchange_rates.data.CurrencyType;
 import dynoapps.exchange_rates.model.rates.YahooRate;
 import dynoapps.exchange_rates.network.Api;
 import dynoapps.exchange_rates.network.YahooService;
-import retrofit2.Call;
-import retrofit2.Response;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by erdemmac on 25/11/2016.
@@ -17,10 +17,13 @@ import retrofit2.Response;
 
 public class YahooRateProvider extends BasePoolingProvider<List<YahooRate>> {
 
-    private Call<List<YahooRate>> lastCall;
+    private CompositeDisposable compositeDisposable;
+    private YahooService yahooService;
 
     public YahooRateProvider(SourceCallback<List<YahooRate>> callback) {
         super(callback);
+        yahooService = Api.getYahooApi().create(YahooService.class);
+        compositeDisposable = new CompositeDisposable();
     }
 
     @Override
@@ -30,8 +33,8 @@ public class YahooRateProvider extends BasePoolingProvider<List<YahooRate>> {
 
     @Override
     public void cancel() {
-        if (lastCall != null) {
-            lastCall.cancel();
+        if (compositeDisposable != null) {
+            compositeDisposable.clear();
         }
     }
 
@@ -42,32 +45,28 @@ public class YahooRateProvider extends BasePoolingProvider<List<YahooRate>> {
 
     @Override
     public void run(final boolean is_single_run) {
-        final YahooService yahooService = Api.getYahooApi().create(YahooService.class);
-        Call<List<YahooRate>> call = yahooService.rates();
-        call.enqueue(new retrofit2.Callback<List<YahooRate>>() {
-            @Override
-            public void onResponse(@NonNull Call<List<YahooRate>> call, @NonNull Response<List<YahooRate>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    List<YahooRate> rates = response.body();
-                    notifyValue(rates);
-                    if (!is_single_run)
-                        fetchAgain(false);
-                } else {
-                    notifyError();
-                    if (!is_single_run)
-                        fetchAgain(true);
-                }
-            }
 
-            @Override
-            public void onFailure(@NonNull Call<List<YahooRate>> call, @NonNull Throwable t) {
-                if (!call.isCanceled()) {
-                    notifyError();
-                    if (!is_single_run)
-                        fetchAgain(true);
-                }
-            }
-        });
-        lastCall = call;
+        compositeDisposable.add(yahooService.rates()
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<List<YahooRate>>() {
+                    @Override
+                    public void onNext(List<YahooRate> rates) {
+                        notifyValue(rates);
+                        if (!is_single_run)
+                            fetchAgain(false);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        notifyError();
+                        if (!is_single_run)
+                            fetchAgain(true);
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                }));
     }
 }

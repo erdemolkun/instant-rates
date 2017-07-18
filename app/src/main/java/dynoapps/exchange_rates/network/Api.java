@@ -54,6 +54,7 @@ public class Api {
                     .client(client)
                     .baseUrl("https://yorumlar.altin.in/")
                     .addConverterFactory(new YorumlarConverter.Factory())
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .build();
         }
         return yorumlarApi;
@@ -102,6 +103,7 @@ public class Api {
             yahooApi = new Retrofit.Builder().
                     client(client).
                     addConverterFactory(new YahooConverter.Factory()).
+                    addCallAdapterFactory(RxJava2CallAdapterFactory.create()).
                     baseUrl("http://finance.yahoo.com/").build();
         }
         return yahooApi;
