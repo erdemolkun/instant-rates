@@ -25,7 +25,7 @@ import dynoapps.exchange_rates.R;
 import dynoapps.exchange_rates.SourcesManager;
 import dynoapps.exchange_rates.alarm.Alarm;
 import dynoapps.exchange_rates.alarm.AlarmManager;
-import dynoapps.exchange_rates.alarm.AlarmsHolder;
+import dynoapps.exchange_rates.alarm.AlarmRepository;
 import dynoapps.exchange_rates.data.CurrencySource;
 import dynoapps.exchange_rates.data.CurrencyType;
 import dynoapps.exchange_rates.data.RatesHolder;
@@ -95,6 +95,7 @@ public class RatePollingService extends IntentService {
         super.onCreate();
         L.i(RatePollingService.class.getSimpleName(), "Service onCreate");
         EventBus.getDefault().register(this);
+        AlarmRepository.getInstance().fetchAlarms();
         if (providers == null) {
             providers = new ArrayList<>();
         }
@@ -177,9 +178,9 @@ public class RatePollingService extends IntentService {
     private <T extends BaseRate> void alarmChecks(List<T> rates, int source_type) {
         if (CollectionUtils.isNullOrEmpty(rates)) return;
         try {
-            AlarmsHolder alarmsHolder = AlarmManager.getAlarmsHolder();
-            Iterator<Alarm> iterator = alarmsHolder.alarms.iterator();
-            int size = alarmsHolder.alarms.size();
+
+            Iterator<Alarm> iterator = AlarmRepository.getInstance().getCachedAlarms().iterator();
+            int size = AlarmRepository.getInstance().getCachedAlarms().size();
             while (iterator.hasNext()) {
                 Alarm alarm = iterator.next();
                 if (alarm.source_type != source_type || !alarm.is_enabled) continue;
@@ -205,17 +206,18 @@ public class RatePollingService extends IntentService {
                 String val = alarm.rate_type == IRate.ONS ? formatter2.format(alarm.val) : formatter5.format(alarm.val);
                 if (alarm.is_above && val_current > alarm.val && val_old <= alarm.val) {
                     iterator.remove();
+                    AlarmRepository.getInstance().removeAlarm(alarm);
                     sendNotification(getString(R.string.is_above_val, SourcesManager.getSourceName(alarm.source_type), RateUtils.rateName(alarm.rate_type),
                             val), "increasing", Alarm.getPushId(alarm));
                 } else if (!alarm.is_above && val_current < alarm.val && val_old >= alarm.val) {
                     iterator.remove();
+                    AlarmRepository.getInstance().removeAlarm(alarm);
                     sendNotification(getString(R.string.is_below_value, SourcesManager.getSourceName(alarm.source_type), RateUtils.rateName(alarm.rate_type),
                             val), "decreasing", Alarm.getPushId(alarm));
                 }
             }
-            if (size != alarmsHolder.alarms.size()) {
+            if (size != AlarmRepository.getInstance().getCachedAlarms().size()) {
                 EventBus.getDefault().post(new AlarmUpdateEvent(null, false, false));
-                AlarmManager.persistAlarms();
             }
         } catch (Exception ex) {
             L.ex(ex);

@@ -13,10 +13,20 @@ public class Prefs {
     private static final String INTERVAL = "INTERVAL";
     private static final String LANDING_HINT_STATE = "LANDING_HINT_STATE";
     private static final String ALARMS = "ALARMS";
+    private static final String ALARM_ENABLED = "ALARM_ENABLED";
 
     private static SharedPreferences getPrefs(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context);
     }
+
+    public static boolean isAlarmEnabled() {
+        return getPrefs(App.context()).getBoolean(ALARM_ENABLED, false);
+    }
+
+    public static void saveAlarmEnabled(boolean enabled) {
+        saveBoolean(ALARM_ENABLED, enabled);
+    }
+
 
     public static void saveSources(String sources) {
         saveString(SOURCES, sources);

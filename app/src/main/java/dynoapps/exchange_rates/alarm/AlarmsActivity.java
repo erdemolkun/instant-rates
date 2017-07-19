@@ -90,15 +90,26 @@ public class AlarmsActivity extends BaseActivity {
                 AlarmManager.addAlarmDialog(AlarmsActivity.this);
             }
         });
+        AlarmRepository.getInstance().addCallback(new AlarmRepository.AlarmCallback() {
+            @Override
+            public void onAdded(Alarm alarm) {
+
+            }
+
+            @Override
+            public void onRemove() {
+
+            }
+
+            @Override
+            public void onFetched(List<Alarm> alarms) {
+                Collections.sort(alarms, Alarm.COMPARATOR);
+                adapter.addData(alarms);
+            }
+        });
+        AlarmRepository.getInstance().fetchAlarms();
     }
 
-    @Override
-    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        List<Alarm> sorted_alarms = AlarmManager.getAlarmsHolder().alarms;
-        Collections.sort(sorted_alarms, Alarm.COMPARATOR);
-        adapter.addData(sorted_alarms);
-    }
 
     @Override
     protected void onResume() {
@@ -134,13 +145,12 @@ public class AlarmsActivity extends BaseActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         //getMenuInflater().inflate(R.menu.menu_alarms, menu);
         swAlarmState = findViewById(R.id.menu_switch);
-        swAlarmState.setChecked(AlarmManager.getAlarmsHolder().is_enabled);
+        swAlarmState.setChecked(AlarmRepository.getInstance().isEnabled());
         swAlarmState.jumpDrawablesToCurrentState();
         swAlarmState.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                AlarmManager.getAlarmsHolder().is_enabled = b;
-                AlarmManager.persistAlarms();
+                AlarmRepository.getInstance().updateEnabled(b);
                 updateViews();
             }
         });
@@ -149,7 +159,7 @@ public class AlarmsActivity extends BaseActivity {
     }
 
     private void updateViews() {
-        rvAlarms.setAlpha(AlarmManager.getAlarmsHolder().is_enabled ? 1.0f : 0.4f);
+        rvAlarms.setAlpha(AlarmRepository.getInstance().isEnabled() ? 1.0f : 0.4f);
     }
 
 

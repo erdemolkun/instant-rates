@@ -91,17 +91,16 @@ class AlarmsAdapter extends UpdatableAdapter<List<Alarm>, AlarmsActivity.AlarmVi
                 int pos = holder.getAdapterPosition();
                 AlarmsAdapter.this.alarms.remove(pos);
                 notifyItemRemoved(pos);
-                AlarmManager.remove(pos);
+                AlarmRepository.getInstance().removeAlarm(alarm);
             }
         });
         holder.swAlarm.setChecked(alarm.is_enabled);
         holder.swAlarm.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                AlarmManager.getAlarmsHolder().alarms.get(holder.getAdapterPosition()).is_enabled = b;
                 alarm.is_enabled = b;
+                AlarmRepository.getInstance().updateAlarm(alarm);
                 EventBus.getDefault().post(new AlarmUpdateEvent(null, true, true));
-                AlarmManager.persistAlarms();
             }
         });
     }

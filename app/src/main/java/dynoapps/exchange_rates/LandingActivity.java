@@ -19,7 +19,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.transition.TransitionManager;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,6 +36,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import dynoapps.exchange_rates.alarm.AlarmManager;
+import dynoapps.exchange_rates.alarm.AlarmRepository;
 import dynoapps.exchange_rates.alarm.AlarmsActivity;
 import dynoapps.exchange_rates.data.CurrencySource;
 import dynoapps.exchange_rates.data.RatesHolder;
@@ -99,6 +99,7 @@ public class LandingActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         setAnimationType(AnimationHelper.FADE_IN);
         super.onCreate(savedInstanceState);
+        AlarmRepository.getInstance().fetchAlarms();
         mHandler = new Handler(Looper.getMainLooper());
         if (getActionBarToolbar() != null) {
             getActionBarToolbar().setTitle(getTitle());
@@ -110,15 +111,15 @@ public class LandingActivity extends BaseActivity {
         setUpRateCardViews();
         refreshCardItemViews();
 
-        /**
+        /*
          * Update with cached rates.
-         * */
+         **/
 
         for (CurrencySource currencySource : SourcesManager.getCurrencySources()) {
             if (currencySource != null && currencySource.isEnabled()) {
                 RatesEvent ratesEvent = RatesHolder.getInstance().getLatestEvent(currencySource.getType());
-                if (ratesEvent!=null) {
-                    update(ratesEvent.rates, ratesEvent.source_type, false);
+                if (ratesEvent != null) {
+                    updateCards(ratesEvent.rates, ratesEvent.source_type, false);
                 }
             }
         }
@@ -485,7 +486,7 @@ public class LandingActivity extends BaseActivity {
             EventBus.getDefault().unregister(this);
         }
         if (isMyServiceRunning(RatePollingService.class)) {
-            if (!AlarmManager.hasAnyActive()) {
+            if (!AlarmRepository.getInstance().hasAnyActive()) {
                 stopService(new Intent(this, RatePollingService.class));
             } else {
                 TimeIntervalManager.setAlarmMode(true);
@@ -500,7 +501,7 @@ public class LandingActivity extends BaseActivity {
         super.onDestroy();
     }
 
-    private void update(List<BaseRate> rates, int source_type, boolean animated) {
+    private void updateCards(List<BaseRate> rates, int source_type, boolean animated) {
         for (CardViewItemParent parent : parentItems) {
             for (CardViewItem item : parent.items) {
                 if (item.source_type == source_type) {
@@ -543,7 +544,7 @@ public class LandingActivity extends BaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(RatesEvent ratesEvent) {
         List<BaseRate> rates = ratesEvent.rates;
-        update(rates, ratesEvent.source_type, true);
+        updateCards(rates, ratesEvent.source_type, true);
     }
 
     @Subscribe
@@ -582,6 +583,4 @@ public class LandingActivity extends BaseActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-
 }

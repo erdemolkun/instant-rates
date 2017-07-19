@@ -49,54 +49,6 @@ public class AlarmManager {
 
     private static final int MAX_ALARM_COUNT = 10;
 
-    private static AlarmsHolder alarmsHolder;
-
-    private static boolean addAlarm(Alarm alarm) {
-        alarmsHolder = getAlarmsHolder();
-        alarmsHolder.alarms.add(alarm);
-
-        if (!getAlarmsHolder().is_enabled) {
-            getAlarmsHolder().is_enabled = true;
-        }
-        EventBus.getDefault().post(new AlarmUpdateEvent(alarm, true, false));
-        persistAlarms();
-        return true;
-    }
-
-    public static void remove(int index) {
-        getAlarmsHolder().alarms.remove(index);
-        EventBus.getDefault().post(new AlarmUpdateEvent(null, false, false));
-        persistAlarms();
-    }
-
-    public static AlarmsHolder getAlarmsHolder() {
-        if (alarmsHolder == null) {
-            String alarm_json = Prefs.getAlarms();
-            if (!TextUtils.isEmpty(alarm_json)) {
-                try {
-                    alarmsHolder = new GsonBuilder().create().fromJson(alarm_json, AlarmsHolder.class);
-                } catch (Exception ignored) {
-                }
-            }
-            if (alarmsHolder == null) {
-                alarmsHolder = new AlarmsHolder(new ArrayList<Alarm>());
-                alarmsHolder.alarms = new ArrayList<>();
-                alarmsHolder.is_enabled = true;
-            }
-
-        }
-
-        return alarmsHolder;
-    }
-
-    private static AppExecutors appExecutors;
-
-
-    public static void persistAlarms() {
-        String alarms_json = new GsonBuilder().create().toJson(alarmsHolder);
-        Prefs.saveAlarms(alarms_json);
-    }
-
     /**
      * Used for spinner item models.
      */
@@ -115,7 +67,7 @@ public class AlarmManager {
     }
 
     public static void addAlarmDialog(@NonNull final Context context, int source_type, final int rate_type, final int value_type, Float default_value) {
-        if (CollectionUtils.size(getAlarmsHolder().alarms) >= AlarmManager.MAX_ALARM_COUNT) {
+        if (CollectionUtils.size(AlarmRepository.getInstance().getCachedAlarms()) >= AlarmManager.MAX_ALARM_COUNT) {
             Toast.makeText(context, context.getString(R.string.max_alarm_message, AlarmManager.MAX_ALARM_COUNT), Toast.LENGTH_SHORT).show();
             return;
         }
@@ -227,7 +179,6 @@ public class AlarmManager {
                                 alarm.source_type = ((CurrencySource) spn_sources.getSelectedItem()).getType();
                                 alarm.rate_type = ((RateValuePair) spn_rate_types.getSelectedItem()).rate_type;
                                 alarm.value_type = value_type;
-                                AlarmManager.addAlarm(alarm);
                                 AlarmRepository.getInstance().saveAlarm(alarm);
                             }
                         } catch (Exception ex) {
@@ -248,19 +199,5 @@ public class AlarmManager {
         alertDialog.show();
     }
 
-    public static boolean hasAnyActive() {
-        if (!getAlarmsHolder().is_enabled) return false;
-        if (getAlarmsHolder().alarms.size() <= 0) return false;
-        for (Alarm alarm : getAlarmsHolder().alarms) {
-            if (alarm.is_enabled) {
-                for (CurrencySource source : SourcesManager.getCurrencySources()) {
-                    if (source.isEnabled() && source.getType() == alarm.source_type) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
 
 }

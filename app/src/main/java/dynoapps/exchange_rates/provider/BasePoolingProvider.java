@@ -9,6 +9,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import dynoapps.exchange_rates.SourcesManager;
 import dynoapps.exchange_rates.alarm.Alarm;
 import dynoapps.exchange_rates.alarm.AlarmManager;
+import dynoapps.exchange_rates.alarm.AlarmRepository;
 import dynoapps.exchange_rates.data.CurrencySource;
 import dynoapps.exchange_rates.interfaces.PoolingRunnable;
 import dynoapps.exchange_rates.time.TimeIntervalManager;
@@ -183,7 +184,7 @@ public abstract class BasePoolingProvider<T> implements IPollingSource, PoolingR
 
     public boolean stopIfHasAlarm() {
         boolean contains = false;
-        for (Alarm alarm : AlarmManager.getAlarmsHolder().alarms) {
+        for (Alarm alarm : AlarmRepository.getInstance().getCachedAlarms()) {
             if (alarm.source_type == getSourceType() && alarm.is_enabled) {
                 contains = true;
                 break;
