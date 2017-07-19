@@ -20,7 +20,7 @@ public class Prefs {
     }
 
     public static boolean isAlarmEnabled() {
-        return getPrefs(App.context()).getBoolean(ALARM_ENABLED, false);
+        return getPrefs(App.context()).getBoolean(ALARM_ENABLED, true);
     }
 
     public static void saveAlarmEnabled(boolean enabled) {

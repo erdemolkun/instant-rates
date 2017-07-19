@@ -27,12 +27,11 @@ import dynoapps.exchange_rates.util.RateUtils;
 
 class AlarmsAdapter extends UpdatableAdapter<List<Alarm>, AlarmsActivity.AlarmViewHolder> {
     private List<Alarm> alarms;
+    private AlarmsRepository alarmRepository;
 
     AlarmsAdapter(ArrayList<Alarm> alarms) {
         this.alarms = new ArrayList<>();
-        for (Alarm al : alarms) {
-            this.alarms.add(al);
-        }
+        this.alarms.addAll(alarms);
     }
 
     private int getToAddIndex(Alarm alarm) {
@@ -91,7 +90,7 @@ class AlarmsAdapter extends UpdatableAdapter<List<Alarm>, AlarmsActivity.AlarmVi
                 int pos = holder.getAdapterPosition();
                 AlarmsAdapter.this.alarms.remove(pos);
                 notifyItemRemoved(pos);
-                AlarmRepository.getInstance().removeAlarm(alarm);
+                alarmRepository.deleteAlarm(alarm,null);
             }
         });
         holder.swAlarm.setChecked(alarm.is_enabled);
@@ -99,8 +98,8 @@ class AlarmsAdapter extends UpdatableAdapter<List<Alarm>, AlarmsActivity.AlarmVi
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 alarm.is_enabled = b;
-                AlarmRepository.getInstance().updateAlarm(alarm);
-                EventBus.getDefault().post(new AlarmUpdateEvent(null, true, true));
+                alarmRepository.updateAlarm(alarm,null);
+                EventBus.getDefault().post(new AlarmUpdateEvent());
             }
         });
     }

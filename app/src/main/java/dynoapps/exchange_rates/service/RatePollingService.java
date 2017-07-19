@@ -20,12 +20,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import dynoapps.exchange_rates.App;
 import dynoapps.exchange_rates.LandingActivity;
 import dynoapps.exchange_rates.R;
 import dynoapps.exchange_rates.SourcesManager;
 import dynoapps.exchange_rates.alarm.Alarm;
-import dynoapps.exchange_rates.alarm.AlarmManager;
-import dynoapps.exchange_rates.alarm.AlarmRepository;
+import dynoapps.exchange_rates.alarm.AlarmsDataSource;
+import dynoapps.exchange_rates.alarm.AlarmsRepository;
 import dynoapps.exchange_rates.data.CurrencySource;
 import dynoapps.exchange_rates.data.CurrencyType;
 import dynoapps.exchange_rates.data.RatesHolder;
@@ -71,6 +72,8 @@ public class RatePollingService extends IntentService {
 
     private final IBinder mBinder = new SimpleBinder();
 
+    private AlarmsRepository alarmsRepository;
+
     public RatePollingService() {
         super("RatePollingService");
     }
@@ -95,7 +98,7 @@ public class RatePollingService extends IntentService {
         super.onCreate();
         L.i(RatePollingService.class.getSimpleName(), "Service onCreate");
         EventBus.getDefault().register(this);
-        AlarmRepository.getInstance().fetchAlarms();
+        alarmsRepository = App.getInstance().provideAlarmsRepository();
         if (providers == null) {
             providers = new ArrayList<>();
         }
@@ -175,12 +178,22 @@ public class RatePollingService extends IntentService {
     private static Formatter formatter2 = new Formatter(3, 0);
     private static Formatter formatter5 = new Formatter(5, 1);
 
-    private <T extends BaseRate> void alarmChecks(List<T> rates, int source_type) {
+    private <T extends BaseRate> void alarmChecks(final List<T> rates, final int source_type) {
+        if (CollectionUtils.isNullOrEmpty(rates)) return;
+        alarmsRepository.getAlarms(new AlarmsDataSource.AlarmsLoadCallback() {
+            @Override
+            public void onAlarmsLoaded(List<Alarm> alarms) {
+                alarmChecks(rates, source_type, alarms);
+            }
+        });
+    }
+
+    private <T extends BaseRate> void alarmChecks(List<T> rates, int source_type, List<Alarm> alarms) {
         if (CollectionUtils.isNullOrEmpty(rates)) return;
         try {
 
-            Iterator<Alarm> iterator = AlarmRepository.getInstance().getCachedAlarms().iterator();
-            int size = AlarmRepository.getInstance().getCachedAlarms().size();
+            int size = CollectionUtils.size(alarms);
+            Iterator<Alarm> iterator = alarms.iterator();
             while (iterator.hasNext()) {
                 Alarm alarm = iterator.next();
                 if (alarm.source_type != source_type || !alarm.is_enabled) continue;
@@ -206,19 +219,19 @@ public class RatePollingService extends IntentService {
                 String val = alarm.rate_type == IRate.ONS ? formatter2.format(alarm.val) : formatter5.format(alarm.val);
                 if (alarm.is_above && val_current > alarm.val && val_old <= alarm.val) {
                     iterator.remove();
-                    AlarmRepository.getInstance().removeAlarm(alarm);
+                    alarmsRepository.deleteAlarm(alarm, null);
+                    EventBus.getDefault().post(new AlarmUpdateEvent());
                     sendNotification(getString(R.string.is_above_val, SourcesManager.getSourceName(alarm.source_type), RateUtils.rateName(alarm.rate_type),
                             val), "increasing", Alarm.getPushId(alarm));
                 } else if (!alarm.is_above && val_current < alarm.val && val_old >= alarm.val) {
                     iterator.remove();
-                    AlarmRepository.getInstance().removeAlarm(alarm);
+                    alarmsRepository.deleteAlarm(alarm, null);
+                    EventBus.getDefault().post(new AlarmUpdateEvent());
                     sendNotification(getString(R.string.is_below_value, SourcesManager.getSourceName(alarm.source_type), RateUtils.rateName(alarm.rate_type),
                             val), "decreasing", Alarm.getPushId(alarm));
                 }
             }
-            if (size != AlarmRepository.getInstance().getCachedAlarms().size()) {
-                EventBus.getDefault().post(new AlarmUpdateEvent(null, false, false));
-            }
+
         } catch (Exception ex) {
             L.ex(ex);
         }

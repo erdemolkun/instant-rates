@@ -36,8 +36,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import dynoapps.exchange_rates.alarm.AlarmManager;
-import dynoapps.exchange_rates.alarm.AlarmRepository;
 import dynoapps.exchange_rates.alarm.AlarmsActivity;
+import dynoapps.exchange_rates.alarm.AlarmsRepository;
 import dynoapps.exchange_rates.data.CurrencySource;
 import dynoapps.exchange_rates.data.RatesHolder;
 import dynoapps.exchange_rates.event.DataSourceUpdate;
@@ -95,11 +95,13 @@ public class LandingActivity extends BaseActivity {
     private Handler mHandler;
     private static final int NAVDRAWER_LAUNCH_DELAY = 250;
 
+    AlarmsRepository alarmsRepository;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         setAnimationType(AnimationHelper.FADE_IN);
         super.onCreate(savedInstanceState);
-        AlarmRepository.getInstance().fetchAlarms();
+        alarmsRepository = App.getInstance().provideAlarmsRepository();
         mHandler = new Handler(Looper.getMainLooper());
         if (getActionBarToolbar() != null) {
             getActionBarToolbar().setTitle(getTitle());
@@ -207,9 +209,9 @@ public class LandingActivity extends BaseActivity {
                 RatesEvent ratesEvent = RatesHolder.getInstance().getLatestEvent(source_type);
                 BaseRate rate = ratesEvent != null ? RateUtils.getRate(ratesEvent.rates, parent.rate_type) : null;
                 if (rate != null) {
-                    AlarmManager.addAlarmDialog(LandingActivity.this, source_type, rate.getRateType(), value_type, rate.getValue(value_type));
+                    AlarmManager.addAlarmDialog(LandingActivity.this, source_type, rate.getRateType(), value_type, rate.getValue(value_type), null);
                 } else {
-                    AlarmManager.addAlarmDialog(LandingActivity.this, source_type, parent.rate_type, value_type, null);
+                    AlarmManager.addAlarmDialog(LandingActivity.this, source_type, parent.rate_type, value_type, null, null);
                 }
                 return true;
             }
@@ -486,7 +488,7 @@ public class LandingActivity extends BaseActivity {
             EventBus.getDefault().unregister(this);
         }
         if (isMyServiceRunning(RatePollingService.class)) {
-            if (!AlarmRepository.getInstance().hasAnyActive()) {
+            if (!alarmsRepository.hasAnyActive()) {
                 stopService(new Intent(this, RatePollingService.class));
             } else {
                 TimeIntervalManager.setAlarmMode(true);

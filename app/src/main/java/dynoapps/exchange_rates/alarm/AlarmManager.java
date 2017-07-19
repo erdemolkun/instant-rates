@@ -20,19 +20,12 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.google.gson.GsonBuilder;
-
-import org.greenrobot.eventbus.EventBus;
-
 import java.util.ArrayList;
 
 import dynoapps.exchange_rates.App;
-import dynoapps.exchange_rates.AppExecutors;
-import dynoapps.exchange_rates.Prefs;
 import dynoapps.exchange_rates.R;
 import dynoapps.exchange_rates.SourcesManager;
 import dynoapps.exchange_rates.data.CurrencySource;
-import dynoapps.exchange_rates.event.AlarmUpdateEvent;
 import dynoapps.exchange_rates.interfaces.ValueType;
 import dynoapps.exchange_rates.ui.SimpleSpinnerAdapter;
 import dynoapps.exchange_rates.util.CollectionUtils;
@@ -46,8 +39,6 @@ import dynoapps.exchange_rates.util.RateUtils;
  */
 
 public class AlarmManager {
-
-    private static final int MAX_ALARM_COUNT = 10;
 
     /**
      * Used for spinner item models.
@@ -63,14 +54,16 @@ public class AlarmManager {
     }
 
     public static void addAlarmDialog(final Context context) {
-        addAlarmDialog(context, -1, -1, ValueType.NONE, null);
+        addAlarmDialog(context, -1, -1, ValueType.NONE, null,null);
     }
 
-    public static void addAlarmDialog(@NonNull final Context context, int source_type, final int rate_type, final int value_type, Float default_value) {
-        if (CollectionUtils.size(AlarmRepository.getInstance().getCachedAlarms()) >= AlarmManager.MAX_ALARM_COUNT) {
-            Toast.makeText(context, context.getString(R.string.max_alarm_message, AlarmManager.MAX_ALARM_COUNT), Toast.LENGTH_SHORT).show();
-            return;
-        }
+    public static void addAlarmDialog(final Context context,final AlarmsDataSource.AlarmUpdateInsertCallback alarmUpdateInsertCallback) {
+        addAlarmDialog(context, -1, -1, ValueType.NONE, null,alarmUpdateInsertCallback);
+    }
+
+    public static void addAlarmDialog(@NonNull final Context context,
+                                      int source_type, final int rate_type, final int value_type, Float default_value,
+                                      final AlarmsDataSource.AlarmUpdateInsertCallback alarmUpdateInsertCallback) {
         @SuppressLint("InflateParams") final View v = LayoutInflater.from(context).inflate(R.layout.layout_alarm_selection, null);
         final EditText etAlarm = (EditText) v.findViewById(R.id.et_alarm_value);
         final TextInputLayout tilValue = (TextInputLayout) v.findViewById(R.id.til_alarm_value);
@@ -179,7 +172,7 @@ public class AlarmManager {
                                 alarm.source_type = ((CurrencySource) spn_sources.getSelectedItem()).getType();
                                 alarm.rate_type = ((RateValuePair) spn_rate_types.getSelectedItem()).rate_type;
                                 alarm.value_type = value_type;
-                                AlarmRepository.getInstance().saveAlarm(alarm);
+                                App.getInstance().provideAlarmsRepository().saveAlarm(alarm,alarmUpdateInsertCallback);
                             }
                         } catch (Exception ex) {
                             L.i(AlarmManager.class.getSimpleName(), "Alarm Convert Exception");

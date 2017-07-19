@@ -4,12 +4,14 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import dynoapps.exchange_rates.App;
 import dynoapps.exchange_rates.SourcesManager;
 import dynoapps.exchange_rates.alarm.Alarm;
-import dynoapps.exchange_rates.alarm.AlarmManager;
-import dynoapps.exchange_rates.alarm.AlarmRepository;
+import dynoapps.exchange_rates.alarm.AlarmsDataSource;
+import dynoapps.exchange_rates.alarm.AlarmsRepository;
 import dynoapps.exchange_rates.data.CurrencySource;
 import dynoapps.exchange_rates.interfaces.PoolingRunnable;
 import dynoapps.exchange_rates.time.TimeIntervalManager;
@@ -30,6 +32,8 @@ public abstract class BasePoolingProvider<T> implements IPollingSource, PoolingR
 
     protected CompositeDisposable compositeDisposable;
 
+    private AlarmsRepository alarmsRepository;
+
     private int error_count = 0;
     private int success_count = 0;
 
@@ -42,6 +46,7 @@ public abstract class BasePoolingProvider<T> implements IPollingSource, PoolingR
         this.callback = callback;
         this.currencySource = SourcesManager.getSource(getSourceType());
         compositeDisposable = new CompositeDisposable();
+        alarmsRepository = App.getInstance().provideAlarmsRepository();
     }
 
     private Handler handler;
@@ -182,19 +187,23 @@ public abstract class BasePoolingProvider<T> implements IPollingSource, PoolingR
         }
     }
 
-    public boolean stopIfHasAlarm() {
-        boolean contains = false;
-        for (Alarm alarm : AlarmRepository.getInstance().getCachedAlarms()) {
-            if (alarm.source_type == getSourceType() && alarm.is_enabled) {
-                contains = true;
-                break;
+    public void stopIfHasAlarm() {
+        alarmsRepository.getAlarms(new AlarmsDataSource.AlarmsLoadCallback() {
+            @Override
+            public void onAlarmsLoaded(List<Alarm> alarms) {
+                boolean contains = false;
+                for (Alarm alarm : alarms) {
+                    if (alarm.source_type == getSourceType() && alarm.is_enabled) {
+                        contains = true;
+                        break;
+                    }
+                }
+                if (!contains) {
+                    stop();
+                }
             }
-        }
-        if (!contains) {
-            stop();
-            return true;
-        }
-        return false;
+        });
+
     }
 
 }

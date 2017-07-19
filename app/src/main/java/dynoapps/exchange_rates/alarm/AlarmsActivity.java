@@ -21,6 +21,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import dynoapps.exchange_rates.App;
 import dynoapps.exchange_rates.BaseActivity;
 import dynoapps.exchange_rates.R;
 import dynoapps.exchange_rates.event.AlarmUpdateEvent;
@@ -46,11 +47,13 @@ public class AlarmsActivity extends BaseActivity {
 
     AlarmsAdapter adapter;
 
+    AlarmsRepository alarmRepository;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         setAnimationType(AnimationHelper.FADE_IN);
         super.onCreate(savedInstanceState);
-
+        alarmRepository = App.getInstance().provideAlarmsRepository();
         setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
         getActionBarToolbar().setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,27 +90,23 @@ public class AlarmsActivity extends BaseActivity {
         fabAddAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlarmManager.addAlarmDialog(AlarmsActivity.this);
+                AlarmManager.addAlarmDialog(AlarmsActivity.this, new AlarmsDataSource.AlarmUpdateInsertCallback() {
+                    @Override
+                    public void onAlarmUpdate(Alarm alarm) {
+                        adapter.addData(alarm);
+                        // TODO refresh
+                    }
+                });
             }
         });
-        AlarmRepository.getInstance().addCallback(new AlarmRepository.AlarmCallback() {
+        alarmRepository.refreshAlarms();
+        alarmRepository.getAlarms(new AlarmsDataSource.AlarmsLoadCallback() {
             @Override
-            public void onAdded(Alarm alarm) {
-
-            }
-
-            @Override
-            public void onRemove() {
-
-            }
-
-            @Override
-            public void onFetched(List<Alarm> alarms) {
+            public void onAlarmsLoaded(List<Alarm> alarms) {
                 Collections.sort(alarms, Alarm.COMPARATOR);
                 adapter.addData(alarms);
             }
         });
-        AlarmRepository.getInstance().fetchAlarms();
     }
 
 
@@ -128,12 +127,7 @@ public class AlarmsActivity extends BaseActivity {
 
     @Subscribe
     public void onEvent(AlarmUpdateEvent event) {
-        if (!event.is_update && event.is_added) {
-            adapter.addData(event.alarm);
-            updateViews();
-        } else {
-            //adapter.notifyDataSetChanged();
-        }
+        // TODO update
     }
 
     @Override
@@ -145,12 +139,12 @@ public class AlarmsActivity extends BaseActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         //getMenuInflater().inflate(R.menu.menu_alarms, menu);
         swAlarmState = findViewById(R.id.menu_switch);
-        swAlarmState.setChecked(AlarmRepository.getInstance().isEnabled());
+        swAlarmState.setChecked(alarmRepository.isEnabled());
         swAlarmState.jumpDrawablesToCurrentState();
         swAlarmState.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                AlarmRepository.getInstance().updateEnabled(b);
+                alarmRepository.updateEnabled(b);
                 updateViews();
             }
         });
@@ -159,7 +153,7 @@ public class AlarmsActivity extends BaseActivity {
     }
 
     private void updateViews() {
-        rvAlarms.setAlpha(AlarmRepository.getInstance().isEnabled() ? 1.0f : 0.4f);
+        rvAlarms.setAlpha(alarmRepository.isEnabled() ? 1.0f : 0.4f);
     }
 
 

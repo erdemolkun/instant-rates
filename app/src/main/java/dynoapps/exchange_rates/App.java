@@ -1,22 +1,22 @@
 package dynoapps.exchange_rates;
 
-import com.google.android.gms.analytics.GoogleAnalytics;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
-
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
-import com.facebook.stetho.Stetho;
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.FormatStrategy;
 import com.orhanobut.logger.Logger;
 import com.orhanobut.logger.PrettyFormatStrategy;
 
 import java.util.HashMap;
+
+import dynoapps.exchange_rates.alarm.AlarmsRepository;
 
 
 /**
@@ -34,6 +34,10 @@ public class App extends Application {
     public static Context context() {
         if (appInstance == null) return null;
         return appInstance.getApplicationContext();
+    }
+
+    public AlarmsRepository provideAlarmsRepository() {
+        return AlarmsRepository.getInstance(getApplicationContext());
     }
 
     @Override
