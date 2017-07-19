@@ -7,7 +7,6 @@ import dynoapps.exchange_rates.model.rates.YahooRate;
 import dynoapps.exchange_rates.network.Api;
 import dynoapps.exchange_rates.network.YahooService;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 
@@ -17,25 +16,16 @@ import io.reactivex.schedulers.Schedulers;
 
 public class YahooRateProvider extends BasePoolingProvider<List<YahooRate>> {
 
-    private CompositeDisposable compositeDisposable;
     private YahooService yahooService;
 
     public YahooRateProvider(SourceCallback<List<YahooRate>> callback) {
         super(callback);
         yahooService = Api.getYahooApi().create(YahooService.class);
-        compositeDisposable = new CompositeDisposable();
     }
 
     @Override
     public int getSourceType() {
         return CurrencyType.YAHOO;
-    }
-
-    @Override
-    public void cancel() {
-        if (compositeDisposable != null) {
-            compositeDisposable.clear();
-        }
     }
 
     @Override

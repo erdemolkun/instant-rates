@@ -7,7 +7,6 @@ import dynoapps.exchange_rates.model.rates.YorumlarRate;
 import dynoapps.exchange_rates.network.Api;
 import dynoapps.exchange_rates.network.YorumlarService;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 
@@ -17,11 +16,11 @@ import io.reactivex.schedulers.Schedulers;
 
 public class YorumlarRateProvider extends BasePoolingProvider<List<YorumlarRate>> {
 
-    private CompositeDisposable compositeDisposable;
+    private YorumlarService yorumlarService;
 
     public YorumlarRateProvider(SourceCallback<List<YorumlarRate>> callback) {
         super(callback);
-        compositeDisposable = new CompositeDisposable();
+        yorumlarService = Api.getYorumlarApi().create(YorumlarService.class);
     }
 
     @Override
@@ -29,15 +28,8 @@ public class YorumlarRateProvider extends BasePoolingProvider<List<YorumlarRate>
         return CurrencyType.ALTININ;
     }
 
-    @Override
-    public void cancel() {
-        if (compositeDisposable != null) {
-            compositeDisposable.clear();
-        }
-    }
-
     private void job(final boolean is_single_run) {
-        compositeDisposable.add(Api.getYorumlarApi().create(YorumlarService.class).rates("ons")
+        compositeDisposable.add(yorumlarService.rates("ons")
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<List<YorumlarRate>>() {
                     @Override

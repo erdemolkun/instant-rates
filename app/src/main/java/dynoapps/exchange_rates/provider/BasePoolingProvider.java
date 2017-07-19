@@ -13,6 +13,7 @@ import dynoapps.exchange_rates.data.CurrencySource;
 import dynoapps.exchange_rates.interfaces.PoolingRunnable;
 import dynoapps.exchange_rates.time.TimeIntervalManager;
 import dynoapps.exchange_rates.util.L;
+import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * Created by erdemmac on 25/11/2016.
@@ -26,6 +27,8 @@ public abstract class BasePoolingProvider<T> implements IPollingSource, PoolingR
 
     private SourceCallback<T> callback;
 
+    protected CompositeDisposable compositeDisposable;
+
     private int error_count = 0;
     private int success_count = 0;
 
@@ -37,6 +40,7 @@ public abstract class BasePoolingProvider<T> implements IPollingSource, PoolingR
     BasePoolingProvider(SourceCallback<T> callback) {
         this.callback = callback;
         this.currencySource = SourcesManager.getSource(getSourceType());
+        compositeDisposable = new CompositeDisposable();
     }
 
     private Handler handler;
@@ -70,6 +74,13 @@ public abstract class BasePoolingProvider<T> implements IPollingSource, PoolingR
     @Override
     public void run() {
         logDurationStart();
+    }
+
+    @Override
+    public void cancel() {
+        if (compositeDisposable != null) {
+            compositeDisposable.clear();
+        }
     }
 
     @Override

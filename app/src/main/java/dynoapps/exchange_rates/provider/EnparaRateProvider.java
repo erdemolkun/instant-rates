@@ -7,7 +7,6 @@ import dynoapps.exchange_rates.model.rates.EnparaRate;
 import dynoapps.exchange_rates.network.Api;
 import dynoapps.exchange_rates.network.EnparaService;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 
@@ -17,11 +16,11 @@ import io.reactivex.schedulers.Schedulers;
 
 public class EnparaRateProvider extends BasePoolingProvider<List<EnparaRate>> {
 
-    private CompositeDisposable compositeDisposable;
+    private EnparaService enparaService;
 
     public EnparaRateProvider(SourceCallback<List<EnparaRate>> callback) {
         super(callback);
-        compositeDisposable = new CompositeDisposable();
+        enparaService = Api.getEnparaApi().create(EnparaService.class);
     }
 
     @Override
@@ -29,23 +28,16 @@ public class EnparaRateProvider extends BasePoolingProvider<List<EnparaRate>> {
         return CurrencyType.ENPARA;
     }
 
-    @Override
-    public void cancel() {
-        if (compositeDisposable != null) {
-            compositeDisposable.clear();
-        }
-    }
 
     @Override
     public void run() {
         run(false);
     }
 
-
     @Override
     public void run(final boolean is_single_run) {
 
-        compositeDisposable.add(Api.getEnparaApi().create(EnparaService.class).rates()
+        compositeDisposable.add(enparaService.rates()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<List<EnparaRate>>() {
                     @Override

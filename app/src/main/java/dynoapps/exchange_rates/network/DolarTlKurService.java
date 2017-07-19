@@ -4,7 +4,7 @@ package dynoapps.exchange_rates.network;
 import java.util.List;
 
 import dynoapps.exchange_rates.model.rates.DolarTlKurRate;
-import retrofit2.Call;
+import io.reactivex.Observable;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.Query;
@@ -19,6 +19,6 @@ public interface DolarTlKurService {
             "Content-Type:text/html"
     })
     @GET("/refresh/header/viewHeader.php")
-    Call<List<DolarTlKurRate>> rates(@Query("_") String time);
+    Observable<List<DolarTlKurRate>> rates(@Query("_") String time);
 
 }

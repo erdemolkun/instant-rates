@@ -41,6 +41,7 @@ public class Api {
                     .client(client)
                     .baseUrl("https://realtime.paragaranti.com/")
                     .addConverterFactory(SimpleXmlConverterFactory.create())
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .build();
         }
         return paraGarantiApi;
@@ -81,6 +82,7 @@ public class Api {
                     .baseUrl("http://www.bigpara.com/")
                     .client(client)
                     .addConverterFactory(new BigparaConverter.Factory())
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .build();
         }
         return bigparaApi;
@@ -91,6 +93,7 @@ public class Api {
             dolarTlKurApi = new Retrofit.Builder()
                     .baseUrl("http://dolar.tlkur.com/")
                     .addConverterFactory(new DolarTlKurAjaxConverter.Factory())
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .build();
         }
         return dolarTlKurApi;

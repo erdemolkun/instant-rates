@@ -7,19 +7,20 @@ import dynoapps.exchange_rates.model.ParagarantiResponse;
 import dynoapps.exchange_rates.model.rates.ParaGarantiRate;
 import dynoapps.exchange_rates.network.Api;
 import dynoapps.exchange_rates.network.ParaGarantiService;
-import retrofit2.Call;
-import retrofit2.Response;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by erdemmac on 25/11/2016.
  */
 
 public class ParaGarantiRateProvider extends BasePoolingProvider<List<ParaGarantiRate>> {
-
-    private Call<ParagarantiResponse> lastCall;
+    private ParaGarantiService paraGarantiService;
 
     public ParaGarantiRateProvider(SourceCallback<List<ParaGarantiRate>> callback) {
         super(callback);
+        paraGarantiService = Api.getParaGarantiApi().create(ParaGarantiService.class);
     }
 
     @Override
@@ -27,46 +28,38 @@ public class ParaGarantiRateProvider extends BasePoolingProvider<List<ParaGarant
         return CurrencyType.PARAGARANTI;
     }
 
-    @Override
-    public void cancel() {
-        if (lastCall != null) {
-            lastCall.cancel();
-        }
-    }
-
     private void job(final boolean is_single_run) {
-        final ParaGarantiService paraGarantiService = Api.getParaGarantiApi().create(ParaGarantiService.class);
-        Call<ParagarantiResponse> call = paraGarantiService.rates();
-        call.enqueue(new retrofit2.Callback<ParagarantiResponse>() {
-            @Override
-            public void onResponse(Call<ParagarantiResponse> call, Response<ParagarantiResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    ParagarantiResponse paragarantiResponse = response.body();
-                    List<ParaGarantiRate> rates = paragarantiResponse.rates;
-                    for (ParaGarantiRate rate : rates){
-                        rate.toRateType();
-                        rate.setRealValues();
-                    }
-                    notifyValue(rates);
-                    if (!is_single_run)
-                        fetchAgain(false);
-                } else {
-                    notifyError();
-                    if (!is_single_run)
-                        fetchAgain(true);
-                }
-            }
 
-            @Override
-            public void onFailure(Call<ParagarantiResponse> call, Throwable t) {
-                notifyError();
-                if (!is_single_run)
-                    fetchAgain(true);
-            }
-        });
-        if (!is_single_run) {
-            lastCall = call;
-        }
+        compositeDisposable.add(paraGarantiService.rates()
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<ParagarantiResponse>() {
+                    @Override
+                    public void onNext(ParagarantiResponse paragarantiResponse) {
+
+                        List<ParaGarantiRate> rates = paragarantiResponse.rates;
+                        for (ParaGarantiRate rate : rates) {
+                            rate.toRateType();
+                            rate.setRealValues();
+                        }
+                        notifyValue(rates);
+                        if (!is_single_run)
+                            fetchAgain(false);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        notifyError();
+                        if (!is_single_run)
+                            fetchAgain(true);
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                }));
+
+
     }
 
     @Override

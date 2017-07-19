@@ -19,11 +19,13 @@ import dynoapps.exchange_rates.model.rates.YapıKrediRate;
 
 public class YapıKrediRateProvider extends BasePoolingProvider<List<YapıKrediRate>> {
 
+    private static final int THREAD_COUNT = 3;
+
     private ExecutorService executorService;
 
     public YapıKrediRateProvider(SourceCallback<List<YapıKrediRate>> callback) {
         super(callback);
-        executorService = Executors.newCachedThreadPool();
+        executorService = Executors.newFixedThreadPool(THREAD_COUNT);
     }
 
     @Override

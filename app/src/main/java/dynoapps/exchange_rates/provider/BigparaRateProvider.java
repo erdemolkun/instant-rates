@@ -6,8 +6,9 @@ import dynoapps.exchange_rates.data.CurrencyType;
 import dynoapps.exchange_rates.model.rates.BigparaRate;
 import dynoapps.exchange_rates.network.Api;
 import dynoapps.exchange_rates.network.BigparaService;
-import retrofit2.Call;
-import retrofit2.Response;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by erdemmac on 25/11/2016.
@@ -15,10 +16,11 @@ import retrofit2.Response;
 
 public class BigparaRateProvider extends BasePoolingProvider<List<BigparaRate>> {
 
-    private Call<List<BigparaRate>> lastCall;
+    private BigparaService bigparaService;
 
     public BigparaRateProvider(SourceCallback<List<BigparaRate>> callback) {
         super(callback);
+        bigparaService = Api.getBigparaApi().create(BigparaService.class);
     }
 
     @Override
@@ -27,45 +29,33 @@ public class BigparaRateProvider extends BasePoolingProvider<List<BigparaRate>> 
     }
 
     @Override
-    public void cancel() {
-        if (lastCall != null)
-            lastCall.cancel();
-    }
-
-    @Override
     public void run() {
         run(false);
-
     }
 
     @Override
     public void run(final boolean is_single_run) {
-        final BigparaService bigparaService = Api.getBigparaApi().create(BigparaService.class);
-        Call<List<BigparaRate>> call = bigparaService.rates();
-        call.enqueue(new retrofit2.Callback<List<BigparaRate>>() {
-            @Override
-            public void onResponse(Call<List<BigparaRate>> call, Response<List<BigparaRate>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    List<BigparaRate> rates = response.body();
-                    notifyValue(rates);
-                    if (!is_single_run)
-                        fetchAgain(false);
-                } else {
-                    notifyError();
-                    if (!is_single_run)
-                        fetchAgain(true);
-                }
-            }
+        compositeDisposable.add(bigparaService.rates()
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<List<BigparaRate>>() {
+                    @Override
+                    public void onNext(List<BigparaRate> rates) {
+                        notifyValue(rates);
+                        if (!is_single_run)
+                            fetchAgain(false);
+                    }
 
-            @Override
-            public void onFailure(Call<List<BigparaRate>> call, Throwable t) {
-                notifyError();
-                if (!is_single_run)
-                    fetchAgain(true);
-            }
-        });
-        if (!is_single_run) {
-            lastCall = call;
-        }
+                    @Override
+                    public void onError(Throwable e) {
+                        notifyError();
+                        if (!is_single_run)
+                            fetchAgain(true);
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                }));
     }
 }

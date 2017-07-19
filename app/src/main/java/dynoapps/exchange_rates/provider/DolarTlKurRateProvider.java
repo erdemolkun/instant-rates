@@ -6,8 +6,9 @@ import dynoapps.exchange_rates.data.CurrencyType;
 import dynoapps.exchange_rates.model.rates.DolarTlKurRate;
 import dynoapps.exchange_rates.network.Api;
 import dynoapps.exchange_rates.network.DolarTlKurService;
-import retrofit2.Call;
-import retrofit2.Response;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by erdemmac on 25/11/2016.
@@ -15,22 +16,16 @@ import retrofit2.Response;
 
 public class DolarTlKurRateProvider extends BasePoolingProvider<List<DolarTlKurRate>> {
 
-    private Call lastCall;
+    private DolarTlKurService dolarTlKurService;
 
     public DolarTlKurRateProvider(SourceCallback<List<DolarTlKurRate>> callback) {
         super(callback);
+        dolarTlKurService = Api.getDolarTlKurApi().create(DolarTlKurService.class);
     }
 
     @Override
     public int getSourceType() {
         return CurrencyType.TLKUR;
-    }
-
-    @Override
-    public void cancel() {
-        if (lastCall != null) {
-            lastCall.cancel();
-        }
     }
 
     @Override
@@ -40,32 +35,28 @@ public class DolarTlKurRateProvider extends BasePoolingProvider<List<DolarTlKurR
 
     @Override
     public void run(final boolean is_single_run) {
-        final DolarTlKurService dolarTlKurService = Api.getDolarTlKurApi().create(DolarTlKurService.class);
-        Call<List<DolarTlKurRate>> call = dolarTlKurService.rates("" + System.currentTimeMillis());
-        call.enqueue(new retrofit2.Callback<List<DolarTlKurRate>>() {
-            @Override
-            public void onResponse(Call<List<DolarTlKurRate>> call, Response<List<DolarTlKurRate>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    List<DolarTlKurRate> rates = response.body();
-                    notifyValue(rates);
-                    if (!is_single_run)
-                        fetchAgain(false);
-                } else {
-                    notifyError();
-                    if (!is_single_run)
-                        fetchAgain(true);
-                }
-            }
 
-            @Override
-            public void onFailure(Call<List<DolarTlKurRate>> call, Throwable t) {
-                notifyError();
-                if (!is_single_run)
-                    fetchAgain(true);
-            }
-        });
-        if (!is_single_run) {
-            lastCall = call;
-        }
+        compositeDisposable.add(dolarTlKurService.rates("" + System.currentTimeMillis())
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<List<DolarTlKurRate>>() {
+                    @Override
+                    public void onNext(List<DolarTlKurRate> rates) {
+                        notifyValue(rates);
+                        if (!is_single_run)
+                            fetchAgain(false);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        notifyError();
+                        if (!is_single_run)
+                            fetchAgain(true);
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                }));
     }
 }
