@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -22,14 +21,11 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import dynoapps.exchange_rates.AppDatabase;
-import dynoapps.exchange_rates.AppExecutors;
 import dynoapps.exchange_rates.BaseActivity;
 import dynoapps.exchange_rates.R;
 import dynoapps.exchange_rates.event.AlarmUpdateEvent;
 import dynoapps.exchange_rates.ui.SlideInItemAnimator;
 import dynoapps.exchange_rates.util.AnimationHelper;
-import dynoapps.exchange_rates.util.CollectionUtils;
 
 /**
  * Created by erdemmac on 13/12/2016.
@@ -92,20 +88,6 @@ public class AlarmsActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 AlarmManager.addAlarmDialog(AlarmsActivity.this);
-            }
-        });
-
-        final AppExecutors appExecutors = new AppExecutors();
-        appExecutors.diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                final List<Alarm> alarms = AppDatabase.getInstance(getApplicationContext()).alarm().list();
-                appExecutors.mainThread().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(AlarmsActivity.this, "Count : " + CollectionUtils.size(alarms), Toast.LENGTH_LONG).show();
-                    }
-                });
             }
         });
     }

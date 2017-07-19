@@ -27,7 +27,6 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.ArrayList;
 
 import dynoapps.exchange_rates.App;
-import dynoapps.exchange_rates.AppDatabase;
 import dynoapps.exchange_rates.AppExecutors;
 import dynoapps.exchange_rates.Prefs;
 import dynoapps.exchange_rates.R;
@@ -91,23 +90,6 @@ public class AlarmManager {
     }
 
     private static AppExecutors appExecutors;
-
-    private static void saveToDao(final Context context, final Alarm alarm) {
-        if (appExecutors == null) appExecutors = new AppExecutors();
-        appExecutors.diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                final long id = AppDatabase.getInstance(App.context()).alarm().insert(alarm);
-                // notify on the main thread
-                appExecutors.mainThread().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                      Toast.makeText(context,"Save With ID : "+id,Toast.LENGTH_LONG).show();
-                    }
-                });
-            }
-        });
-    }
 
 
     public static void persistAlarms() {
@@ -246,7 +228,7 @@ public class AlarmManager {
                                 alarm.rate_type = ((RateValuePair) spn_rate_types.getSelectedItem()).rate_type;
                                 alarm.value_type = value_type;
                                 AlarmManager.addAlarm(alarm);
-                                saveToDao(context,alarm);
+                                AlarmRepository.getInstance().saveAlarm(alarm);
                             }
                         } catch (Exception ex) {
                             L.i(AlarmManager.class.getSimpleName(), "Alarm Convert Exception");
