@@ -62,10 +62,9 @@ public class AlarmsActivity extends BaseActivity {
             }
         });
 
-        ArrayList<Alarm> alarms = new ArrayList<>();
         rvAlarms.setLayoutManager(new LinearLayoutManager(this));
         rvAlarms.setItemAnimator(new SlideInItemAnimator());
-        adapter = new AlarmsAdapter(alarms);
+        adapter = new AlarmsAdapter(alarmRepository, new ArrayList<Alarm>());
         rvAlarms.setAdapter(adapter);
         adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override

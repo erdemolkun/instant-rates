@@ -29,7 +29,8 @@ class AlarmsAdapter extends UpdatableAdapter<List<Alarm>, AlarmsActivity.AlarmVi
     private List<Alarm> alarms;
     private AlarmsRepository alarmRepository;
 
-    AlarmsAdapter(ArrayList<Alarm> alarms) {
+    AlarmsAdapter(AlarmsRepository alarmsRepository,ArrayList<Alarm> alarms) {
+        this.alarmRepository = alarmsRepository;
         this.alarms = new ArrayList<>();
         this.alarms.addAll(alarms);
     }
