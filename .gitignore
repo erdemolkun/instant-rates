@@ -42,7 +42,10 @@ production/
 *.DS_Store
 
 # Authentication and file path infos to sign apk files.
-*.signing.properties
+signing/*.signing.properties
+signing/release.jks
+
+
 
 # Temporary properties file used to hold last latest build numbers.
 app-build.properties

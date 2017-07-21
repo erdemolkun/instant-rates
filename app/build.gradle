@@ -25,12 +25,12 @@ android {
         debug {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
-            storeFile file("${project.rootDir}/keystores/debug.keystore")
+            storeFile file("${project.rootDir}/signing/debug.keystore")
             storePassword 'android'
         }
         release {
             if (isCi) {
-                storeFile rootProject.file("keystores/release.jks")
+                storeFile rootProject.file("signing/release.jks")
                 storePassword = System.getenv("RELEASE_STORE_PASSWORD")
                 keyAlias = System.getenv("RELEASE_ALIAS")
                 keyPassword = System.getenv("RELEASE_PASSWORD")
