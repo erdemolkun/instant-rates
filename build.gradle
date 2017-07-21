@@ -5,6 +5,10 @@ apply plugin: 'com.github.ben-manes.versions'
 buildscript {
     repositories {
         jcenter()
+        maven {
+            url 'https://maven.google.com'
+            // Alternative URL is 'https://dl.google.com/dl/android/maven2/'
+        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.0.0-alpha7'
