@@ -132,14 +132,14 @@ public class SourcesManager {
     }
 
     private static void saveSources(List<CurrencySource> currencySources) {
-        String sources = "";
+        StringBuilder sources = new StringBuilder();
         for (int i = 0; i < currencySources.size(); i++) {
             CurrencySource currencySource = currencySources.get(i);
             if (currencySource.isEnabled()) {
-                sources += currencySource.getType() + ";";
+                sources.append(currencySource.getType()).append(";");
             }
         }
-        Prefs.saveSources(sources);
+        Prefs.saveSources(sources.toString());
     }
 
 

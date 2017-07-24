@@ -157,11 +157,11 @@ def getPropertiesFile() {
 }
 
 def getBuildVersionName() {
-    Properties properties = new Properties();
+    Properties properties = new Properties()
     def propsFile = getPropertiesFile()
     if (propsFile.canRead()) {
 
-        properties.load(propsFile.newDataInputStream());
+        properties.load(propsFile.newDataInputStream())
         def major = properties.getProperty("versionMajor") as String
         def minor = properties.getProperty("versionMinor") as String
         def patch = properties.getProperty("versionPatch") as String
@@ -172,9 +172,9 @@ def getBuildVersionName() {
         if (build != "0") {
             version += "." + patch + "." + build
         } else if (patch != "0") {
-            version += "." + patch;
+            version += "." + patch
         }
-        return version + suffix;
+        return version + suffix
 
     } else {
         throw new GradleException("Versionname : unable to find gradle.properties file : \n" + propsFile.absolutePath)
@@ -183,11 +183,11 @@ def getBuildVersionName() {
 
 def getBuildVersionCode() {
 
-    Properties properties = new Properties();
+    Properties properties = new Properties()
     def propsFile = getPropertiesFile()
 
     if (propsFile.canRead()) {
-        properties.load(propsFile.newDataInputStream());
+        properties.load(propsFile.newDataInputStream())
 
         def major = properties.getProperty("versionMajor") as int
         def minor = properties.getProperty("versionMinor") as int

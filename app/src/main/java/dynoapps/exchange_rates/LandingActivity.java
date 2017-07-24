@@ -234,9 +234,9 @@ public class LandingActivity extends BaseActivity {
 
         @Override
         public String toString() {
-            String itemsToString = "";
+            StringBuilder itemsToString = new StringBuilder();
             for (CardViewItem item : items) {
-                itemsToString += "\n" + item.toString();
+                itemsToString.append("\n").append(item.toString());
             }
             return itemsToString + "\nType : " + rate_type;
         }
