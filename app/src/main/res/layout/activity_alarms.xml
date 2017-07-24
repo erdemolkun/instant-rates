@@ -10,7 +10,6 @@
 
     <include layout="@layout/toolbar_actionbar_with_switch"/>
 
-
     <TextView
             android:id="@+id/tv_no_alarm"
             android:layout_gravity="center_horizontal"
