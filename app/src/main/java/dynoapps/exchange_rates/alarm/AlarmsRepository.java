@@ -68,7 +68,7 @@ public class AlarmsRepository implements AlarmsDataSource {
     public void saveAlarm(@NonNull Alarm alarm, final AlarmUpdateInsertCallback alarmUpdateInsertCallback) {
         localAlarmsDataSource.saveAlarm(alarm, new AlarmUpdateInsertCallback() {
             @Override
-            public void onAlarmUpdate(Alarm alarm) {
+            public void onAlarmUpdate(final Alarm alarm) {
                 // Do in memory cache update to keep the app UI up to date
                 if (mCachedAlarms == null) {
                     mCachedAlarms = new LinkedHashMap<>();

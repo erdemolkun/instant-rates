@@ -47,7 +47,12 @@ public class LocalAlarmsDataSource implements AlarmsDataSource {
             @Override
             public void run() {
                 alarm.id = alarmDao.insert(alarm);
-                alarmUpdateInsertCallback.onAlarmUpdate(alarm);
+                appExecutors.mainThread().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        alarmUpdateInsertCallback.onAlarmUpdate(alarm);
+                    }
+                });
             }
         });
     }
@@ -58,7 +63,13 @@ public class LocalAlarmsDataSource implements AlarmsDataSource {
             @Override
             public void run() {
                 alarmDao.deleteById(alarm.id);
-                alarmUpdateInsertCallback.onAlarmUpdate(alarm);
+                appExecutors.mainThread().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        alarmUpdateInsertCallback.onAlarmUpdate(alarm);
+                    }
+                });
+
             }
         });
     }
@@ -69,7 +80,12 @@ public class LocalAlarmsDataSource implements AlarmsDataSource {
             @Override
             public void run() {
                 alarmDao.update(alarm);
-                alarmUpdateInsertCallback.onAlarmUpdate(alarm);
+                appExecutors.mainThread().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        alarmUpdateInsertCallback.onAlarmUpdate(alarm);
+                    }
+                });
             }
         });
     }
