@@ -299,7 +299,7 @@ public class ChartActivity extends BaseActivity {
         public CustomMarkerView(Context context, int layoutResource, int rateType) {
             super(context, layoutResource);
             this.rateType = rateType;
-            tvMarker = (TextView) findViewById(R.id.tv_marker);
+            tvMarker = findViewById(R.id.tv_marker);
         }
 
         // callbacks everytime the MarkerView is redrawn, can be used to update the

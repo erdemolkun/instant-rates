@@ -65,8 +65,8 @@ public class AlarmManager {
                                       int source_type, final int rate_type, final int value_type, Float default_value,
                                       final AlarmsDataSource.AlarmUpdateInsertCallback alarmUpdateInsertCallback) {
         @SuppressLint("InflateParams") final View v = LayoutInflater.from(context).inflate(R.layout.layout_alarm_selection, null);
-        final EditText etAlarm = (EditText) v.findViewById(R.id.et_alarm_value);
-        final TextInputLayout tilValue = (TextInputLayout) v.findViewById(R.id.til_alarm_value);
+        final EditText etAlarm = v.findViewById(R.id.et_alarm_value);
+        final TextInputLayout tilValue = v.findViewById(R.id.til_alarm_value);
         if (default_value != null) {
             String val = RateUtils.formatValue(default_value, rate_type);
             etAlarm.setText(val);

@@ -274,7 +274,7 @@ public class LandingActivity extends BaseActivity {
 
         //#
         CardViewItemParent parentUsd = new CardViewItemParent();
-        parentUsd.me = (ViewGroup) findViewById(R.id.v_card_holder_usd);
+        parentUsd.me = findViewById(R.id.v_card_holder_usd);
         parentUsd.rate_type = IRate.USD;
 
 
@@ -283,7 +283,7 @@ public class LandingActivity extends BaseActivity {
         //#
         CardViewItemParent parentEur = new CardViewItemParent();
         parentEur.rate_type = IRate.EUR;
-        parentEur.me = (ViewGroup) findViewById(R.id.v_card_holder_eur);
+        parentEur.me = findViewById(R.id.v_card_holder_eur);
 
 
         parentItems.add(parentEur);
@@ -291,14 +291,14 @@ public class LandingActivity extends BaseActivity {
         //#
         CardViewItemParent parentParity = new CardViewItemParent();
         parentParity.rate_type = IRate.EUR_USD;
-        parentParity.me = (ViewGroup) findViewById(R.id.v_card_holder_parity);
+        parentParity.me = findViewById(R.id.v_card_holder_parity);
 
         parentItems.add(parentParity);
 
         //#
         CardViewItemParent parentOns = new CardViewItemParent();
         parentOns.rate_type = IRate.ONS;
-        parentOns.me = (ViewGroup) findViewById(R.id.v_card_holder_ons);
+        parentOns.me = findViewById(R.id.v_card_holder_ons);
 
         parentItems.add(parentOns);
 
@@ -409,7 +409,7 @@ public class LandingActivity extends BaseActivity {
      */
     private void setupNavDrawer() {
 
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerLayout = findViewById(R.id.drawer_layout);
         if (mDrawerLayout == null) return;
 
 
