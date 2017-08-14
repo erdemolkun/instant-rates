@@ -26,7 +26,7 @@ checkout:
 dependencies:
   pre:
     - ( sleep 5 && while [ 1 ]; do sleep 1; echo y; done ) | android update sdk --no-ui --all --filter "tools,platform-tools,android-26,extra-google-m2repository,extra-android-m2repository,extra-android-support"
-    - echo y | android update sdk --no-ui --all --filter "build-tools-26.0.0"
+    - echo y | android update sdk --no-ui --all --filter "build-tools-26.0.1"
 
 
 test:
