@@ -38,11 +38,11 @@ jobs:
           name: Assemble APKs
           command: |
                         if [ "${CIRCLE_BRANCH}" == "develop" ]; then
-                          ./gradlew app:assembleAlpha --no-daemon;
+                          ./gradlew app:assembleDebug --no-daemon;
                         elif [ "${CIRCLE_BRANCH}" == "uat" ]; then
                           ./gradlew app:assembleUat --no-daemon;
                         else
-                          ./gradlew app:assembleAlpha --no-daemon;
+                          ./gradlew app:assembleDebug --no-daemon;
                         fi
 
       - store_artifacts:
