@@ -6,10 +6,10 @@
      android:interpolator="@android:interpolator/accelerate_quint">
 
     <alpha
-            android:duration="@integer/jump_anim_offset"
-            android:fillAfter="true"
-            android:fillBefore="true"
-            android:fromAlpha="0.0"
-            android:startOffset="@integer/jump_anim_duration"
-            android:toAlpha="1.0"/>
+        android:duration="@integer/jump_anim_offset"
+        android:fillAfter="true"
+        android:fillBefore="true"
+        android:fromAlpha="0.0"
+        android:startOffset="@integer/jump_anim_duration"
+        android:toAlpha="1.0"/>
 </set>

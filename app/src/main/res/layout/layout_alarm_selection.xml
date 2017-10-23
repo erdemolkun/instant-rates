@@ -8,93 +8,93 @@
               android:layout_height="match_parent">
 
     <android.support.design.widget.TextInputLayout
-            android:id="@+id/til_alarm_value"
-            android:layout_width="match_parent"
-            app:errorEnabled="true"
-            android:layout_height="wrap_content">
+        android:id="@+id/til_alarm_value"
+        android:layout_width="match_parent"
+        app:errorEnabled="true"
+        android:layout_height="wrap_content">
 
         <EditText
-                android:id="@+id/et_alarm_value"
-                android:textSize="16sp"
-                android:minHeight="44dp"
-                android:hint="@string/enter_value"
-                android:digits="@string/digits_for_decimal"
-                android:imeOptions="actionDone"
-                android:inputType="numberDecimal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+            android:id="@+id/et_alarm_value"
+            android:textSize="16sp"
+            android:minHeight="44dp"
+            android:hint="@string/enter_value"
+            android:digits="@string/digits_for_decimal"
+            android:imeOptions="actionDone"
+            android:inputType="numberDecimal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
     </android.support.design.widget.TextInputLayout>
 
     <RadioGroup
-            android:id="@+id/rg_alarm"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="44dp"
+        android:id="@+id/rg_alarm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="44dp"
+        android:gravity="center_vertical"
+        android:layout_marginTop="2dp"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/rb_above"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            tools:checked="true"
             android:gravity="center_vertical"
-            android:layout_marginTop="2dp"
-            android:orientation="horizontal">
+            android:maxLines="2"
+            android:text="@string/if_above"
+            android:textSize="14sp"/>
 
         <RadioButton
-                android:id="@+id/rb_above"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                tools:checked="true"
-                android:gravity="center_vertical"
-                android:maxLines="2"
-                android:text="@string/if_above"
-                android:textSize="14sp"/>
-
-        <RadioButton
-                android:id="@+id/rb_below"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:maxLines="2"
-                android:gravity="center_vertical"
-                android:text="@string/if_below"
-                android:textSize="14sp"/>
+            android:id="@+id/rb_below"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:maxLines="2"
+            android:gravity="center_vertical"
+            android:text="@string/if_below"
+            android:textSize="14sp"/>
 
 
     </RadioGroup>
 
     <TextView
-            android:layout_marginTop="12dp"
+        android:layout_marginTop="12dp"
+        android:layout_width="wrap_content"
+        android:textSize="12sp"
+        android:text="@string/sources"
+        android:textColor="?colorAccent"
+        android:layout_height="wrap_content"/>
+
+    <Spinner
+        android:layout_marginTop="2dp"
+        android:overlapAnchor="false"
+        android:id="@+id/spn_source_types"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <LinearLayout
+        android:id="@+id/v_alarm_types"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_marginTop="8dp"
             android:layout_width="wrap_content"
             android:textSize="12sp"
-            android:text="@string/sources"
+            android:text="@string/rate_types"
             android:textColor="?colorAccent"
             android:layout_height="wrap_content"/>
 
-    <Spinner
+        <Spinner
             android:layout_marginTop="2dp"
             android:overlapAnchor="false"
-            android:id="@+id/spn_source_types"
+            android:id="@+id/spn_rate_types"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
-
-    <LinearLayout
-            android:id="@+id/v_alarm_types"
-            android:layout_width="match_parent"
-            android:visibility="gone"
-            tools:visibility="visible"
-            android:orientation="vertical"
-            android:layout_height="wrap_content">
-
-        <TextView
-                android:layout_marginTop="8dp"
-                android:layout_width="wrap_content"
-                android:textSize="12sp"
-                android:text="@string/rate_types"
-                android:textColor="?colorAccent"
-                android:layout_height="wrap_content"/>
-
-        <Spinner
-                android:layout_marginTop="2dp"
-                android:overlapAnchor="false"
-                android:id="@+id/spn_rate_types"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
     </LinearLayout>
 
 

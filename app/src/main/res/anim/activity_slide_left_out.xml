@@ -4,14 +4,14 @@
      android:shareInterpolator="true">
 
     <translate
-            android:duration="@integer/activity_anim_duration_fast"
-            android:fromXDelta="0%"
-            android:toXDelta="-100%"/>
+        android:duration="@integer/activity_anim_duration_fast"
+        android:fromXDelta="0%"
+        android:toXDelta="-100%"/>
 
     <alpha
-            android:duration="@integer/activity_anim_duration_fast"
-            android:fromAlpha="1.0"
-            android:toAlpha="1.0"/>
+        android:duration="@integer/activity_anim_duration_fast"
+        android:fromAlpha="1.0"
+        android:toAlpha="1.0"/>
 
 
 </set>

@@ -76,26 +76,20 @@ public class ChartActivity extends BaseActivity {
 
     public static final String EXTRA_RATE_TYPE = "EXTRA_RATE_TYPE";
     private static final float THRESHOLD_ERROR_USD_TRY = 0.2f;
-
+    private static final int DATA_COUNT = 20;
     @BindView(R.id.tv_chart_title)
     TextView tvTitle;
-
     @BindView(R.id.line_chart)
     LineChart lineChart;
-
     @BindView(R.id.swipe_to_refresh)
     SwipeRefreshLayout swipeRefreshLayout;
-
+    SimpleDateFormat hourFormatter = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
     private
     @IRate.RateDef
     int rateType = IRate.USD;
-
     private long startMilis;
-    SimpleDateFormat hourFormatter = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
     private int white;
     private int chart_text_color;
-
-    private static final int DATA_COUNT = 20;
 
     private long getVisibleTimeInMilis() {
         return TimeIntervalManager.getPollingInterval() * DATA_COUNT;
@@ -290,28 +284,6 @@ public class ChartActivity extends BaseActivity {
         update(rates, ratesEvent.source_type, ratesEvent.fetch_time);
     }
 
-    @SuppressLint("ViewConstructor")
-    static class CustomMarkerView extends MarkerView {
-
-        private TextView tvMarker;
-        private int rateType;
-
-        public CustomMarkerView(Context context, int layoutResource, int rateType) {
-            super(context, layoutResource);
-            this.rateType = rateType;
-            tvMarker = findViewById(R.id.tv_marker);
-        }
-
-        // callbacks everytime the MarkerView is redrawn, can be used to update the
-        // content (user-interface)
-        @Override
-        public void refreshContent(Entry e, Highlight highlight) {
-            String val = RateUtils.valueToUI(e.getY(), rateType);
-            tvMarker.setText(val); // set the entry-value as the display text
-        }
-    }
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_chart, menu);
@@ -357,7 +329,6 @@ public class ChartActivity extends BaseActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
 
     private void addEntry(float value, int chartIndex, long milis) {
         if (THRESHOLD_ERROR_USD_TRY > value) return;
@@ -412,7 +383,6 @@ public class ChartActivity extends BaseActivity {
         return set;
     }
 
-
     @Override
     protected void onDestroy() {
         EventBus.getDefault().unregister(this);
@@ -422,6 +392,27 @@ public class ChartActivity extends BaseActivity {
     @Override
     public int getLayoutId() {
         return R.layout.activity_chart;
+    }
+
+    @SuppressLint("ViewConstructor")
+    static class CustomMarkerView extends MarkerView {
+
+        private TextView tvMarker;
+        private int rateType;
+
+        public CustomMarkerView(Context context, int layoutResource, int rateType) {
+            super(context, layoutResource);
+            this.rateType = rateType;
+            tvMarker = findViewById(R.id.tv_marker);
+        }
+
+        // callbacks everytime the MarkerView is redrawn, can be used to update the
+        // content (user-interface)
+        @Override
+        public void refreshContent(Entry e, Highlight highlight) {
+            String val = RateUtils.valueToUI(e.getY(), rateType);
+            tvMarker.setText(val); // set the entry-value as the display text
+        }
     }
 
 

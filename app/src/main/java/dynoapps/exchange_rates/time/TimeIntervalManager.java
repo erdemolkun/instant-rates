@@ -23,12 +23,11 @@ public final class TimeIntervalManager {
 
     private static final int DEFAULT_INTERVAL_INDEX = 2;
     private static final int INTERVAL_SERVICE_INDEX = 4;
-
-    private static Integer selected_interval_index_user = getSelectedIndexViaPrefs();
     private static long pref_interval_milis = Prefs.getInterval(App.context());
     private static ArrayList<TimeInterval> intervals;
-
+    private static Integer selected_interval_index_user = getSelectedIndexViaPrefs();
     private static boolean isAlarmMode = false;
+    private static int user_selected_item_index = -1;
 
     private static boolean isAlarmMode() {
         return isAlarmMode;
@@ -51,8 +50,6 @@ public final class TimeIntervalManager {
         }
         return intervals;
     }
-
-    private static int user_selected_item_index = -1;
 
     public static String getSelectionStr() {
         return getDefaultIntervals().get(getSelectedIndex()).toString();

@@ -20,25 +20,10 @@ import retrofit2.Retrofit;
 
 public class YorumlarConverter implements Converter<ResponseBody, List<BaseRate>> {
 
-    /**
-     * Factory for creating converter. We only care about decoding responses.
-     **/
-    public static final class Factory extends Converter.Factory {
-
-        @Override
-        public Converter<ResponseBody, ?> responseBodyConverter(Type type,
-                                                                Annotation[] annotations,
-                                                                Retrofit retrofit) {
-            return INSTANCE;
-        }
-
-    }
+    static final YorumlarConverter INSTANCE = new YorumlarConverter();
 
     private YorumlarConverter() {
     }
-
-    static final YorumlarConverter INSTANCE = new YorumlarConverter();
-
 
     /**
      * Sample response body <p> <p> dolar_guncelle('3.4047','13:01:36');euro_guncelle('3.6012','13:01:36');sterlin_guncelle('4.2431','13:01:36');gumus_guncelle('1.7921','1.7941','13:01:36');parite_guncelle('1.0570','13:01:36');ons_guncelle('$1190.0000','13:01:36');ySi('[5164806,5388042,5387395,5387090]');
@@ -67,6 +52,20 @@ public class YorumlarConverter implements Converter<ResponseBody, List<BaseRate>
             }
         }
         return rates;
+    }
+
+    /**
+     * Factory for creating converter. We only care about decoding responses.
+     **/
+    public static final class Factory extends Converter.Factory {
+
+        @Override
+        public Converter<ResponseBody, ?> responseBodyConverter(Type type,
+                                                                Annotation[] annotations,
+                                                                Retrofit retrofit) {
+            return INSTANCE;
+        }
+
     }
 
 

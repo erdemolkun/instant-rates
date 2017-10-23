@@ -12,6 +12,7 @@ public class RatesEvent<T extends BaseRate> {
 
     public int source_type;
     public long fetch_time;
+    public List<T> rates;
 
     public RatesEvent(List<T> rates, int source_type, long fetch_time) {
         this.rates = rates;
@@ -24,6 +25,4 @@ public class RatesEvent<T extends BaseRate> {
         this.source_type = source_type;
         this.fetch_time = System.currentTimeMillis();
     }
-
-    public List<T> rates;
 }

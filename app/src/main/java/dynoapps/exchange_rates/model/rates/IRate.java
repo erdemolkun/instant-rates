@@ -17,6 +17,11 @@ public interface IRate {
     int ONS_TRY = 4;
     int EUR_USD = 5;
 
+    @RateDef
+    int getRateType();
+
+    float getValue(int value_type);
+
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({
             UNKNOWN,
@@ -28,9 +33,4 @@ public interface IRate {
     })
     @interface RateDef {
     }
-
-    @RateDef
-    int getRateType();
-
-    float getValue(int value_type);
 }

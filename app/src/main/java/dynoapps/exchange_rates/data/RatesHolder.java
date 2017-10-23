@@ -27,14 +27,13 @@ public class RatesHolder {
     private static final int MAX_RATES_COUNT = 10;
 
     private static RatesHolder instance;
+    private SparseArray<List<RatesEvent>> rateEventsSparse;
 
     public static RatesHolder getInstance() {
         if (instance == null)
             instance = new RatesHolder();
         return instance;
     }
-
-    private SparseArray<List<RatesEvent>> rateEventsSparse;
 
     public RatesEvent getLatestEvent(int source_type) {
         if (rateEventsSparse != null && rateEventsSparse.get(source_type, null) != null) {

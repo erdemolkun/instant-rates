@@ -7,7 +7,7 @@
      android:shareInterpolator="true">
 
     <translate
-            android:fromYDelta="100%p"
-            android:toYDelta="0"/>
+        android:fromYDelta="100%p"
+        android:toYDelta="0"/>
 
 </set>

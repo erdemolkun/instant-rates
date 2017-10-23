@@ -1,130 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardBackgroundColor="#f3f3f3"
-        app:cardCornerRadius="2dp"
-        android:layout_gravity="center_horizontal"
-        app:cardElevation="4dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="#f3f3f3"
+    app:cardCornerRadius="2dp"
+    android:layout_gravity="center_horizontal"
+    app:cardElevation="4dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="8dp"
+    android:layout_marginRight="8dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginLeft="8dp"
+    android:layout_marginStart="8dp">
 
 
     <RelativeLayout
-            android:paddingTop="12dp"
-            android:orientation="vertical"
-            android:paddingStart="4dp"
-            android:paddingEnd="4dp"
-            android:paddingBottom="12dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        android:paddingTop="12dp"
+        android:orientation="vertical"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"
+        android:paddingBottom="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <android.support.v7.widget.SwitchCompat
-                android:id="@+id/sw_alarm"
-                android:layout_marginTop="4dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginEnd="8dp"
-                android:checked="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+            android:id="@+id/sw_alarm"
+            android:layout_marginTop="4dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginEnd="8dp"
+            android:checked="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
 
         <ImageView
-                android:layout_alignTop="@+id/sw_alarm"
-                android:layout_marginStart="12dp"
-                android:layout_marginLeft="12dp"
-                android:layout_toRightOf="@+id/sw_alarm"
-                android:layout_toEndOf="@+id/sw_alarm"
-                android:id="@+id/iv_alarm_rate_type"
-                android:textSize="16sp"
-                android:tint="?colorPrimary"
-                android:textStyle="bold"
-                tools:src="@drawable/ic_dollar"
-                android:layout_width="24dp"
-                android:layout_height="24dp"/>
+            android:layout_alignTop="@+id/sw_alarm"
+            android:layout_marginStart="12dp"
+            android:layout_marginLeft="12dp"
+            android:layout_toRightOf="@+id/sw_alarm"
+            android:layout_toEndOf="@+id/sw_alarm"
+            android:id="@+id/iv_alarm_rate_type"
+            android:textSize="16sp"
+            android:tint="?colorPrimary"
+            android:textStyle="bold"
+            tools:src="@drawable/ic_dollar"
+            android:layout_width="24dp"
+            android:layout_height="24dp"/>
 
         <TextView
-                tools:text="3,45"
-                android:layout_alignTop="@+id/sw_alarm"
-                android:layout_marginStart="12dp"
-                android:layout_marginLeft="12dp"
-                android:layout_toRightOf="@+id/iv_alarm_rate_type"
-                android:layout_toEndOf="@+id/iv_alarm_rate_type"
-                android:id="@+id/tv_alarm_val"
-                android:textSize="18sp"
-                android:textStyle="bold"
+            tools:text="3,45"
+            android:layout_alignTop="@+id/sw_alarm"
+            android:layout_marginStart="12dp"
+            android:layout_marginLeft="12dp"
+            android:layout_toRightOf="@+id/iv_alarm_rate_type"
+            android:layout_toEndOf="@+id/iv_alarm_rate_type"
+            android:id="@+id/tv_alarm_val"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            tools:text="Paragaranti"
+            android:maxLines="1"
+            android:layout_alignTop="@+id/sw_alarm"
+            android:layout_marginStart="12dp"
+            android:ellipsize="end"
+            android:layout_marginLeft="12dp"
+            android:layout_toRightOf="@+id/tv_alarm_val"
+            android:layout_toLeftOf="@+id/v_alarm_close"
+            android:layout_toEndOf="@+id/tv_alarm_val"
+            android:layout_toStartOf="@+id/v_alarm_close"
+            android:id="@+id/tv_alarm_source"
+            android:gravity="start"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+
+        <ImageView
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:id="@+id/v_alarm_close"
+            android:padding="8dp"
+            android:background="?selectableItemBackgroundBorderless"
+            android:layout_width="wrap_content"
+            android:layout_alignParentTop="true"
+            android:contentDescription="@string/remove"
+            android:src="@drawable/ic_close_black_20dp"
+            android:layout_height="wrap_content"/>
+
+        <LinearLayout
+            android:layout_alignLeft="@+id/iv_alarm_rate_type"
+            android:layout_below="@+id/iv_alarm_rate_type"
+            android:layout_marginTop="12dp"
+            android:gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/iv_alarm_type"
+                android:rotation="90"
+                android:tint="@color/colorPrimary"
+                android:src="@drawable/ic_arrow_back_black_24dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
-        <TextView
-                tools:text="Paragaranti"
+            <TextView
+                tools:text="@string/if_below"
                 android:maxLines="1"
-                android:layout_alignTop="@+id/sw_alarm"
+                android:layout_marginLeft="12dp"
                 android:layout_marginStart="12dp"
                 android:ellipsize="end"
-                android:layout_marginLeft="12dp"
-                android:layout_toRightOf="@+id/tv_alarm_val"
-                android:layout_toLeftOf="@+id/v_alarm_close"
-                android:layout_toEndOf="@+id/tv_alarm_val"
-                android:layout_toStartOf="@+id/v_alarm_close"
-                android:id="@+id/tv_alarm_source"
+                android:textColor="@color/colorPrimary"
+                android:id="@+id/tv_alarm_type_hint"
                 android:gravity="start"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
-
-
-        <ImageView
-                android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:id="@+id/v_alarm_close"
-                android:padding="8dp"
-                android:background="?selectableItemBackgroundBorderless"
-                android:layout_width="wrap_content"
-                android:layout_alignParentTop="true"
-                android:contentDescription="@string/remove"
-                android:src="@drawable/ic_close_black_20dp"
-                android:layout_height="wrap_content"/>
-
-        <LinearLayout
-                android:layout_alignLeft="@+id/iv_alarm_rate_type"
-                android:layout_below="@+id/iv_alarm_rate_type"
-                android:layout_marginTop="12dp"
-                android:gravity="center_vertical"
-                android:layout_width="wrap_content"
-                android:orientation="horizontal"
-                android:layout_height="wrap_content">
-
-            <ImageView
-                    android:id="@+id/iv_alarm_type"
-                    android:rotation="90"
-                    android:tint="@color/colorPrimary"
-                    android:src="@drawable/ic_arrow_back_black_24dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-            <TextView
-                    tools:text="@string/if_below"
-                    android:maxLines="1"
-                    android:layout_marginLeft="12dp"
-                    android:layout_marginStart="12dp"
-                    android:ellipsize="end"
-                    android:textColor="@color/colorPrimary"
-                    android:id="@+id/tv_alarm_type_hint"
-                    android:gravity="start"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
 
         </LinearLayout>
 

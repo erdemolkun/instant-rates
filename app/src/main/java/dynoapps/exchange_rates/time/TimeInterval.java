@@ -10,6 +10,9 @@ import dynoapps.exchange_rates.R;
  */
 
 public class TimeInterval {
+    private TimeUnit timeUnit;
+    private int value;
+
     TimeInterval(int value, TimeUnit timeUnit) {
         this.value = value;
         this.timeUnit = timeUnit;
@@ -29,8 +32,5 @@ public class TimeInterval {
             return value + "";
         }
     }
-
-    private TimeUnit timeUnit;
-    private int value;
 
 }

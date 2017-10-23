@@ -5,6 +5,6 @@
      android:shareInterpolator="true">
 
     <alpha
-            android:fromAlpha="1.0"
-            android:toAlpha="1.0"/>
+        android:fromAlpha="1.0"
+        android:toAlpha="1.0"/>
 </set>

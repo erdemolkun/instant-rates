@@ -1,14 +1,15 @@
 package dynoapps.exchange_rates;
 
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
-import com.google.android.gms.analytics.GoogleAnalytics;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.FormatStrategy;
 import com.orhanobut.logger.Logger;
@@ -26,6 +27,7 @@ import dynoapps.exchange_rates.alarm.AlarmsRepository;
 public class App extends Application {
     private static final String PROPERTY_ID = "UA-58111264-6";
     private static App appInstance;
+    private HashMap<TrackerName, Tracker> trackers = new HashMap<>();
 
     public static App getInstance() {
         return appInstance;
@@ -64,8 +66,6 @@ public class App extends Application {
         });
 
     }
-
-    private HashMap<TrackerName, Tracker> trackers = new HashMap<>();
 
     private synchronized Tracker getTracker(TrackerName trackerId) {
         if (!trackers.containsKey(trackerId)) {

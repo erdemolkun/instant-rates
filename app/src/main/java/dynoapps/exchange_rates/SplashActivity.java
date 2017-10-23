@@ -38,8 +38,20 @@ public class SplashActivity extends AppCompatActivity {
             gotoNextIntent();
         }
     };
-
+    RatePollingService ratePollingService;
     private long startMilis;
+    private ServiceConnection rateServiceConnection = new ServiceConnection() {
+        public void onServiceConnected(ComponentName className, IBinder binder) {
+            L.i(LandingActivity.class.getSimpleName(), "onServiceConnected");
+            TimeIntervalManager.setAlarmMode(false);
+            ratePollingService = ((RatePollingService.SimpleBinder) binder).getService();
+            onConnectionDone();
+        }
+
+        public void onServiceDisconnected(ComponentName className) {
+            ratePollingService = null;
+        }
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,7 +74,6 @@ public class SplashActivity extends AppCompatActivity {
         }
     }
 
-
     private void onConnectionDone() {
         long currentMilis = System.currentTimeMillis();
         if (currentMilis - startMilis < MIN_DURATION) {
@@ -71,20 +82,6 @@ public class SplashActivity extends AppCompatActivity {
             gotoNextIntent();
         }
     }
-
-    RatePollingService ratePollingService;
-    private ServiceConnection rateServiceConnection = new ServiceConnection() {
-        public void onServiceConnected(ComponentName className, IBinder binder) {
-            L.i(LandingActivity.class.getSimpleName(), "onServiceConnected");
-            TimeIntervalManager.setAlarmMode(false);
-            ratePollingService = ((RatePollingService.SimpleBinder) binder).getService();
-            onConnectionDone();
-        }
-
-        public void onServiceDisconnected(ComponentName className) {
-            ratePollingService = null;
-        }
-    };
 
     private boolean isMyServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);

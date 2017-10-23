@@ -59,10 +59,6 @@ public class CurrencySource {
         this.enabled = enabled;
     }
 
-    public void setPollingSource(IPollingSource iPollingSource) {
-        this.iPollingSource = iPollingSource;
-    }
-
     @Override
     public String toString() {
         return getName();
@@ -70,6 +66,10 @@ public class CurrencySource {
 
     public IPollingSource getPollingSource() {
         return iPollingSource;
+    }
+
+    public void setPollingSource(IPollingSource iPollingSource) {
+        this.iPollingSource = iPollingSource;
     }
 
     public boolean isAvgType() {

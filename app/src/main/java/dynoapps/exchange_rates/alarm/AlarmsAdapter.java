@@ -29,7 +29,7 @@ class AlarmsAdapter extends UpdatableAdapter<List<Alarm>, AlarmsActivity.AlarmVi
     private List<Alarm> alarms;
     private AlarmsRepository alarmRepository;
 
-    AlarmsAdapter(AlarmsRepository alarmsRepository,ArrayList<Alarm> alarms) {
+    AlarmsAdapter(AlarmsRepository alarmsRepository, ArrayList<Alarm> alarms) {
         this.alarmRepository = alarmsRepository;
         this.alarms = new ArrayList<>();
         this.alarms.addAll(alarms);
@@ -91,7 +91,7 @@ class AlarmsAdapter extends UpdatableAdapter<List<Alarm>, AlarmsActivity.AlarmVi
                 int pos = holder.getAdapterPosition();
                 AlarmsAdapter.this.alarms.remove(pos);
                 notifyItemRemoved(pos);
-                alarmRepository.deleteAlarm(alarm,null);
+                alarmRepository.deleteAlarm(alarm, null);
             }
         });
         holder.swAlarm.setChecked(alarm.is_enabled);
@@ -99,7 +99,7 @@ class AlarmsAdapter extends UpdatableAdapter<List<Alarm>, AlarmsActivity.AlarmVi
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 alarm.is_enabled = b;
-                alarmRepository.updateAlarm(alarm,null);
+                alarmRepository.updateAlarm(alarm, null);
                 EventBus.getDefault().post(new AlarmUpdateEvent());
             }
         });

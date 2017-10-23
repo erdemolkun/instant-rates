@@ -40,25 +40,12 @@ import dynoapps.exchange_rates.util.RateUtils;
 
 public class AlarmManager {
 
-    /**
-     * Used for spinner item models.
-     */
-    static class RateValuePair {
-        public int rate_type;
-        public String name;
-
-        @Override
-        public String toString() {
-            return name;
-        }
-    }
-
     public static void addAlarmDialog(final Context context) {
-        addAlarmDialog(context, -1, -1, ValueType.NONE, null,null);
+        addAlarmDialog(context, -1, -1, ValueType.NONE, null, null);
     }
 
-    public static void addAlarmDialog(final Context context,final AlarmsDataSource.AlarmUpdateInsertCallback alarmUpdateInsertCallback) {
-        addAlarmDialog(context, -1, -1, ValueType.NONE, null,alarmUpdateInsertCallback);
+    public static void addAlarmDialog(final Context context, final AlarmsDataSource.AlarmUpdateInsertCallback alarmUpdateInsertCallback) {
+        addAlarmDialog(context, -1, -1, ValueType.NONE, null, alarmUpdateInsertCallback);
     }
 
     public static void addAlarmDialog(@NonNull final Context context,
@@ -172,7 +159,7 @@ public class AlarmManager {
                                 alarm.source_type = ((CurrencySource) spn_sources.getSelectedItem()).getType();
                                 alarm.rate_type = ((RateValuePair) spn_rate_types.getSelectedItem()).rate_type;
                                 alarm.value_type = value_type;
-                                App.getInstance().provideAlarmsRepository().saveAlarm(alarm,alarmUpdateInsertCallback);
+                                App.getInstance().provideAlarmsRepository().saveAlarm(alarm, alarmUpdateInsertCallback);
                             }
                         } catch (Exception ex) {
                             L.i(AlarmManager.class.getSimpleName(), "Alarm Convert Exception");
@@ -190,6 +177,19 @@ public class AlarmManager {
         });
         alertDialog.setCanceledOnTouchOutside(false);
         alertDialog.show();
+    }
+
+    /**
+     * Used for spinner item models.
+     */
+    static class RateValuePair {
+        public int rate_type;
+        public String name;
+
+        @Override
+        public String toString() {
+            return name;
+        }
     }
 
 

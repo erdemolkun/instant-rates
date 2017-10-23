@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <dynoapps.exchange_rates.ui.CustomSwipeToRefresh
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/swipe_to_refresh"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/swipe_to_refresh"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <LinearLayout
-            android:layout_width="match_parent"
-            android:orientation="vertical"
-            android:layout_height="match_parent">
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="match_parent">
 
         <include layout="@layout/toolbar_actionbar"/>
 
 
         <TextView
-                android:id="@+id/tv_chart_title"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="12dp"
-                android:layout_marginTop="12dp"
-                android:textSize="14sp"
-                android:textColor="@color/colorPrimary"
-                android:text="@string/dollar_tl_graph"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+            android:id="@+id/tv_chart_title"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="12dp"
+            android:layout_marginTop="12dp"
+            android:textSize="14sp"
+            android:textColor="@color/colorPrimary"
+            android:text="@string/dollar_tl_graph"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
         <com.github.mikephil.charting.charts.LineChart
-                android:id="@+id/line_chart"
-                android:layout_margin="4dp"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/chart_height"/>
+            android:id="@+id/line_chart"
+            android:layout_margin="4dp"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/chart_height"/>
     </LinearLayout>
 </dynoapps.exchange_rates.ui.CustomSwipeToRefresh>
 

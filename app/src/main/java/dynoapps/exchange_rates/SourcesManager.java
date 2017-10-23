@@ -35,6 +35,8 @@ import dynoapps.exchange_rates.util.CollectionUtils;
 public class SourcesManager {
 
     private static ArrayList<CurrencySource> currencySources = null;
+    // Boolean array for initial enabled items
+    private static boolean[] temp_data_source_states;
 
     private static void init() {
         if (CollectionUtils.size(currencySources) > 0) return; // Already initialized
@@ -69,9 +71,6 @@ public class SourcesManager {
             }
         }
     }
-
-    // Boolean array for initial enabled items
-    private static boolean[] temp_data_source_states;
 
     public static void selectSources(final Activity activity) {
         final ArrayList<CurrencySource> currencySources = getCurrencySources();

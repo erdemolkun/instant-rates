@@ -5,15 +5,15 @@
      android:shareInterpolator="true">
 
     <scale
-            android:fromXScale="1.0"
-            android:fromYScale="1.0"
-            android:pivotX="50%"
-            android:pivotY="100%"
-            android:toXScale="0.1"
-            android:toYScale="0.1"/>
+        android:fromXScale="1.0"
+        android:fromYScale="1.0"
+        android:pivotX="50%"
+        android:pivotY="100%"
+        android:toXScale="0.1"
+        android:toYScale="0.1"/>
 
     <alpha
-            android:fromAlpha="1.0"
-            android:toAlpha="0.2"/>
+        android:fromAlpha="1.0"
+        android:toAlpha="0.2"/>
 
 </set>

@@ -23,27 +23,11 @@ import retrofit2.Retrofit;
 
 public class BigparaConverter implements Converter<ResponseBody, List<BaseRate>> {
 
-    /**
-     * Factory for creating converter. We only care about decoding responses.
-     **/
-    public static final class Factory extends Converter.Factory {
-
-        @Override
-        public Converter<ResponseBody, ?> responseBodyConverter(Type type,
-                                                                Annotation[] annotations,
-                                                                Retrofit retrofit) {
-            return INSTANCE;
-        }
-
-    }
-
+    static final BigparaConverter INSTANCE = new BigparaConverter();
     private static final String HOST = "http://www.bigpara.com";
 
     private BigparaConverter() {
     }
-
-    static final BigparaConverter INSTANCE = new BigparaConverter();
-
 
     @Override
     public List<BaseRate> convert(ResponseBody value) throws IOException {
@@ -66,6 +50,20 @@ public class BigparaConverter implements Converter<ResponseBody, List<BaseRate>>
         rates.add(buySellRate);
 
         return rates;
+    }
+
+    /**
+     * Factory for creating converter. We only care about decoding responses.
+     **/
+    public static final class Factory extends Converter.Factory {
+
+        @Override
+        public Converter<ResponseBody, ?> responseBodyConverter(Type type,
+                                                                Annotation[] annotations,
+                                                                Retrofit retrofit) {
+            return INSTANCE;
+        }
+
     }
 
 

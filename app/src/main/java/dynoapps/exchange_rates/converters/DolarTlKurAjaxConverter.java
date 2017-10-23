@@ -30,25 +30,10 @@ import retrofit2.Retrofit;
 
 public class DolarTlKurAjaxConverter implements Converter<ResponseBody, List<BaseRate>> {
 
-    /**
-     * Factory for creating converter. We only care about decoding responses.
-     **/
-    public static final class Factory extends Converter.Factory {
-
-        @Override
-        public Converter<ResponseBody, ?> responseBodyConverter(Type type,
-                                                                Annotation[] annotations,
-                                                                Retrofit retrofit) {
-            return INSTANCE;
-        }
-
-    }
+    static final DolarTlKurAjaxConverter INSTANCE = new DolarTlKurAjaxConverter();
 
     private DolarTlKurAjaxConverter() {
     }
-
-    static final DolarTlKurAjaxConverter INSTANCE = new DolarTlKurAjaxConverter();
-
 
     /**
      * Sample response body <p> <p> USDTRY:3.4560: EURTRY:3.6623: EURUSD:1.0595: XAUUSD:1187.34:
@@ -76,6 +61,20 @@ public class DolarTlKurAjaxConverter implements Converter<ResponseBody, List<Bas
             }
         }
         return rates;
+    }
+
+    /**
+     * Factory for creating converter. We only care about decoding responses.
+     **/
+    public static final class Factory extends Converter.Factory {
+
+        @Override
+        public Converter<ResponseBody, ?> responseBodyConverter(Type type,
+                                                                Annotation[] annotations,
+                                                                Retrofit retrofit) {
+            return INSTANCE;
+        }
+
     }
 
 

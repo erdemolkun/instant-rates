@@ -68,10 +68,10 @@ import dynoapps.exchange_rates.util.RateUtils;
  */
 
 public class RatePollingService extends IntentService {
-    ArrayList<BasePoolingProvider> providers;
-
+    private static Formatter formatter2 = new Formatter(3, 0);
+    private static Formatter formatter5 = new Formatter(5, 1);
     private final IBinder mBinder = new SimpleBinder();
-
+    ArrayList<BasePoolingProvider> providers;
     private AlarmsRepository alarmsRepository;
 
     public RatePollingService() {
@@ -174,9 +174,6 @@ public class RatePollingService extends IntentService {
         SourcesManager.updateProviders(providers);
         refreshSources();
     }
-
-    private static Formatter formatter2 = new Formatter(3, 0);
-    private static Formatter formatter5 = new Formatter(5, 1);
 
     private <T extends BaseRate> void alarmChecks(final List<T> rates, final int source_type) {
         if (CollectionUtils.isNullOrEmpty(rates)) return;

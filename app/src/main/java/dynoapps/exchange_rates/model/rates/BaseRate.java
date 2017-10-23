@@ -8,13 +8,12 @@ import dynoapps.exchange_rates.util.RateUtils;
 
 public abstract class BaseRate implements IConvertable, IRate {
 
-    BaseRate() {
-    }
-
+    public String type;
     protected
     @RateDef
     int rateType;
-    public String type;
+    BaseRate() {
+    }
 
     @Override
     public int getRateType() {

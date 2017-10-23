@@ -37,27 +37,11 @@ import retrofit2.Retrofit;
 
 public class EnparaConverter implements Converter<ResponseBody, List<BaseRate>> {
 
-    /**
-     * Factory for creating converter. We only care about decoding responses.
-     **/
-    public static final class Factory extends Converter.Factory {
-
-        @Override
-        public Converter<ResponseBody, ?> responseBodyConverter(Type type,
-                                                                Annotation[] annotations,
-                                                                Retrofit retrofit) {
-            return INSTANCE;
-        }
-
-    }
-
+    static final EnparaConverter INSTANCE = new EnparaConverter();
     private static final String HOST = "http://www.qnbfinansbank.enpara.com";
 
     private EnparaConverter() {
     }
-
-    static final EnparaConverter INSTANCE = new EnparaConverter();
-
 
     @Override
     public List<BaseRate> convert(@NonNull ResponseBody value) throws IOException {
@@ -87,6 +71,20 @@ public class EnparaConverter implements Converter<ResponseBody, List<BaseRate>> 
         rate.setRealValues();
 
         return rate;
+    }
+
+    /**
+     * Factory for creating converter. We only care about decoding responses.
+     **/
+    public static final class Factory extends Converter.Factory {
+
+        @Override
+        public Converter<ResponseBody, ?> responseBodyConverter(Type type,
+                                                                Annotation[] annotations,
+                                                                Retrofit retrofit) {
+            return INSTANCE;
+        }
+
     }
 
 

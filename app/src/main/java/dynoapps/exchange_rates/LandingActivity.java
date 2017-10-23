@@ -63,39 +63,29 @@ import dynoapps.exchange_rates.util.ViewUtils;
 
 public class LandingActivity extends BaseActivity {
 
+    private static final int NAVDRAWER_LAUNCH_DELAY = 250;
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
-
     ActionBarDrawerToggle toggle;
-
     @BindView(R.id.v_drawer_item_usd)
     TextView tvDrawerItemUsd;
-
     @BindView(R.id.v_drawer_item_eur)
     TextView tvDrawerItemEur;
-
     @BindView(R.id.v_drawer_item_eur_usd)
     TextView tvDrawerItemEurUsd;
-
     @BindView(R.id.v_drawer_item_ons)
     TextView tvDrawerItemOns;
-
     @BindView(R.id.v_drawer_item_alarms)
     TextView tvDrawerItemAlarms;
-
     @BindView(R.id.v_navdrawer_version)
     TextView tvVersion;
-
     @BindView(R.id.tv_interval_hint)
     TextView tvIntervalHint;
-
     @BindView(R.id.swipe_to_refresh)
     SwipeRefreshLayout swipeRefreshLayout;
-
-    private Handler mHandler;
-    private static final int NAVDRAWER_LAUNCH_DELAY = 250;
-
     AlarmsRepository alarmsRepository;
+    List<CardViewItemParent> parentItems = new ArrayList<>();
+    private Handler mHandler;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -221,54 +211,6 @@ public class LandingActivity extends BaseActivity {
         parent.items.add(item);
     }
 
-    List<CardViewItemParent> parentItems = new ArrayList<>();
-
-    static class CardViewItemParent {
-        ViewGroup me;
-        /**
-         * Refers to {@link IRate#getRateType()}
-         **/
-        int rate_type;
-
-        List<CardViewItem> items = new ArrayList<>();
-
-        @Override
-        public String toString() {
-            StringBuilder itemsToString = new StringBuilder();
-            for (CardViewItem item : items) {
-                itemsToString.append("\n").append(item.toString());
-            }
-            return itemsToString + "\nType : " + rate_type;
-        }
-    }
-
-    static class CardViewItem {
-
-        @BindView(R.id.tv_type)
-        TextView tvType;
-
-        @BindView(R.id.tv_rate_value)
-        TextView tvValue;
-
-        CardViewItem(View card, int source_type, int value_type) {
-            this.card = card;
-            this.source_type = source_type;
-            this.value_type = value_type;
-            ButterKnife.bind(this, card);
-        }
-
-        View card;
-
-        int value_type;
-
-        /**
-         * Refers to {@link CurrencySource#getType()}
-         */
-        int source_type;
-
-
-    }
-
     private void setUpRateCardViews() {
         if (parentItems == null) parentItems = new ArrayList<>();
 
@@ -320,7 +262,6 @@ public class LandingActivity extends BaseActivity {
     public int getLayoutId() {
         return R.layout.activity_landing;
     }
-
 
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
@@ -471,7 +412,6 @@ public class LandingActivity extends BaseActivity {
         return mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.START);
     }
 
-
     private boolean isMyServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
@@ -542,7 +482,6 @@ public class LandingActivity extends BaseActivity {
         mAnimationSet.start();
     }
 
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(RatesEvent ratesEvent) {
         List<BaseRate> rates = ratesEvent.rates;
@@ -562,7 +501,6 @@ public class LandingActivity extends BaseActivity {
     private void updateHint() {
         tvIntervalHint.setText(getString(R.string.interval_hint, TimeIntervalManager.getSelectionStr()));
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -584,5 +522,48 @@ public class LandingActivity extends BaseActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    static class CardViewItemParent {
+        ViewGroup me;
+        /**
+         * Refers to {@link IRate#getRateType()}
+         **/
+        int rate_type;
+
+        List<CardViewItem> items = new ArrayList<>();
+
+        @Override
+        public String toString() {
+            StringBuilder itemsToString = new StringBuilder();
+            for (CardViewItem item : items) {
+                itemsToString.append("\n").append(item.toString());
+            }
+            return itemsToString + "\nType : " + rate_type;
+        }
+    }
+
+    static class CardViewItem {
+
+        @BindView(R.id.tv_type)
+        TextView tvType;
+
+        @BindView(R.id.tv_rate_value)
+        TextView tvValue;
+        View card;
+        int value_type;
+        /**
+         * Refers to {@link CurrencySource#getType()}
+         */
+        int source_type;
+
+        CardViewItem(View card, int source_type, int value_type) {
+            this.card = card;
+            this.source_type = source_type;
+            this.value_type = value_type;
+            ButterKnife.bind(this, card);
+        }
+
+
     }
 }

@@ -15,11 +15,6 @@ import dynoapps.exchange_rates.alarm.AlarmDao;
 @Database(entities = {Alarm.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
     /**
-     * @return The DAO for the Alarm table.
-     */
-    public abstract AlarmDao alarm();
-
-    /**
      * The only instance
      */
     private static AppDatabase sInstance;
@@ -38,4 +33,9 @@ public abstract class AppDatabase extends RoomDatabase {
         }
         return sInstance;
     }
+
+    /**
+     * @return The DAO for the Alarm table.
+     */
+    public abstract AlarmDao alarm();
 }

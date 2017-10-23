@@ -27,11 +27,8 @@ public abstract class BasePoolingProvider<T> implements IPollingSource, PoolingR
     private static final int NEXT_FETCH_ON_ERROR = 4000;
 
     private static final int MESSAGE_WHAT_FETCH = 1;
-
-    private SourceCallback<T> callback;
-
     protected CompositeDisposable compositeDisposable;
-
+    private SourceCallback<T> callback;
     private AlarmsRepository alarmsRepository;
 
     private int error_count = 0;
@@ -41,6 +38,9 @@ public abstract class BasePoolingProvider<T> implements IPollingSource, PoolingR
     private AtomicBoolean is_started = new AtomicBoolean(false); // Indicates if a job currently running
 
     private CurrencySource currencySource;
+    private Handler handler;
+    private long last_call_start_millis = -1;
+    private int average_duration = 0;
 
     BasePoolingProvider(SourceCallback<T> callback) {
         this.callback = callback;
@@ -48,8 +48,6 @@ public abstract class BasePoolingProvider<T> implements IPollingSource, PoolingR
         compositeDisposable = new CompositeDisposable();
         alarmsRepository = App.getInstance().provideAlarmsRepository();
     }
-
-    private Handler handler;
 
     private Handler getHandler() {
         if (handler == null) {
@@ -153,10 +151,6 @@ public abstract class BasePoolingProvider<T> implements IPollingSource, PoolingR
         getHandler().sendEmptyMessageDelayed(1, delayed);
         L.e(BasePoolingProvider.class.getSimpleName(), "- postWork : " + delayed + " ms - " + this.getClass().getSimpleName());
     }
-
-
-    private long last_call_start_millis = -1;
-    private int average_duration = 0;
 
     private void logDurationSuccess() {
         if (last_call_start_millis < 0) return;

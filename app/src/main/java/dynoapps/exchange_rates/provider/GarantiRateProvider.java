@@ -20,8 +20,8 @@ import retrofit2.Call;
 
 public class GarantiRateProvider extends BasePoolingProvider<List<GarantiRate>> {
 
-    private Call<List<GarantiRate>> lastCall;
     ExecutorService executorService;
+    private Call<List<GarantiRate>> lastCall;
 
     public GarantiRateProvider(SourceCallback<List<GarantiRate>> callback) {
         super(callback);

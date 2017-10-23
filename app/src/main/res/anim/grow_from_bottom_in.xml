@@ -5,16 +5,16 @@
      android:shareInterpolator="true">
 
     <scale
-            android:fromXScale="0.1"
-            android:fromYScale="0.1"
-            android:pivotX="50%"
-            android:pivotY="100%"
-            android:toXScale="1.0"
-            android:toYScale="1.0"/>
+        android:fromXScale="0.1"
+        android:fromYScale="0.1"
+        android:pivotX="50%"
+        android:pivotY="100%"
+        android:toXScale="1.0"
+        android:toYScale="1.0"/>
 
     <alpha
-            android:fromAlpha="0.2"
-            android:toAlpha="1.0"/>
+        android:fromAlpha="0.2"
+        android:toAlpha="1.0"/>
 
 
 </set>

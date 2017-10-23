@@ -10,6 +10,16 @@ import java.util.List;
 
 public interface AlarmsDataSource {
 
+    void getAlarms(AlarmsLoadCallback alarmsLoadCallback);
+
+    void saveAlarm(@NonNull Alarm alarm, AlarmUpdateInsertCallback alarmUpdateInsertCallback);
+
+    void deleteAlarm(@NonNull Alarm alarm, AlarmUpdateInsertCallback alarmUpdateInsertCallback);
+
+    void updateAlarm(@NonNull Alarm alarm, AlarmUpdateInsertCallback alarmUpdateInsertCallback);
+
+    void refreshAlarms();
+
     interface AlarmsLoadCallback {
 
         void onAlarmsLoaded(List<Alarm> alarms);
@@ -21,15 +31,4 @@ public interface AlarmsDataSource {
 
         void onAlarmUpdate(Alarm alarm);
     }
-
-
-    void getAlarms(AlarmsLoadCallback alarmsLoadCallback);
-
-    void saveAlarm(@NonNull Alarm alarm, AlarmUpdateInsertCallback alarmUpdateInsertCallback);
-
-    void deleteAlarm(@NonNull Alarm alarm, AlarmUpdateInsertCallback alarmUpdateInsertCallback);
-
-    void updateAlarm(@NonNull Alarm alarm, AlarmUpdateInsertCallback alarmUpdateInsertCallback);
-
-    void refreshAlarms();
 }

@@ -16,8 +16,8 @@ import dynoapps.exchange_rates.model.rates.ParaGarantiRate;
 public class ParagarantiResponse {
 
     @ElementListUnion({
-            @ElementList(entry="STOCK", inline=true),
-            @ElementList(entry="PARITY", inline=true),
+            @ElementList(entry = "STOCK", inline = true),
+            @ElementList(entry = "PARITY", inline = true),
     })
     public List<ParaGarantiRate> rates;
 }

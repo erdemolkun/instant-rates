@@ -19,33 +19,28 @@ import dynoapps.exchange_rates.data.CurrencySource;
 public class AlarmsRepository implements AlarmsDataSource {
 
     private static AlarmsRepository INSTANCE = null;
-
-    private AlarmsDataSource localAlarmsDataSource;
-
-
-    private Boolean alarmEnabled = null;
-
     /**
      * Marks the cache as invalid, to force an update the next time data is requested. This variable
      * has package local visibility so it can be accessed from tests.
      */
     boolean mCacheIsDirty = false;
-
     /**
      * This variable has package local visibility so it can be accessed from tests.
      */
     Map<Long, Alarm> mCachedAlarms;
+    private AlarmsDataSource localAlarmsDataSource;
+    private Boolean alarmEnabled = null;
 
+
+    private AlarmsRepository(AlarmsDataSource localAlarmsDataSource) {
+        this.localAlarmsDataSource = localAlarmsDataSource;
+    }
 
     public static AlarmsRepository getInstance(@NonNull Context context) {
         if (INSTANCE == null) {
             INSTANCE = new AlarmsRepository(new LocalAlarmsDataSource(context));
         }
         return INSTANCE;
-    }
-
-    private AlarmsRepository(AlarmsDataSource localAlarmsDataSource) {
-        this.localAlarmsDataSource = localAlarmsDataSource;
     }
 
     @Override

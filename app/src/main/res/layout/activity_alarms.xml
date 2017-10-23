@@ -11,44 +11,44 @@
     <include layout="@layout/toolbar_actionbar_with_switch"/>
 
     <TextView
-            android:id="@+id/tv_no_alarm"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="12dp"
-            android:layout_marginTop="12dp"
-            android:textSize="18sp"
-            android:maxLines="2"
-            android:padding="12dp"
-            android:visibility="gone"
-            tools:visibility="visible"
-            android:layout_centerInParent="true"
-            android:textColor="@color/colorPrimary"
-            android:text="@string/have_no_alarms"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+        android:id="@+id/tv_no_alarm"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="12dp"
+        android:layout_marginTop="12dp"
+        android:textSize="18sp"
+        android:maxLines="2"
+        android:padding="12dp"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:layout_centerInParent="true"
+        android:textColor="@color/colorPrimary"
+        android:text="@string/have_no_alarms"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
     <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_alarms"
-            android:paddingTop="4dp"
-            android:layout_marginTop="?actionBarSize"
-            tools:listitem="@layout/item_alarm"
-            android:clipToPadding="false"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        android:id="@+id/rv_alarms"
+        android:paddingTop="4dp"
+        android:layout_marginTop="?actionBarSize"
+        tools:listitem="@layout/item_alarm"
+        android:clipToPadding="false"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     </android.support.v7.widget.RecyclerView>
 
     <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab_add_alarm"
-            android:layout_width="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_margin="16dp"
-            app:backgroundTint="?colorAccent"
-            app:fabSize="normal"
-            app:elevation="6dp"
-            app:pressedTranslationZ="12dp"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:src="@drawable/ic_add_alarm_white_24dp"
-            android:layout_height="wrap_content"/>
+        android:id="@+id/fab_add_alarm"
+        android:layout_width="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="16dp"
+        app:backgroundTint="?colorAccent"
+        app:fabSize="normal"
+        app:elevation="6dp"
+        app:pressedTranslationZ="12dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:src="@drawable/ic_add_alarm_white_24dp"
+        android:layout_height="wrap_content"/>
 
 </RelativeLayout>

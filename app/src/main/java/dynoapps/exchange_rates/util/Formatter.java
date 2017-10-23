@@ -14,7 +14,7 @@ public class Formatter {
     public Formatter(int digits) {
         numberFormat = DecimalFormat.getInstance();
         numberFormat.setMaximumFractionDigits(digits);
-        numberFormat.setMinimumFractionDigits(Math.max(digits-2,0));
+        numberFormat.setMinimumFractionDigits(Math.max(digits - 2, 0));
     }
 
     public Formatter(int digits, int min_digits) {

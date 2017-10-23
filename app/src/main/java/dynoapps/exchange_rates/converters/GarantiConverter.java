@@ -21,26 +21,11 @@ import retrofit2.Retrofit;
 
 public class GarantiConverter implements Converter<ResponseBody, List<BaseRate>> {
 
-    /**
-     * Factory for creating converter. We only care about decoding responses.
-     **/
-    public static final class Factory extends Converter.Factory {
-
-        @Override
-        public Converter<ResponseBody, ?> responseBodyConverter(Type type,
-                                                                Annotation[] annotations,
-                                                                Retrofit retrofit) {
-            return INSTANCE;
-        }
-
-    }
-
+    static final GarantiConverter INSTANCE = new GarantiConverter();
     private static final String HOST = "https://www.garanti.com.tr/";
 
     private GarantiConverter() {
     }
-
-    static final GarantiConverter INSTANCE = new GarantiConverter();
 
     @Override
     public List<BaseRate> convert(ResponseBody value) throws IOException {
@@ -61,6 +46,20 @@ public class GarantiConverter implements Converter<ResponseBody, List<BaseRate>>
         }
 
         return rates;
+    }
+
+    /**
+     * Factory for creating converter. We only care about decoding responses.
+     **/
+    public static final class Factory extends Converter.Factory {
+
+        @Override
+        public Converter<ResponseBody, ?> responseBodyConverter(Type type,
+                                                                Annotation[] annotations,
+                                                                Retrofit retrofit) {
+            return INSTANCE;
+        }
+
     }
 
 

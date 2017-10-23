@@ -24,11 +24,13 @@ import dynoapps.exchange_rates.util.L;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
-    @AnimationHelper.AnimationType
-    int animationTypeEnter = AnimationHelper.NONE;
     protected
     @AnimationHelper.AnimationType
     int animationTypeExit = AnimationHelper.NONE;
+    @AnimationHelper.AnimationType
+    int animationTypeEnter = AnimationHelper.NONE;
+    private Handler handler;
+    private Toolbar mActionBarToolbar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,15 +54,12 @@ public abstract class BaseActivity extends AppCompatActivity {
         App.getInstance().sendAnalyticsScreenName(this);
     }
 
-    private Handler handler;
-
     protected Handler getHandler() {
         if (handler == null) {
             handler = new Handler(Looper.getMainLooper());
         }
         return handler;
     }
-
 
     protected void setAnimationType(@AnimationHelper.AnimationType int animationType) {
         this.animationTypeEnter = animationType;
@@ -71,9 +70,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         this.animationTypeEnter = animationTypeEnter;
         this.animationTypeExit = animationTypeExit;
     }
-
-
-    private Toolbar mActionBarToolbar;
 
     protected Toolbar getActionBarToolbar() {
         if (mActionBarToolbar == null) {

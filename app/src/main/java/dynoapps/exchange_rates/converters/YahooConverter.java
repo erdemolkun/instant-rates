@@ -21,25 +21,10 @@ import retrofit2.Retrofit;
 
 public class YahooConverter implements Converter<ResponseBody, List<BaseRate>> {
 
-    /**
-     * Factory for creating converter. We only care about decoding responses.
-     **/
-    public static final class Factory extends Converter.Factory {
-
-        @Override
-        public Converter<ResponseBody, ?> responseBodyConverter(Type type,
-                                                                Annotation[] annotations,
-                                                                Retrofit retrofit) {
-            return INSTANCE;
-        }
-
-    }
+    static final YahooConverter INSTANCE = new YahooConverter();
 
     private YahooConverter() {
     }
-
-    static final YahooConverter INSTANCE = new YahooConverter();
-
 
     /**
      * Sample response body <p> <p> "USDTRY=X",3.4837,"12/9/2016","11:45pm"
@@ -68,6 +53,20 @@ public class YahooConverter implements Converter<ResponseBody, List<BaseRate>> {
             }
         }
         return rates;
+    }
+
+    /**
+     * Factory for creating converter. We only care about decoding responses.
+     **/
+    public static final class Factory extends Converter.Factory {
+
+        @Override
+        public Converter<ResponseBody, ?> responseBodyConverter(Type type,
+                                                                Annotation[] annotations,
+                                                                Retrofit retrofit) {
+            return INSTANCE;
+        }
+
     }
 
 
