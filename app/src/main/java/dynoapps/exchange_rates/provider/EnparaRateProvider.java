@@ -38,7 +38,7 @@ public class EnparaRateProvider extends BasePoolingProvider<List<EnparaRate>> {
     public void run(final boolean is_single_run) {
 
         compositeDisposable.add(enparaService.rates()
-                .subscribeOn(Schedulers.newThread())
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<List<EnparaRate>>() {
                     @Override
                     public void onNext(List<EnparaRate> rates) {

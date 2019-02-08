@@ -37,7 +37,7 @@ public class DolarTlKurRateProvider extends BasePoolingProvider<List<DolarTlKurR
     public void run(final boolean is_single_run) {
 
         compositeDisposable.add(dolarTlKurService.rates("" + System.currentTimeMillis())
-                .subscribeOn(Schedulers.newThread())
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<List<DolarTlKurRate>>() {
                     @Override
                     public void onNext(List<DolarTlKurRate> rates) {

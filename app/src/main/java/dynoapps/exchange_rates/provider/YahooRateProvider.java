@@ -37,7 +37,7 @@ public class YahooRateProvider extends BasePoolingProvider<List<YahooRate>> {
     public void run(final boolean is_single_run) {
 
         compositeDisposable.add(yahooService.rates()
-                .subscribeOn(Schedulers.newThread())
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<List<YahooRate>>() {
                     @Override
                     public void onNext(List<YahooRate> rates) {

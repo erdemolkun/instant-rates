@@ -31,7 +31,7 @@ public class ParaGarantiRateProvider extends BasePoolingProvider<List<ParaGarant
     private void job(final boolean is_single_run) {
 
         compositeDisposable.add(paraGarantiService.rates()
-                .subscribeOn(Schedulers.newThread())
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<ParagarantiResponse>() {
                     @Override
                     public void onNext(ParagarantiResponse paragarantiResponse) {

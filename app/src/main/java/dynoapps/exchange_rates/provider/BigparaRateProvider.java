@@ -36,7 +36,7 @@ public class BigparaRateProvider extends BasePoolingProvider<List<BigparaRate>> 
     @Override
     public void run(final boolean is_single_run) {
         compositeDisposable.add(bigparaService.rates()
-                .subscribeOn(Schedulers.newThread())
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<List<BigparaRate>>() {
                     @Override
                     public void onNext(List<BigparaRate> rates) {
