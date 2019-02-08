@@ -6,6 +6,7 @@ import dynoapps.exchange_rates.data.CurrencyType;
 import dynoapps.exchange_rates.model.rates.EnparaRate;
 import dynoapps.exchange_rates.network.Api;
 import dynoapps.exchange_rates.network.EnparaService;
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
@@ -24,6 +25,11 @@ public class EnparaRateProvider extends BasePoolingProvider<List<EnparaRate>> {
     }
 
     @Override
+    protected Observable<List<EnparaRate>> getObservable() {
+        return enparaService.rates();
+    }
+
+    @Override
     public int getSourceType() {
         return CurrencyType.ENPARA;
     }
@@ -37,7 +43,7 @@ public class EnparaRateProvider extends BasePoolingProvider<List<EnparaRate>> {
     @Override
     public void run(final boolean is_single_run) {
 
-        compositeDisposable.add(enparaService.rates()
+        compositeDisposable.add(getObservable()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<List<EnparaRate>>() {
                     @Override

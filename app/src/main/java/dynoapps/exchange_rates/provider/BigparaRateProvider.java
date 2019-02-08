@@ -6,6 +6,7 @@ import dynoapps.exchange_rates.data.CurrencyType;
 import dynoapps.exchange_rates.model.rates.BigparaRate;
 import dynoapps.exchange_rates.network.Api;
 import dynoapps.exchange_rates.network.BigparaService;
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
@@ -21,6 +22,11 @@ public class BigparaRateProvider extends BasePoolingProvider<List<BigparaRate>> 
     public BigparaRateProvider(SourceCallback<List<BigparaRate>> callback) {
         super(callback);
         bigparaService = Api.getBigparaApi().create(BigparaService.class);
+    }
+
+    @Override
+    protected Observable<List<BigparaRate>> getObservable() {
+        return bigparaService.rates();
     }
 
     @Override

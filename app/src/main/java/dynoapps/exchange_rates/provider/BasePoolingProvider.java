@@ -16,6 +16,7 @@ import dynoapps.exchange_rates.data.CurrencySource;
 import dynoapps.exchange_rates.interfaces.PoolingRunnable;
 import dynoapps.exchange_rates.time.TimeIntervalManager;
 import dynoapps.exchange_rates.util.L;
+import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
 
 /**
@@ -48,6 +49,8 @@ public abstract class BasePoolingProvider<T> implements IPollingSource, PoolingR
         compositeDisposable = new CompositeDisposable();
         alarmsRepository = App.getInstance().provideAlarmsRepository();
     }
+
+    protected abstract Observable<T> getObservable();
 
     private Handler getHandler() {
         if (handler == null) {
@@ -90,19 +93,19 @@ public abstract class BasePoolingProvider<T> implements IPollingSource, PoolingR
     @Override
     public void start() {
         if (!isEnabled()) {
-            /**
+            /*
              * Double check :)
              * */
             return;
         }
         if (is_working.get()) {
-            /**
+            /*
              Working already. Has a handler callback.
              */
             return;
         }
         if (is_started.get()) {
-            /**
+            /*
              * No need to start again.
              * */
             return;

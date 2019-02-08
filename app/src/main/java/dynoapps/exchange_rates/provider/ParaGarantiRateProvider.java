@@ -7,7 +7,9 @@ import dynoapps.exchange_rates.model.ParagarantiResponse;
 import dynoapps.exchange_rates.model.rates.ParaGarantiRate;
 import dynoapps.exchange_rates.network.Api;
 import dynoapps.exchange_rates.network.ParaGarantiService;
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 
@@ -24,23 +26,32 @@ public class ParaGarantiRateProvider extends BasePoolingProvider<List<ParaGarant
     }
 
     @Override
+    protected Observable<List<ParaGarantiRate>> getObservable() {
+        return paraGarantiService.rates().map(new Function<ParagarantiResponse, List<ParaGarantiRate>>() {
+            @Override
+            public List<ParaGarantiRate> apply(ParagarantiResponse paragarantiResponse) {
+                List<ParaGarantiRate> rates = paragarantiResponse.rates;
+                for (ParaGarantiRate rate : rates) {
+                    rate.toRateType();
+                    rate.setRealValues();
+                }
+                return rates;
+            }
+        });
+    }
+
+    @Override
     public int getSourceType() {
         return CurrencyType.PARAGARANTI;
     }
 
     private void job(final boolean is_single_run) {
 
-        compositeDisposable.add(paraGarantiService.rates()
+        compositeDisposable.add(getObservable()
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<ParagarantiResponse>() {
+                .observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<List<ParaGarantiRate>>() {
                     @Override
-                    public void onNext(ParagarantiResponse paragarantiResponse) {
-
-                        List<ParaGarantiRate> rates = paragarantiResponse.rates;
-                        for (ParaGarantiRate rate : rates) {
-                            rate.toRateType();
-                            rate.setRealValues();
-                        }
+                    public void onNext(List<ParaGarantiRate> rates) {
                         notifyValue(rates);
                         if (!is_single_run)
                             fetchAgain(false);
@@ -58,7 +69,6 @@ public class ParaGarantiRateProvider extends BasePoolingProvider<List<ParaGarant
 
                     }
                 }));
-
 
     }
 

@@ -6,6 +6,7 @@ import dynoapps.exchange_rates.data.CurrencyType;
 import dynoapps.exchange_rates.model.rates.DolarTlKurRate;
 import dynoapps.exchange_rates.network.Api;
 import dynoapps.exchange_rates.network.DolarTlKurService;
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
@@ -24,6 +25,11 @@ public class DolarTlKurRateProvider extends BasePoolingProvider<List<DolarTlKurR
     }
 
     @Override
+    protected Observable<List<DolarTlKurRate>> getObservable() {
+        return dolarTlKurService.rates("" + System.currentTimeMillis());
+    }
+
+    @Override
     public int getSourceType() {
         return CurrencyType.TLKUR;
     }
@@ -36,7 +42,7 @@ public class DolarTlKurRateProvider extends BasePoolingProvider<List<DolarTlKurR
     @Override
     public void run(final boolean is_single_run) {
 
-        compositeDisposable.add(dolarTlKurService.rates("" + System.currentTimeMillis())
+        compositeDisposable.add(getObservable()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<List<DolarTlKurRate>>() {
                     @Override

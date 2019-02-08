@@ -6,6 +6,7 @@ import dynoapps.exchange_rates.data.CurrencyType;
 import dynoapps.exchange_rates.model.rates.YorumlarRate;
 import dynoapps.exchange_rates.network.Api;
 import dynoapps.exchange_rates.network.YorumlarService;
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
@@ -24,12 +25,17 @@ public class YorumlarRateProvider extends BasePoolingProvider<List<YorumlarRate>
     }
 
     @Override
+    protected Observable<List<YorumlarRate>> getObservable() {
+        return yorumlarService.rates("ons");
+    }
+
+    @Override
     public int getSourceType() {
         return CurrencyType.ALTININ;
     }
 
     private void job(final boolean is_single_run) {
-        compositeDisposable.add(yorumlarService.rates("ons")
+        compositeDisposable.add(getObservable()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<List<YorumlarRate>>() {
                     @Override

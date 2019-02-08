@@ -6,6 +6,7 @@ import dynoapps.exchange_rates.data.CurrencyType;
 import dynoapps.exchange_rates.model.rates.YahooRate;
 import dynoapps.exchange_rates.network.Api;
 import dynoapps.exchange_rates.network.YahooService;
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
@@ -24,6 +25,11 @@ public class YahooRateProvider extends BasePoolingProvider<List<YahooRate>> {
     }
 
     @Override
+    protected Observable<List<YahooRate>> getObservable() {
+        return yahooService.rates();
+    }
+
+    @Override
     public int getSourceType() {
         return CurrencyType.YAHOO;
     }
@@ -36,7 +42,7 @@ public class YahooRateProvider extends BasePoolingProvider<List<YahooRate>> {
     @Override
     public void run(final boolean is_single_run) {
 
-        compositeDisposable.add(yahooService.rates()
+        compositeDisposable.add(getObservable()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<List<YahooRate>>() {
                     @Override
