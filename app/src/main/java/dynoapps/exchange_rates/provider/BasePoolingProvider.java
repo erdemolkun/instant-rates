@@ -14,10 +14,14 @@ import dynoapps.exchange_rates.alarm.AlarmsDataSource;
 import dynoapps.exchange_rates.alarm.AlarmsRepository;
 import dynoapps.exchange_rates.data.CurrencySource;
 import dynoapps.exchange_rates.interfaces.PoolingRunnable;
+import dynoapps.exchange_rates.model.rates.YorumlarRate;
 import dynoapps.exchange_rates.time.TimeIntervalManager;
 import dynoapps.exchange_rates.util.L;
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by erdemmac on 25/11/2016.
@@ -81,6 +85,7 @@ public abstract class BasePoolingProvider<T> implements IPollingSource, PoolingR
     @Override
     public void run() {
         logDurationStart();
+        job(false);
     }
 
     @Override
@@ -203,4 +208,34 @@ public abstract class BasePoolingProvider<T> implements IPollingSource, PoolingR
 
     }
 
+    private void job(final boolean is_single_run) {
+
+        compositeDisposable.add(getObservable()
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<T>() {
+                    @Override
+                    public void onNext(T rates) {
+                        notifyValue(rates);
+                        if (!is_single_run)
+                            fetchAgain(false);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        notifyError();
+                        if (!is_single_run)
+                            fetchAgain(true);
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                }));
+    }
+
+    @Override
+    public void run(boolean is_single_run) {
+        job(is_single_run);
+    }
 }

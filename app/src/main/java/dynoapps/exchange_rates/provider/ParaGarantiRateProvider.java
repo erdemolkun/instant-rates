@@ -45,40 +45,4 @@ public class ParaGarantiRateProvider extends BasePoolingProvider<List<ParaGarant
         return CurrencyType.PARAGARANTI;
     }
 
-    private void job(final boolean is_single_run) {
-
-        compositeDisposable.add(getObservable()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<List<ParaGarantiRate>>() {
-                    @Override
-                    public void onNext(List<ParaGarantiRate> rates) {
-                        notifyValue(rates);
-                        if (!is_single_run)
-                            fetchAgain(false);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        notifyError();
-                        if (!is_single_run)
-                            fetchAgain(true);
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                }));
-
-    }
-
-    @Override
-    public void run(boolean is_single_run) {
-        job(is_single_run);
-    }
-
-    @Override
-    public void run() {
-        job(false);
-    }
 }
