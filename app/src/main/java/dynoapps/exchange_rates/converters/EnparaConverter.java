@@ -1,8 +1,6 @@
 package dynoapps.exchange_rates.converters;
 
 
-import android.support.annotation.NonNull;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -13,6 +11,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import dynoapps.exchange_rates.model.rates.BaseRate;
 import dynoapps.exchange_rates.model.rates.EnparaRate;
 import okhttp3.ResponseBody;
@@ -37,7 +36,7 @@ import retrofit2.Retrofit;
 
 public class EnparaConverter implements Converter<ResponseBody, List<BaseRate>> {
 
-    static final EnparaConverter INSTANCE = new EnparaConverter();
+    private static final EnparaConverter INSTANCE = new EnparaConverter();
     private static final String HOST = "http://www.qnbfinansbank.enpara.com";
 
     private EnparaConverter() {

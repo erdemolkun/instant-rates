@@ -1,8 +1,7 @@
 package dynoapps.exchange_rates.data;
 
-import android.support.annotation.ColorRes;
-import android.support.v4.content.ContextCompat;
-
+import androidx.annotation.ColorRes;
+import androidx.core.content.ContextCompat;
 import dynoapps.exchange_rates.App;
 import dynoapps.exchange_rates.provider.IPollingSource;
 

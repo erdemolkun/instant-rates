@@ -1,13 +1,13 @@
 package dynoapps.exchange_rates.alarm;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.PrimaryKey;
 import android.provider.BaseColumns;
 
 import java.io.Serializable;
 import java.util.Comparator;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 import dynoapps.exchange_rates.interfaces.ValueType;
 
 /**

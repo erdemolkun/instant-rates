@@ -1,8 +1,9 @@
 package dynoapps.exchange_rates.alarm;
 
-import android.support.annotation.NonNull;
 
 import java.util.List;
+
+import androidx.annotation.NonNull;
 
 /**
  * Created by erdemmac on 19/07/2017.

@@ -1,10 +1,10 @@
 package dynoapps.exchange_rates.alarm;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import dynoapps.exchange_rates.AppDatabase;
 import dynoapps.exchange_rates.AppExecutors;
 

@@ -4,8 +4,9 @@ package dynoapps.exchange_rates.ui.widget.recyclerview;
  * Created by erdemmac on 14/12/2016.
  */
 
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Abstract base class for {@link RecyclerView.Adapter}s whose data can be updated.

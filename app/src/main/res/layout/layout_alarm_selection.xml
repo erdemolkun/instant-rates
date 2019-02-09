@@ -1,57 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
               xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:orientation="vertical"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_height="match_parent"
               android:layout_width="match_parent"
-              android:padding="16dp"
-              android:layout_height="match_parent">
+              android:orientation="vertical"
+              android:padding="16dp">
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_alarm_value"
+        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        app:errorEnabled="true"
-        android:layout_height="wrap_content">
+        app:errorEnabled="true">
 
         <EditText
-            android:id="@+id/et_alarm_value"
-            android:textSize="16sp"
-            android:minHeight="44dp"
-            android:hint="@string/enter_value"
             android:digits="@string/digits_for_decimal"
+            android:hint="@string/enter_value"
+            android:id="@+id/et_alarm_value"
             android:imeOptions="actionDone"
             android:inputType="numberDecimal"
+            android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-    </android.support.design.widget.TextInputLayout>
+            android:minHeight="44dp"
+            android:textSize="16sp"/>
+    </com.google.android.material.textfield.TextInputLayout>
 
     <RadioGroup
-        android:id="@+id/rg_alarm"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="44dp"
         android:gravity="center_vertical"
+        android:id="@+id/rg_alarm"
+        android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
+        android:layout_width="match_parent"
+        android:minHeight="44dp"
         android:orientation="horizontal">
 
         <RadioButton
+            android:gravity="center_vertical"
             android:id="@+id/rb_above"
-            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            tools:checked="true"
-            android:gravity="center_vertical"
+            android:layout_width="0dp"
             android:maxLines="2"
             android:text="@string/if_above"
-            android:textSize="14sp"/>
+            android:textSize="14sp"
+            tools:checked="true"/>
 
         <RadioButton
+            android:gravity="center_vertical"
             android:id="@+id/rb_below"
-            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:layout_width="0dp"
             android:maxLines="2"
-            android:gravity="center_vertical"
             android:text="@string/if_below"
             android:textSize="14sp"/>
 
@@ -59,42 +59,42 @@
     </RadioGroup>
 
     <TextView
+        android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:layout_width="wrap_content"
-        android:textSize="12sp"
         android:text="@string/sources"
         android:textColor="?colorAccent"
-        android:layout_height="wrap_content"/>
+        android:textSize="12sp"/>
 
     <Spinner
-        android:layout_marginTop="2dp"
-        android:overlapAnchor="false"
         android:id="@+id/spn_source_types"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:overlapAnchor="false"/>
 
     <LinearLayout
         android:id="@+id/v_alarm_types"
+        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:visibility="gone"
-        tools:visibility="visible"
         android:orientation="vertical"
-        android:layout_height="wrap_content">
+        android:visibility="gone"
+        tools:visibility="visible">
 
         <TextView
+            android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_width="wrap_content"
-            android:textSize="12sp"
             android:text="@string/rate_types"
             android:textColor="?colorAccent"
-            android:layout_height="wrap_content"/>
+            android:textSize="12sp"/>
 
         <Spinner
-            android:layout_marginTop="2dp"
-            android:overlapAnchor="false"
             android:id="@+id/spn_rate_types"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:overlapAnchor="false"/>
     </LinearLayout>
 
 

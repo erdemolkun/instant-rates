@@ -1,9 +1,10 @@
 package dynoapps.exchange_rates.model.rates;
 
-import android.support.annotation.IntDef;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+
+import androidx.annotation.IntDef;
 
 /**
  * Created by erdemmac on 06/12/2016.

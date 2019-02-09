@@ -2,13 +2,13 @@ package dynoapps.exchange_rates.time;
 
 import android.app.Activity;
 import android.content.DialogInterface;
-import android.support.v7.app.AlertDialog;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
+import androidx.appcompat.app.AlertDialog;
 import dynoapps.exchange_rates.App;
 import dynoapps.exchange_rates.Prefs;
 import dynoapps.exchange_rates.R;
