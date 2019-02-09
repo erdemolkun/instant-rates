@@ -4,13 +4,11 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 
-import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import dynoapps.exchange_rates.App;
 import dynoapps.exchange_rates.SourcesManager;
 import dynoapps.exchange_rates.alarm.Alarm;
-import dynoapps.exchange_rates.alarm.AlarmsDataSource;
 import dynoapps.exchange_rates.alarm.AlarmsRepository;
 import dynoapps.exchange_rates.data.CurrencySource;
 import dynoapps.exchange_rates.interfaces.PoolingRunnable;
@@ -31,7 +29,7 @@ public abstract class BasePoolingProvider<T> implements IPollingSource, PoolingR
     private static final int NEXT_FETCH_ON_ERROR = 4000;
 
     private static final int MESSAGE_WHAT_FETCH = 1;
-    protected CompositeDisposable compositeDisposable;
+    private CompositeDisposable disposables = new CompositeDisposable();
     private SourceCallback<T> callback;
     private AlarmsRepository alarmsRepository;
 
@@ -49,7 +47,6 @@ public abstract class BasePoolingProvider<T> implements IPollingSource, PoolingR
     BasePoolingProvider(SourceCallback<T> callback) {
         this.callback = callback;
         this.currencySource = SourcesManager.getSource(getSourceType());
-        compositeDisposable = new CompositeDisposable();
         alarmsRepository = App.getInstance().provideAlarmsRepository();
     }
 
@@ -89,9 +86,7 @@ public abstract class BasePoolingProvider<T> implements IPollingSource, PoolingR
 
     @Override
     public void cancel() {
-        if (compositeDisposable != null) {
-            compositeDisposable.clear();
-        }
+        disposables.clear();
     }
 
     @Override
@@ -126,13 +121,13 @@ public abstract class BasePoolingProvider<T> implements IPollingSource, PoolingR
         is_started.set(false);
     }
 
-    void fetchAgain(boolean wasError) {
+    private void fetchAgain(boolean wasError) {
         if (!isEnabled() && !is_started.get()) return;
         long interval_value = TimeIntervalManager.getPollingInterval();
         if (wasError) {
-            /**
+            /*
              * Calculate error interval in logarithmic.
-             * */
+             **/
             float ratio = (error_count / (float) (success_count <= 0 ? 1 : success_count));
             interval_value = (int) (NEXT_FETCH_ON_ERROR + Math.log(ratio) * NEXT_FETCH_ON_ERROR);
         }
@@ -171,7 +166,7 @@ public abstract class BasePoolingProvider<T> implements IPollingSource, PoolingR
         last_call_start_millis = System.currentTimeMillis();
     }
 
-    void notifyValue(T value) {
+    private void notifyValue(T value) {
         logDurationSuccess();
         success_count++;
         if (!is_working.get()) return;
@@ -180,7 +175,7 @@ public abstract class BasePoolingProvider<T> implements IPollingSource, PoolingR
         }
     }
 
-    void notifyError() {
+    private void notifyError() {
         last_call_start_millis = -1;
         error_count++;
         if (callback != null) {
@@ -189,19 +184,16 @@ public abstract class BasePoolingProvider<T> implements IPollingSource, PoolingR
     }
 
     public void stopIfHasAlarm() {
-        alarmsRepository.getAlarms(new AlarmsDataSource.AlarmsLoadCallback() {
-            @Override
-            public void onAlarmsLoaded(List<Alarm> alarms) {
-                boolean contains = false;
-                for (Alarm alarm : alarms) {
-                    if (alarm.source_type == getSourceType() && alarm.is_enabled) {
-                        contains = true;
-                        break;
-                    }
+        alarmsRepository.getAlarms(alarms -> {
+            boolean contains = false;
+            for (Alarm alarm : alarms) {
+                if (alarm.source_type == getSourceType() && alarm.is_enabled) {
+                    contains = true;
+                    break;
                 }
-                if (!contains) {
-                    stop();
-                }
+            }
+            if (!contains) {
+                stop();
             }
         });
 
@@ -209,8 +201,8 @@ public abstract class BasePoolingProvider<T> implements IPollingSource, PoolingR
 
     private void job(final boolean is_single_run) {
 
-        compositeDisposable.add(getObservable()
-                .subscribeOn(Schedulers.newThread())
+        disposables.add(getObservable()
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<T>() {
                     @Override
                     public void onNext(T rates) {
