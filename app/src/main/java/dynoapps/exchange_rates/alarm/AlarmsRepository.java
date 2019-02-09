@@ -50,12 +50,9 @@ public class AlarmsRepository implements AlarmsDataSource {
             callback.onAlarmsLoaded(new ArrayList<>(mCachedAlarms.values()));
             return;
         }
-        localAlarmsDataSource.getAlarms(new AlarmsLoadCallback() {
-            @Override
-            public void onAlarmsLoaded(List<Alarm> alarms) {
-                refreshCache(alarms);
-                callback.onAlarmsLoaded(new ArrayList<>(mCachedAlarms.values()));
-            }
+        localAlarmsDataSource.getAlarms(alarms -> {
+            refreshCache(alarms);
+            callback.onAlarmsLoaded(new ArrayList<>(mCachedAlarms.values()));
         });
     }
 
@@ -78,30 +75,24 @@ public class AlarmsRepository implements AlarmsDataSource {
 
     @Override
     public void deleteAlarm(@NonNull Alarm alarm, final AlarmUpdateInsertCallback alarmUpdateInsertCallback) {
-        localAlarmsDataSource.deleteAlarm(alarm, new AlarmUpdateInsertCallback() {
-            @Override
-            public void onAlarmUpdate(Alarm alarm) {
-                mCachedAlarms.remove(alarm.id);
-                if (alarmUpdateInsertCallback != null) {
-                    alarmUpdateInsertCallback.onAlarmUpdate(alarm);
-                }
+        localAlarmsDataSource.deleteAlarm(alarm, alarm1 -> {
+            mCachedAlarms.remove(alarm1.id);
+            if (alarmUpdateInsertCallback != null) {
+                alarmUpdateInsertCallback.onAlarmUpdate(alarm1);
             }
         });
     }
 
     @Override
     public void updateAlarm(@NonNull Alarm alarm, final AlarmUpdateInsertCallback alarmUpdateInsertCallback) {
-        localAlarmsDataSource.updateAlarm(alarm, new AlarmUpdateInsertCallback() {
-            @Override
-            public void onAlarmUpdate(Alarm alarm) {
-                // Do in memory cache update to keep the app UI up to date
-                if (mCachedAlarms == null) {
-                    mCachedAlarms = new LinkedHashMap<>();
-                }
-                mCachedAlarms.put(alarm.id, alarm);
-                if (alarmUpdateInsertCallback != null) {
-                    alarmUpdateInsertCallback.onAlarmUpdate(alarm);
-                }
+        localAlarmsDataSource.updateAlarm(alarm, alarm1 -> {
+            // Do in memory cache update to keep the app UI up to date
+            if (mCachedAlarms == null) {
+                mCachedAlarms = new LinkedHashMap<>();
+            }
+            mCachedAlarms.put(alarm1.id, alarm1);
+            if (alarmUpdateInsertCallback != null) {
+                alarmUpdateInsertCallback.onAlarmUpdate(alarm1);
             }
         });
     }

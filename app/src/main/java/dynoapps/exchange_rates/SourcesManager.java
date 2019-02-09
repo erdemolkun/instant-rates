@@ -43,7 +43,7 @@ public class SourcesManager {
         initDataSourceSelections();
     }
 
-    public static void updateProviders(ArrayList<BasePoolingProvider> providers) {
+    public static void updateProviders(List<BasePoolingProvider> providers) {
 
         for (CurrencySource source : getCurrencySources()) {
             switch (source.getType()) {

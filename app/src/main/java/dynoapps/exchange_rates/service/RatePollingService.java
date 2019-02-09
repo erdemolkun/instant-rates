@@ -25,7 +25,6 @@ import dynoapps.exchange_rates.LandingActivity;
 import dynoapps.exchange_rates.R;
 import dynoapps.exchange_rates.SourcesManager;
 import dynoapps.exchange_rates.alarm.Alarm;
-import dynoapps.exchange_rates.alarm.AlarmsDataSource;
 import dynoapps.exchange_rates.alarm.AlarmsRepository;
 import dynoapps.exchange_rates.data.CurrencySource;
 import dynoapps.exchange_rates.data.CurrencyType;
@@ -71,7 +70,7 @@ public class RatePollingService extends IntentService {
     private static Formatter formatter2 = new Formatter(3, 0);
     private static Formatter formatter5 = new Formatter(5, 1);
     private final IBinder mBinder = new SimpleBinder();
-    ArrayList<BasePoolingProvider> providers;
+    List<BasePoolingProvider> providers;
     private AlarmsRepository alarmsRepository;
 
     public RatePollingService() {
@@ -110,63 +109,47 @@ public class RatePollingService extends IntentService {
             providers.add(new YorumlarRateProvider(new ProviderSourceCallbackAdapter<List<YorumlarRate>>() {
                 @Override
                 public void onResult(List<YorumlarRate> rates) {
-                    alarmChecks(rates, CurrencyType.ALTININ);
-                    RatesHolder.getInstance().addRate(rates, CurrencyType.ALTININ);
-                    EventBus.getDefault().post(new RatesEvent<>(rates, CurrencyType.ALTININ));
+                    onProviderResult(rates, CurrencyType.ALTININ);
                 }
             }));
             providers.add(new EnparaRateProvider(new ProviderSourceCallbackAdapter<List<EnparaRate>>() {
                 @Override
                 public void onResult(List<EnparaRate> rates) {
-                    alarmChecks(rates, CurrencyType.ENPARA);
-                    RatesHolder.getInstance().addRate(rates, CurrencyType.ENPARA);
-                    EventBus.getDefault().post(new RatesEvent<>(rates, CurrencyType.ENPARA, System.currentTimeMillis()));
+                    onProviderResult(rates, CurrencyType.ENPARA);
                 }
             }));
 
-            providers.add(
-                    new BigparaRateProvider(new ProviderSourceCallbackAdapter<List<BigparaRate>>() {
-                        @Override
-                        public void onResult(List<BigparaRate> rates) {
-                            alarmChecks(rates, CurrencyType.BIGPARA);
-                            RatesHolder.getInstance().addRate(rates, CurrencyType.BIGPARA);
-                            EventBus.getDefault().post(new RatesEvent<>(rates, CurrencyType.BIGPARA));
-                        }
-                    }));
+            providers.add(new BigparaRateProvider(new ProviderSourceCallbackAdapter<List<BigparaRate>>() {
+                @Override
+                public void onResult(List<BigparaRate> rates) {
+                    onProviderResult(rates, CurrencyType.BIGPARA);
+                }
+            }));
 
             providers.add(new DolarTlKurRateProvider(new ProviderSourceCallbackAdapter<List<DolarTlKurRate>>() {
                 @Override
                 public void onResult(List<DolarTlKurRate> rates) {
-                    alarmChecks(rates, CurrencyType.TLKUR);
-                    RatesHolder.getInstance().addRate(rates, CurrencyType.TLKUR);
-                    EventBus.getDefault().post(new RatesEvent<>(rates, CurrencyType.TLKUR));
+                    onProviderResult(rates, CurrencyType.TLKUR);
                 }
             }));
-
 
             providers.add(new YapıKrediRateProvider(new ProviderSourceCallbackAdapter<List<YapıKrediRate>>() {
                 @Override
                 public void onResult(List<YapıKrediRate> rates) {
-                    alarmChecks(rates, CurrencyType.YAPIKREDI);
-                    RatesHolder.getInstance().addRate(rates, CurrencyType.YAPIKREDI);
-                    EventBus.getDefault().post(new RatesEvent<>(rates, CurrencyType.YAPIKREDI));
+                    onProviderResult(rates, CurrencyType.YAPIKREDI);
                 }
             }));
             providers.add(new YahooRateProvider(new ProviderSourceCallbackAdapter<List<YahooRate>>() {
                 @Override
                 public void onResult(List<YahooRate> rates) {
-                    alarmChecks(rates, CurrencyType.YAHOO);
-                    RatesHolder.getInstance().addRate(rates, CurrencyType.YAHOO);
-                    EventBus.getDefault().post(new RatesEvent<>(rates, CurrencyType.YAHOO));
+                    onProviderResult(rates, CurrencyType.YAHOO);
                 }
             }));
 
             providers.add(new ParaGarantiRateProvider(new ProviderSourceCallbackAdapter<List<ParaGarantiRate>>() {
                 @Override
                 public void onResult(List<ParaGarantiRate> rates) {
-                    alarmChecks(rates, CurrencyType.PARAGARANTI);
-                    RatesHolder.getInstance().addRate(rates, CurrencyType.PARAGARANTI);
-                    EventBus.getDefault().post(new RatesEvent<>(rates, CurrencyType.PARAGARANTI));
+                    onProviderResult(rates, CurrencyType.PARAGARANTI);
                 }
             }));
         }
@@ -175,21 +158,21 @@ public class RatePollingService extends IntentService {
         refreshSources();
     }
 
+    private void onProviderResult(List<? extends BaseRate> rates, int sourceType) {
+        alarmChecks(rates, sourceType);
+        RatesHolder.getInstance().addRate(rates, sourceType);
+        EventBus.getDefault().post(new RatesEvent<>(rates, sourceType, System.currentTimeMillis()));
+    }
+
     private <T extends BaseRate> void alarmChecks(final List<T> rates, final int source_type) {
         if (CollectionUtils.isNullOrEmpty(rates)) return;
-        alarmsRepository.getAlarms(new AlarmsDataSource.AlarmsLoadCallback() {
-            @Override
-            public void onAlarmsLoaded(List<Alarm> alarms) {
-                alarmChecks(rates, source_type, alarms);
-            }
-        });
+        alarmsRepository.getAlarms(alarms -> alarmChecks(rates, source_type, alarms));
     }
 
     private <T extends BaseRate> void alarmChecks(List<T> rates, int source_type, List<Alarm> alarms) {
         if (CollectionUtils.isNullOrEmpty(rates)) return;
         try {
 
-            int size = CollectionUtils.size(alarms);
             Iterator<Alarm> iterator = alarms.iterator();
             while (iterator.hasNext()) {
                 Alarm alarm = iterator.next();

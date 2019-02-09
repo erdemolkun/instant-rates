@@ -24,16 +24,13 @@ public class ParaGarantiRateProvider extends BasePoolingProvider<List<ParaGarant
 
     @Override
     protected Observable<List<ParaGarantiRate>> getObservable() {
-        return paraGarantiService.rates().map(new Function<ParagarantiResponse, List<ParaGarantiRate>>() {
-            @Override
-            public List<ParaGarantiRate> apply(ParagarantiResponse paragarantiResponse) {
-                List<ParaGarantiRate> rates = paragarantiResponse.rates;
-                for (ParaGarantiRate rate : rates) {
-                    rate.toRateType();
-                    rate.setRealValues();
-                }
-                return rates;
+        return paraGarantiService.rates().map(paragarantiResponse -> {
+            List<ParaGarantiRate> rates = paragarantiResponse.rates;
+            for (ParaGarantiRate rate : rates) {
+                rate.toRateType();
+                rate.setRealValues();
             }
+            return rates;
         });
     }
 
