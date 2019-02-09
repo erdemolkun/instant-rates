@@ -48,6 +48,7 @@ public class ParaGarantiRate extends AvgRate implements IConvertable {
     @Override
     public void setRealValues() {
         if (rateType == UNKNOWN) return;
+        last=last.replace(',','.');
         String val = last.replace("\'", "").replace("$", "").trim();
         Float real_val = RateUtils.toFloat(val);
         val_real_avg = real_val != null ? real_val : 0.0f;
