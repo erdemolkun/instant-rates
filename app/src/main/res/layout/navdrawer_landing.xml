@@ -3,56 +3,56 @@
 <dynoapps.exchange_rates.ui.ScrimInsetsScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_gravity="start"
-    android:layout_width="@dimen/nav_drawer_width"
-    android:fillViewport="true"
     android:background="@color/color_material_grey_50"
-    android:layout_height="match_parent">
+    android:fillViewport="true"
+    android:layout_gravity="start"
+    android:layout_height="match_parent"
+    android:layout_width="@dimen/nav_drawer_width">
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
 
         <RelativeLayout
-            android:id="@+id/v_drawer_header"
-            android:layout_width="match_parent"
             android:background="#CFD8DC"
-            android:padding="16dp"
-            android:layout_height="136dp">
+            android:id="@+id/v_drawer_header"
+            android:layout_height="136dp"
+            android:layout_width="match_parent"
+            android:padding="16dp">
 
             <ImageView
-                android:layout_alignParentBottom="true"
                 android:id="@+id/iv_drawer_header_logo"
-                android:layout_width="44dp"
+                android:layout_alignParentBottom="true"
                 android:layout_height="44dp"
+                android:layout_width="44dp"
                 android:src="@drawable/ic_orco_512"/>
 
             <LinearLayout
                 android:layout_alignParentBottom="true"
-                android:layout_toRightOf="@+id/iv_drawer_header_logo"
-                android:layout_toEndOf="@+id/iv_drawer_header_logo"
-                android:orientation="vertical"
-                android:layout_marginStart="8dp"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_toEndOf="@+id/iv_drawer_header_logo"
+                android:layout_toRightOf="@+id/iv_drawer_header_logo"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:orientation="vertical">
 
                 <TextView
-                    android:textColor="@android:color/black"
-                    android:text="@string/app_name"
-                    android:textStyle="bold"
-                    android:textSize="16sp"
                     android:ellipsize="end"
+                    android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:text="@string/app_name"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold"/>
 
                 <TextView
                     android:id="@+id/v_navdrawer_version"
-                    android:textColor="@android:color/black"
-                    tools:text="v0.0.1"
-                    android:textSize="13sp"
+                    android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:textColor="@android:color/black"
+                    android:textSize="13sp"
+                    tools:text="v0.0.1"/>
             </LinearLayout>
 
 
@@ -60,78 +60,78 @@
 
         <LinearLayout
             android:layout_below="@+id/v_drawer_header"
-            android:orientation="vertical"
+            android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:paddingTop="8dp"
-            android:layout_height="wrap_content">
+            android:orientation="vertical"
+            android:paddingTop="8dp">
 
             <TextView
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:layout_width="wrap_content"
+                android:padding="10dp"
                 android:text="@string/graph_types"
                 android:textColor="?colorPrimary"
-                android:textSize="14sp"
-                android:padding="10dp"
-                android:layout_marginTop="8dp"
-                android:layout_height="wrap_content"/>
+                android:textSize="14sp"/>
 
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/v_drawer_item_usd"
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/side_item_style"
                 android:drawableLeft="@drawable/ic_dollar"
                 android:drawableStart="@drawable/ic_dollar"
-                android:layout_width="match_parent"
-                android:text="USD"
+                android:id="@+id/v_drawer_item_usd"
                 android:layout_height="wrap_content"
-                style="@style/side_item_style"/>
+                android:layout_width="match_parent"
+                android:text="USD"/>
 
             <TextView
-                android:id="@+id/v_drawer_item_eur"
                 style="@style/side_item_style"
                 android:drawableLeft="@drawable/ic_euro"
                 android:drawableStart="@drawable/ic_euro"
+                android:id="@+id/v_drawer_item_eur"
+                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:text="EURO"
-                android:layout_height="wrap_content"/>
+                android:text="EURO"/>
 
             <TextView
-                android:id="@+id/v_drawer_item_eur_usd"
                 style="@style/side_item_style"
-                android:layout_width="match_parent"
                 android:drawableLeft="@drawable/ic_exchange_eur_usd"
                 android:drawableStart="@drawable/ic_exchange_eur_usd"
-                android:text="EURO / USD"
-                android:layout_height="wrap_content"/>
+                android:id="@+id/v_drawer_item_eur_usd"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:text="EURO / USD"/>
 
             <TextView
-                android:id="@+id/v_drawer_item_ons"
                 style="@style/side_item_style"
-                android:layout_width="match_parent"
-                android:text="ONS"
                 android:drawableLeft="@drawable/ic_gold"
                 android:drawableStart="@drawable/ic_gold"
-                android:layout_height="wrap_content"/>
+                android:id="@+id/v_drawer_item_ons"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:text="ONS"/>
 
             <ImageView
-                android:layout_width="match_parent"
                 android:background="?colorPrimary"
-                android:layout_height="1px"/>
+                android:layout_height="1px"
+                android:layout_width="match_parent"/>
 
             <TextView
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:layout_width="wrap_content"
+                android:padding="12dp"
                 android:text="@string/others"
                 android:textColor="?colorPrimary"
-                android:textSize="13sp"
-                android:padding="12dp"
-                android:layout_marginTop="8dp"
-                android:layout_height="wrap_content"/>
+                android:textSize="13sp"/>
 
             <TextView
-                android:id="@+id/v_drawer_item_alarms"
+                style="@style/side_item_style"
                 android:drawableLeft="@drawable/ic_add_alarm_white_24dp"
                 android:drawableStart="@drawable/ic_add_alarm_white_24dp"
-                style="@style/side_item_style"
+                android:id="@+id/v_drawer_item_alarms"
+                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:text="@string/alarms"
-                android:layout_height="wrap_content"/>
+                android:text="@string/alarms"/>
 
 
         </LinearLayout>

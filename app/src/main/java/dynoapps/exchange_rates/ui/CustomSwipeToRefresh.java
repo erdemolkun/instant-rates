@@ -1,10 +1,11 @@
 package dynoapps.exchange_rates.ui;
 
 import android.content.Context;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ViewConfiguration;
+
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 /**
  * Created by Erdem OLKUN , 07/02/2017 http://stackoverflow.com/questions/23989910/horizontalscrollview-inside-swiperefreshlayout

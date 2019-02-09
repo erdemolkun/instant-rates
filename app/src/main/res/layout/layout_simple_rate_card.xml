@@ -1,43 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-                                    xmlns:app="http://schemas.android.com/apk/res-auto"
-                                    xmlns:tools="http://schemas.android.com/tools"
-                                    android:layout_width="wrap_content"
-                                    app:cardBackgroundColor="#f1f1f1"
-                                    app:cardCornerRadius="2dp"
-                                    android:layout_gravity="center_horizontal"
-                                    android:foreground="?selectableItemBackground"
-                                    app:cardElevation="4dp"
-                                    android:layout_margin="6dp"
-                                    android:layout_height="wrap_content">
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                   xmlns:tools="http://schemas.android.com/tools"
+                                   android:foreground="?selectableItemBackground"
+                                   android:layout_gravity="center_horizontal"
+                                   android:layout_height="wrap_content"
+                                   android:layout_margin="6dp"
+                                   android:layout_width="wrap_content"
+                                   app:cardBackgroundColor="#f1f1f1"
+                                   app:cardCornerRadius="2dp"
+                                   app:cardElevation="4dp">
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:orientation="vertical"
-        android:minHeight="64dp"
-        android:padding="6dp"
-        android:minWidth="88dp"
         android:gravity="center"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:minHeight="64dp"
+        android:minWidth="88dp"
+        android:orientation="vertical"
+        android:padding="6dp">
 
         <TextView
             android:id="@+id/tv_type"
-            tools:text="Enpara"
-            android:padding="3dp"
-            android:textSize="13sp"
-            android:textColor="?colorPrimary"
+            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:padding="3dp"
+            android:textColor="?colorPrimary"
+            android:textSize="13sp"
+            tools:text="Enpara"/>
 
         <TextView
             android:id="@+id/tv_rate_value"
-            tools:text="3,45 TL"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:textColor="@color/colorAccent"
             android:textSize="15sp"
             android:textStyle="bold"
-            android:textColor="@color/colorAccent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            tools:text="3,45 TL"/>
 
     </LinearLayout>
 
-</android.support.v7.widget.CardView>
+</androidx.cardview.widget.CardView>

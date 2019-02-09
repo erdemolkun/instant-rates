@@ -1,12 +1,12 @@
 package dynoapps.exchange_rates.util;
 
-import android.support.annotation.DrawableRes;
 import android.text.TextUtils;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.List;
 
+import androidx.annotation.DrawableRes;
 import dynoapps.exchange_rates.App;
 import dynoapps.exchange_rates.R;
 import dynoapps.exchange_rates.model.rates.BaseRate;

@@ -1,13 +1,13 @@
 package dynoapps.exchange_rates.alarm;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import androidx.annotation.NonNull;
 import dynoapps.exchange_rates.Prefs;
 import dynoapps.exchange_rates.SourcesManager;
 import dynoapps.exchange_rates.data.CurrencySource;

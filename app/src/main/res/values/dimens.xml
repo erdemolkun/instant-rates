@@ -11,4 +11,5 @@
     <dimen name="swipe_refresh_progress_bar_start_margin">-40dp</dimen>
     <dimen name="swipe_refresh_progress_bar_end_margin">16dp</dimen>
     <dimen name="landing_card_icon_width">32dp</dimen>
+    <dimen name="nav_drawer_width">304dp</dimen>
 </resources>

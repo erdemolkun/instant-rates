@@ -7,7 +7,6 @@ import com.google.android.gms.analytics.Tracker;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.orhanobut.logger.AndroidLogAdapter;
@@ -17,6 +16,7 @@ import com.orhanobut.logger.PrettyFormatStrategy;
 
 import java.util.HashMap;
 
+import androidx.annotation.NonNull;
 import dynoapps.exchange_rates.alarm.AlarmsRepository;
 
 
