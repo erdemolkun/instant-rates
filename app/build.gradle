@@ -89,7 +89,7 @@ android {
             signingConfig signingConfigs.debug
             minifyEnabled false
         }
-        prod {
+        production {
             proguardFile 'proguard-appcompat-v7.pro'
             proguardFile 'proguard-android-java.pro'
             proguardFile 'proguard-square-retrofit2.pro'
