@@ -8,6 +8,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import dynoapps.exchange_rates.model.rates.BaseRate;
 import dynoapps.exchange_rates.model.rates.DolarTlKurRate;
 import okhttp3.ResponseBody;
@@ -30,7 +31,7 @@ import retrofit2.Retrofit;
 
 public class DolarTlKurAjaxConverter implements Converter<ResponseBody, List<BaseRate>> {
 
-    static final DolarTlKurAjaxConverter INSTANCE = new DolarTlKurAjaxConverter();
+    private static final DolarTlKurAjaxConverter INSTANCE = new DolarTlKurAjaxConverter();
 
     private DolarTlKurAjaxConverter() {
     }
@@ -40,10 +41,10 @@ public class DolarTlKurAjaxConverter implements Converter<ResponseBody, List<Bas
      * GBPTRY:4.2978: CHFTRY:3.4122: SARTRY:0.9216: 16:33:31 </p>
      **/
     @Override
-    public List<BaseRate> convert(ResponseBody value) throws IOException {
+    public List<BaseRate> convert(@NonNull ResponseBody value) throws IOException {
 
         ArrayList<BaseRate> rates = new ArrayList<>();
-        String responseBody = value != null ? value.string() : null;
+        String responseBody = value.string();
         if (!TextUtils.isEmpty(responseBody)) {
             String[] splitsMoney = responseBody.split("\n");
             if (splitsMoney.length > 0) {

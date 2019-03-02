@@ -6,7 +6,4 @@ package dynoapps.exchange_rates.event;
 
 public class AlarmUpdateEvent {
 
-    public AlarmUpdateEvent() {
-
-    }
 }

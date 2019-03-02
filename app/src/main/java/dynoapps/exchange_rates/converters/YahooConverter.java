@@ -21,7 +21,7 @@ import retrofit2.Retrofit;
 
 public class YahooConverter implements Converter<ResponseBody, List<BaseRate>> {
 
-    static final YahooConverter INSTANCE = new YahooConverter();
+    private static final YahooConverter INSTANCE = new YahooConverter();
 
     private YahooConverter() {
     }

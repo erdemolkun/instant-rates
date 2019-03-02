@@ -10,6 +10,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import dynoapps.exchange_rates.model.rates.BaseRate;
 import dynoapps.exchange_rates.model.rates.BigparaRate;
 import dynoapps.exchange_rates.model.rates.BuySellRate;
@@ -23,17 +24,17 @@ import retrofit2.Retrofit;
 
 public class BigparaConverter implements Converter<ResponseBody, List<BaseRate>> {
 
-    static final BigparaConverter INSTANCE = new BigparaConverter();
+    private static final BigparaConverter INSTANCE = new BigparaConverter();
     private static final String HOST = "http://www.bigpara.com";
 
     private BigparaConverter() {
     }
 
     @Override
-    public List<BaseRate> convert(ResponseBody value) throws IOException {
+    public List<BaseRate> convert(@NonNull ResponseBody value) throws IOException {
 
         ArrayList<BaseRate> rates = new ArrayList<>();
-        String responseBody = value != null ? value.string() : null;
+        String responseBody = value.string();
 
         ArrayList<Element> elements = Jsoup.parse(responseBody, HOST).select("#content").select(".kurdetail").select(".kurbox");
 

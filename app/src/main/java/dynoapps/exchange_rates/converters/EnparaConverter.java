@@ -46,7 +46,7 @@ public class EnparaConverter implements Converter<ResponseBody, List<BaseRate>> 
     public List<BaseRate> convert(@NonNull ResponseBody value) throws IOException {
 
         ArrayList<BaseRate> rates = new ArrayList<>();
-        String responseBody = value != null ? value.string() : null;
+        String responseBody = value.string();
 
         final Elements shotElements = Jsoup.parse(responseBody, HOST).select("#pnlContent span dl");
         for (Element element : shotElements) {

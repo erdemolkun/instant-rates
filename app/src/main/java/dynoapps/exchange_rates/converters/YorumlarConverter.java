@@ -8,6 +8,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import dynoapps.exchange_rates.model.rates.BaseRate;
 import dynoapps.exchange_rates.model.rates.YorumlarRate;
 import okhttp3.ResponseBody;
@@ -20,7 +21,7 @@ import retrofit2.Retrofit;
 
 public class YorumlarConverter implements Converter<ResponseBody, List<BaseRate>> {
 
-    static final YorumlarConverter INSTANCE = new YorumlarConverter();
+    private static final YorumlarConverter INSTANCE = new YorumlarConverter();
 
     private YorumlarConverter() {
     }
@@ -30,15 +31,15 @@ public class YorumlarConverter implements Converter<ResponseBody, List<BaseRate>
      * </p>
      **/
     @Override
-    public List<BaseRate> convert(ResponseBody value) throws IOException {
+    public List<BaseRate> convert(@NonNull ResponseBody value) throws IOException {
 
         ArrayList<BaseRate> rates = new ArrayList<>();
-        String responseBody = value != null ? value.string() : null;
+        String responseBody = value.string();
         if (!TextUtils.isEmpty(responseBody)) {
             String[] splitsMoney = responseBody.split(";");
             if (splitsMoney.length > 0) {
                 for (String singleSplit : splitsMoney) {
-                    String[] splits = singleSplit.split("\\(|\\)|,"); // ysi Type not supported
+                    String[] splits = singleSplit.split("[(),]"); // ysi Type not supported
                     if (splits.length > 2) {
                         YorumlarRate rate = new YorumlarRate();
                         rate.type = splits[0];

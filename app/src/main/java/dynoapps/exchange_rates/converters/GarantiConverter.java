@@ -9,6 +9,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import dynoapps.exchange_rates.model.rates.BaseRate;
 import dynoapps.exchange_rates.model.rates.GarantiRate;
 import okhttp3.ResponseBody;
@@ -21,17 +22,17 @@ import retrofit2.Retrofit;
 
 public class GarantiConverter implements Converter<ResponseBody, List<BaseRate>> {
 
-    static final GarantiConverter INSTANCE = new GarantiConverter();
+    private static final GarantiConverter INSTANCE = new GarantiConverter();
     private static final String HOST = "https://www.garanti.com.tr/";
 
     private GarantiConverter() {
     }
 
     @Override
-    public List<BaseRate> convert(ResponseBody value) throws IOException {
+    public List<BaseRate> convert(@NonNull ResponseBody value) throws IOException {
 
         ArrayList<BaseRate> rates = new ArrayList<>();
-        String responseBody = value != null ? value.string() : null;
+        String responseBody = value.string();
 
         ArrayList<Element> elements = Jsoup.parse(responseBody, HOST).select(".rightSideContainer").select("#tab10").select("tbody").select("tr");
 
