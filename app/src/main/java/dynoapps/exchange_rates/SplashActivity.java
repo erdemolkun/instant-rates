@@ -32,12 +32,7 @@ public class SplashActivity extends AppCompatActivity {
 
     Handler handler;
 
-    Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-            gotoNextIntent();
-        }
-    };
+    Runnable runnable = this::gotoNextIntent;
     RatePollingService ratePollingService;
     private long startMilis;
     private ServiceConnection rateServiceConnection = new ServiceConnection() {

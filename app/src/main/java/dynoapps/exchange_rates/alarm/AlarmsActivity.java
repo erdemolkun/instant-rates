@@ -56,16 +56,11 @@ public class AlarmsActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         alarmRepository = App.getInstance().provideAlarmsRepository();
         setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
-        getActionBarToolbar().setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        getActionBarToolbar().setNavigationOnClickListener((View.OnClickListener) v -> finish());
 
         rvAlarms.setLayoutManager(new LinearLayoutManager(this));
         rvAlarms.setItemAnimator(new SlideInItemAnimator());
-        adapter = new AlarmsAdapter(alarmRepository, new ArrayList<Alarm>());
+        adapter = new AlarmsAdapter(alarmRepository, new ArrayList<>());
         rvAlarms.setAdapter(adapter);
         adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
@@ -87,18 +82,10 @@ public class AlarmsActivity extends BaseActivity {
             }
         });
 
-        fabAddAlarm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlarmManager.addAlarmDialog(AlarmsActivity.this, new AlarmsDataSource.AlarmUpdateInsertCallback() {
-                    @Override
-                    public void onAlarmUpdate(Alarm alarm) {
-                        adapter.addData(alarm);
-                        // TODO refresh
-                    }
-                });
-            }
-        });
+        fabAddAlarm.setOnClickListener((View.OnClickListener) view -> AlarmManager.addAlarmDialog(AlarmsActivity.this, alarm -> {
+            adapter.addData(alarm);
+            // TODO refresh
+        }));
         alarmRepository.refreshAlarms();
         alarmRepository.getAlarms(new AlarmsDataSource.AlarmsLoadCallback() {
             @Override

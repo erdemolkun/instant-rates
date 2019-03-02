@@ -141,40 +141,33 @@ public class AlarmManager {
                 .setView(v)
                 .setNegativeButton(R.string.dismiss, null)
                 .setPositiveButton(R.string.add, null).create();
-        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(DialogInterface dialogInterface) {
-                Button b = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-                b.setOnClickListener(new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View view) {
-                        String str = etAlarm.getText().toString();
-                        Float val = null;
-                        try {
-                            val = RateUtils.toFloat(str);
-                            if (val != null) {
-                                Alarm alarm = new Alarm();
-                                alarm.val = val;
-                                alarm.is_above = rgAlarm.getCheckedRadioButtonId() == R.id.rb_above;
-                                alarm.source_type = ((CurrencySource) spn_sources.getSelectedItem()).getType();
-                                alarm.rate_type = ((RateValuePair) spn_rate_types.getSelectedItem()).rate_type;
-                                alarm.value_type = value_type;
-                                App.getInstance().provideAlarmsRepository().saveAlarm(alarm, alarmUpdateInsertCallback);
-                            }
-                        } catch (Exception ex) {
-                            L.i(AlarmManager.class.getSimpleName(), "Alarm Convert Exception");
-                        }
-                        if (val == null) {
-                            tilValue.setError(App.context().getString(R.string.check_value));
-                            Toast.makeText(context, R.string.check_value, Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                        alertDialog.dismiss();
-
+        alertDialog.setOnShowListener(dialogInterface -> {
+            Button b = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+            b.setOnClickListener(view -> {
+                String str = etAlarm.getText().toString();
+                Float val = null;
+                try {
+                    val = RateUtils.toFloat(str);
+                    if (val != null) {
+                        Alarm alarm = new Alarm();
+                        alarm.val = val;
+                        alarm.is_above = rgAlarm.getCheckedRadioButtonId() == R.id.rb_above;
+                        alarm.source_type = ((CurrencySource) spn_sources.getSelectedItem()).getType();
+                        alarm.rate_type = ((RateValuePair) spn_rate_types.getSelectedItem()).rate_type;
+                        alarm.value_type = value_type;
+                        App.getInstance().provideAlarmsRepository().saveAlarm(alarm, alarmUpdateInsertCallback);
                     }
-                });
-            }
+                } catch (Exception ex) {
+                    L.i(AlarmManager.class.getSimpleName(), "Alarm Convert Exception");
+                }
+                if (val == null) {
+                    tilValue.setError(App.context().getString(R.string.check_value));
+                    Toast.makeText(context, R.string.check_value, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                alertDialog.dismiss();
+
+            });
         });
         alertDialog.setCanceledOnTouchOutside(false);
         alertDialog.show();

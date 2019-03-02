@@ -85,23 +85,17 @@ class AlarmsAdapter extends UpdatableAdapter<List<Alarm>, AlarmsActivity.AlarmVi
             holder.tvSource.setTextColor(ContextCompat.getColor(App.context(), R.color.colorPrimary));
         }
 
-        holder.vClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int pos = holder.getAdapterPosition();
-                AlarmsAdapter.this.alarms.remove(pos);
-                notifyItemRemoved(pos);
-                alarmRepository.deleteAlarm(alarm, null);
-            }
+        holder.vClose.setOnClickListener(view -> {
+            int pos = holder.getAdapterPosition();
+            AlarmsAdapter.this.alarms.remove(pos);
+            notifyItemRemoved(pos);
+            alarmRepository.deleteAlarm(alarm, null);
         });
         holder.swAlarm.setChecked(alarm.is_enabled);
-        holder.swAlarm.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                alarm.is_enabled = b;
-                alarmRepository.updateAlarm(alarm, null);
-                EventBus.getDefault().post(new AlarmUpdateEvent());
-            }
+        holder.swAlarm.setOnCheckedChangeListener((CompoundButton.OnCheckedChangeListener) (compoundButton, b) -> {
+            alarm.is_enabled = b;
+            alarmRepository.updateAlarm(alarm, null);
+            EventBus.getDefault().post(new AlarmUpdateEvent());
         });
     }
 

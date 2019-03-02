@@ -25,68 +25,36 @@ public class LocalAlarmsDataSource implements AlarmsDataSource {
 
     @Override
     public void getAlarms(final AlarmsLoadCallback alarmsLoadCallback) {
-        appExecutors.diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                final List<Alarm> alarms = alarmDao.list();
-                if (alarmsLoadCallback != null) {
-                    appExecutors.mainThread().execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            alarmsLoadCallback.onAlarmsLoaded(alarms);
-                        }
-                    });
-                }
+        appExecutors.diskIO().execute(() -> {
+            final List<Alarm> alarms = alarmDao.list();
+            if (alarmsLoadCallback != null) {
+                appExecutors.mainThread().execute(() -> alarmsLoadCallback.onAlarmsLoaded(alarms));
             }
         });
     }
 
     @Override
     public void saveAlarm(@NonNull final Alarm alarm, final AlarmUpdateInsertCallback alarmUpdateInsertCallback) {
-        appExecutors.diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                alarm.id = alarmDao.insert(alarm);
-                appExecutors.mainThread().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        alarmUpdateInsertCallback.onAlarmUpdate(alarm);
-                    }
-                });
-            }
+        appExecutors.diskIO().execute(() -> {
+            alarm.id = alarmDao.insert(alarm);
+            appExecutors.mainThread().execute(() -> alarmUpdateInsertCallback.onAlarmUpdate(alarm));
         });
     }
 
     @Override
     public void deleteAlarm(@NonNull final Alarm alarm, final AlarmUpdateInsertCallback alarmUpdateInsertCallback) {
-        appExecutors.diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                alarmDao.deleteById(alarm.id);
-                appExecutors.mainThread().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        alarmUpdateInsertCallback.onAlarmUpdate(alarm);
-                    }
-                });
+        appExecutors.diskIO().execute(() -> {
+            alarmDao.deleteById(alarm.id);
+            appExecutors.mainThread().execute(() -> alarmUpdateInsertCallback.onAlarmUpdate(alarm));
 
-            }
         });
     }
 
     @Override
     public void updateAlarm(@NonNull final Alarm alarm, final AlarmUpdateInsertCallback alarmUpdateInsertCallback) {
-        appExecutors.diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                alarmDao.update(alarm);
-                appExecutors.mainThread().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        alarmUpdateInsertCallback.onAlarmUpdate(alarm);
-                    }
-                });
-            }
+        appExecutors.diskIO().execute(() -> {
+            alarmDao.update(alarm);
+            appExecutors.mainThread().execute(() -> alarmUpdateInsertCallback.onAlarmUpdate(alarm));
         });
     }
 

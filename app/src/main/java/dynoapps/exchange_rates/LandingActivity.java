@@ -136,17 +136,9 @@ public class LandingActivity extends BaseActivity {
         int progressBarEndMargin = getResources().getDimensionPixelSize(
                 R.dimen.swipe_refresh_progress_bar_end_margin);
         swipeRefreshLayout.setProgressViewOffset(true, top + progressBarStartMargin, top + progressBarEndMargin);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                EventBus.getDefault().post(new UpdateTriggerEvent());
-                getHandler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        swipeRefreshLayout.setRefreshing(false);
-                    }
-                }, 1000);
-            }
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            EventBus.getDefault().post(new UpdateTriggerEvent());
+            getHandler().postDelayed(() -> swipeRefreshLayout.setRefreshing(false), 1000);
         });
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
@@ -266,48 +258,23 @@ public class LandingActivity extends BaseActivity {
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        tvDrawerItemUsd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                doLeftMenuWork(new Runnable() {
-                    @Override
-                    public void run() {
-                        Intent i = new Intent(LandingActivity.this, ChartActivity.class);
-                        i.putExtra(ChartActivity.EXTRA_RATE_TYPE, IRate.USD);
-                        startActivity(i);
-                    }
-                });
+        tvDrawerItemUsd.setOnClickListener(view -> doLeftMenuWork(() -> {
+            Intent i = new Intent(LandingActivity.this, ChartActivity.class);
+            i.putExtra(ChartActivity.EXTRA_RATE_TYPE, IRate.USD);
+            startActivity(i);
+        }));
 
-            }
-        });
+        tvDrawerItemEur.setOnClickListener(view -> doLeftMenuWork(() -> {
+            Intent i = new Intent(LandingActivity.this, ChartActivity.class);
+            i.putExtra(ChartActivity.EXTRA_RATE_TYPE, IRate.EUR);
+            startActivity(i);
+        }));
 
-        tvDrawerItemEur.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                doLeftMenuWork(new Runnable() {
-                    @Override
-                    public void run() {
-                        Intent i = new Intent(LandingActivity.this, ChartActivity.class);
-                        i.putExtra(ChartActivity.EXTRA_RATE_TYPE, IRate.EUR);
-                        startActivity(i);
-                    }
-                });
-            }
-        });
-
-        tvDrawerItemEurUsd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                doLeftMenuWork(new Runnable() {
-                    @Override
-                    public void run() {
-                        Intent i = new Intent(LandingActivity.this, ChartActivity.class);
-                        i.putExtra(ChartActivity.EXTRA_RATE_TYPE, IRate.EUR_USD);
-                        startActivity(i);
-                    }
-                });
-            }
-        });
+        tvDrawerItemEurUsd.setOnClickListener(view -> doLeftMenuWork(() -> {
+            Intent i = new Intent(LandingActivity.this, ChartActivity.class);
+            i.putExtra(ChartActivity.EXTRA_RATE_TYPE, IRate.EUR_USD);
+            startActivity(i);
+        }));
 
         tvDrawerItemOns.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -323,18 +290,10 @@ public class LandingActivity extends BaseActivity {
             }
         });
 
-        tvDrawerItemAlarms.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                doLeftMenuWork(new Runnable() {
-                    @Override
-                    public void run() {
-                        Intent i = new Intent(LandingActivity.this, AlarmsActivity.class);
-                        startActivity(i);
-                    }
-                });
-            }
-        });
+        tvDrawerItemAlarms.setOnClickListener(view -> doLeftMenuWork(() -> {
+            Intent i = new Intent(LandingActivity.this, AlarmsActivity.class);
+            startActivity(i);
+        }));
         ViewUtils.tint(tvDrawerItemUsd, R.color.colorPrimary);
         ViewUtils.tint(tvDrawerItemEur, R.color.colorPrimary);
         ViewUtils.tint(tvDrawerItemEurUsd, R.color.colorPrimary);
@@ -397,14 +356,11 @@ public class LandingActivity extends BaseActivity {
         mDrawerLayout.setStatusBarBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
 
 
-        getActionBarToolbar().setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!isNavDrawerOpen())
-                    mDrawerLayout.openDrawer(GravityCompat.START);
-                else
-                    mDrawerLayout.closeDrawer(GravityCompat.START);
-            }
+        getActionBarToolbar().setNavigationOnClickListener(view -> {
+            if (!isNavDrawerOpen())
+                mDrawerLayout.openDrawer(GravityCompat.START);
+            else
+                mDrawerLayout.closeDrawer(GravityCompat.START);
         });
     }
 
