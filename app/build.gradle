@@ -162,11 +162,11 @@ dependencies {
     implementation 'com.facebook.stetho:stetho:1.5.1'
     implementation 'com.facebook.stetho:stetho-okhttp3:1.5.1'
 
-    implementation 'androidx.room:room-runtime:2.1.0-alpha06'
-    implementation 'androidx.room:room-rxjava2:2.1.0-alpha06'
+    implementation 'androidx.room:room-runtime:2.1.0-alpha04'
+    implementation 'androidx.room:room-rxjava2:2.1.0-alpha04'
     implementation 'androidx.lifecycle:lifecycle-runtime:2.1.0-alpha04'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0-alpha04'
-    annotationProcessor 'androidx.room:room-compiler:2.1.0-alpha06'
+    annotationProcessor 'androidx.room:room-compiler:2.1.0-alpha04'
 
 
     androidTestImplementation('tools.fastlane:screengrab:1.2.0', {
