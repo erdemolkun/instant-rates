@@ -20,6 +20,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.IDataSet;
 
@@ -186,9 +187,11 @@ public class ChartActivity extends BaseActivity {
 //        lineChart.getAxisRight().setAxisMaximum(3.48f);
 //        lineChart.getAxisRight().setAxisMinimum(3.42f);
         lineChart.getAxisLeft().setEnabled(false);
-        lineChart.getXAxis().setValueFormatter(new IAxisValueFormatter() {
+
+
+        lineChart.getXAxis().setValueFormatter(new ValueFormatter() {
             @Override
-            public String getFormattedValue(float value, AxisBase axis) {
+            public String getFormattedValue(float value) {
                 Calendar calendar = Calendar.getInstance();
                 int time = (int) value;
                 calendar.add(Calendar.MILLISECOND, time);
@@ -196,15 +199,15 @@ public class ChartActivity extends BaseActivity {
 
                 return time > 0 ? hourFormatter.format(date) : "";
             }
-
         });
 
-        lineChart.getAxisRight().setValueFormatter(new IAxisValueFormatter() {
+        lineChart.getAxisRight().setValueFormatter(new ValueFormatter() {
             @Override
-            public String getFormattedValue(float value, AxisBase axis) {
+            public String getFormattedValue(float value) {
                 return RateUtils.valueToUI(value, rateType);
             }
         });
+
         lineChart.setScaleEnabled(false);
         lineChart.invalidate();
 
