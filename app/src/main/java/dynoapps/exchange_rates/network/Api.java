@@ -59,7 +59,6 @@ public class Api {
                     .build();
         }
         return yorumlarApi;
-
     }
 
     public static Retrofit getEnparaApi() {
