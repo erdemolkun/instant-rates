@@ -53,7 +53,7 @@ public class Api {
             final OkHttpClient client = builder().build();
             yorumlarApi = new Retrofit.Builder()
                     .client(client)
-                    .baseUrl("https://yorumlar.altin.in/")
+                    .baseUrl("https://yorum.altin.in/")
                     .addConverterFactory(new YorumlarConverter.Factory())
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .build();
