@@ -37,7 +37,7 @@ import retrofit2.Retrofit;
 public class EnparaConverter implements Converter<ResponseBody, List<BaseRate>> {
 
     private static final EnparaConverter INSTANCE = new EnparaConverter();
-    private static final String HOST = "http://www.qnbfinansbank.enpara.com";
+    private static final String HOST = "https://www.qnbfinansbank.enpara.com";
 
     private EnparaConverter() {
     }
