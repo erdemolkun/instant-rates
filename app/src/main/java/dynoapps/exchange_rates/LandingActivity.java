@@ -61,7 +61,7 @@ import dynoapps.exchange_rates.util.ViewUtils;
  * Created by erdemmac on 06/12/2016.
  */
 
-public class LandingActivity extends BaseActivity {
+public class LandingActivity extends BaseServiceActivity {
 
     private static final int NAVDRAWER_LAUNCH_DELAY = 250;
     @BindView(R.id.drawer_layout)
@@ -86,6 +86,11 @@ public class LandingActivity extends BaseActivity {
     AlarmsRepository alarmsRepository;
     List<CardViewItemParent> parentItems = new ArrayList<>();
     private Handler mHandler;
+
+    @Override
+    void onConnectionDone() {
+
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

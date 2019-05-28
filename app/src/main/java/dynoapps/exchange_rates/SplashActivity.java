@@ -1,97 +1,43 @@
 package dynoapps.exchange_rates;
 
-import android.app.ActivityManager;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Looper;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import butterknife.ButterKnife;
-import dynoapps.exchange_rates.event.IntervalUpdate;
-import dynoapps.exchange_rates.event.RatesEvent;
-import dynoapps.exchange_rates.service.RatePollingService;
-import dynoapps.exchange_rates.time.TimeIntervalManager;
-import dynoapps.exchange_rates.util.L;
 
 /**
  * Created by erdemmac on 03/12/2016.
  */
 
-public class SplashActivity extends AppCompatActivity {
+public class SplashActivity extends BaseServiceActivity {
     private static final int MIN_DURATION = 450;
 
-    Handler handler;
-
-    Runnable runnable = this::gotoNextIntent;
-    RatePollingService ratePollingService;
     private long startMilis;
-    private ServiceConnection rateServiceConnection = new ServiceConnection() {
-        public void onServiceConnected(ComponentName className, IBinder binder) {
-            L.i(LandingActivity.class.getSimpleName(), "onServiceConnected");
-            TimeIntervalManager.setAlarmMode(false);
-            ratePollingService = ((RatePollingService.SimpleBinder) binder).getService();
-            onConnectionDone();
-        }
-
-        public void onServiceDisconnected(ComponentName className) {
-            ratePollingService = null;
-        }
-    };
+    Runnable runnable = this::gotoNextIntent;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
         startMilis = System.currentTimeMillis();
-        handler = new Handler(Looper.getMainLooper());
-        EventBus.getDefault().register(this);
-        TimeIntervalManager.setAlarmMode(false);
-        if (!isMyServiceRunning(RatePollingService.class)) {
-            Intent intent = new Intent(this, RatePollingService.class);
-            bindService(intent, rateServiceConnection, Context.BIND_AUTO_CREATE);
-            startService(new Intent(this, RatePollingService.class));
-        } else {
-            Intent intent = new Intent(this, RatePollingService.class);
-            bindService(intent, rateServiceConnection, Context.BIND_AUTO_CREATE);
-            SourcesManager.update();
-            EventBus.getDefault().post(new IntervalUpdate(true)); // Intervals should be updated on ui mode.
-        }
+
     }
 
-    private void onConnectionDone() {
+    @Override
+    public int getLayoutId() {
+        return R.layout.activity_splash;
+    }
+
+    protected void onConnectionDone() {
         long currentMilis = System.currentTimeMillis();
         if (currentMilis - startMilis < MIN_DURATION) {
-            handler.postDelayed(runnable, Math.abs(MIN_DURATION - (currentMilis - startMilis)));
+            getHandler().postDelayed(runnable, Math.abs(MIN_DURATION - (currentMilis - startMilis)));
         } else {
             gotoNextIntent();
         }
     }
 
-    private boolean isMyServiceRunning(Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(RatesEvent ratesEvent) {
-
-    }
 
     @Override
     public void onBackPressed() {
@@ -101,18 +47,13 @@ public class SplashActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        if (ratePollingService != null) {
-            unbindService(rateServiceConnection);
-        }
         clearEvents();
-        EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
 
     private void clearEvents() {
-        if (handler != null) {
-            handler.removeCallbacks(runnable);
-            handler = null;
+        if (getHandler() != null) {
+            getHandler().removeCallbacks(runnable);
         }
     }
 
