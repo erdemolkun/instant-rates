@@ -2,8 +2,6 @@ package dynoapps.exchange_rates;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.app.ActivityManager;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
@@ -55,6 +53,7 @@ import dynoapps.exchange_rates.time.TimeIntervalManager;
 import dynoapps.exchange_rates.util.AnimationHelper;
 import dynoapps.exchange_rates.util.AppUtils;
 import dynoapps.exchange_rates.util.RateUtils;
+import dynoapps.exchange_rates.util.ServiceUtils;
 import dynoapps.exchange_rates.util.ViewUtils;
 
 /**
@@ -155,9 +154,7 @@ public class LandingActivity extends BaseServiceActivity {
         for (CurrencySource dataSource : dataSources) {
             boolean isEnabled = dataSource.isEnabled();
             for (CardViewItemParent parent : parentItems) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    TransitionManager.beginDelayedTransition(parent.me);
-                }
+                TransitionManager.beginDelayedTransition(parent.me);
                 boolean foundCard = false;
                 for (CardViewItem item : parent.items) {
                     if (item.source_type == dataSource.getType()) {
@@ -182,26 +179,20 @@ public class LandingActivity extends BaseServiceActivity {
     private void addCardToParent(final CardViewItemParent parent, final int value_type, final int source_type) {
         LayoutInflater.from(this).inflate(R.layout.layout_simple_rate_card, parent.me, true);
         View v = parent.me.getChildAt(parent.me.getChildCount() - 1);
-        v.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(LandingActivity.this, ChartActivity.class);
-                i.putExtra(ChartActivity.EXTRA_RATE_TYPE, parent.rate_type);
-                startActivity(i);
-            }
+        v.setOnClickListener(view -> {
+            Intent i = new Intent(LandingActivity.this, ChartActivity.class);
+            i.putExtra(ChartActivity.EXTRA_RATE_TYPE, parent.rate_type);
+            startActivity(i);
         });
-        v.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                RatesEvent ratesEvent = RatesHolder.getInstance().getLatestEvent(source_type);
-                BaseRate rate = ratesEvent != null ? RateUtils.getRate(ratesEvent.rates, parent.rate_type) : null;
-                if (rate != null) {
-                    AlarmManager.addAlarmDialog(LandingActivity.this, source_type, rate.getRateType(), value_type, rate.getValue(value_type), null);
-                } else {
-                    AlarmManager.addAlarmDialog(LandingActivity.this, source_type, parent.rate_type, value_type, null, null);
-                }
-                return true;
+        v.setOnLongClickListener(view -> {
+            RatesEvent ratesEvent = RatesHolder.getInstance().getLatestEvent(source_type);
+            BaseRate rate = ratesEvent != null ? RateUtils.getRate(ratesEvent.rates, parent.rate_type) : null;
+            if (rate != null) {
+                AlarmManager.addAlarmDialog(LandingActivity.this, source_type, rate.getRateType(), value_type, rate.getValue(value_type), null);
+            } else {
+                AlarmManager.addAlarmDialog(LandingActivity.this, source_type, parent.rate_type, value_type, null, null);
             }
+            return true;
         });
         CardViewItem item = new CardViewItem(v, source_type, value_type);
         item.tvType.setText(SourcesManager.getSourceName(source_type, value_type));
@@ -373,22 +364,12 @@ public class LandingActivity extends BaseServiceActivity {
         return mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.START);
     }
 
-    private boolean isMyServiceRunning(Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     @Override
     protected void onDestroy() {
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
         }
-        if (isMyServiceRunning(RatePollingService.class)) {
+        if (ServiceUtils.isMyServiceRunning(this, RatePollingService.class)) {
             if (!alarmsRepository.hasAnyActive()) {
                 stopService(new Intent(this, RatePollingService.class));
             } else {
