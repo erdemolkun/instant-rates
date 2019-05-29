@@ -11,41 +11,41 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
-        android:usesCleartextTraffic="true"
-        tools:replace="android:appComponentFactory"
-        android:appComponentFactory="whateverString"
-        android:name=".App"
         android:allowBackup="true"
+        android:appComponentFactory="whateverString"
         android:configChanges="locale"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:name=".App"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="GoogleAppIndexingWarning">
+        android:usesCleartextTraffic="true"
+        tools:ignore="GoogleAppIndexingWarning"
+        tools:replace="android:appComponentFactory">
         <activity
             android:configChanges="orientation|screenSize|locale"
-            android:name=".ChartActivity"
             android:label="@string/graphic"
-            android:theme="@style/AppTheme"
-            android:screenOrientation="portrait">
+            android:name=".ChartActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
 
         </activity>
 
         <activity
             android:configChanges="orientation|screenSize|locale"
-            android:name=".alarm.AlarmsActivity"
             android:label="@string/alarms"
-            android:theme="@style/AppTheme"
-            android:screenOrientation="portrait">
+            android:name=".alarm.AlarmsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
 
         </activity>
 
         <activity
             android:configChanges="orientation|screenSize|locale"
-            android:name=".LandingActivity"
             android:launchMode="singleTask"
-            android:theme="@style/AppTheme.WithDrawer"
-            android:screenOrientation="portrait">
+            android:name=".LandingActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.WithDrawer">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -57,16 +57,11 @@
             android:configChanges="orientation|screenSize|locale"
             android:name=".SplashActivity"
             android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
         </activity>
 
         <service
-            android:name=".service.RatePollingService"
-            android:exported="false"/>
+            android:exported="false"
+            android:name=".service.RatePollingService"/>
     </application>
 
 </manifest>
