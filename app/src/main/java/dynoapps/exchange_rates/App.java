@@ -1,22 +1,14 @@
 package dynoapps.exchange_rates;
 
-import com.google.android.gms.analytics.GoogleAnalytics;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 
-import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
-import android.text.TextUtils;
 
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.FormatStrategy;
 import com.orhanobut.logger.Logger;
 import com.orhanobut.logger.PrettyFormatStrategy;
 
-import java.util.HashMap;
-
-import androidx.annotation.NonNull;
 import dynoapps.exchange_rates.alarm.AlarmsRepository;
 
 
@@ -27,7 +19,7 @@ import dynoapps.exchange_rates.alarm.AlarmsRepository;
 public class App extends Application {
     private static final String PROPERTY_ID = "UA-58111264-6";
     private static App appInstance;
-    private HashMap<TrackerName, Tracker> trackers = new HashMap<>();
+    //private HashMap<TrackerName, Tracker> trackers = new HashMap<>();
 
     public static App getInstance() {
         return appInstance;
@@ -67,7 +59,7 @@ public class App extends Application {
 
     }
 
-    private synchronized Tracker getTracker(TrackerName trackerId) {
+    /*private synchronized Tracker getTracker(TrackerName trackerId) {
         if (!trackers.containsKey(trackerId)) {
 
             GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
@@ -108,7 +100,7 @@ public class App extends Application {
 
     public void sendAnalyticsError(String description, boolean isFatal) {
         sendAnalyticsError(null, description, isFatal);
-    }
+    }*/
 
     /**
      * Enum used to identify the tracker that needs to be used for tracking.
