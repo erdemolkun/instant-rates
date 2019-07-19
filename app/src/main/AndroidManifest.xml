@@ -1,67 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
-          package="dynoapps.exchange_rates">
+    xmlns:dist="http://schemas.android.com/apk/distribution"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="dynoapps.exchange_rates">
 
-    <permission android:name="android.permission.INTERNET"/>
+    <permission android:name="android.permission.INTERNET" />
 
-    <permission android:name="android.permission.WAKE_LOCK"/>
+    <permission android:name="android.permission.WAKE_LOCK" />
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
+    <dist:module dist:instant="true" />
     <application
+        android:name=".App"
         android:allowBackup="true"
         android:appComponentFactory="whateverString"
         android:configChanges="locale"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:name=".App"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:appComponentFactory">
         <activity
+            android:name=".ChartActivity"
             android:configChanges="orientation|screenSize|locale"
             android:label="@string/graphic"
-            android:name=".ChartActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
 
         </activity>
 
         <activity
+            android:name=".alarm.AlarmsActivity"
             android:configChanges="orientation|screenSize|locale"
             android:label="@string/alarms"
-            android:name=".alarm.AlarmsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
 
         </activity>
 
         <activity
+            android:name=".LandingActivity"
             android:configChanges="orientation|screenSize|locale"
             android:launchMode="singleTask"
-            android:name=".LandingActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.WithDrawer">
 
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:configChanges="orientation|screenSize|locale"
             android:name=".SplashActivity"
-            android:screenOrientation="portrait">
-        </activity>
+            android:configChanges="orientation|screenSize|locale"
+            android:screenOrientation="portrait"></activity>
 
         <service
-            android:exported="false"
-            android:name=".service.RatePollingService"/>
+            android:name=".service.RatePollingService"
+            android:exported="false" />
     </application>
 
 </manifest>
