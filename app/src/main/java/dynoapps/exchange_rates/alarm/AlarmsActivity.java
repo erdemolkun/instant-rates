@@ -8,9 +8,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -23,9 +20,9 @@ import butterknife.ButterKnife;
 import dynoapps.exchange_rates.App;
 import dynoapps.exchange_rates.BaseActivity;
 import dynoapps.exchange_rates.R;
-import dynoapps.exchange_rates.event.AlarmUpdateEvent;
 import dynoapps.exchange_rates.ui.SlideInItemAnimator;
 import dynoapps.exchange_rates.util.AnimationHelper;
+import dynoapps.exchange_rates.util.ViewUtils;
 
 /**
  * Created by erdemmac on 13/12/2016.
@@ -63,19 +60,19 @@ public class AlarmsActivity extends BaseActivity {
         adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onChanged() {
-                tvNoAlarm.setVisibility(adapter.getItemCount() <= 0 ? View.VISIBLE : View.GONE);
+                ViewUtils.visibility(tvNoAlarm, adapter.getItemCount() <= 0);
                 super.onChanged();
             }
 
             @Override
             public void onItemRangeRemoved(int positionStart, int itemCount) {
-                tvNoAlarm.setVisibility(adapter.getItemCount() <= 0 ? View.VISIBLE : View.GONE);
+                ViewUtils.visibility(tvNoAlarm, adapter.getItemCount() <= 0);
                 super.onItemRangeRemoved(positionStart, itemCount);
             }
 
             @Override
             public void onItemRangeInserted(int positionStart, int itemCount) {
-                tvNoAlarm.setVisibility(adapter.getItemCount() <= 0 ? View.VISIBLE : View.GONE);
+                ViewUtils.visibility(tvNoAlarm, adapter.getItemCount() <= 0);
                 super.onItemRangeInserted(positionStart, itemCount);
             }
         });
@@ -89,27 +86,6 @@ public class AlarmsActivity extends BaseActivity {
             Collections.sort(alarms, Alarm.COMPARATOR);
             adapter.addData(alarms);
         });
-    }
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (!EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().register(this);
-        }
-    }
-
-    protected void onDestroy() {
-        if (EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().unregister(this);
-        }
-        super.onDestroy();
-    }
-
-    @Subscribe
-    public void onEvent(AlarmUpdateEvent event) {
-        // TODO update
     }
 
     @Override
