@@ -10,7 +10,6 @@ import android.os.IBinder;
 import org.greenrobot.eventbus.EventBus;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import dynoapps.exchange_rates.event.IntervalUpdate;
 import dynoapps.exchange_rates.service.RatePollingService;
 import dynoapps.exchange_rates.time.TimeIntervalManager;

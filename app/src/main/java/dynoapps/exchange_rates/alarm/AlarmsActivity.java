@@ -5,7 +5,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,7 +13,6 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SwitchCompat;
@@ -56,7 +54,7 @@ public class AlarmsActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         alarmRepository = App.getInstance().provideAlarmsRepository();
         setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
-        getActionBarToolbar().setNavigationOnClickListener((View.OnClickListener) v -> finish());
+        getActionBarToolbar().setNavigationOnClickListener(v -> finish());
 
         rvAlarms.setLayoutManager(new LinearLayoutManager(this));
         rvAlarms.setItemAnimator(new SlideInItemAnimator());
@@ -82,17 +80,14 @@ public class AlarmsActivity extends BaseActivity {
             }
         });
 
-        fabAddAlarm.setOnClickListener((View.OnClickListener) view -> AlarmManager.addAlarmDialog(AlarmsActivity.this, alarm -> {
+        fabAddAlarm.setOnClickListener(view -> AlarmManager.addAlarmDialog(AlarmsActivity.this, alarm -> {
             adapter.addData(alarm);
             // TODO refresh
         }));
         alarmRepository.refreshAlarms();
-        alarmRepository.getAlarms(new AlarmsDataSource.AlarmsLoadCallback() {
-            @Override
-            public void onAlarmsLoaded(List<Alarm> alarms) {
-                Collections.sort(alarms, Alarm.COMPARATOR);
-                adapter.addData(alarms);
-            }
+        alarmRepository.getAlarms(alarms -> {
+            Collections.sort(alarms, Alarm.COMPARATOR);
+            adapter.addData(alarms);
         });
     }
 
@@ -128,12 +123,9 @@ public class AlarmsActivity extends BaseActivity {
         swAlarmState = findViewById(R.id.menu_switch);
         swAlarmState.setChecked(alarmRepository.isEnabled());
         swAlarmState.jumpDrawablesToCurrentState();
-        swAlarmState.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                alarmRepository.updateEnabled(b);
-                updateViews();
-            }
+        swAlarmState.setOnCheckedChangeListener((compoundButton, b) -> {
+            alarmRepository.updateEnabled(b);
+            updateViews();
         });
         updateViews();
         return true;

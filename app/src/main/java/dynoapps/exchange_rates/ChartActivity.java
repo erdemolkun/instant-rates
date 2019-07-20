@@ -113,12 +113,7 @@ public class ChartActivity extends BaseActivity {
         tvTitle.setText(title);
 
         setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
-        getActionBarToolbar().setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        getActionBarToolbar().setNavigationOnClickListener(v -> finish());
 
         white = ContextCompat.getColor(getApplicationContext(), android.R.color.white);
         chart_text_color = ContextCompat.getColor(getApplicationContext(), android.R.color.black);
@@ -152,17 +147,9 @@ public class ChartActivity extends BaseActivity {
         int progressBarEndMargin = getResources().getDimensionPixelSize(
                 R.dimen.swipe_refresh_progress_bar_end_margin);
         swipeRefreshLayout.setProgressViewOffset(true, top + progressBarStartMargin, top + progressBarEndMargin);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                EventBus.getDefault().post(new UpdateTriggerEvent());
-                getHandler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        swipeRefreshLayout.setRefreshing(false);
-                    }
-                }, 1000);
-            }
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            EventBus.getDefault().post(new UpdateTriggerEvent());
+            getHandler().postDelayed(() -> swipeRefreshLayout.setRefreshing(false), 1000);
         });
     }
 
@@ -308,20 +295,17 @@ public class ChartActivity extends BaseActivity {
             builder.setCancelable(true);
             builder.setTitle(R.string.refresh);
             builder.setMessage(R.string.clear_sure_message);
-            builder.setPositiveButton(R.string.sure, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    for (int i = 0; i < lineChart.getData().getDataSetCount(); i++) {
-                        IDataSet iDataSet = lineChart.getData().getDataSetByIndex(i);
-                        iDataSet.clear();
+            builder.setPositiveButton(R.string.sure, (dialog, which) -> {
+                for (int i = 0; i < lineChart.getData().getDataSetCount(); i++) {
+                    IDataSet iDataSet = lineChart.getData().getDataSetByIndex(i);
+                    iDataSet.clear();
 
-                    }
-                    lineChart.getXAxis().resetAxisMaximum();
-                    lineChart.invalidate();
-                    lineChart.notifyDataSetChanged();
-                    startMilis = System.currentTimeMillis();
-                    lineChart.moveViewToX(0);
                 }
+                lineChart.getXAxis().resetAxisMaximum();
+                lineChart.invalidate();
+                lineChart.notifyDataSetChanged();
+                startMilis = System.currentTimeMillis();
+                lineChart.moveViewToX(0);
             });
 
             builder.setNegativeButton(R.string.ignore, null);

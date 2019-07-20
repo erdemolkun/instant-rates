@@ -13,7 +13,7 @@ public class PublishSettings {
 
     private static ReleaseTypes releaseType = null;
 
-    public static ReleaseTypes getReleaseType() {
+    private static ReleaseTypes getReleaseType() {
         // Lazy release rate_type loading.
         if (releaseType == null)
             releaseType = getReleaseTypeByVersionName();
