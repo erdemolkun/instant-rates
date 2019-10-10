@@ -48,18 +48,16 @@ public class EnparaConverter implements Converter<ResponseBody, List<BaseRate>> 
         ArrayList<BaseRate> rates = new ArrayList<>();
         String responseBody = value.string();
 
-        final Elements shotElements = Jsoup.parse(responseBody, HOST).select("#pnlContent span dl");
+        final Elements shotElements = Jsoup.parse(responseBody, HOST).getElementsByClass("enpara-gold-exchange-rates__table-item");
         for (Element element : shotElements) {
             BaseRate rate = parseRate(element);
-            if (rate != null) {
-                rates.add(rate);
-            }
+            rates.add(rate);
         }
         return rates;
     }
 
     private EnparaRate parseRate(Element element) {
-        final Elements divElements = element.select("div");
+        final Elements divElements = element.select("div span");
         EnparaRate rate = new EnparaRate();
         if (divElements.size() > 2) {
             rate.type = divElements.get(0).text();
