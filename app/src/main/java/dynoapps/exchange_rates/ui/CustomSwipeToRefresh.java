@@ -7,6 +7,7 @@ import android.view.ViewConfiguration;
 
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+
 /**
  * Created by Erdem OLKUN , 07/02/2017 http://stackoverflow.com/questions/23989910/horizontalscrollview-inside-swiperefreshlayout
  */
