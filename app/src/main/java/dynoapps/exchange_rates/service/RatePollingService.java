@@ -278,6 +278,7 @@ public class RatePollingService extends IntentService {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
                 pushIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
+        // TODO implement notification with channel id
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_add_alarm_white_24dp)

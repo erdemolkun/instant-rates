@@ -19,7 +19,7 @@ buildscript {
 def isCi = "true" == System.getenv("CI")
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
     signingConfigs {
         debug {
             keyAlias 'androiddebugkey'
@@ -78,7 +78,7 @@ android {
     defaultConfig {
         applicationId "dynoapps.exchange_rates"
         minSdkVersion 21
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode getBuildVersionCode()
         versionName getBuildVersionName()
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
