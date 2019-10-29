@@ -1,7 +1,8 @@
 <resources>
 
+
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="BaseAppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -17,7 +18,9 @@
         <item name="android:navigationBarColor">@color/colorPrimary</item>
         <item name="android:splitMotionEvents">false</item>
 
+    </style>
 
+    <style name="AppTheme" parent="BaseAppTheme">
     </style>
 
     <style name="AppTheme.WithDrawer">
@@ -25,33 +28,12 @@
         <item name="android:statusBarColor">@android:color/transparent</item>
 
         <item name="android:windowTranslucentStatus">false</item>
-        <!--<item name="android:windowBackground">@color/white</item>-->
     </style>
 
-    <!--<style name="AppTheme.NoActionbar" parent="AppTheme">-->
-    <!--<item name="windowActionBar">false</item>-->
-    <!--<item name="windowNoTitle">true</item>-->
-    <!--</style>-->
+    <style name="ActionBarPopupThemeOverlay" parent="ThemeOverlay.AppCompat.DayNight" />
 
-    <!--<style name="SplashTheme" parent="AppTheme">-->
-    <!--<item name="windowActionBar">false</item>-->
-    <!--<item name="windowNoTitle">true</item>-->
-    <!--</style>-->
-
-
-    <style name="ActionBarPopupThemeOverlay" parent="ThemeOverlay.AppCompat.Light"/>
-
-
-    <style name="AppTheme.AlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <!--&lt;!&ndash; Used for the buttons &ndash;&gt;-->
-        <item name="colorAccent">@color/colorAccent</item>
-        <!--&lt;!&ndash; Used for the title and text &ndash;&gt;-->
-        <!--<item name="android:textColorPrimary">@color/theme_primary</item>-->
-        <!--&lt;!&ndash; Used for the background &ndash;&gt;-->
-        <!--<item name="android:background">@color/white</item>-->
-
-        <item name="android:textColor">@color/colorPrimary</item>
+    <style name="AppTheme.Alert" parent="Theme.MaterialComponents.DayNight.Dialog.Alert">
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
     </style>
-
 
 </resources>

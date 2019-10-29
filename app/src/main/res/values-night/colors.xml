@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#222222</color>
+    <color name="colorPrimaryDark">#111111</color>
+    <color name="colorAccent">#FFB300</color>
+
+    <color name="colorGraph">@color/color_material_grey_50</color>
+    <color name="colorEnpara">#aa51a0</color><!--170, 81, 160-->
+    <color name="colorYorumlar">#f1c15a</color>
+    <color name="colorDolarTlKur">#76ff03</color>
+    <color name="colorBigPara">#f57c00</color>
+    <color name="colorYapiKredi">#3F51B5</color>
+    <color name="colorYahoo">#47019a</color>
+    <color name="colorParagaranti">#2da6aa</color> <!--46 166 170-->
+
+
+    <color name="white">#fff</color>
+
+    <color name="refresh_progress_1">@color/colorPrimary</color>
+    <color name="refresh_progress_2">@color/colorAccent</color>
+    <color name="refresh_progress_3">@color/colorYahoo</color>
+
+    <color name="color_material_grey_50">#ff444444</color>
+
+</resources>
