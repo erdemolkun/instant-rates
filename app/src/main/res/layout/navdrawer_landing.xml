@@ -1,137 +1,127 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<dynoapps.exchange_rates.ui.ScrimInsetsScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<dynoapps.exchange_rates.ui.ScrimInsetsScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/color_material_grey_50"
-    android:fillViewport="true"
-    android:layout_gravity="start"
+    android:layout_width="@dimen/nav_drawer_width"
     android:layout_height="match_parent"
-    android:layout_width="@dimen/nav_drawer_width">
+    android:layout_gravity="start"
+    android:background="@color/color_material_grey_50"
+    android:fillViewport="true">
 
     <RelativeLayout
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <RelativeLayout
-            android:background="#CFD8DC"
             android:id="@+id/v_drawer_header"
-            android:layout_height="136dp"
             android:layout_width="match_parent"
+            android:layout_height="136dp"
+            android:background="@color/colorPrimary"
             android:padding="16dp">
 
             <ImageView
                 android:id="@+id/iv_drawer_header_logo"
-                android:layout_alignParentBottom="true"
-                android:layout_height="44dp"
                 android:layout_width="44dp"
-                android:src="@drawable/ic_orco_512"/>
+                android:layout_height="44dp"
+                android:layout_alignParentBottom="true"
+                android:src="@drawable/ic_orco_512" />
 
             <LinearLayout
-                android:layout_alignParentBottom="true"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
+                android:layout_alignParentBottom="true"
                 android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
                 android:layout_toEndOf="@+id/iv_drawer_header_logo"
                 android:layout_toRightOf="@+id/iv_drawer_header_logo"
-                android:layout_width="wrap_content"
                 android:orientation="vertical">
 
                 <TextView
-                    android:ellipsize="end"
-                    android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
                     android:text="@string/app_name"
-                    android:textColor="@android:color/black"
                     android:textSize="16sp"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/v_navdrawer_version"
-                    android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
-                    android:textColor="@android:color/black"
+                    android:layout_height="wrap_content"
                     android:textSize="13sp"
-                    tools:text="v0.0.1"/>
+                    tools:text="v0.0.1" />
             </LinearLayout>
 
 
         </RelativeLayout>
 
         <LinearLayout
-            android:layout_below="@+id/v_drawer_header"
-            android:layout_height="wrap_content"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/v_drawer_header"
             android:orientation="vertical"
             android:paddingTop="8dp">
 
             <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:layout_width="wrap_content"
                 android:padding="10dp"
                 android:text="@string/graph_types"
-                android:textColor="?colorPrimary"
-                android:textSize="14sp"/>
+                android:textSize="14sp" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                style="@style/side_item_style"
-                android:drawableLeft="@drawable/ic_dollar"
-                android:drawableStart="@drawable/ic_dollar"
                 android:id="@+id/v_drawer_item_usd"
-                android:layout_height="wrap_content"
+                style="@style/side_item_style"
                 android:layout_width="match_parent"
-                android:text="USD"/>
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_dollar"
+                android:text="USD" />
 
             <TextView
-                style="@style/side_item_style"
-                android:drawableLeft="@drawable/ic_euro"
-                android:drawableStart="@drawable/ic_euro"
                 android:id="@+id/v_drawer_item_eur"
-                android:layout_height="wrap_content"
+                style="@style/side_item_style"
                 android:layout_width="match_parent"
-                android:text="EURO"/>
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_euro"
+                android:text="EURO" />
 
             <TextView
-                style="@style/side_item_style"
-                android:drawableLeft="@drawable/ic_exchange_eur_usd"
-                android:drawableStart="@drawable/ic_exchange_eur_usd"
                 android:id="@+id/v_drawer_item_eur_usd"
-                android:layout_height="wrap_content"
+                style="@style/side_item_style"
                 android:layout_width="match_parent"
-                android:text="EURO / USD"/>
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_exchange_eur_usd"
+                android:text="EURO / USD" />
 
             <TextView
-                style="@style/side_item_style"
-                android:drawableLeft="@drawable/ic_gold"
-                android:drawableStart="@drawable/ic_gold"
                 android:id="@+id/v_drawer_item_ons"
-                android:layout_height="wrap_content"
+                style="@style/side_item_style"
                 android:layout_width="match_parent"
-                android:text="ONS"/>
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_gold"
+                android:text="ONS" />
 
             <ImageView
-                android:background="?colorPrimary"
+                android:layout_width="match_parent"
                 android:layout_height="1px"
-                android:layout_width="match_parent"/>
+                android:background="?colorPrimary" />
 
             <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:layout_width="wrap_content"
                 android:padding="12dp"
                 android:text="@string/others"
-                android:textColor="?colorPrimary"
-                android:textSize="13sp"/>
+                android:textSize="13sp" />
 
             <TextView
-                style="@style/side_item_style"
-                android:drawableLeft="@drawable/ic_add_alarm_white_24dp"
-                android:drawableStart="@drawable/ic_add_alarm_white_24dp"
                 android:id="@+id/v_drawer_item_alarms"
-                android:layout_height="wrap_content"
+                style="@style/side_item_style"
                 android:layout_width="match_parent"
-                android:text="@string/alarms"/>
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_add_alarm_white_24dp"
+                android:text="@string/alarms" />
 
 
         </LinearLayout>

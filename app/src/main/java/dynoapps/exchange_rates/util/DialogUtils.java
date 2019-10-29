@@ -170,7 +170,7 @@ public class DialogUtils {
         }
 
         private Dialog buildDialog() {
-            AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.AppTheme_AlertDialog);
+            AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.AppTheme_Alert);
             if (title != null) {
                 builder.setTitle(title);
             }

@@ -82,14 +82,9 @@ public class SourcesManager {
         for (int i = 0; i < currencySources.size(); i++) {
             data_set_names[i] = currencySources.get(i).getName();
         }
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity, R.style.AppTheme_AlertDialog);
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity, R.style.AppTheme_Alert);
 
-        builder.setMultiChoiceItems(data_set_names, temp_data_source_states, new DialogInterface.OnMultiChoiceClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                temp_data_source_states[which] = isChecked;
-            }
-        });
+        builder.setMultiChoiceItems(data_set_names, temp_data_source_states, (dialog, which, isChecked) -> temp_data_source_states[which] = isChecked);
 
         builder.setCancelable(true);
         builder.setTitle(R.string.select_sources);

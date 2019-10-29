@@ -287,7 +287,7 @@ public class ChartActivity extends BaseActivity {
             return true;
         } else if (id == R.id.menu_item_refresh) {
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AppTheme_AlertDialog);
+            AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AppTheme_Alert);
             builder.setCancelable(true);
             builder.setTitle(R.string.refresh);
             builder.setMessage(R.string.clear_sure_message);

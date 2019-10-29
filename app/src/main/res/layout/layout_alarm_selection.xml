@@ -10,10 +10,11 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_alarm_value"
         android:layout_height="wrap_content"
+        app:boxBackgroundColor="@null"
         android:layout_width="match_parent"
         app:errorEnabled="true">
 
-        <EditText
+        <androidx.appcompat.widget.AppCompatEditText
             android:digits="@string/digits_for_decimal"
             android:hint="@string/enter_value"
             android:id="@+id/et_alarm_value"

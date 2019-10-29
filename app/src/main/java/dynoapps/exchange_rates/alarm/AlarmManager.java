@@ -136,7 +136,7 @@ public class AlarmManager {
         });
         spn_sources.setSelection(selected_source_index);
 
-        final AlertDialog alertDialog = new AlertDialog.Builder(context, R.style.AppTheme_AlertDialog).setIcon(R.drawable.ic_orco_512).
+        final AlertDialog alertDialog = new AlertDialog.Builder(context, R.style.AppTheme_Alert).setIcon(R.drawable.ic_orco_512).
                 setTitle(R.string.add_alarm)
                 .setView(v)
                 .setNegativeButton(R.string.dismiss, null)
