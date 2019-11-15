@@ -29,7 +29,6 @@ import dynoapps.exchange_rates.alarm.AlarmsRepository;
 import dynoapps.exchange_rates.data.CurrencySource;
 import dynoapps.exchange_rates.data.CurrencyType;
 import dynoapps.exchange_rates.data.RatesHolder;
-import dynoapps.exchange_rates.event.AlarmUpdateEvent;
 import dynoapps.exchange_rates.event.DataSourceUpdate;
 import dynoapps.exchange_rates.event.IntervalUpdate;
 import dynoapps.exchange_rates.event.RatesEvent;
@@ -200,13 +199,11 @@ public class RatePollingService extends IntentService {
                 if (alarm.is_above && val_current > alarm.val && val_old <= alarm.val) {
                     iterator.remove();
                     alarmsRepository.deleteAlarm(alarm, null);
-                    EventBus.getDefault().post(new AlarmUpdateEvent());
                     sendNotification(getString(R.string.is_above_val, SourcesManager.getSourceName(alarm.source_type), RateUtils.rateName(alarm.rate_type),
                             val), "increasing", Alarm.getPushId(alarm));
                 } else if (!alarm.is_above && val_current < alarm.val && val_old >= alarm.val) {
                     iterator.remove();
                     alarmsRepository.deleteAlarm(alarm, null);
-                    EventBus.getDefault().post(new AlarmUpdateEvent());
                     sendNotification(getString(R.string.is_below_value, SourcesManager.getSourceName(alarm.source_type), RateUtils.rateName(alarm.rate_type),
                             val), "decreasing", Alarm.getPushId(alarm));
                 }

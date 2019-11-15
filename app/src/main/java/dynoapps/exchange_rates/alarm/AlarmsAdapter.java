@@ -16,7 +16,6 @@ import dynoapps.exchange_rates.App;
 import dynoapps.exchange_rates.R;
 import dynoapps.exchange_rates.SourcesManager;
 import dynoapps.exchange_rates.data.CurrencySource;
-import dynoapps.exchange_rates.event.AlarmUpdateEvent;
 import dynoapps.exchange_rates.ui.widget.recyclerview.UpdatableAdapter;
 import dynoapps.exchange_rates.util.CollectionUtils;
 import dynoapps.exchange_rates.util.RateUtils;
@@ -95,7 +94,6 @@ class AlarmsAdapter extends UpdatableAdapter<List<Alarm>, AlarmsActivity.AlarmVi
         holder.swAlarm.setOnCheckedChangeListener((CompoundButton.OnCheckedChangeListener) (compoundButton, b) -> {
             alarm.is_enabled = b;
             alarmRepository.updateAlarm(alarm, null);
-            EventBus.getDefault().post(new AlarmUpdateEvent());
         });
     }
 
