@@ -85,7 +85,7 @@ android {
         targetSdkVersion 29
         versionCode getBuildVersionCode()
         versionName getBuildVersionName()
-        setProperty("archivesBaseName", "-v" + versionCode + "(" + versionName + ")")
+        setProperty("archivesBaseName", versionName)
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
