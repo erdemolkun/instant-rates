@@ -23,6 +23,9 @@ jobs:
       - run:
           name: Submodule Update
           command: git submodule update
+      - run:
+          name: Create release.jks
+          command: echo $RELEASE_PATH_ENCODED | base64 -d > "app/signing/release.jks"
 
       - restore_cache:
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
