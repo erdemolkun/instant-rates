@@ -4,7 +4,6 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -23,6 +22,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.content.ContextCompat;
@@ -272,19 +272,14 @@ public class LandingActivity extends BaseServiceActivity {
             startActivity(i);
         }));
 
-        tvDrawerItemOns.setOnClickListener(new View.OnClickListener() {
+        tvDrawerItemOns.setOnClickListener(view -> doLeftMenuWork(new Runnable() {
             @Override
-            public void onClick(View view) {
-                doLeftMenuWork(new Runnable() {
-                    @Override
-                    public void run() {
-                        Intent i = new Intent(LandingActivity.this, ChartActivity.class);
-                        i.putExtra(ChartActivity.EXTRA_RATE_TYPE, IRate.ONS);
-                        startActivity(i);
-                    }
-                });
+            public void run() {
+                Intent i = new Intent(LandingActivity.this, ChartActivity.class);
+                i.putExtra(ChartActivity.EXTRA_RATE_TYPE, IRate.ONS);
+                startActivity(i);
             }
-        });
+        }));
 
         tvDrawerItemAlarms.setOnClickListener(view -> doLeftMenuWork(() -> {
             Intent i = new Intent(LandingActivity.this, AlarmsActivity.class);
@@ -375,7 +370,7 @@ public class LandingActivity extends BaseServiceActivity {
             } else {
                 TimeIntervalManager.setAlarmMode(true);
                 for (CurrencySource source : SourcesManager.getCurrencySources()) {
-                    BasePoolingProvider provider = (BasePoolingProvider) source.getPollingSource();
+                    BasePoolingProvider<?> provider = (BasePoolingProvider<?>) source.getPollingSource();
                     if (provider != null) {
                         provider.stopIfHasAlarm();
                     }
@@ -475,6 +470,7 @@ public class LandingActivity extends BaseServiceActivity {
 
         List<CardViewItem> items = new ArrayList<>();
 
+        @NonNull
         @Override
         public String toString() {
             StringBuilder itemsToString = new StringBuilder();
