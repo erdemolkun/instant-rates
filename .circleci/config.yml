@@ -26,9 +26,9 @@ jobs:
       - run:
           name: Create release.jks
           command: echo $RELEASE_PATH_ENCODED | base64 -d >  $releaseKeyStoreFile
-  - run:
-      name: Create keystore.properies
-      command: printf '$releaseKeyStoreFile=%s' $releaseKeyStoreFile > keystore.properties
+      - run:
+          name: Create keystore.properies
+          command: printf '$releaseKeyStoreFile=%s' $releaseKeyStoreFile > keystore.properties
       - restore_cache:
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
       - run:
