@@ -203,15 +203,14 @@ def getBuildVersionName() {
         def minor = properties.getProperty("versionMinor") as String
         def patch = properties.getProperty("versionPatch") as String
         def build = properties.getProperty("versionBuild") as String
-        def suffix = properties.get("versionSuffix") != null ? properties.getProperty("versionSuffix") : "" as String
-        println "Suffix : " + suffix
         def version = major + "." + minor
         if (build != "0") {
             version += "." + patch + "." + build
         } else if (patch != "0") {
             version += "." + patch
         }
-        return version + suffix
+        println "Version : " + version
+        return version
 
     } else {
         throw new GradleException("Versionname : unable to find gradle.properties file : \n" + propsFile.absolutePath)
