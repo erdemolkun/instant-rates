@@ -25,7 +25,7 @@ jobs:
           command: git submodule update
       - run:
           name: Create release.jks
-          command: echo $RELEASE_PATH_ENCODED | base64 -d >  $releaseKeyStoreFile
+          command: echo $RELEASE_PATH_ENCODED | base64 -d > .signing/release.jks
       - run:
           name: Create keystore.properies
           command: printf '$releaseKeyStoreFile=%s' $releaseKeyStoreFile > keystore.properties

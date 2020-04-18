@@ -29,7 +29,7 @@ android {
         }
         release {
             if (isCi) {
-                storeFile file(rootDir.getCanonicalPath() + '/' + keystoreProperties['releaseKeyStore'])
+                storeFile file("${project.rootDir}/signing/release.jks")
                 storePassword = System.getenv("RELEASE_STORE_PASSWORD")
                 keyAlias = System.getenv("RELEASE_ALIAS")
                 keyPassword = System.getenv("RELEASE_PASSWORD")
