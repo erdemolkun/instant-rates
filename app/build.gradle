@@ -95,13 +95,11 @@ android {
             minifyEnabled false
         }
         production {
-            proguardFile 'proguard-appcompat-v7.pro'
             proguardFile 'proguard-android-java.pro'
             proguardFile 'proguard-square-retrofit2.pro'
             proguardFile 'proguard-simple-xml.pro'
             proguardFile 'proguard-rules.pro'
             proguardFile 'proguard-project-app.pro'
-            proguardFile 'proguard-support-design.pro'
             signingConfig signingConfigs.release
             minifyEnabled true;
         }

@@ -272,13 +272,10 @@ public class LandingActivity extends BaseServiceActivity {
             startActivity(i);
         }));
 
-        tvDrawerItemOns.setOnClickListener(view -> doLeftMenuWork(new Runnable() {
-            @Override
-            public void run() {
-                Intent i = new Intent(LandingActivity.this, ChartActivity.class);
-                i.putExtra(ChartActivity.EXTRA_RATE_TYPE, IRate.ONS);
-                startActivity(i);
-            }
+        tvDrawerItemOns.setOnClickListener(view -> doLeftMenuWork(() -> {
+            Intent i = new Intent(LandingActivity.this, ChartActivity.class);
+            i.putExtra(ChartActivity.EXTRA_RATE_TYPE, IRate.ONS);
+            startActivity(i);
         }));
 
         tvDrawerItemAlarms.setOnClickListener(view -> doLeftMenuWork(() -> {
