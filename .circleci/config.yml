@@ -35,13 +35,13 @@ jobs:
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
 
       - run:
-          name: Assemble APKs
+          name: Assemble Build
           command: |
             ./gradlew app:bundleProduction --no-daemon;
 
       - store_artifacts:
           path: app/build/outputs/bundle
-          destination: apks
+          destination: aab
 
       - store_artifacts:
           path: app/build/reports
