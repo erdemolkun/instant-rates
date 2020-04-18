@@ -69,7 +69,7 @@ public class RatePollingService extends IntentService {
     private static Formatter formatter2 = new Formatter(3, 0);
     private static Formatter formatter5 = new Formatter(5, 1);
     private final IBinder mBinder = new SimpleBinder();
-    List<BasePoolingProvider> providers;
+    List<BasePoolingProvider<?>> providers;
     private AlarmsRepository alarmsRepository;
 
     public RatePollingService() {
@@ -101,7 +101,7 @@ public class RatePollingService extends IntentService {
             providers = new ArrayList<>();
         }
         if (providers.size() > 0) {
-            for (BasePoolingProvider provider : providers) {
+            for (BasePoolingProvider<?> provider : providers) {
                 provider.stop();
             }
         } else {

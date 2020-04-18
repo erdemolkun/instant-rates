@@ -73,14 +73,10 @@ public class Alarm implements Serializable {
     }
 
     private static int compare(int x, int y) {
-        return x < y ? -1
-                : x > y ? 1
-                : 0;
+        return Integer.compare(x, y);
     }
 
     private static int compare(float x, float y) {
-        return x < y ? -1
-                : x > y ? 1
-                : 0;
+        return Float.compare(x, y);
     }
 }

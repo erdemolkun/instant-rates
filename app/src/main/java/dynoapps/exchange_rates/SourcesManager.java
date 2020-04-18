@@ -43,7 +43,7 @@ public class SourcesManager {
         initDataSourceSelections();
     }
 
-    public static void updateProviders(List<BasePoolingProvider> providers) {
+    public static void updateProviders(List<BasePoolingProvider<?>> providers) {
 
         for (CurrencySource source : getCurrencySources()) {
             switch (source.getType()) {
@@ -92,32 +92,25 @@ public class SourcesManager {
         builder.setNegativeButton(R.string.dismiss, null);
 
         final AlertDialog dialog = builder.create();
-        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(DialogInterface dialogInterface) {
-                Button button = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
-                button.setOnClickListener(new View.OnClickListener() {
+        dialog.setOnShowListener(dialogInterface -> {
+            Button button = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+            button.setOnClickListener(view -> {
 
-                    @Override
-                    public void onClick(View view) {
-
-                        int enabled_count = 0;
-                        for (int i = 0; i < currencySources.size(); i++) {
-                            if (temp_data_source_states[i]) enabled_count++;
-                        }
-                        if (enabled_count == 0) {
-                            Toast.makeText(activity, R.string.select_at_least_one_source, Toast.LENGTH_SHORT).show();
-                        } else {
-                            for (int i = 0; i < currencySources.size(); i++) {
-                                currencySources.get(i).setEnabled(temp_data_source_states[i]);
-                            }
-                            EventBus.getDefault().post(new DataSourceUpdate());
-                            saveSources(currencySources);
-                            dialog.dismiss();
-                        }
+                int enabled_count = 0;
+                for (int i = 0; i < currencySources.size(); i++) {
+                    if (temp_data_source_states[i]) enabled_count++;
+                }
+                if (enabled_count == 0) {
+                    Toast.makeText(activity, R.string.select_at_least_one_source, Toast.LENGTH_SHORT).show();
+                } else {
+                    for (int i = 0; i < currencySources.size(); i++) {
+                        currencySources.get(i).setEnabled(temp_data_source_states[i]);
                     }
-                });
-            }
+                    EventBus.getDefault().post(new DataSourceUpdate());
+                    saveSources(currencySources);
+                    dialog.dismiss();
+                }
+            });
         });
         dialog.getWindow().setWindowAnimations(R.style.DialogAnimationFade);
         dialog.show();
