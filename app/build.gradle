@@ -29,10 +29,14 @@ android {
         }
         release {
             if (isCi) {
-                storeFile rootProject.file("signing/release.jks")
-                storePassword = System.getenv("RELEASE_STORE_PASSWORD")
-                keyAlias = System.getenv("RELEASE_ALIAS")
-                keyPassword = System.getenv("RELEASE_PASSWORD")
+                //storeFile rootProject.file("signing/release.jks")
+                //storePassword = System.getenv("RELEASE_STORE_PASSWORD")
+                //keyAlias = System.getenv("RELEASE_ALIAS")
+                //keyPassword = System.getenv("RELEASE_PASSWORD")
+                keyAlias 'androiddebugkey'
+                keyPassword 'android'
+                storeFile file("${project.rootDir}/signing/debug.keystore")
+                storePassword 'android'
             } else {
                 Properties propsSigning = new Properties()
                 def signingPropsFile = rootProject.file("${project.rootDir}/signing/release.signing.properties")
