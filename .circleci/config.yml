@@ -38,9 +38,9 @@ jobs:
           name: Assemble APKs
           command: |
                         if [ "${CIRCLE_BRANCH}" == "develop" ]; then
-                          ./gradlew app:assembleDebug --no-daemon;
-                        elif [ "${CIRCLE_BRANCH}" == "uat" ]; then
-                          ./gradlew app:assembleUat --no-daemon;
+                          ./gradlew app:assembleProduction --no-daemon;
+                        elif [ "${CIRCLE_BRANCH}" == "master" ]; then
+                          ./gradlew app:bundleProduction --no-daemon;
                         else
                           ./gradlew app:assembleDebug --no-daemon;
                         fi
