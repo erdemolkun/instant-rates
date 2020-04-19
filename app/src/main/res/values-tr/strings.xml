@@ -38,5 +38,8 @@
     <string name="ons_dollar_grapsh">Ons / Dolar Grafiği</string>
     <string name="max_alarm_message">En fazla %d alarm ekleyebilirsiniz.</string>
     <string name="rate_types">Tipler</string>
+    <string name="connection">Bağlantı</string>
+    <string name="background_working">Kurlar Güncelleniyor</string>
+    <string name="alarm_notifications">Alarm Bildirimleri</string>
 
 </resources>

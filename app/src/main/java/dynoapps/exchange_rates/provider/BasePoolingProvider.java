@@ -151,7 +151,7 @@ public abstract class BasePoolingProvider<T> implements IPollingSource, PoolingR
     private void postWork(long delayed) {
         is_working.set(true);
         getHandler().sendEmptyMessageDelayed(1, delayed);
-        L.e(BasePoolingProvider.class.getSimpleName(), "- postWork : " + delayed + " ms - " + this.getClass().getSimpleName());
+        L.i(BasePoolingProvider.class.getSimpleName(), "- postWork : " + delayed + " ms - " + this.getClass().getSimpleName());
     }
 
     private void logDurationSuccess() {

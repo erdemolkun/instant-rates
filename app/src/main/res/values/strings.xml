@@ -39,5 +39,8 @@
     <string name="ons_dollar_grapsh">Ons / Dollar Graph</string>
     <string name="max_alarm_message">You can add max %d alarms</string>
     <string name="rate_types">Types</string>
+    <string name="connection">Connection</string>
+    <string name="background_working">Updating Rates</string>
+    <string name="alarm_notifications">Alarm Notifications</string>
 
 </resources>

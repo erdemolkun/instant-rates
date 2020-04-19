@@ -2,6 +2,7 @@ package dynoapps.exchange_rates;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -19,6 +20,9 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -88,6 +92,30 @@ public class LandingActivity extends BaseServiceActivity {
 
     @Override
     void onConnectionDone() {
+
+    }
+
+    private  @NonNull CharSequence getContent(@NonNull Context context) {
+        try {
+            final Process        process        = Runtime.getRuntime().exec("logcat -d");
+            final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            final StringBuilder  log            = new StringBuilder();
+            final String         separator      = System.getProperty("line.separator");
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                log.append(line);
+                log.append(separator);
+            }
+            return log.toString();
+        } catch (IOException ioe) {
+            return "Failed to retrieve.";
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        String x = getContent(getApplicationContext()).toString();
+        super.onResume();
 
     }
 

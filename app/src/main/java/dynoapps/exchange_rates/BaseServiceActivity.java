@@ -4,12 +4,14 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 
 import org.greenrobot.eventbus.EventBus;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import dynoapps.exchange_rates.event.IntervalUpdate;
 import dynoapps.exchange_rates.service.RatePollingService;
 import dynoapps.exchange_rates.time.TimeIntervalManager;
@@ -43,7 +45,7 @@ public abstract class BaseServiceActivity extends BaseActivity {
         if (!ServiceUtils.isMyServiceRunning(this, RatePollingService.class)) {
             Intent intent = new Intent(this, RatePollingService.class);
             bindService(intent, rateServiceConnection, Context.BIND_AUTO_CREATE);
-            startService(new Intent(this, RatePollingService.class));
+            ContextCompat.startForegroundService(this,intent);
         } else {
             Intent intent = new Intent(this, RatePollingService.class);
             bindService(intent, rateServiceConnection, Context.BIND_AUTO_CREATE);
