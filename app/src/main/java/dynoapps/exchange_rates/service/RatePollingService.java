@@ -358,7 +358,7 @@ public class RatePollingService extends IntentService {
             builder.setContentText(getApplicationContext().getString(R.string.background_working));
             builder.setPriority(NotificationCompat.PRIORITY_MIN);
             builder.setWhen(0);
-            builder.setSmallIcon(R.drawable.ic_dollar);
+            builder.setSmallIcon(R.drawable.ic_store_icon_24dp);
             startForeground(FOREGROUND_ID, builder.build());
         }
         return START_STICKY;
