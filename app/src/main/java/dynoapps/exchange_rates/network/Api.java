@@ -1,12 +1,10 @@
 package dynoapps.exchange_rates.network;
 
 
-import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
 import java.util.concurrent.TimeUnit;
 
-import dynoapps.exchange_rates.PublishSettings;
 import dynoapps.exchange_rates.converters.BigparaConverter;
 import dynoapps.exchange_rates.converters.DolarTlKurAjaxConverter;
 import dynoapps.exchange_rates.converters.EnparaConverter;
@@ -138,9 +136,6 @@ public class Api {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.connectTimeout(8, TimeUnit.SECONDS)
                 .readTimeout(8, TimeUnit.SECONDS);
-        if (PublishSettings.isAlphaOrDeveloper()) {
-            builder.addNetworkInterceptor(new StethoInterceptor());
-        }
         return builder;
     }
 

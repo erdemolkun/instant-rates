@@ -69,9 +69,6 @@ public *;
 -keeppackagenames org.jsoup.nodes
 
 
--keep class com.facebook.stetho.** { *; }
--dontwarn com.facebook.stetho.**
-
 ## Android architecture components: Lifecycle
 # LifecycleObserver's empty constructor is considered to be unused by proguard
 -keepclassmembers class * implements android.arch.lifecycle.LifecycleObserver {

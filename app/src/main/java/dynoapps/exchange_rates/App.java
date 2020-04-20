@@ -38,9 +38,6 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         appInstance = this;
-//        if (PublishSettings.isAlphaOrDeveloper()) {
-//            Stetho.initializeWithDefaults(this);
-//        }
 
         FormatStrategy formatStrategy = PrettyFormatStrategy.newBuilder()
                 .showThreadInfo(false)  // (Optional) Whether to show thread info or not. Default true
