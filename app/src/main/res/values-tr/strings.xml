@@ -41,5 +41,6 @@
     <string name="connection">Bağlantı</string>
     <string name="background_working">Kurlar Güncelleniyor</string>
     <string name="alarm_notifications">Alarm Bildirimleri</string>
+    <string name="notification_stop_action">Durdur</string>
 
 </resources>

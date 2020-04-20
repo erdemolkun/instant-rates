@@ -5,7 +5,7 @@ package dynoapps.exchange_rates.event;
  */
 
 public class IntervalUpdate {
-    public boolean is_immediate = false;
+    public boolean is_immediate;
 
     public IntervalUpdate(boolean is_immediate) {
         this.is_immediate = is_immediate;

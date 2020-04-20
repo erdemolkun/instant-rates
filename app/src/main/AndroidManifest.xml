@@ -10,7 +10,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
@@ -27,6 +27,12 @@
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:appComponentFactory">
+
+        <receiver
+            android:name=".service.ServiceStopActionReceiver"
+            android:enabled="true"
+            android:exported="false" />
+
         <activity
             android:name=".ChartActivity"
             android:configChanges="orientation|screenSize|locale"
@@ -61,7 +67,7 @@
         <activity
             android:name=".SplashActivity"
             android:configChanges="orientation|screenSize|locale"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
 
         <service
             android:name=".service.RatePollingService"

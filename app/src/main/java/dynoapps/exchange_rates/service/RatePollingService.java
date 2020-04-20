@@ -14,6 +14,7 @@ import android.os.IBinder;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.NoSubscriberEvent;
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -298,6 +299,9 @@ public class RatePollingService extends IntentService {
 
     @Override
     public void onDestroy() {
+        if (isOreoAndAbove()) {
+            stopForeground(STOP_FOREGROUND_REMOVE);
+        }
         L.i(RatePollingService.class.getSimpleName(), "Service Stopped");
         EventBus.getDefault().unregister(this);
         if (providers != null) {
@@ -311,6 +315,15 @@ public class RatePollingService extends IntentService {
     @Subscribe
     public void onEvent(NoSubscriberEvent callBackEvent) {
         //L.i(RatePollingService.class.getSimpleName(), "NoSubscriberEvent");
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(ServiceStopActionReceiver.StopAction stopAction) {
+        if (isOreoAndAbove()) {
+            stopForeground(STOP_FOREGROUND_REMOVE);
+        }
+        stopSelf();
     }
 
     private void sendNotification(String message, String category, int id) {
@@ -353,11 +366,18 @@ public class RatePollingService extends IntentService {
                     pushIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 
+            Intent stopActionIntent = new Intent(this, ServiceStopActionReceiver.class);
+            PendingIntent stopActionPendingIntent = PendingIntent.getBroadcast(this, FOREGROUND_ID, stopActionIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            NotificationCompat.Action stopAction = new NotificationCompat.Action.Builder(0, getString(R.string.notification_stop_action), stopActionPendingIntent)
+                    .build();
+
             NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID_CONNECTION);
             builder.setContentIntent(pendingIntent);
             builder.setContentText(getApplicationContext().getString(R.string.background_working));
             builder.setPriority(NotificationCompat.PRIORITY_MIN);
             builder.setWhen(0);
+            builder.addAction(stopAction);
             builder.setSmallIcon(R.drawable.ic_store_icon_24dp);
             startForeground(FOREGROUND_ID, builder.build());
         }

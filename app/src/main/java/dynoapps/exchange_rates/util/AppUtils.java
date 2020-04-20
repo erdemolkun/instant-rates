@@ -3,7 +3,6 @@ package dynoapps.exchange_rates.util;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.text.TextUtils;
 
 import java.util.ArrayList;
@@ -17,7 +16,6 @@ import dynoapps.exchange_rates.App;
  */
 public class AppUtils {
 
-
     public static PackageInfo getPackageInfo(Context context) {
         try {
             return context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
@@ -25,10 +23,6 @@ public class AppUtils {
             // Should not happen.
             throw new RuntimeException("Could not get package name: " + e);
         }
-    }
-
-    public static String getDeviceVersion() {
-        return Build.VERSION.SDK_INT + "";
     }
 
     public static String getAppVersion() {
@@ -65,29 +59,6 @@ public class AppUtils {
             }
             List<String> limitedParts = parts.subList(0, max_digit);
             return TextUtils.join(".", limitedParts);
-        }
-    }
-
-    public static String getDeviceName() {
-        String manufacturer = Build.MANUFACTURER;
-        String model = Build.MODEL;
-        if (model.startsWith(manufacturer)) {
-            return capitalize(model);
-        } else {
-            return capitalize(manufacturer) + " " + model;
-        }
-    }
-
-
-    private static String capitalize(String s) {
-        if (TextUtils.isEmpty(s)) {
-            return "";
-        }
-        char first = s.charAt(0);
-        if (Character.isUpperCase(first)) {
-            return s;
-        } else {
-            return Character.toUpperCase(first) + s.substring(1);
         }
     }
 }

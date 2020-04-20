@@ -42,5 +42,6 @@
     <string name="connection">Connection</string>
     <string name="background_working">Updating Rates</string>
     <string name="alarm_notifications">Alarm Notifications</string>
+    <string name="notification_stop_action">Stop</string>
 
 </resources>

@@ -7,7 +7,7 @@ import java.util.List;
  */
 
 public class CollectionUtils {
-    public static <E> E getInstance(List<E> list, Class clazz) {
+    public static <E> E getInstance(List<E> list, Class<?> clazz) {
         for (E e : list) {
             if (clazz.isInstance(e)) {
                 return e;

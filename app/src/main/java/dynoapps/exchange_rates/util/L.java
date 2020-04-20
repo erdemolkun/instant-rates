@@ -64,7 +64,9 @@ public class L {
     }
 
     public static void ex(Exception ex) {
-        if (App.context() == null) return;
         Logger.t("ExchangeRates").e(ex, "");
+    }
+    public static void ex(Exception ex,String message) {
+        Logger.t("ExchangeRates").e(ex, message);
     }
 }
