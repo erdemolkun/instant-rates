@@ -141,7 +141,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.8.1'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.5.0'
 
-    implementation('com.squareup.retrofit2:converter-simplexml:2.6.2') {
+    implementation('com.squareup.retrofit2:converter-simplexml:2.8.1') {
         exclude group: 'xpp3', module: 'xpp3'
         exclude group: 'stax', module: 'stax-api'
         exclude group: 'stax', module: 'stax'
@@ -156,8 +156,8 @@ dependencies {
     implementation 'com.jakewharton.retrofit:retrofit2-rxjava2-adapter:1.0.0'
 
 
-    implementation 'com.jakewharton:butterknife:10.2.0'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.0'
+    implementation 'com.jakewharton:butterknife:10.2.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.1'
 
     implementation 'org.greenrobot:eventbus:3.2.0'
     implementation 'org.jsoup:jsoup:1.13.1'
@@ -172,7 +172,7 @@ dependencies {
     annotationProcessor 'androidx.room:room-compiler:2.2.5'
 
 
-    androidTestImplementation('tools.fastlane:screengrab:1.2.0', {
+    androidTestImplementation('tools.fastlane:screengrab:2.0.0', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
