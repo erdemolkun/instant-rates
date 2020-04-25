@@ -97,7 +97,6 @@ android {
         }
         production {
             proguardFile 'proguard-android-java.pro'
-            proguardFile 'proguard-square-retrofit2.pro'
             proguardFile 'proguard-simple-xml.pro'
             proguardFile 'proguard-rules.pro'
             proguardFile 'proguard-project-app.pro'
@@ -126,15 +125,9 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0-alpha4', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    //implementation 'androidx.appcompat:appcompat:1.1.0-rc01'
     implementation 'androidx.drawerlayout:drawerlayout:1.1.0-beta01'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'com.google.android.material:material:1.2.0-alpha06'
-
-    //implementation 'com.google.android.gms:play-services-analytics:17.0.0'
 
     implementation 'com.squareup.retrofit2:retrofit:2.8.1'
     implementation 'com.google.code.gson:gson:2.8.6'
