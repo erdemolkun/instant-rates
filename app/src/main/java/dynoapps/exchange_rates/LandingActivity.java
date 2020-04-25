@@ -79,8 +79,8 @@ public class LandingActivity extends BaseServiceActivity {
     TextView tvVersion;
     @BindView(R.id.tv_interval_hint)
     TextView tvIntervalHint;
-    @BindView(R.id.swipe_to_refresh)
-    SwipeRefreshLayout swipeRefreshLayout;
+    //@BindView(R.id.swipe_to_refresh)
+    //SwipeRefreshLayout swipeRefreshLayout;
     AlarmsRepository alarmsRepository;
     List<CardViewItemParent> parentItems = new ArrayList<>();
     private Handler mHandler;
@@ -127,7 +127,7 @@ public class LandingActivity extends BaseServiceActivity {
         tvVersion.setText(getString(R.string.version_placeholder, AppUtils.getPlainVersion()));
         updateHint();
 
-        swipeRefreshLayout.setColorSchemeResources(
+        /*swipeRefreshLayout.setColorSchemeResources(
                 R.color.refresh_progress_1,
                 R.color.refresh_progress_2,
                 R.color.refresh_progress_3);
@@ -141,7 +141,7 @@ public class LandingActivity extends BaseServiceActivity {
         swipeRefreshLayout.setOnRefreshListener(() -> {
             EventBus.getDefault().post(new UpdateTriggerEvent());
             mainHandler().postDelayed(() -> swipeRefreshLayout.setRefreshing(false), 1000);
-        });
+        });*/
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
@@ -300,7 +300,7 @@ public class LandingActivity extends BaseServiceActivity {
 
 
 //        mDrawerLayout.getParent().requestDisallowInterceptTouchEvent(true);
-        findViewById(R.id.v_main_content).getParent().requestDisallowInterceptTouchEvent(true);
+       // findViewById(R.id.v_main_content).getParent().requestDisallowInterceptTouchEvent(true);
 
 
         mDrawerLayout.setScrimColor(Color.TRANSPARENT);

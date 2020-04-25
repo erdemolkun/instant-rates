@@ -37,7 +37,7 @@
             android:name=".ChartActivity"
             android:configChanges="orientation|screenSize|locale"
             android:label="@string/graphic"
-            android:screenOrientation="portrait"
+            android:screenOrientation="fullSensor"
             android:theme="@style/AppTheme">
 
         </activity>
@@ -46,7 +46,7 @@
             android:name=".alarm.AlarmsActivity"
             android:configChanges="orientation|screenSize|locale"
             android:label="@string/alarms"
-            android:screenOrientation="portrait"
+            android:screenOrientation="fullSensor"
             android:theme="@style/AppTheme">
 
         </activity>
@@ -55,7 +55,7 @@
             android:name=".LandingActivity"
             android:configChanges="orientation|screenSize|locale"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
+            android:screenOrientation="fullSensor"
             android:theme="@style/AppTheme.WithDrawer">
 
             <intent-filter>
@@ -67,7 +67,7 @@
         <activity
             android:name=".SplashActivity"
             android:configChanges="orientation|screenSize|locale"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="fullSensor" />
 
         <service
             android:name=".service.RatePollingService"

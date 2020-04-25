@@ -1,102 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_height="match_parent"
-              android:layout_width="match_parent"
-              android:orientation="vertical"
-              android:padding="16dp">
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_alarm_value"
-        android:layout_height="wrap_content"
-        app:boxBackgroundColor="@null"
-        android:layout_width="match_parent"
-        app:errorEnabled="true">
-
-        <androidx.appcompat.widget.AppCompatEditText
-            android:digits="@string/digits_for_decimal"
-            android:hint="@string/enter_value"
-            android:id="@+id/et_alarm_value"
-            android:imeOptions="actionDone"
-            android:inputType="numberDecimal"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:minHeight="44dp"
-            android:textSize="16sp"/>
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <RadioGroup
-        android:gravity="center_vertical"
-        android:id="@+id/rg_alarm"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        android:layout_width="match_parent"
-        android:minHeight="44dp"
-        android:orientation="horizontal">
-
-        <RadioButton
-            android:gravity="center_vertical"
-            android:id="@+id/rb_above"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:maxLines="2"
-            android:text="@string/if_above"
-            android:textSize="14sp"
-            tools:checked="true"/>
-
-        <RadioButton
-            android:gravity="center_vertical"
-            android:id="@+id/rb_below"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:maxLines="2"
-            android:text="@string/if_below"
-            android:textSize="14sp"/>
-
-
-    </RadioGroup>
-
-    <TextView
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:layout_width="wrap_content"
-        android:text="@string/sources"
-        android:textColor="?colorAccent"
-        android:textSize="12sp"/>
-
-    <Spinner
-        android:id="@+id/spn_source_types"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        android:layout_width="match_parent"
-        android:overlapAnchor="false"/>
-
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
     <LinearLayout
-        android:id="@+id/v_alarm_types"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:orientation="vertical"
-        android:visibility="gone"
-        tools:visibility="visible">
+        android:padding="16dp">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_alarm_value"
+            android:layout_height="wrap_content"
+            app:boxBackgroundColor="@null"
+            android:layout_width="match_parent"
+            app:errorEnabled="true">
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:digits="@string/digits_for_decimal"
+                android:hint="@string/enter_value"
+                android:id="@+id/et_alarm_value"
+                android:imeOptions="actionDone"
+                android:inputType="numberDecimal"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:minHeight="42dp"
+                android:textSize="16sp"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <RadioGroup
+            android:gravity="center_vertical"
+            android:id="@+id/rg_alarm"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_width="match_parent"
+            android:minHeight="42dp"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:gravity="center_vertical"
+                android:id="@+id/rb_above"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:maxLines="2"
+                android:text="@string/if_above"
+                android:textSize="14sp"
+                tools:checked="true"/>
+
+            <RadioButton
+                android:gravity="center_vertical"
+                android:id="@+id/rb_below"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:maxLines="2"
+                android:text="@string/if_below"
+                android:textSize="14sp"/>
+
+        </RadioGroup>
 
         <TextView
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_width="wrap_content"
-            android:text="@string/rate_types"
+            android:text="@string/sources"
             android:textColor="?colorAccent"
             android:textSize="12sp"/>
 
         <Spinner
-            android:id="@+id/spn_rate_types"
+            android:id="@+id/spn_source_types"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:layout_width="match_parent"
             android:overlapAnchor="false"/>
+
+        <LinearLayout
+            android:id="@+id/v_alarm_types"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_width="wrap_content"
+                android:text="@string/rate_types"
+                android:textColor="?colorAccent"
+                android:textSize="12sp"/>
+
+            <Spinner
+                android:id="@+id/spn_rate_types"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:layout_width="match_parent"
+                android:overlapAnchor="false"/>
+        </LinearLayout>
+
+
     </LinearLayout>
-
-
-</LinearLayout>
+</ScrollView>
