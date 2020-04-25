@@ -201,7 +201,7 @@ public abstract class BasePoolingProvider<T> implements IPollingSource, PoolingR
 
     private void job(final boolean is_single_run) {
 
-        disposables.add(getObservable()
+        disposables.add(Observable.defer(this::getObservable)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<T>() {
                     @Override

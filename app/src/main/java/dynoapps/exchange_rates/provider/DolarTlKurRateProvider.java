@@ -18,11 +18,14 @@ public class DolarTlKurRateProvider extends BasePoolingProvider<List<DolarTlKurR
 
     public DolarTlKurRateProvider(SourceCallback<List<DolarTlKurRate>> callback) {
         super(callback);
-        dolarTlKurService = Api.getDolarTlKurApi().create(DolarTlKurService.class);
+
     }
 
     @Override
     protected Observable<List<DolarTlKurRate>> getObservable() {
+        if (dolarTlKurService == null) {
+            dolarTlKurService = Api.getDolarTlKurApi().create(DolarTlKurService.class);
+        }
         return dolarTlKurService.rates("" + System.currentTimeMillis());
     }
 

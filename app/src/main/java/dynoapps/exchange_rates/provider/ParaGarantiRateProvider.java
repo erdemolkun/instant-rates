@@ -17,11 +17,14 @@ public class ParaGarantiRateProvider extends BasePoolingProvider<List<ParaGarant
 
     public ParaGarantiRateProvider(SourceCallback<List<ParaGarantiRate>> callback) {
         super(callback);
-        paraGarantiService = Api.getParaGarantiApi().create(ParaGarantiService.class);
+
     }
 
     @Override
     protected Observable<List<ParaGarantiRate>> getObservable() {
+        if (paraGarantiService == null) {
+            paraGarantiService = Api.getParaGarantiApi().create(ParaGarantiService.class);
+        }
         return paraGarantiService.rates().map(rates -> {
             for (ParaGarantiRate rate : rates) {
                 rate.toRateType();

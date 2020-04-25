@@ -18,11 +18,14 @@ public class BigparaRateProvider extends BasePoolingProvider<List<BigparaRate>> 
 
     public BigparaRateProvider(SourceCallback<List<BigparaRate>> callback) {
         super(callback);
-        bigparaService = Api.getBigparaApi().create(BigparaService.class);
+
     }
 
     @Override
     protected Observable<List<BigparaRate>> getObservable() {
+        if (bigparaService == null) {
+            bigparaService = Api.getBigparaApi().create(BigparaService.class);
+        }
         return bigparaService.rates();
     }
 

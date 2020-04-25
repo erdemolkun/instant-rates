@@ -18,11 +18,13 @@ public class YorumlarRateProvider extends BasePoolingProvider<List<YorumlarRate>
 
     public YorumlarRateProvider(SourceCallback<List<YorumlarRate>> callback) {
         super(callback);
-        yorumlarService = Api.getYorumlarApi().create(YorumlarService.class);
     }
 
     @Override
     protected Observable<List<YorumlarRate>> getObservable() {
+        if (yorumlarService == null) {
+            yorumlarService = Api.getYorumlarApi().create(YorumlarService.class);
+        }
         return yorumlarService.rates("ons");
     }
 

@@ -18,11 +18,14 @@ public class YahooRateProvider extends BasePoolingProvider<List<YahooRate>> {
 
     public YahooRateProvider(SourceCallback<List<YahooRate>> callback) {
         super(callback);
-        yahooService = Api.getYahooApi().create(YahooService.class);
+
     }
 
     @Override
     protected Observable<List<YahooRate>> getObservable() {
+        if (yahooService==null){
+            yahooService = Api.getYahooApi().create(YahooService.class);
+        }
         return yahooService.rates();
     }
 

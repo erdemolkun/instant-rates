@@ -18,11 +18,14 @@ public class EnparaRateProvider extends BasePoolingProvider<List<EnparaRate>> {
 
     public EnparaRateProvider(SourceCallback<List<EnparaRate>> callback) {
         super(callback);
-        enparaService = Api.getEnparaApi().create(EnparaService.class);
+
     }
 
     @Override
     protected Observable<List<EnparaRate>> getObservable() {
+        if (enparaService == null) {
+            enparaService = Api.getEnparaApi().create(EnparaService.class);
+        }
         return enparaService.rates();
     }
 
