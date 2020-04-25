@@ -77,6 +77,14 @@ android {
         exclude 'META-INF/notice.txt'
         exclude 'META-INF/ASL2.0'
         exclude 'META-INF/proguard/androidx-annotations.pro'
+        // Exclude AndroidX version files
+        exclude 'META-INF/*.version'
+        // Exclude consumer proguard files
+        exclude 'META-INF/proguard/*'
+        // Exclude the Firebase/Fabric/other random properties files
+        exclude '/*.properties'
+        exclude 'fabric/*.properties'
+        exclude 'META-INF/*.properties'
     }
 
     defaultConfig {
@@ -96,13 +104,33 @@ android {
             minifyEnabled false
         }
         production {
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), "proguard-android-java.pro"
+            proguardFiles "proguard-android-java.pro"
             signingConfig signingConfigs.release
             minifyEnabled true
+            shrinkResources true
         }
     }
 
-    // Add this block and enable/disable the parameters as follows
+    dexOptions {
+        // Don't pre-dex on CI
+        preDexLibraries !isCi
+    }
+
+    lintOptions {
+        // Disable lintVital. Not needed since lint is run on CI
+        checkReleaseBuilds false
+        // Allow lint to check dependencies
+        checkDependencies true
+        // Ignore any tests
+        ignoreTestSources true
+
+        // Lint doesn't seem to handle Kotlin int types + string format very well
+        disable 'StringFormatMatches'
+        // Seems to be broken in 4.0.0-alpha09 https://issuetracker.google.com/issues/148172219
+        disable 'Instantiatable'
+    }
+
+        // Add this block and enable/disable the parameters as follows
     bundle {
         density {
             // Different APKs are generated for devices with different screen densities; true by default.
