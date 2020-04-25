@@ -18,8 +18,10 @@ import dynoapps.exchange_rates.data.CurrencyType;
 import dynoapps.exchange_rates.event.DataSourceUpdate;
 import dynoapps.exchange_rates.interfaces.ValueType;
 import dynoapps.exchange_rates.model.rates.IRate;
+import dynoapps.exchange_rates.network.BloombergService;
 import dynoapps.exchange_rates.provider.BasePoolingProvider;
 import dynoapps.exchange_rates.provider.BigparaRateProvider;
+import dynoapps.exchange_rates.provider.BloombergRateProvider;
 import dynoapps.exchange_rates.provider.DolarTlKurRateProvider;
 import dynoapps.exchange_rates.provider.EnparaRateProvider;
 import dynoapps.exchange_rates.provider.ParaGarantiRateProvider;
@@ -67,6 +69,9 @@ public class SourcesManager {
                     break;
                 case CurrencyType.YAHOO:
                     source.setPollingSource(CollectionUtils.getInstance(providers, YahooRateProvider.class));
+                    break;
+                case CurrencyType.BLOOMBERGHT:
+                    source.setPollingSource(CollectionUtils.getInstance(providers, BloombergRateProvider.class));
                     break;
             }
         }
@@ -185,6 +190,7 @@ public class SourcesManager {
         currencySources.add(new CurrencySource("Yapı Kredi", CurrencyType.YAPIKREDI, R.color.colorYapiKredi, false, yapikredi_supported));
         currencySources.add(new CurrencySource("Yahoo", CurrencyType.YAHOO, R.color.colorYahoo, false, altin_in_supported));
         currencySources.add(new CurrencySource("Paragaranti", CurrencyType.PARAGARANTI, R.color.colorParagaranti, false, paragaranti_supported)); // update supported ones
+        currencySources.add(new CurrencySource("BloombergHT", CurrencyType.BLOOMBERGHT, R.color.colorBloomberg, false, only_usd_try));
         int index = 0;
         for (CurrencySource source : currencySources) {
             source.setChartIndex(index);

@@ -6,6 +6,7 @@ import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import java.util.concurrent.TimeUnit;
 
 import dynoapps.exchange_rates.converters.BigparaConverter;
+import dynoapps.exchange_rates.converters.BloombergConverter;
 import dynoapps.exchange_rates.converters.DolarTlKurAjaxConverter;
 import dynoapps.exchange_rates.converters.EnparaConverter;
 import dynoapps.exchange_rates.converters.ParagarantiConverter;
@@ -13,7 +14,6 @@ import dynoapps.exchange_rates.converters.YahooConverter;
 import dynoapps.exchange_rates.converters.YorumlarConverter;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by erdemmac on 21/10/2016.
@@ -114,8 +114,9 @@ public class Api {
                     .build();
             bloombergApi = new Retrofit.Builder()
                     .client(client)
-                    .baseUrl("http://www.bloomberght.com/")
-                    .addConverterFactory(GsonConverterFactory.create())
+                    .baseUrl("https://www.bloomberght.com")
+                    .addConverterFactory(new BloombergConverter.Factory())
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .build();
         }
         return bloombergApi;

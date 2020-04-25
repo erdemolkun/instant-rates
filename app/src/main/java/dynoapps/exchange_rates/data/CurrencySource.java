@@ -1,6 +1,7 @@
 package dynoapps.exchange_rates.data;
 
 import androidx.annotation.ColorRes;
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import dynoapps.exchange_rates.App;
 import dynoapps.exchange_rates.provider.IPollingSource;
@@ -59,6 +60,7 @@ public class CurrencySource {
     }
 
     @Override
+    @NonNull
     public String toString() {
         return getName();
     }
@@ -73,7 +75,7 @@ public class CurrencySource {
 
     public boolean isAvgType() {
         return type == CurrencyType.ALTININ || type == CurrencyType.PARAGARANTI ||
-                type == CurrencyType.TLKUR || type == CurrencyType.YAHOO;
+                type == CurrencyType.TLKUR || type == CurrencyType.YAHOO | type == CurrencyType.BLOOMBERGHT;
     }
 
     public boolean isRateSupported(int rateType) {

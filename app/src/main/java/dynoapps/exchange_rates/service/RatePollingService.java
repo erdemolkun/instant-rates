@@ -39,6 +39,7 @@ import dynoapps.exchange_rates.interfaces.ValueType;
 import dynoapps.exchange_rates.model.rates.AvgRate;
 import dynoapps.exchange_rates.model.rates.BaseRate;
 import dynoapps.exchange_rates.model.rates.BigparaRate;
+import dynoapps.exchange_rates.model.rates.BloombergRate;
 import dynoapps.exchange_rates.model.rates.BuySellRate;
 import dynoapps.exchange_rates.model.rates.DolarTlKurRate;
 import dynoapps.exchange_rates.model.rates.EnparaRate;
@@ -50,6 +51,7 @@ import dynoapps.exchange_rates.model.rates.YorumlarRate;
 import dynoapps.exchange_rates.notification.NotificationHelper;
 import dynoapps.exchange_rates.provider.BasePoolingProvider;
 import dynoapps.exchange_rates.provider.BigparaRateProvider;
+import dynoapps.exchange_rates.provider.BloombergRateProvider;
 import dynoapps.exchange_rates.provider.DolarTlKurRateProvider;
 import dynoapps.exchange_rates.provider.EnparaRateProvider;
 import dynoapps.exchange_rates.provider.IPollingSource;
@@ -154,6 +156,13 @@ public class RatePollingService extends IntentService {
                 @Override
                 public void onResult(List<ParaGarantiRate> rates) {
                     onProviderResult(rates, CurrencyType.PARAGARANTI);
+                }
+            }));
+
+            providers.add(new BloombergRateProvider(new ProviderSourceCallbackAdapter<List<BloombergRate>>() {
+                @Override
+                public void onResult(List<BloombergRate> rates) {
+                    onProviderResult(rates, CurrencyType.BLOOMBERGHT);
                 }
             }));
         }

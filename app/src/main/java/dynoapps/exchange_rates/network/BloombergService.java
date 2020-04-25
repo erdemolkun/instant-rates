@@ -1,8 +1,10 @@
 package dynoapps.exchange_rates.network;
 
 
-import dynoapps.exchange_rates.model.DynamicDataResponse;
-import retrofit2.Call;
+import java.util.List;
+
+import dynoapps.exchange_rates.model.rates.BloombergRate;
+import io.reactivex.Observable;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 
@@ -13,9 +15,9 @@ import retrofit2.http.Headers;
 public interface BloombergService {
 
     @Headers({
-            "Content-Type:text/html"
+            "Content-Type:text/html; charset=utf-8"
     })
-    @GET("dynamics/updateDynamicData")
-    Call<DynamicDataResponse> getDynamicData();
+    @GET("/")
+    Observable<List<BloombergRate>> rates();
 
 }

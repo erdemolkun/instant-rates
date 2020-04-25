@@ -64,9 +64,6 @@ public class EnparaConverter implements Converter<ResponseBody, List<BaseRate>> 
             rate.value_buy = divElements.get(1).text();
             rate.value_sell = divElements.get(2).text();
         }
-        rate.toRateType();
-        rate.setRealValues();
-
         return rate;
     }
 

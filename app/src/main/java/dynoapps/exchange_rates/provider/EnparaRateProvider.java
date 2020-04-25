@@ -26,7 +26,13 @@ public class EnparaRateProvider extends BasePoolingProvider<List<EnparaRate>> {
         if (enparaService == null) {
             enparaService = Api.getEnparaApi().create(EnparaService.class);
         }
-        return enparaService.rates();
+        return enparaService.rates().map(rates -> {
+            for (EnparaRate rate : rates) {
+                rate.toRateType();
+                rate.setRealValues();
+            }
+            return rates;
+        });
     }
 
     @Override
