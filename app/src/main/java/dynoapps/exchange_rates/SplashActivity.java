@@ -11,7 +11,7 @@ import butterknife.ButterKnife;
  */
 
 public class SplashActivity extends BaseServiceActivity {
-    private static final int MIN_DURATION = 450;
+    private static final int MIN_DURATION = 300;
 
     private long startMilis;
     Runnable runnable = this::gotoNextIntent;
@@ -32,7 +32,7 @@ public class SplashActivity extends BaseServiceActivity {
     protected void onConnectionDone() {
         long currentMilis = System.currentTimeMillis();
         if (currentMilis - startMilis < MIN_DURATION) {
-            getHandler().postDelayed(runnable, Math.abs(MIN_DURATION - (currentMilis - startMilis)));
+            mainHandler().postDelayed(runnable, Math.abs(MIN_DURATION - (currentMilis - startMilis)));
         } else {
             gotoNextIntent();
         }
@@ -52,8 +52,8 @@ public class SplashActivity extends BaseServiceActivity {
     }
 
     private void clearEvents() {
-        if (getHandler() != null) {
-            getHandler().removeCallbacks(runnable);
+        if (mainHandler() != null) {
+            mainHandler().removeCallbacks(runnable);
         }
     }
 

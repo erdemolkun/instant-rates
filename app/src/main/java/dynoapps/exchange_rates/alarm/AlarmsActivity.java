@@ -21,7 +21,6 @@ import dynoapps.exchange_rates.App;
 import dynoapps.exchange_rates.BaseActivity;
 import dynoapps.exchange_rates.R;
 import dynoapps.exchange_rates.ui.SlideInItemAnimator;
-import dynoapps.exchange_rates.util.AnimationHelper;
 import dynoapps.exchange_rates.util.ViewUtils;
 
 /**
@@ -47,7 +46,6 @@ public class AlarmsActivity extends BaseActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        setAnimationType(AnimationHelper.FADE_IN);
         super.onCreate(savedInstanceState);
         alarmRepository = App.getInstance().provideAlarmsRepository();
         setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);

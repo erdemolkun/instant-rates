@@ -52,7 +52,6 @@ import dynoapps.exchange_rates.model.rates.YahooRate;
 import dynoapps.exchange_rates.model.rates.YapıKrediRate;
 import dynoapps.exchange_rates.model.rates.YorumlarRate;
 import dynoapps.exchange_rates.time.TimeIntervalManager;
-import dynoapps.exchange_rates.util.AnimationHelper;
 import dynoapps.exchange_rates.util.RateUtils;
 import dynoapps.exchange_rates.util.ViewUtils;
 
@@ -85,7 +84,6 @@ public class ChartActivity extends BaseActivity {
     @IRate.RateDef
     int rateType = IRate.USD;
     private long startMilis;
-    private int white;
     private int chart_text_color;
 
     private long getVisibleTimeInMilis() {
@@ -94,7 +92,6 @@ public class ChartActivity extends BaseActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        setAnimationType(AnimationHelper.FADE_IN);
         super.onCreate(savedInstanceState);
         rateType = getIntent().getExtras().getInt(EXTRA_RATE_TYPE, rateType);
 
@@ -111,7 +108,6 @@ public class ChartActivity extends BaseActivity {
         setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
         getActionBarToolbar().setNavigationOnClickListener(v -> finish());
 
-        white = ContextCompat.getColor(getApplicationContext(), android.R.color.white);
         chart_text_color = ContextCompat.getColor(getApplicationContext(), android.R.color.black);
         startMilis = System.currentTimeMillis();
         initChart();
@@ -145,18 +141,12 @@ public class ChartActivity extends BaseActivity {
         swipeRefreshLayout.setProgressViewOffset(true, top + progressBarStartMargin, top + progressBarEndMargin);
         swipeRefreshLayout.setOnRefreshListener(() -> {
             EventBus.getDefault().post(new UpdateTriggerEvent());
-            getHandler().postDelayed(() -> swipeRefreshLayout.setRefreshing(false), 1000);
+            mainHandler().postDelayed(() -> swipeRefreshLayout.setRefreshing(false), 1000);
         });
     }
 
     private void initChart() {
-//        Description description = new Description();
-//        description.setTextSize(12f);
-//        description.setText("Dolar-TL Grafiği");
-//        description.setXOffset(8);
-//        description.setYOffset(8);
-//        description.setTextColor(ContextCompat.getColor(this, android.R.color.white));
-//        lineChart.setDescription(description);
+
         lineChart.getDescription().setEnabled(false);
         lineChart.setBackgroundColor(ContextCompat.getColor(this, R.color.colorGraph));
 

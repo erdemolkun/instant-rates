@@ -54,7 +54,6 @@ import dynoapps.exchange_rates.model.rates.IRate;
 import dynoapps.exchange_rates.provider.BasePoolingProvider;
 import dynoapps.exchange_rates.service.RatePollingService;
 import dynoapps.exchange_rates.time.TimeIntervalManager;
-import dynoapps.exchange_rates.util.AnimationHelper;
 import dynoapps.exchange_rates.util.AppUtils;
 import dynoapps.exchange_rates.util.RateUtils;
 import dynoapps.exchange_rates.util.ServiceUtils;
@@ -121,7 +120,6 @@ public class LandingActivity extends BaseServiceActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        setAnimationType(AnimationHelper.FADE_IN);
         super.onCreate(savedInstanceState);
         alarmsRepository = App.getInstance().provideAlarmsRepository();
         mHandler = new Handler(Looper.getMainLooper());
@@ -170,7 +168,7 @@ public class LandingActivity extends BaseServiceActivity {
         swipeRefreshLayout.setProgressViewOffset(true, top + progressBarStartMargin, top + progressBarEndMargin);
         swipeRefreshLayout.setOnRefreshListener(() -> {
             EventBus.getDefault().post(new UpdateTriggerEvent());
-            getHandler().postDelayed(() -> swipeRefreshLayout.setRefreshing(false), 1000);
+            mainHandler().postDelayed(() -> swipeRefreshLayout.setRefreshing(false), 1000);
         });
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);

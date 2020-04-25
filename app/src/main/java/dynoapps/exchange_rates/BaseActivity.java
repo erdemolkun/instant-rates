@@ -3,6 +3,7 @@ package dynoapps.exchange_rates;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,7 +16,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import butterknife.ButterKnife;
-import dynoapps.exchange_rates.util.AnimationHelper;
 import dynoapps.exchange_rates.util.L;
 
 /**
@@ -24,51 +24,22 @@ import dynoapps.exchange_rates.util.L;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
-    protected
-    @AnimationHelper.AnimationType
-    int animationTypeExit = AnimationHelper.NONE;
-    @AnimationHelper.AnimationType
-    int animationTypeEnter = AnimationHelper.NONE;
+
     private Handler handler;
     private Toolbar mActionBarToolbar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        AnimationHelper.doAnimation(this, animationTypeEnter, true);
         super.onCreate(savedInstanceState);
         setContentView(getLayoutId());
         ButterKnife.bind(this);
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (isFinishing()) {
-            AnimationHelper.doAnimation(this, animationTypeExit, false);
-        }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        //App.getInstance().sendAnalyticsScreenName(this);
-    }
-
-    protected Handler getHandler() {
+    protected Handler mainHandler() {
         if (handler == null) {
             handler = new Handler(Looper.getMainLooper());
         }
         return handler;
-    }
-
-    protected void setAnimationType(@AnimationHelper.AnimationType int animationType) {
-        this.animationTypeEnter = animationType;
-        this.animationTypeExit = animationType;
-    }
-
-    protected void setAnimationType(@AnimationHelper.AnimationType int animationTypeEnter, @AnimationHelper.AnimationType int animationTypeExit) {
-        this.animationTypeEnter = animationTypeEnter;
-        this.animationTypeExit = animationTypeExit;
     }
 
     protected Toolbar getActionBarToolbar() {
@@ -99,7 +70,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             L.ex(e);
         }
         if (color != null) {
-            drawable.mutate().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+            drawable.mutate().setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_ATOP));
         }
         getActionBarToolbar().setNavigationIcon(drawable);
     }
