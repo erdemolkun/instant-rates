@@ -96,12 +96,9 @@ android {
             minifyEnabled false
         }
         production {
-            proguardFile 'proguard-android-java.pro'
-            proguardFile 'proguard-simple-xml.pro'
-            proguardFile 'proguard-rules.pro'
-            proguardFile 'proguard-project-app.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), "proguard-android-java.pro"
             signingConfig signingConfigs.release
-            minifyEnabled true;
+            minifyEnabled true
         }
     }
 
@@ -118,7 +115,7 @@ android {
         language {
             // This is disabled so that the App Bundle does NOT split the APK for each language.
             // We're gonna use the same APK for all languages.
-            enableSplit false
+            enableSplit true
         }
     }
 }
