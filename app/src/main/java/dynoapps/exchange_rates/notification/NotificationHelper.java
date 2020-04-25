@@ -32,7 +32,6 @@ public class NotificationHelper {
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID_CONNECTION, name, importance);
             channel.setDescription(description);
             channel.setShowBadge(false);
-            channel.setSound(null, null);
             channel.enableVibration(false);
             notificationManager.createNotificationChannel(channel);
         }
