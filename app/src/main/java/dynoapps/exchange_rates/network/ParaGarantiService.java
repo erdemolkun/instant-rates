@@ -1,7 +1,9 @@
 package dynoapps.exchange_rates.network;
 
 
-import dynoapps.exchange_rates.model.ParagarantiResponse;
+import java.util.List;
+
+import dynoapps.exchange_rates.model.rates.ParaGarantiRate;
 import io.reactivex.Observable;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
@@ -16,6 +18,6 @@ public interface ParaGarantiService {
             "Content-Type:text/html;charset=UTF-8"
     })
     @GET("asp/xml/icpiyasaX.xml")
-    Observable<ParagarantiResponse> rates();
+    Observable<List<ParaGarantiRate>> rates();
 
 }

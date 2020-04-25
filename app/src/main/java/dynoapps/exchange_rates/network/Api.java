@@ -8,13 +8,12 @@ import java.util.concurrent.TimeUnit;
 import dynoapps.exchange_rates.converters.BigparaConverter;
 import dynoapps.exchange_rates.converters.DolarTlKurAjaxConverter;
 import dynoapps.exchange_rates.converters.EnparaConverter;
-import dynoapps.exchange_rates.converters.GarantiConverter;
+import dynoapps.exchange_rates.converters.ParagarantiConverter;
 import dynoapps.exchange_rates.converters.YahooConverter;
 import dynoapps.exchange_rates.converters.YorumlarConverter;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
 
 /**
  * Created by erdemmac on 21/10/2016.
@@ -27,7 +26,6 @@ public class Api {
     private static Retrofit bloombergApi;
     private static Retrofit bigparaApi;
     private static Retrofit dolarTlKurApi;
-    private static Retrofit garantiApi;
     private static Retrofit yahooApi;
     private static Retrofit paraGarantiApi;
 
@@ -38,7 +36,7 @@ public class Api {
             paraGarantiApi = new Retrofit.Builder()
                     .client(client)
                     .baseUrl("https://realtime.paragaranti.com/")
-                    .addConverterFactory(SimpleXmlConverterFactory.create())
+                    .addConverterFactory(new ParagarantiConverter.Factory())
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .build();
         }
@@ -109,15 +107,6 @@ public class Api {
         return yahooApi;
     }
 
-    public static Retrofit getGarantiApi() {
-        if (garantiApi == null) {
-            garantiApi = new Retrofit.Builder()
-                    .baseUrl("https://www.garanti.com.tr/")
-                    .addConverterFactory(new GarantiConverter.Factory())
-                    .build();
-        }
-        return garantiApi;
-    }
 
     public static Retrofit getBloombergApi() {
         if (bloombergApi == null) {
