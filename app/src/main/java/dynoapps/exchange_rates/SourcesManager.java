@@ -1,9 +1,7 @@
 package dynoapps.exchange_rates;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.text.TextUtils;
-import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -18,7 +16,6 @@ import dynoapps.exchange_rates.data.CurrencyType;
 import dynoapps.exchange_rates.event.DataSourceUpdate;
 import dynoapps.exchange_rates.interfaces.ValueType;
 import dynoapps.exchange_rates.model.rates.IRate;
-import dynoapps.exchange_rates.network.BloombergService;
 import dynoapps.exchange_rates.provider.BasePoolingProvider;
 import dynoapps.exchange_rates.provider.BigparaRateProvider;
 import dynoapps.exchange_rates.provider.BloombergRateProvider;
@@ -183,6 +180,7 @@ public class SourcesManager {
         int[] paragaranti_supported = {IRate.USD, IRate.EUR, IRate.EUR_USD};
         int[] enpara_supported = {IRate.USD, IRate.EUR, IRate.EUR_USD, IRate.ONS_TRY};
         int[] yapikredi_supported = {IRate.USD, IRate.EUR, IRate.ONS_TRY};
+        int[] bloomberg_supported = {IRate.USD, IRate.EUR, IRate.EUR_USD};
         currencySources.add(new CurrencySource("Altın.in", CurrencyType.ALTININ, R.color.colorYorumlar, false, altin_in_supported));
         currencySources.add(new CurrencySource("Enpara", CurrencyType.ENPARA, R.color.colorEnpara, true, enpara_supported));
         currencySources.add(new CurrencySource("Bigpara", CurrencyType.BIGPARA, R.color.colorBigPara, false, only_usd_try));
@@ -190,7 +188,7 @@ public class SourcesManager {
         currencySources.add(new CurrencySource("Yapı Kredi", CurrencyType.YAPIKREDI, R.color.colorYapiKredi, false, yapikredi_supported));
         currencySources.add(new CurrencySource("Yahoo", CurrencyType.YAHOO, R.color.colorYahoo, false, altin_in_supported));
         currencySources.add(new CurrencySource("Paragaranti", CurrencyType.PARAGARANTI, R.color.colorParagaranti, false, paragaranti_supported)); // update supported ones
-        currencySources.add(new CurrencySource("BloombergHT", CurrencyType.BLOOMBERGHT, R.color.colorBloomberg, false, only_usd_try));
+        currencySources.add(new CurrencySource("Bloomberg HT", CurrencyType.BLOOMBERGHT, R.color.colorBloomberg, false, bloomberg_supported));
         int index = 0;
         for (CurrencySource source : currencySources) {
             source.setChartIndex(index);
