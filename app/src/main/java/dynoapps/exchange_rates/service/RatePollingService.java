@@ -2,8 +2,6 @@ package dynoapps.exchange_rates.service;
 
 import android.app.IntentService;
 import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
@@ -49,6 +47,7 @@ import dynoapps.exchange_rates.model.rates.ParaGarantiRate;
 import dynoapps.exchange_rates.model.rates.YahooRate;
 import dynoapps.exchange_rates.model.rates.YapıKrediRate;
 import dynoapps.exchange_rates.model.rates.YorumlarRate;
+import dynoapps.exchange_rates.notification.NotificationHelper;
 import dynoapps.exchange_rates.provider.BasePoolingProvider;
 import dynoapps.exchange_rates.provider.BigparaRateProvider;
 import dynoapps.exchange_rates.provider.DolarTlKurRateProvider;
@@ -77,9 +76,6 @@ public class RatePollingService extends IntentService {
     private AlarmsRepository alarmsRepository;
 
     private static final int FOREGROUND_ID = 1001;
-
-    private static final String CHANNEL_ID_CONNECTION = "connection";
-    private static final String CHANNEL_ID_ALARM = "alarm";
 
     public RatePollingService() {
         super("RatePollingService");
@@ -170,38 +166,6 @@ public class RatePollingService extends IntentService {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.O;
     }
 
-
-    private void createConnectionChannelIfNotExists() {
-        if (isOreoAndAbove()) {
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            if (notificationManager == null || notificationManager.getNotificationChannel(CHANNEL_ID_CONNECTION) != null)
-                return;
-
-            CharSequence name = getString(R.string.connection);
-            String description = getString(R.string.connection);
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID_CONNECTION, name, importance);
-            channel.setDescription(description);
-
-            notificationManager.createNotificationChannel(channel);
-        }
-    }
-
-    private void createAlarmChannelIfNotExists() {
-        if (isOreoAndAbove()) {
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            if (notificationManager == null || notificationManager.getNotificationChannel(CHANNEL_ID_ALARM) != null)
-                return;
-
-            CharSequence name = getString(R.string.alarms);
-            String description = getString(R.string.alarm_notifications);
-            int importance = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID_ALARM, name, importance);
-            channel.setDescription(description);
-
-            notificationManager.createNotificationChannel(channel);
-        }
-    }
 
     private void onProviderResult(List<? extends BaseRate> rates, int sourceType) {
         alarmChecks(rates, sourceType);
@@ -328,14 +292,14 @@ public class RatePollingService extends IntentService {
 
     private void sendNotification(String message, String category, int id) {
 
-        createAlarmChannelIfNotExists();
+        NotificationHelper.createAlarmChannelIfNotExists(this);
         Intent pushIntent = new Intent(this, LandingActivity.class);
         pushIntent.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
                 pushIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(this, CHANNEL_ID_ALARM)
+                new NotificationCompat.Builder(this, NotificationHelper.CHANNEL_ID_ALARM)
                         .setSmallIcon(R.drawable.ic_add_alarm_white_24dp)
                         .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
                         .setContentTitle(getString(R.string.app_name))
@@ -358,7 +322,7 @@ public class RatePollingService extends IntentService {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (isOreoAndAbove()) {
-            createConnectionChannelIfNotExists();
+            NotificationHelper.createConnectionChannelIfNotExists(this);
 
             Intent pushIntent = new Intent(this, LandingActivity.class);
             pushIntent.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
@@ -372,7 +336,7 @@ public class RatePollingService extends IntentService {
             NotificationCompat.Action stopAction = new NotificationCompat.Action.Builder(0, getString(R.string.notification_stop_action), stopActionPendingIntent)
                     .build();
 
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID_CONNECTION);
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), NotificationHelper.CHANNEL_ID_CONNECTION);
             builder.setContentIntent(pendingIntent);
             builder.setContentText(getApplicationContext().getString(R.string.background_working));
             builder.setPriority(NotificationCompat.PRIORITY_MIN);
