@@ -30,7 +30,6 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 import androidx.interpolator.view.animation.LinearOutSlowInInterpolator;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import dynoapps.exchange_rates.alarm.AlarmManager;
@@ -38,10 +37,7 @@ import dynoapps.exchange_rates.alarm.AlarmsActivity;
 import dynoapps.exchange_rates.alarm.AlarmsRepository;
 import dynoapps.exchange_rates.data.CurrencySource;
 import dynoapps.exchange_rates.data.RatesHolder;
-import dynoapps.exchange_rates.event.DataSourceUpdate;
-import dynoapps.exchange_rates.event.IntervalUpdate;
 import dynoapps.exchange_rates.event.RatesEvent;
-import dynoapps.exchange_rates.event.UpdateTriggerEvent;
 import dynoapps.exchange_rates.interfaces.ValueType;
 import dynoapps.exchange_rates.model.rates.AvgRate;
 import dynoapps.exchange_rates.model.rates.BaseRate;
@@ -54,6 +50,8 @@ import dynoapps.exchange_rates.util.AppUtils;
 import dynoapps.exchange_rates.util.RateUtils;
 import dynoapps.exchange_rates.util.ServiceUtils;
 import dynoapps.exchange_rates.util.ViewUtils;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 
 /**
  * Created by erdemmac on 06/12/2016.
@@ -79,8 +77,6 @@ public class LandingActivity extends BaseServiceActivity {
     TextView tvVersion;
     @BindView(R.id.tv_interval_hint)
     TextView tvIntervalHint;
-    //@BindView(R.id.swipe_to_refresh)
-    //SwipeRefreshLayout swipeRefreshLayout;
     AlarmsRepository alarmsRepository;
     List<CardViewItemParent> parentItems = new ArrayList<>();
     private Handler mHandler;
@@ -127,6 +123,13 @@ public class LandingActivity extends BaseServiceActivity {
         tvVersion.setText(getString(R.string.version_placeholder, AppUtils.getPlainVersion()));
         updateHint();
 
+        Disposable disposable = TimeIntervalManager.getIntervalUpdates().observeOn(AndroidSchedulers.mainThread()).subscribe(__ -> updateHint());
+        compositeDisposable.add(disposable);
+
+        compositeDisposable.add(SourcesManager.getSourceUpdates().observeOn(AndroidSchedulers.mainThread()).subscribe(__ -> {
+            refreshCardItemViews();
+        }));
+
         /*swipeRefreshLayout.setColorSchemeResources(
                 R.color.refresh_progress_1,
                 R.color.refresh_progress_2,
@@ -139,7 +142,7 @@ public class LandingActivity extends BaseServiceActivity {
                 R.dimen.swipe_refresh_progress_bar_end_margin);
         swipeRefreshLayout.setProgressViewOffset(true, top + progressBarStartMargin, top + progressBarEndMargin);
         swipeRefreshLayout.setOnRefreshListener(() -> {
-            EventBus.getDefault().post(new UpdateTriggerEvent());
+            ProvidersManager.getInstance().triggerUpdate();
             mainHandler().postDelayed(() -> swipeRefreshLayout.setRefreshing(false), 1000);
         });*/
         if (!EventBus.getDefault().isRegistered(this)) {
@@ -300,7 +303,7 @@ public class LandingActivity extends BaseServiceActivity {
 
 
 //        mDrawerLayout.getParent().requestDisallowInterceptTouchEvent(true);
-       // findViewById(R.id.v_main_content).getParent().requestDisallowInterceptTouchEvent(true);
+        // findViewById(R.id.v_main_content).getParent().requestDisallowInterceptTouchEvent(true);
 
 
         mDrawerLayout.setScrimColor(Color.TRANSPARENT);
@@ -418,16 +421,6 @@ public class LandingActivity extends BaseServiceActivity {
     public void onEvent(RatesEvent ratesEvent) {
         List<BaseRate> rates = ratesEvent.rates;
         updateCards(rates, ratesEvent.source_type, true);
-    }
-
-    @Subscribe
-    public void onEvent(DataSourceUpdate event) {
-        refreshCardItemViews();
-    }
-
-    @Subscribe
-    public void onEvent(IntervalUpdate event) {
-        updateHint();
     }
 
     private void updateHint() {

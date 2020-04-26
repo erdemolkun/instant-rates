@@ -1,7 +1,6 @@
 package dynoapps.exchange_rates.time;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -12,8 +11,8 @@ import androidx.appcompat.app.AlertDialog;
 import dynoapps.exchange_rates.App;
 import dynoapps.exchange_rates.Prefs;
 import dynoapps.exchange_rates.R;
-import dynoapps.exchange_rates.event.IntervalUpdate;
 import dynoapps.exchange_rates.util.CollectionUtils;
+import io.reactivex.subjects.PublishSubject;
 
 /**
  * Created by erdemmac on 03/12/2016.
@@ -29,12 +28,18 @@ public final class TimeIntervalManager {
     private static boolean isAlarmMode = false;
     private static int user_selected_item_index = -1;
 
+    private static PublishSubject<Boolean> intervalUpdates = PublishSubject.create();
+
     private static boolean isAlarmMode() {
         return isAlarmMode;
     }
 
     public static void setAlarmMode(boolean enabled) {
         TimeIntervalManager.isAlarmMode = enabled;
+    }
+
+    public static void updateIntervalsToUIMode(){
+        intervalUpdates.onNext(true);
     }
 
     private static ArrayList<TimeInterval> getDefaultIntervals() {
@@ -49,6 +54,10 @@ public final class TimeIntervalManager {
             intervals.add(new TimeInterval(1, TimeUnit.MINUTES));
         }
         return intervals;
+    }
+
+    public static PublishSubject<Boolean> getIntervalUpdates() {
+        return intervalUpdates;
     }
 
     public static String getSelectionStr() {
@@ -69,13 +78,10 @@ public final class TimeIntervalManager {
 
         builder.setCancelable(true);
         builder.setTitle(R.string.select_time_interval);
-        builder.setPositiveButton(R.string.apply, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (user_selected_item_index != TimeIntervalManager.getSelectedIndex()) {
-                    TimeIntervalManager.updateUserInvertalSelection(user_selected_item_index);
-                    EventBus.getDefault().post(new IntervalUpdate(false));
-                }
+        builder.setPositiveButton(R.string.apply, (dialog, which) -> {
+            if (user_selected_item_index != TimeIntervalManager.getSelectedIndex()) {
+                TimeIntervalManager.updateUserInvertalSelection(user_selected_item_index);
+                intervalUpdates.onNext(false);
             }
         });
 

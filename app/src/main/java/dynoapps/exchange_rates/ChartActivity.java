@@ -40,7 +40,6 @@ import butterknife.BindView;
 import dynoapps.exchange_rates.data.CurrencySource;
 import dynoapps.exchange_rates.data.RatesHolder;
 import dynoapps.exchange_rates.event.RatesEvent;
-import dynoapps.exchange_rates.event.UpdateTriggerEvent;
 import dynoapps.exchange_rates.model.rates.BaseRate;
 import dynoapps.exchange_rates.model.rates.BigparaRate;
 import dynoapps.exchange_rates.model.rates.BuySellRate;
@@ -140,7 +139,7 @@ public class ChartActivity extends BaseActivity {
                 R.dimen.swipe_refresh_progress_bar_end_margin);
         swipeRefreshLayout.setProgressViewOffset(true, top + progressBarStartMargin, top + progressBarEndMargin);
         swipeRefreshLayout.setOnRefreshListener(() -> {
-            EventBus.getDefault().post(new UpdateTriggerEvent());
+            ProvidersManager.getInstance().triggerUpdate();
             mainHandler().postDelayed(() -> swipeRefreshLayout.setRefreshing(false), 1000);
         });
     }

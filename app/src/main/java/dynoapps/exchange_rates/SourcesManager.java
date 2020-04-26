@@ -5,15 +5,12 @@ import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.Toast;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import androidx.appcompat.app.AlertDialog;
 import dynoapps.exchange_rates.data.CurrencySource;
 import dynoapps.exchange_rates.data.CurrencyType;
-import dynoapps.exchange_rates.event.DataSourceUpdate;
 import dynoapps.exchange_rates.interfaces.ValueType;
 import dynoapps.exchange_rates.model.rates.IRate;
 import dynoapps.exchange_rates.provider.BasePoolingProvider;
@@ -26,6 +23,7 @@ import dynoapps.exchange_rates.provider.YahooRateProvider;
 import dynoapps.exchange_rates.provider.YapıKrediRateProvider;
 import dynoapps.exchange_rates.provider.YorumlarRateProvider;
 import dynoapps.exchange_rates.util.CollectionUtils;
+import io.reactivex.subjects.PublishSubject;
 
 /**
  * Created by erdemmac on 05/12/2016.
@@ -37,9 +35,15 @@ public class SourcesManager {
     // Boolean array for initial enabled items
     private static boolean[] temp_data_source_states;
 
+    private static PublishSubject<Boolean> sourceUpdates = PublishSubject.create();
+
     private static void init() {
         if (CollectionUtils.size(currencySources) > 0) return; // Already initialized
         initDataSourceSelections();
+    }
+
+    public static PublishSubject<Boolean> getSourceUpdates() {
+        return sourceUpdates;
     }
 
     public static void updateProviders(List<BasePoolingProvider<?>> providers) {
@@ -108,7 +112,7 @@ public class SourcesManager {
                     for (int i = 0; i < currencySources.size(); i++) {
                         currencySources.get(i).setEnabled(temp_data_source_states[i]);
                     }
-                    EventBus.getDefault().post(new DataSourceUpdate());
+                    sourceUpdates.onNext(true);
                     saveSources(currencySources);
                     dialog.dismiss();
                 }

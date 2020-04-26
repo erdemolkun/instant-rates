@@ -4,7 +4,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 
@@ -12,15 +11,17 @@ import org.greenrobot.eventbus.EventBus;
 
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
-import dynoapps.exchange_rates.event.IntervalUpdate;
 import dynoapps.exchange_rates.service.RatePollingService;
 import dynoapps.exchange_rates.time.TimeIntervalManager;
 import dynoapps.exchange_rates.util.L;
 import dynoapps.exchange_rates.util.ServiceUtils;
+import io.reactivex.disposables.CompositeDisposable;
 
 public abstract class BaseServiceActivity extends BaseActivity {
 
     RatePollingService ratePollingService;
+
+    protected CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     private ServiceConnection rateServiceConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className, IBinder binder) {
@@ -45,21 +46,23 @@ public abstract class BaseServiceActivity extends BaseActivity {
         if (!ServiceUtils.isMyServiceRunning(this, RatePollingService.class)) {
             Intent intent = new Intent(this, RatePollingService.class);
             bindService(intent, rateServiceConnection, Context.BIND_AUTO_CREATE);
-            ContextCompat.startForegroundService(this,intent);
+            ContextCompat.startForegroundService(this, intent);
         } else {
             Intent intent = new Intent(this, RatePollingService.class);
             bindService(intent, rateServiceConnection, Context.BIND_AUTO_CREATE);
             SourcesManager.update();
-            EventBus.getDefault().post(new IntervalUpdate(true)); // Intervals should be updated on ui mode.
+            TimeIntervalManager.updateIntervalsToUIMode();// Intervals should be updated on ui mode.
         }
     }
 
     @Override
     protected void onDestroy() {
+
         if (ratePollingService != null) {
             unbindService(rateServiceConnection);
         }
         EventBus.getDefault().unregister(this);
+        compositeDisposable.dispose();
         super.onDestroy();
     }
 

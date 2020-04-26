@@ -10,6 +10,10 @@ import com.orhanobut.logger.Logger;
 import com.orhanobut.logger.PrettyFormatStrategy;
 
 import dynoapps.exchange_rates.alarm.AlarmsRepository;
+import dynoapps.exchange_rates.util.L;
+import io.reactivex.exceptions.OnErrorNotImplementedException;
+import io.reactivex.exceptions.UndeliverableException;
+import io.reactivex.plugins.RxJavaPlugins;
 
 
 /**
@@ -17,9 +21,7 @@ import dynoapps.exchange_rates.alarm.AlarmsRepository;
  */
 
 public class App extends Application {
-    private static final String PROPERTY_ID = "UA-58111264-6";
     private static App appInstance;
-    //private HashMap<TrackerName, Tracker> trackers = new HashMap<>();
 
     public static App getInstance() {
         return appInstance;
@@ -39,6 +41,8 @@ public class App extends Application {
         super.onCreate();
         appInstance = this;
 
+        RxJavaPlugins.setErrorHandler(throwable -> L.e("App",throwable.getLocalizedMessage()));
+
         FormatStrategy formatStrategy = PrettyFormatStrategy.newBuilder()
                 .showThreadInfo(false)  // (Optional) Whether to show thread info or not. Default true
                 .methodCount(0)         // (Optional) How many method line to show. Default 2
@@ -55,49 +59,6 @@ public class App extends Application {
         });
 
     }
-
-    /*private synchronized Tracker getTracker(TrackerName trackerId) {
-        if (!trackers.containsKey(trackerId)) {
-
-            GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
-            GoogleAnalytics.getInstance(this).setDryRun(false);
-            Tracker t = (trackerId == TrackerName.APP_TRACKER) ? analytics.newTracker(PROPERTY_ID) :
-                    (trackerId == TrackerName.GLOBAL_TRACKER) ? analytics.newTracker(R.xml.global_tracker) : analytics.newTracker(R.xml.global_tracker);
-            trackers.put(trackerId, t);
-        }
-        return trackers.get(trackerId);
-    }
-
-    public void sendAnalyticsScreenName(Activity activity) {
-        // Get tracker.
-        Tracker tracker = getTracker(TrackerName.APP_TRACKER);
-
-        if (tracker == null) return;
-
-        String screenName = activity.getClass().getSimpleName();
-        // Set screen name.
-        tracker.setScreenName(screenName);
-        tracker.send(new HitBuilders.ScreenViewBuilder().build());
-    }
-
-    public void sendAnalyticsError(Exception ex, @NonNull String description, boolean isFatal) {
-        // Get tracker.
-        Tracker tracker = getTracker(TrackerName.APP_TRACKER);
-
-        if (tracker == null) return;
-        String desc_final = description;
-        if (ex != null) {
-            String exMessage = ex.getLocalizedMessage();
-            if (!TextUtils.isEmpty(exMessage)) {
-                desc_final += " : " + exMessage;
-            }
-        }
-        tracker.send(new HitBuilders.ExceptionBuilder().setDescription(desc_final).setFatal(isFatal).build());
-    }
-
-    public void sendAnalyticsError(String description, boolean isFatal) {
-        sendAnalyticsError(null, description, isFatal);
-    }*/
 
     /**
      * Enum used to identify the tracker that needs to be used for tracking.
