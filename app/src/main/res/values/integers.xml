@@ -1,11 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <integer name="activity_anim_duration_too_fast">200</integer>
-    <integer name="activity_anim_duration_fast">300</integer>
-    <integer name="activity_anim_duration_medium">400</integer>
-
-    <integer name="jump_anim_total">425</integer>
-    <integer name="jump_anim_offset">125</integer>
-    <integer name="jump_anim_duration">300</integer>
 
 </resources>
