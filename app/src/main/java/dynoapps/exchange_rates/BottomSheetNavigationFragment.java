@@ -65,6 +65,7 @@ public class BottomSheetNavigationFragment extends BottomSheetDialogFragment {
             Intent i = new Intent(getContext(), ChartActivity.class);
             i.putExtra(ChartActivity.EXTRA_RATE_TYPE, IRate.EUR_USD);
             startActivity(i);
+            dismiss();
         });
 
         tvDrawerItemOns.setOnClickListener(v -> {
@@ -79,12 +80,11 @@ public class BottomSheetNavigationFragment extends BottomSheetDialogFragment {
             startActivity(i);
             dismiss();
         });
-        ViewUtils.tint(tvDrawerItemUsd, R.color.colorPrimary);
-        ViewUtils.tint(tvDrawerItemEur, R.color.colorPrimary);
-        ViewUtils.tint(tvDrawerItemEurUsd, R.color.colorPrimary);
-        ViewUtils.tint(tvDrawerItemOns, R.color.colorPrimary);
-        ViewUtils.tint(tvDrawerItemAlarms, R.color.colorPrimary);
-
+        ViewUtils.tintDrawable(tvDrawerItemUsd, R.color.colorPrimary);
+        ViewUtils.tintDrawable(tvDrawerItemEur, R.color.colorPrimary);
+        ViewUtils.tintDrawable(tvDrawerItemEurUsd, R.color.colorPrimary);
+        ViewUtils.tintDrawable(tvDrawerItemOns, R.color.colorPrimary);
+        ViewUtils.tintDrawable(tvDrawerItemAlarms, R.color.colorPrimary);
     }
 
     @Nullable

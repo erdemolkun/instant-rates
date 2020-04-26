@@ -30,7 +30,7 @@ public class ViewUtils {
     private static final int[] RES_IDS_ACTION_BAR_SIZE = {R.attr.actionBarSize};
 
 
-    public static void tint(TextView tv, @ColorRes int color) {
+    public static void tintDrawable(TextView tv, @ColorRes int color) {
         if (tv == null || CollectionUtils.size(tv.getCompoundDrawables()) <= 0) return;
         Drawable drawable = tv.getCompoundDrawables()[0];
         if (drawable == null) return;
