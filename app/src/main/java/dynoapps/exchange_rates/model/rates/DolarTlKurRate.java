@@ -2,12 +2,13 @@ package dynoapps.exchange_rates.model.rates;
 
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
+
 /**
  * Created by erdemmac on 24/11/2016.
  */
 
 public class DolarTlKurRate extends AvgRate implements IConvertable {
-
 
     @Override
     public void toRateType() {
@@ -33,11 +34,12 @@ public class DolarTlKurRate extends AvgRate implements IConvertable {
     @Override
     public void setRealValues() {
         if (rateType == UNKNOWN) return;
-        String val = avg_val.replace("\'", "").replace("$", "").trim();
-        val_real_avg = Float.valueOf(val);
+        String val = avg_val.replace("'", "").replace("$", "").trim();
+        val_real_avg = Float.parseFloat(val);
     }
 
     @Override
+    @NonNull
     public String toString() {
         return type.split("_")[0] + " -> : " + val_real_avg;
     }

@@ -2,6 +2,7 @@ package dynoapps.exchange_rates.time;
 
 import java.util.concurrent.TimeUnit;
 
+import androidx.annotation.NonNull;
 import dynoapps.exchange_rates.App;
 import dynoapps.exchange_rates.R;
 
@@ -23,6 +24,7 @@ public class TimeInterval {
     }
 
     @Override
+    @NonNull
     public String toString() {
         if (timeUnit == TimeUnit.SECONDS) {
             return App.context().getResources().getQuantityString(R.plurals.sec_short, value, value);

@@ -1,5 +1,6 @@
 package dynoapps.exchange_rates.model.rates;
 
+import androidx.annotation.NonNull;
 import dynoapps.exchange_rates.interfaces.ValueType;
 
 /**
@@ -10,10 +11,6 @@ public abstract class BuySellRate extends BaseRate {
     public Float value_sell_real, value_buy_real;
     public String value_sell, value_buy;
 
-    @Override
-    public String toString() {
-        return type.split("_")[0] + " -> " + value_sell_real + " : " + value_buy_real;
-    }
 
     @Override
     public void toRateType() {
@@ -49,5 +46,11 @@ public abstract class BuySellRate extends BaseRate {
             return value_sell_real;
         }
         return 0.0f;
+    }
+
+    @Override
+    @NonNull
+    public String toString() {
+        return type.split("_")[0] + " -> " + value_sell_real + " : " + value_buy_real;
     }
 }

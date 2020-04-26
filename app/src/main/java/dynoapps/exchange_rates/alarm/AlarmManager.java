@@ -4,7 +4,6 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextUtils;
@@ -50,13 +49,13 @@ public class AlarmManager {
     }
 
     public static void addAlarmDialog(@NonNull final Context context,
-                                      int source_type, final int rate_type, final int value_type, Float default_value,
+                                      int sourceType, final int rateType, final int valueType, Float defaultValue,
                                       final AlarmsDataSource.AlarmUpdateInsertCallback alarmUpdateInsertCallback) {
         @SuppressLint("InflateParams") final View v = LayoutInflater.from(context).inflate(R.layout.layout_alarm_selection, null);
         final EditText etAlarm = v.findViewById(R.id.et_alarm_value);
         final TextInputLayout tilValue = v.findViewById(R.id.til_alarm_value);
-        if (default_value != null) {
-            String val = RateUtils.formatValue(default_value, rate_type);
+        if (defaultValue != null) {
+            String val = RateUtils.formatValue(defaultValue, rateType);
             etAlarm.setText(val);
             etAlarm.setSelection(etAlarm.getText().length());
         }
@@ -89,7 +88,7 @@ public class AlarmManager {
         int i = 0;
         for (CurrencySource source : SourcesManager.getCurrencySources()) {
             if (source.isEnabled()) {
-                if (source.getType() == source_type) {
+                if (source.getType() == sourceType) {
                     selected_source_index = i;
                 }
                 sources.add(source);
@@ -114,7 +113,7 @@ public class AlarmManager {
                         rateValuePair.rate_type = val;
                         if (!TextUtils.isEmpty(rateValuePair.name)) {
                             rateValuePairs.add(rateValuePair);
-                            if (rate_type == val) {
+                            if (rateType == val) {
                                 selected_rate_index = i;
                             }
                         }
@@ -154,7 +153,7 @@ public class AlarmManager {
                         alarm.is_above = rgAlarm.getCheckedRadioButtonId() == R.id.rb_above;
                         alarm.source_type = ((CurrencySource) spn_sources.getSelectedItem()).getType();
                         alarm.rate_type = ((RateValuePair) spn_rate_types.getSelectedItem()).rate_type;
-                        alarm.value_type = value_type;
+                        alarm.value_type = valueType;
                         App.getInstance().provideAlarmsRepository().saveAlarm(alarm, alarmUpdateInsertCallback);
                     }
                 } catch (Exception ex) {
@@ -181,6 +180,7 @@ public class AlarmManager {
         public String name;
 
         @Override
+        @NonNull
         public String toString() {
             return name;
         }

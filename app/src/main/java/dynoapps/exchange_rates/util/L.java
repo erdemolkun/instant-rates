@@ -5,14 +5,13 @@ import android.text.TextUtils;
 
 import com.orhanobut.logger.Logger;
 
-import dynoapps.exchange_rates.App;
-
 
 /**
  * Created by eolkun on 10/11/15.
  */
 public class L {
 
+    private static final String TAG = "ExchangeRates";
 
     private static final String LOG_PREFIX = "";
     private static final int LOG_PREFIX_LENGTH = LOG_PREFIX.length();
@@ -46,6 +45,10 @@ public class L {
         Logger.t(makeLogTag(tag)).e(msg);
     }
 
+    public static void e(String tag, Throwable th) {
+        Logger.e(th, tag);
+    }
+
     public static void i(String tag, String msg) {
         Logger.t(makeLogTag(tag)).i(msg);
     }
@@ -64,9 +67,10 @@ public class L {
     }
 
     public static void ex(Exception ex) {
-        Logger.t("ExchangeRates").e(ex, "");
+        Logger.t(TAG).e(ex, "");
     }
-    public static void ex(Exception ex,String message) {
-        Logger.t("ExchangeRates").e(ex, message);
+
+    public static void ex(Exception ex, String message) {
+        Logger.t(TAG).e(ex, message);
     }
 }

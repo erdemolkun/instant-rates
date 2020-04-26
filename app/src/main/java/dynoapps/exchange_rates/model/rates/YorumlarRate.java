@@ -43,7 +43,7 @@ public class YorumlarRate extends AvgRate implements IConvertable {
     @Override
     @NonNull
     public String toString() {
-        return type.split("_")[0] + " -> : " + val_real_avg + " : Time -> " + time.replace("\'", "");
+        return type.split("_")[0] + " -> : " + val_real_avg + " : Time -> " + time.replace("'", "");
     }
 
 }

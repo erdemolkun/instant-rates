@@ -1,20 +1,11 @@
 package dynoapps.exchange_rates;
 
-import android.app.Notification;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.BitmapFactory;
-
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
-import androidx.core.content.ContextCompat;
 import dynoapps.exchange_rates.alarm.Alarm;
 import dynoapps.exchange_rates.alarm.AlarmsRepository;
 import dynoapps.exchange_rates.data.CurrencySource;
@@ -78,7 +69,7 @@ public class ProvidersManager {
         return instance;
     }
 
-    public void triggerUpdate(){
+    public void triggerUpdate() {
         TimeIntervalManager.setAlarmMode(false);
         for (CurrencySource currencySource : SourcesManager.getCurrencySources()) {
             if (currencySource.isEnabled()) {
@@ -87,7 +78,7 @@ public class ProvidersManager {
         }
     }
 
-    public Disposable registerIntervalUpdates(){
+    public Disposable registerIntervalUpdates() {
         return TimeIntervalManager.getIntervalUpdates().observeOn(AndroidSchedulers.mainThread()).subscribe(isImmediate -> {
             TimeIntervalManager.setAlarmMode(false);
             for (BasePoolingProvider provider : ProvidersManager.getInstance().getProviders()) {
@@ -166,7 +157,7 @@ public class ProvidersManager {
     }
 
     private void onProviderResult(List<? extends BaseRate> rates, int sourceType) {
-        alarmChecks(rates, sourceType);
+        updateAlarmsAndCheck(rates, sourceType);
         RatesHolder.getInstance().addRate(rates, sourceType);
         EventBus.getDefault().post(new RatesEvent<>(rates, sourceType, System.currentTimeMillis()));
     }
@@ -196,12 +187,12 @@ public class ProvidersManager {
         }
     }
 
-    private <T extends BaseRate> void alarmChecks(final List<T> rates, final int source_type) {
+    private <T extends BaseRate> void updateAlarmsAndCheck(final List<T> rates, final int source_type) {
         if (CollectionUtils.isNullOrEmpty(rates)) return;
-        alarmsRepository.getAlarms(alarms -> alarmChecks(rates, source_type, alarms));
+        alarmsRepository.getAlarms(alarms -> checkAlarms(rates, source_type, alarms));
     }
 
-    private <T extends BaseRate> void alarmChecks(List<T> rates, int source_type, List<Alarm> alarms) {
+    private <T extends BaseRate> void checkAlarms(List<T> rates, int source_type, List<Alarm> alarms) {
         if (CollectionUtils.isNullOrEmpty(rates)) return;
         try {
 
@@ -232,12 +223,12 @@ public class ProvidersManager {
                 if (alarm.is_above && val_current > alarm.val && val_old <= alarm.val) {
                     iterator.remove();
                     alarmsRepository.deleteAlarm(alarm, null);
-                    showAlarmNotification(App.context(), App.context().getString(R.string.is_above_val, SourcesManager.getSourceName(alarm.source_type), RateUtils.rateName(alarm.rate_type),
+                    NotificationHelper.showAlarmNotification(App.context(), App.context().getString(R.string.is_above_val, SourcesManager.getSourceName(alarm.source_type), RateUtils.rateName(alarm.rate_type),
                             val), "increasing", Alarm.getPushId(alarm));
                 } else if (!alarm.is_above && val_current < alarm.val && val_old >= alarm.val) {
                     iterator.remove();
                     alarmsRepository.deleteAlarm(alarm, null);
-                    showAlarmNotification(App.context(), App.context().getString(R.string.is_below_value, SourcesManager.getSourceName(alarm.source_type), RateUtils.rateName(alarm.rate_type),
+                    NotificationHelper.showAlarmNotification(App.context(), App.context().getString(R.string.is_below_value, SourcesManager.getSourceName(alarm.source_type), RateUtils.rateName(alarm.rate_type),
                             val), "decreasing", Alarm.getPushId(alarm));
                 }
             }
@@ -246,34 +237,4 @@ public class ProvidersManager {
             L.ex(ex);
         }
     }
-
-    private void showAlarmNotification(Context context, String message, String category, int id) {
-
-        NotificationHelper.createAlarmChannelIfNotExists(context);
-        Intent pushIntent = new Intent(context, LandingActivity.class);
-        pushIntent.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,
-                pushIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(context, NotificationHelper.CHANNEL_ID_ALARM)
-                        .setSmallIcon(R.drawable.ic_add_alarm_white_24dp)
-                        .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher))
-                        .setContentTitle(context.getString(R.string.app_name))
-                        .setDefaults(Notification.FLAG_AUTO_CANCEL | Notification.DEFAULT_SOUND
-                                | Notification.DEFAULT_VIBRATE | Notification.FLAG_SHOW_LIGHTS);
-
-
-        mBuilder.setStyle(new NotificationCompat.BigTextStyle()
-                .bigText(message));
-
-        mBuilder.setColor(ContextCompat.getColor(context, R.color.colorPrimary))
-                .setContentIntent(pendingIntent)
-                .setContentText(message);
-        mBuilder.setAutoCancel(true);
-        Notification notification = mBuilder.build();
-        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
-        notificationManagerCompat.notify(category, id, notification);
-    }
-
 }

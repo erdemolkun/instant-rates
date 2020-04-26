@@ -3,12 +3,19 @@ package dynoapps.exchange_rates.notification;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.media.AudioAttributes;
 import android.media.RingtoneManager;
 import android.os.Build;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
+import dynoapps.exchange_rates.LandingActivity;
 import dynoapps.exchange_rates.R;
 
 public class NotificationHelper {
@@ -60,5 +67,34 @@ public class NotificationHelper {
 
             notificationManager.createNotificationChannel(channel);
         }
+    }
+
+    public static void showAlarmNotification(@NonNull Context context, String message, String category, int id) {
+
+        NotificationHelper.createAlarmChannelIfNotExists(context);
+        Intent pushIntent = new Intent(context, LandingActivity.class);
+        pushIntent.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,
+                pushIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(context, NotificationHelper.CHANNEL_ID_ALARM)
+                        .setSmallIcon(R.drawable.ic_add_alarm_white_24dp)
+                        .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher))
+                        .setContentTitle(context.getString(R.string.app_name))
+                        .setDefaults(Notification.FLAG_AUTO_CANCEL | Notification.DEFAULT_SOUND
+                                | Notification.DEFAULT_VIBRATE | Notification.FLAG_SHOW_LIGHTS);
+
+
+        mBuilder.setStyle(new NotificationCompat.BigTextStyle()
+                .bigText(message));
+
+        mBuilder.setColor(ContextCompat.getColor(context, R.color.colorPrimary))
+                .setContentIntent(pendingIntent)
+                .setContentText(message);
+        mBuilder.setAutoCancel(true);
+        Notification notification = mBuilder.build();
+        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
+        notificationManagerCompat.notify(category, id, notification);
     }
 }
