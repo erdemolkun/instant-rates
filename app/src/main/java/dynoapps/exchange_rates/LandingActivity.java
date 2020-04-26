@@ -1,12 +1,12 @@
 package dynoapps.exchange_rates;
 
+import com.google.android.material.bottomappbar.BottomAppBar;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.transition.TransitionManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,25 +15,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.core.content.ContextCompat;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 import androidx.interpolator.view.animation.LinearOutSlowInInterpolator;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import dynoapps.exchange_rates.alarm.AlarmManager;
-import dynoapps.exchange_rates.alarm.AlarmsActivity;
 import dynoapps.exchange_rates.alarm.AlarmsRepository;
 import dynoapps.exchange_rates.data.CurrencySource;
 import dynoapps.exchange_rates.data.RatesHolder;
@@ -46,10 +37,8 @@ import dynoapps.exchange_rates.model.rates.IRate;
 import dynoapps.exchange_rates.provider.BasePoolingProvider;
 import dynoapps.exchange_rates.service.RatePollingService;
 import dynoapps.exchange_rates.time.TimeIntervalManager;
-import dynoapps.exchange_rates.util.AppUtils;
 import dynoapps.exchange_rates.util.RateUtils;
 import dynoapps.exchange_rates.util.ServiceUtils;
-import dynoapps.exchange_rates.util.ViewUtils;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 
@@ -59,43 +48,28 @@ import io.reactivex.disposables.Disposable;
 
 public class LandingActivity extends BaseServiceActivity {
 
-    private static final int NAVDRAWER_LAUNCH_DELAY = 250;
-    @BindView(R.id.drawer_layout)
-    DrawerLayout mDrawerLayout;
-    ActionBarDrawerToggle toggle;
-    @BindView(R.id.v_drawer_item_usd)
-    TextView tvDrawerItemUsd;
-    @BindView(R.id.v_drawer_item_eur)
-    TextView tvDrawerItemEur;
-    @BindView(R.id.v_drawer_item_eur_usd)
-    TextView tvDrawerItemEurUsd;
-    @BindView(R.id.v_drawer_item_ons)
-    TextView tvDrawerItemOns;
-    @BindView(R.id.v_drawer_item_alarms)
-    TextView tvDrawerItemAlarms;
-    @BindView(R.id.v_navdrawer_version)
-    TextView tvVersion;
+    private static final String TAG_BOTTOM_SHEET = "TAG_BOTTOM_SHEET";
+
+    @BindView(R.id.v_fab_add_alarm)
+    View vFab;
+
     @BindView(R.id.tv_interval_hint)
     TextView tvIntervalHint;
+
+    @BindView(R.id.bottomAppBar)
+    BottomAppBar bottomAppBar;
+
     AlarmsRepository alarmsRepository;
     List<CardViewItemParent> parentItems = new ArrayList<>();
-    private Handler mHandler;
-
-    @Override
-    void onConnectionDone() {
-
-    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         alarmsRepository = App.getInstance().provideAlarmsRepository();
-        mHandler = new Handler(Looper.getMainLooper());
-        if (getActionBarToolbar() != null) {
-            getActionBarToolbar().setTitle(getTitle());
-        }
 
-        setupNavDrawer();
+        setUpBottomAppBar();
+
+        vFab.setOnClickListener(v -> AlarmManager.addAlarmDialog(this));
 
         TimeIntervalManager.setAlarmMode(false);
         setUpRateCardViews();
@@ -120,7 +94,7 @@ public class LandingActivity extends BaseServiceActivity {
             }
         }
 
-        tvVersion.setText(getString(R.string.version_placeholder, AppUtils.getPlainVersion()));
+
         updateHint();
 
         Disposable disposable = TimeIntervalManager.getIntervalUpdates().observeOn(AndroidSchedulers.mainThread()).subscribe(__ -> updateHint());
@@ -130,24 +104,36 @@ public class LandingActivity extends BaseServiceActivity {
             refreshCardItemViews();
         }));
 
-        /*swipeRefreshLayout.setColorSchemeResources(
-                R.color.refresh_progress_1,
-                R.color.refresh_progress_2,
-                R.color.refresh_progress_3);
-        swipeRefreshLayout.setEnabled(true);
-        int top = ViewUtils.calculateActionBarSize(this);
-        int progressBarStartMargin = getResources().getDimensionPixelSize(
-                R.dimen.swipe_refresh_progress_bar_start_margin);
-        int progressBarEndMargin = getResources().getDimensionPixelSize(
-                R.dimen.swipe_refresh_progress_bar_end_margin);
-        swipeRefreshLayout.setProgressViewOffset(true, top + progressBarStartMargin, top + progressBarEndMargin);
-        swipeRefreshLayout.setOnRefreshListener(() -> {
-            ProvidersManager.getInstance().triggerUpdate();
-            mainHandler().postDelayed(() -> swipeRefreshLayout.setRefreshing(false), 1000);
-        });*/
-        if (!EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().register(this);
-        }
+        compositeDisposable.add(ProvidersManager.getInstance().getRatesEventPublishSubject()
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(ratesEvent -> {
+                    List<BaseRate> rates = ratesEvent.rates;
+                    updateCards(rates, ratesEvent.source_type, true);
+                }));
+
+    }
+
+    private void setUpBottomAppBar() {
+
+        setSupportActionBar(bottomAppBar);
+
+        bottomAppBar.setOnMenuItemClickListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.menu_time_interval) {
+                TimeIntervalManager.selectInterval(this);
+                return true;
+            } else if (id == R.id.menu_item_sources) {
+                SourcesManager.selectSources(this);
+                return true;
+            }
+            return false;
+        });
+
+        bottomAppBar.setNavigationOnClickListener(view -> {
+            if (getSupportFragmentManager().findFragmentByTag(TAG_BOTTOM_SHEET) == null) {
+                BottomSheetDialogFragment bottomSheetDialogFragment = BottomSheetNavigationFragment.newInstance();
+                bottomSheetDialogFragment.show(getSupportFragmentManager(), TAG_BOTTOM_SHEET);
+            }
+        });
     }
 
     private void refreshCardItemViews() {
@@ -232,19 +218,6 @@ public class LandingActivity extends BaseServiceActivity {
         parentOns.me = findViewById(R.id.v_card_holder_ons);
 
         parentItems.add(parentOns);
-
-    }
-
-    private void doLeftMenuWork(final Runnable runnable) {
-        closeNavDrawer();
-        // launch the target Activity after a short delay, to allow the close animation to play
-        mHandler.postDelayed(runnable, NAVDRAWER_LAUNCH_DELAY);
-    }
-
-    protected void closeNavDrawer() {
-        if (mDrawerLayout != null) {
-            mDrawerLayout.closeDrawer(GravityCompat.START);
-        }
     }
 
     @Override
@@ -253,115 +226,7 @@ public class LandingActivity extends BaseServiceActivity {
     }
 
     @Override
-    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        tvDrawerItemUsd.setOnClickListener(view -> doLeftMenuWork(() -> {
-            Intent i = new Intent(LandingActivity.this, ChartActivity.class);
-            i.putExtra(ChartActivity.EXTRA_RATE_TYPE, IRate.USD);
-            startActivity(i);
-        }));
-
-        tvDrawerItemEur.setOnClickListener(view -> doLeftMenuWork(() -> {
-            Intent i = new Intent(LandingActivity.this, ChartActivity.class);
-            i.putExtra(ChartActivity.EXTRA_RATE_TYPE, IRate.EUR);
-            startActivity(i);
-        }));
-
-        tvDrawerItemEurUsd.setOnClickListener(view -> doLeftMenuWork(() -> {
-            Intent i = new Intent(LandingActivity.this, ChartActivity.class);
-            i.putExtra(ChartActivity.EXTRA_RATE_TYPE, IRate.EUR_USD);
-            startActivity(i);
-        }));
-
-        tvDrawerItemOns.setOnClickListener(view -> doLeftMenuWork(() -> {
-            Intent i = new Intent(LandingActivity.this, ChartActivity.class);
-            i.putExtra(ChartActivity.EXTRA_RATE_TYPE, IRate.ONS);
-            startActivity(i);
-        }));
-
-        tvDrawerItemAlarms.setOnClickListener(view -> doLeftMenuWork(() -> {
-            Intent i = new Intent(LandingActivity.this, AlarmsActivity.class);
-            startActivity(i);
-        }));
-        ViewUtils.tint(tvDrawerItemUsd, R.color.colorPrimary);
-        ViewUtils.tint(tvDrawerItemEur, R.color.colorPrimary);
-        ViewUtils.tint(tvDrawerItemEurUsd, R.color.colorPrimary);
-        ViewUtils.tint(tvDrawerItemOns, R.color.colorPrimary);
-        ViewUtils.tint(tvDrawerItemAlarms, R.color.colorPrimary);
-
-    }
-
-    /**
-     * Sets up the navigation drawer as appropriate. Note that the nav drawer will be different
-     * depending on whether the attendee indicated that they are attending the event on-site vs.
-     * attending remotely.
-     */
-    private void setupNavDrawer() {
-
-        mDrawerLayout = findViewById(R.id.drawer_layout);
-        if (mDrawerLayout == null) return;
-
-
-//        mDrawerLayout.getParent().requestDisallowInterceptTouchEvent(true);
-        // findViewById(R.id.v_main_content).getParent().requestDisallowInterceptTouchEvent(true);
-
-
-        mDrawerLayout.setScrimColor(Color.TRANSPARENT);
-//        mDrawerLayout.setScrimColor(Color.parseColor("#66000000"));
-//        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-        toggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.open, R.string.close) {
-            @Override
-            public void onDrawerClosed(View drawerView) {
-                super.onDrawerClosed(drawerView);
-//                invalidateOptionsMenu();
-                syncState();
-            }
-
-            @Override
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-//                invalidateOptionsMenu();
-                syncState();
-            }
-
-            @Override
-            public void onDrawerStateChanged(int newState) {
-                super.onDrawerStateChanged(newState);
-            }
-
-            @Override
-            public void onDrawerSlide(View drawerView, float slideOffset) {
-                super.onDrawerSlide(drawerView, slideOffset);
-            }
-        };
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toggle.syncState();
-
-        if (mDrawerLayout == null) {
-            return;
-        }
-        mDrawerLayout.addDrawerListener(toggle);
-        mDrawerLayout.setStatusBarBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
-
-
-        getActionBarToolbar().setNavigationOnClickListener(view -> {
-            if (!isNavDrawerOpen())
-                mDrawerLayout.openDrawer(GravityCompat.START);
-            else
-                mDrawerLayout.closeDrawer(GravityCompat.START);
-        });
-    }
-
-    protected boolean isNavDrawerOpen() {
-        return mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.START);
-    }
-
-    @Override
     protected void onDestroy() {
-        if (EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().unregister(this);
-        }
         if (ServiceUtils.isMyServiceRunning(this, RatePollingService.class)) {
             if (!alarmsRepository.hasAnyActive()) {
                 stopService(new Intent(this, RatePollingService.class));
@@ -417,12 +282,6 @@ public class LandingActivity extends BaseServiceActivity {
         mAnimationSet.start();
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(RatesEvent ratesEvent) {
-        List<BaseRate> rates = ratesEvent.rates;
-        updateCards(rates, ratesEvent.source_type, true);
-    }
-
     private void updateHint() {
         tvIntervalHint.setText(getString(R.string.interval_hint, TimeIntervalManager.getSelectionStr()));
     }
@@ -441,9 +300,6 @@ public class LandingActivity extends BaseServiceActivity {
             return true;
         } else if (id == R.id.menu_item_sources) {
             SourcesManager.selectSources(this);
-            return true;
-        } else if (id == R.id.menu_add_alarm) {
-            AlarmManager.addAlarmDialog(this);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -476,6 +332,7 @@ public class LandingActivity extends BaseServiceActivity {
 
         @BindView(R.id.tv_rate_value)
         TextView tvValue;
+
         View card;
         int value_type;
         /**
@@ -489,7 +346,5 @@ public class LandingActivity extends BaseServiceActivity {
             this.value_type = value_type;
             ButterKnife.bind(this, card);
         }
-
-
     }
 }

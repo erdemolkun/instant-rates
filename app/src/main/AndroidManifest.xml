@@ -56,7 +56,7 @@
             android:configChanges="orientation|screenSize|locale"
             android:launchMode="singleTask"
             android:screenOrientation="fullSensor"
-            android:theme="@style/AppTheme.WithDrawer">
+            android:theme="@style/AppTheme">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

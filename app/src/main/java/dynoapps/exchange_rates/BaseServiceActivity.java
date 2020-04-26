@@ -36,7 +36,8 @@ public abstract class BaseServiceActivity extends BaseActivity {
         }
     };
 
-    abstract void onConnectionDone();
+    void onConnectionDone() {
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

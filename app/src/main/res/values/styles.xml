@@ -1,12 +1,6 @@
 <resources>
-
-
     <style name="HeaderBar">
         <item name="android:background">?colorPrimary</item>
-    </style>
-
-    <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
-        <item name="spinBars">false</item>
     </style>
 
     <style name="ActionBarThemeOverlay" parent="">

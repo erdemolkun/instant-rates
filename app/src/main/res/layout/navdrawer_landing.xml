@@ -1,131 +1,123 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<dynoapps.exchange_rates.ui.ScrimInsetsScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="@dimen/nav_drawer_width"
-    android:layout_height="match_parent"
-    android:layout_gravity="start"
-    android:background="@color/color_material_grey_50"
-    android:fillViewport="true">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
     <RelativeLayout
+        android:id="@+id/v_drawer_header"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="60dp"
+        android:background="@color/colorPrimary"
+        android:padding="12dp">
 
-        <RelativeLayout
-            android:id="@+id/v_drawer_header"
-            android:layout_width="match_parent"
-            android:layout_height="136dp"
-            android:background="@color/colorPrimary"
-            android:padding="16dp">
-
-            <ImageView
-                android:id="@+id/iv_drawer_header_logo"
-                android:layout_width="44dp"
-                android:layout_height="44dp"
-                android:layout_alignParentBottom="true"
-                android:src="@drawable/ic_orco_512" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_toEndOf="@+id/iv_drawer_header_logo"
-                android:layout_toRightOf="@+id/iv_drawer_header_logo"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:text="@string/app_name"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/v_navdrawer_version"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="13sp"
-                    tools:text="v0.0.1" />
-            </LinearLayout>
-
-
-        </RelativeLayout>
+        <ImageView
+            android:id="@+id/iv_drawer_header_logo"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_alignParentBottom="true"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_store_icon_24dp"
+            android:tint="@color/white" />
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/v_drawer_header"
-            android:orientation="vertical"
-            android:paddingTop="8dp">
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_toEndOf="@+id/iv_drawer_header_logo"
+            android:layout_toRightOf="@+id/iv_drawer_header_logo"
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:padding="10dp"
-                android:text="@string/graph_types"
-                android:textSize="14sp" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/v_drawer_item_usd"
-                style="@style/side_item_style"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_dollar"
-                android:text="USD" />
+                android:ellipsize="end"
+                android:text="@string/app_name"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/v_drawer_item_eur"
-                style="@style/side_item_style"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_euro"
-                android:text="EURO" />
-
-            <TextView
-                android:id="@+id/v_drawer_item_eur_usd"
-                style="@style/side_item_style"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_exchange_eur_usd"
-                android:text="EURO / USD" />
-
-            <TextView
-                android:id="@+id/v_drawer_item_ons"
-                style="@style/side_item_style"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_gold"
-                android:text="ONS" />
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:background="?colorPrimary" />
-
-            <TextView
+                android:id="@+id/v_navdrawer_version"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:padding="12dp"
-                android:text="@string/others"
-                android:textSize="13sp" />
-
-            <TextView
-                android:id="@+id/v_drawer_item_alarms"
-                style="@style/side_item_style"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_add_alarm_white_24dp"
-                android:text="@string/alarms" />
-
-
+                android:textColor="@color/white"
+                android:textSize="13sp"
+                tools:text="v0.0.1" />¬
         </LinearLayout>
 
     </RelativeLayout>
 
-</dynoapps.exchange_rates.ui.ScrimInsetsScrollView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/v_drawer_header"
+        android:orientation="vertical"
+        android:paddingTop="4dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:padding="8dp"
+            android:text="@string/graph_types"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/v_drawer_item_usd"
+            style="@style/side_item_style"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_dollar"
+            android:text="USD" />
+
+        <TextView
+            android:id="@+id/v_drawer_item_eur"
+            style="@style/side_item_style"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_euro"
+            android:text="EURO" />
+
+        <TextView
+            android:id="@+id/v_drawer_item_eur_usd"
+            style="@style/side_item_style"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_exchange_eur_usd"
+            android:text="EURO / USD" />
+
+        <TextView
+            android:id="@+id/v_drawer_item_ons"
+            style="@style/side_item_style"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_gold"
+            android:text="ONS" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="?colorPrimary" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:padding="8dp"
+            android:text="@string/others"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/v_drawer_item_alarms"
+            style="@style/side_item_style"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_add_alarm_white_24dp"
+            android:text="@string/alarms" />
+
+    </LinearLayout>
+
+</RelativeLayout>

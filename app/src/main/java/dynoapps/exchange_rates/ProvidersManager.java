@@ -1,7 +1,5 @@
 package dynoapps.exchange_rates;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -44,12 +42,15 @@ import dynoapps.exchange_rates.util.L;
 import dynoapps.exchange_rates.util.RateUtils;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.subjects.PublishSubject;
 
 public class ProvidersManager {
     List<BasePoolingProvider<?>> providers;
     private AlarmsRepository alarmsRepository;
     private static Formatter formatter2 = new Formatter(3, 0);
     private static Formatter formatter5 = new Formatter(5, 1);
+
+    private PublishSubject<RatesEvent> ratesEventPublishSubject = PublishSubject.create();
 
     private static ProvidersManager instance;
 
@@ -67,6 +68,10 @@ public class ProvidersManager {
             }
         }
         return instance;
+    }
+
+    public PublishSubject<RatesEvent> getRatesEventPublishSubject() {
+        return ratesEventPublishSubject;
     }
 
     public void triggerUpdate() {
@@ -159,7 +164,7 @@ public class ProvidersManager {
     private void onProviderResult(List<? extends BaseRate> rates, int sourceType) {
         updateAlarmsAndCheck(rates, sourceType);
         RatesHolder.getInstance().addRate(rates, sourceType);
-        EventBus.getDefault().post(new RatesEvent<>(rates, sourceType, System.currentTimeMillis()));
+        ratesEventPublishSubject.onNext(new RatesEvent<>(rates, sourceType, System.currentTimeMillis()));
     }
 
     public void stopAll() {

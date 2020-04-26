@@ -3,12 +3,6 @@
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/menu_add_alarm"
-        android:title="@string/add_alarm"
-        app:showAsAction="ifRoom"
-        android:icon="@drawable/ic_add_alarm_white_24dp"/>
-
-    <item
         android:id="@+id/menu_time_interval"
         android:title="@string/time_interval"
         app:showAsAction="ifRoom"
