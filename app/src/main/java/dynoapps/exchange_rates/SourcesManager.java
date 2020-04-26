@@ -8,7 +8,10 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.ColorInt;
+import androidx.annotation.ColorRes;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import dynoapps.exchange_rates.data.CurrencySource;
 import dynoapps.exchange_rates.data.CurrencyType;
 import dynoapps.exchange_rates.interfaces.ValueType;
@@ -120,8 +123,6 @@ public class SourcesManager {
         });
         dialog.getWindow().setWindowAnimations(R.style.DialogAnimationFade);
         dialog.show();
-
-
     }
 
     private static void saveSources(List<CurrencySource> currencySources) {
@@ -172,27 +173,35 @@ public class SourcesManager {
         return null;
     }
 
+    @ColorInt
+    private static int color(@ColorRes int colorRes) {
+        return ContextCompat.getColor(App.context(), colorRes);
+    }
+
     private static void initDataSourceSelections() {
 
+        if (currencySources != null) {
+            return;
+        }
         /*
-         * Initialize once.g
+         * Initialize once.
          **/
-        if (CollectionUtils.size(currencySources) > 0) return;
-        currencySources = new ArrayList<>();
+
         int[] only_usd_try = {IRate.USD};
         int[] altin_in_supported = {IRate.USD, IRate.EUR, IRate.EUR_USD, IRate.ONS};
         int[] paragaranti_supported = {IRate.USD, IRate.EUR, IRate.EUR_USD};
         int[] enpara_supported = {IRate.USD, IRate.EUR, IRate.EUR_USD, IRate.ONS_TRY};
         int[] yapikredi_supported = {IRate.USD, IRate.EUR, IRate.ONS_TRY};
         int[] bloomberg_supported = {IRate.USD, IRate.EUR, IRate.EUR_USD};
-        currencySources.add(new CurrencySource("Altın.in", CurrencyType.ALTININ, R.color.colorYorumlar, false, altin_in_supported));
-        currencySources.add(new CurrencySource("Enpara", CurrencyType.ENPARA, R.color.colorEnpara, true, enpara_supported));
-        currencySources.add(new CurrencySource("Bigpara", CurrencyType.BIGPARA, R.color.colorBigPara, false, only_usd_try));
-        currencySources.add(new CurrencySource("TlKur", CurrencyType.TLKUR, R.color.colorDolarTlKur, false, altin_in_supported));
-        currencySources.add(new CurrencySource("Yapı Kredi", CurrencyType.YAPIKREDI, R.color.colorYapiKredi, false, yapikredi_supported));
-        currencySources.add(new CurrencySource("Yahoo", CurrencyType.YAHOO, R.color.colorYahoo, false, altin_in_supported));
-        currencySources.add(new CurrencySource("Paragaranti", CurrencyType.PARAGARANTI, R.color.colorParagaranti, false, paragaranti_supported)); // update supported ones
-        currencySources.add(new CurrencySource("Bloomberg HT", CurrencyType.BLOOMBERGHT, R.color.colorBloomberg, false, bloomberg_supported));
+        currencySources = new ArrayList<>();
+        currencySources.add(new CurrencySource("Altın.in", CurrencyType.ALTININ, color(R.color.colorYorumlar), false, altin_in_supported));
+        currencySources.add(new CurrencySource("Enpara", CurrencyType.ENPARA, color(R.color.colorEnpara), true, enpara_supported));
+        currencySources.add(new CurrencySource("Bigpara", CurrencyType.BIGPARA, color(R.color.colorBigPara), false, only_usd_try));
+        currencySources.add(new CurrencySource("TlKur", CurrencyType.TLKUR, color(R.color.colorDolarTlKur), false, altin_in_supported));
+        currencySources.add(new CurrencySource("Yapı Kredi", CurrencyType.YAPIKREDI, color(R.color.colorYapiKredi), false, yapikredi_supported));
+        currencySources.add(new CurrencySource("Yahoo", CurrencyType.YAHOO, color(R.color.colorYahoo), false, altin_in_supported));
+        currencySources.add(new CurrencySource("Paragaranti", CurrencyType.PARAGARANTI, color(R.color.colorParagaranti), false, paragaranti_supported)); // update supported ones
+        currencySources.add(new CurrencySource("Bloomberg HT", CurrencyType.BLOOMBERGHT, color(R.color.colorBloomberg), false, bloomberg_supported));
         int index = 0;
         for (CurrencySource source : currencySources) {
             source.setChartIndex(index);
@@ -228,5 +237,4 @@ public class SourcesManager {
             }
         }
     }
-
 }

@@ -9,10 +9,9 @@ import com.orhanobut.logger.FormatStrategy;
 import com.orhanobut.logger.Logger;
 import com.orhanobut.logger.PrettyFormatStrategy;
 
+import androidx.annotation.NonNull;
 import dynoapps.exchange_rates.alarm.AlarmsRepository;
 import dynoapps.exchange_rates.util.L;
-import io.reactivex.exceptions.OnErrorNotImplementedException;
-import io.reactivex.exceptions.UndeliverableException;
 import io.reactivex.plugins.RxJavaPlugins;
 
 
@@ -27,8 +26,8 @@ public class App extends Application {
         return appInstance;
     }
 
+    @NonNull
     public static Context context() {
-        if (appInstance == null) return null;
         return appInstance.getApplicationContext();
     }
 
@@ -41,7 +40,7 @@ public class App extends Application {
         super.onCreate();
         appInstance = this;
 
-        RxJavaPlugins.setErrorHandler(throwable -> L.e("App",throwable.getLocalizedMessage()));
+        RxJavaPlugins.setErrorHandler(throwable -> L.e("App", throwable.getLocalizedMessage()));
 
         FormatStrategy formatStrategy = PrettyFormatStrategy.newBuilder()
                 .showThreadInfo(false)  // (Optional) Whether to show thread info or not. Default true

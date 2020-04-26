@@ -11,7 +11,6 @@ import android.preference.PreferenceManager;
 public class Prefs {
     private static final String SOURCES = "SOURCES";
     private static final String INTERVAL = "INTERVAL";
-    private static final String LANDING_HINT_STATE = "LANDING_HINT_STATE";
     private static final String ALARMS = "ALARMS";
     private static final String ALARM_ENABLED = "ALARM_ENABLED";
 

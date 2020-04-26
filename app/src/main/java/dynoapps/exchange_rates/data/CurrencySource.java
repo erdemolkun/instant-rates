@@ -1,5 +1,6 @@
 package dynoapps.exchange_rates.data;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -19,11 +20,11 @@ public class CurrencySource {
     private int[] supported_rates = new int[0];
     private int chartIndex = 0;
 
-    public CurrencySource(String name, int type, @ColorRes int colorRes, boolean enabled, int[] supported_rates) {
+    public CurrencySource(String name, int type, @ColorInt int colorInt, boolean enabled, int[] supported_rates) {
         this.name = name;
         this.type = type;
         this.enabled = enabled;
-        this.color = ContextCompat.getColor(App.context(), colorRes);
+        this.color = colorInt;
         this.supported_rates = supported_rates;
     }
 
