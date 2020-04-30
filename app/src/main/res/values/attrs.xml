@@ -8,6 +8,7 @@
         <attr name="actionbarHeaderStyle" format="reference"/>
         <attr name="toolbarTheme" format="reference"/>
         <attr name="toolbarTextAppearance" format="reference"/>
+        <attr name="dividerColor" format="reference"/>
 
     </declare-styleable>
 

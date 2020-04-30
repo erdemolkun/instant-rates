@@ -26,7 +26,7 @@
                 android:hint="@string/enter_value"
                 android:imeOptions="actionDone"
                 android:inputType="numberDecimal"
-                android:minHeight="42dp"
+                android:minHeight="40dp"
                 android:textSize="16sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:gravity="center_vertical"
-            android:minHeight="42dp"
+            android:minHeight="40dp"
             android:orientation="horizontal">
 
             <RadioButton
@@ -65,17 +65,23 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="6dp"
             android:text="@string/sources"
             android:textColor="?colorAccent"
             android:textSize="12sp" />
 
-        <Spinner
+        <androidx.appcompat.widget.AppCompatSpinner
             android:id="@+id/spn_source_types"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:overlapAnchor="false" />
+            android:overlapAnchor="false"
+            tools:minHeight="40dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="?dividerColor" />
 
         <LinearLayout
             android:id="@+id/v_alarm_types"
@@ -88,18 +94,25 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="6dp"
                 android:text="@string/rate_types"
                 android:textColor="?colorAccent"
                 android:textSize="12sp" />
 
-            <Spinner
+            <androidx.appcompat.widget.AppCompatSpinner
                 android:id="@+id/spn_rate_types"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:overlapAnchor="false" />
+                android:overlapAnchor="false"
+                tools:minHeight="40dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="?dividerColor" />
         </LinearLayout>
+
 
     </LinearLayout>
 </ScrollView>
