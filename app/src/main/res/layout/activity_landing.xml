@@ -19,15 +19,14 @@
                 android:id="@+id/tv_interval_hint"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="sans-serif"
                 android:paddingStart="16sp"
                 android:paddingLeft="16sp"
-                android:paddingTop="12dp"
+                android:paddingTop="16dp"
                 android:paddingEnd="16dp"
                 android:paddingRight="16dp"
-                android:textStyle="bold"
                 android:paddingBottom="8dp"
                 android:textSize="15sp"
+                android:textStyle="bold"
                 tools:text="@string/interval_hint" />
 
             <HorizontalScrollView
@@ -45,7 +44,6 @@
                     android:clipToPadding="false"
                     android:orientation="horizontal"
                     android:padding="4dp">
-
 
                     <ImageView
                         android:layout_width="@dimen/landing_card_icon_width"

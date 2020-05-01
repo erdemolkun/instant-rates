@@ -188,20 +188,20 @@ public class SourcesManager {
          **/
 
         int[] only_usd_try = {IRate.USD};
-        int[] altin_in_supported = {IRate.USD, IRate.EUR, IRate.EUR_USD, IRate.ONS};
-        int[] paragaranti_supported = {IRate.USD, IRate.EUR, IRate.EUR_USD};
-        int[] enpara_supported = {IRate.USD, IRate.EUR, IRate.EUR_USD, IRate.ONS_TRY};
-        int[] yapikredi_supported = {IRate.USD, IRate.EUR, IRate.ONS_TRY};
-        int[] bloomberg_supported = {IRate.USD, IRate.EUR, IRate.EUR_USD};
+        int[] altinInSupported = {IRate.USD, IRate.EUR, IRate.EUR_USD, IRate.ONS};
+        int[] paragarantiSupported = {IRate.USD, IRate.EUR, IRate.EUR_USD};
+        int[] enparaSupported = {IRate.USD, IRate.EUR, IRate.EUR_USD, IRate.ONS_TRY};
+        int[] yapikrediSupported = {IRate.USD, IRate.EUR, IRate.ONS_TRY};
+        int[] bloombergSupported = {IRate.USD, IRate.EUR, IRate.EUR_USD};
         currencySources = new ArrayList<>();
-        currencySources.add(new CurrencySource("Altın.in", CurrencyType.ALTININ, color(R.color.colorYorumlar), false, altin_in_supported));
-        currencySources.add(new CurrencySource("Enpara", CurrencyType.ENPARA, color(R.color.colorEnpara), true, enpara_supported));
+        currencySources.add(new CurrencySource("Altın.in", CurrencyType.ALTININ, color(R.color.colorYorumlar), true, altinInSupported));
+        currencySources.add(new CurrencySource("Enpara", CurrencyType.ENPARA, color(R.color.colorEnpara), false, enparaSupported));
         currencySources.add(new CurrencySource("Bigpara", CurrencyType.BIGPARA, color(R.color.colorBigPara), false, only_usd_try));
-        currencySources.add(new CurrencySource("TlKur", CurrencyType.TLKUR, color(R.color.colorDolarTlKur), false, altin_in_supported));
-        currencySources.add(new CurrencySource("Yapı Kredi", CurrencyType.YAPIKREDI, color(R.color.colorYapiKredi), false, yapikredi_supported));
-        currencySources.add(new CurrencySource("Yahoo", CurrencyType.YAHOO, color(R.color.colorYahoo), false, altin_in_supported));
-        currencySources.add(new CurrencySource("Paragaranti", CurrencyType.PARAGARANTI, color(R.color.colorParagaranti), false, paragaranti_supported)); // update supported ones
-        currencySources.add(new CurrencySource("Bloomberg HT", CurrencyType.BLOOMBERGHT, color(R.color.colorBloomberg), false, bloomberg_supported));
+        currencySources.add(new CurrencySource("TlKur", CurrencyType.TLKUR, color(R.color.colorDolarTlKur), false, altinInSupported));
+        currencySources.add(new CurrencySource("Yapı Kredi", CurrencyType.YAPIKREDI, color(R.color.colorYapiKredi), false, yapikrediSupported));
+        currencySources.add(new CurrencySource("Yahoo", CurrencyType.YAHOO, color(R.color.colorYahoo), false, altinInSupported));
+        currencySources.add(new CurrencySource("Paragaranti", CurrencyType.PARAGARANTI, color(R.color.colorParagaranti), false, paragarantiSupported)); // update supported ones
+        currencySources.add(new CurrencySource("Bloomberg HT", CurrencyType.BLOOMBERGHT, color(R.color.colorBloomberg), true, bloombergSupported));
         int index = 0;
         for (CurrencySource source : currencySources) {
             source.setChartIndex(index);
