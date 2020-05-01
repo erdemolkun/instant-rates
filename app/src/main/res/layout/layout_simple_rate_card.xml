@@ -1,42 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-                                   xmlns:app="http://schemas.android.com/apk/res-auto"
-                                   xmlns:tools="http://schemas.android.com/tools"
-                                   android:foreground="?selectableItemBackground"
-                                   android:layout_gravity="center_horizontal"
-                                   android:layout_height="wrap_content"
-                                   android:layout_margin="4dp"
-                                   android:layout_width="wrap_content"
-                                   app:cardBackgroundColor="#f1f1f1"
-                                   app:cardCornerRadius="2dp"
-                                   app:cardElevation="4dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:layout_margin="4dp"
+    android:foreground="?selectableItemBackground"
+    app:cardBackgroundColor="?cardBackgroundColor"
+    app:cardCornerRadius="2dp"
+    app:cardElevation="4dp">
 
     <LinearLayout
-        android:gravity="center"
-        android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:minHeight="64dp"
-        android:minWidth="88dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:minWidth="100dp"
+        android:minHeight="72dp"
         android:orientation="vertical"
         android:padding="4dp">
 
         <TextView
             android:id="@+id/tv_type"
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:padding="3dp"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
             android:textColor="?colorPrimary"
-            android:textSize="14sp"
-            tools:text="Enpara"/>
+            android:textSize="15sp"
+            tools:text="Enpara" />
 
         <TextView
             android:id="@+id/tv_rate_value"
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:textColor="@color/colorAccent"
-            android:textSize="16sp"
+            android:textSize="17sp"
             android:textStyle="bold"
-            tools:text="3,45 TL"/>
+            tools:text="3,45 TL" />
 
     </LinearLayout>
 

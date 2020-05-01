@@ -1,10 +1,11 @@
 <resources>
+
     <style name="HeaderBar">
         <item name="android:background">?colorPrimary</item>
     </style>
 
     <style name="ActionBarThemeOverlay" parent="">
-        <item name="android:textColorPrimary">@color/colorPrimary</item>
+        <item name="android:textColorPrimary">@color/white</item>
         <item name="colorControlNormal">?actionBarIconColor</item>
         <item name="colorControlHighlight">#3fff</item>
         <item name="colorControlActivated">@color/colorAccent</item>
@@ -29,7 +30,23 @@
         <item name="android:gravity">center_vertical</item>
         <item name="android:background">?selectableItemBackground</item>
         <item name="android:drawablePadding">16dp</item>
-        <item name="drawableTint">?android:textColorPrimary</item>
+        <item name="drawableTint">?iconTintColor</item>
+    </style>
+
+    <style name="CustomBottomSheetDialog" parent="@style/ThemeOverlay.MaterialComponents.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/CustomBottomSheet</item>
+    </style>
+
+    <style name="CustomBottomSheet" parent="Widget.MaterialComponents.BottomSheet">
+        <item name="shapeAppearanceOverlay">@style/CustomShapeAppearanceBottomSheetDialog</item>
+    </style>
+
+    <style name="CustomShapeAppearanceBottomSheetDialog" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopRight">16dp</item>
+        <item name="cornerSizeTopLeft">16dp</item>
+        <item name="cornerSizeBottomRight">0dp</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
     </style>
 
 

@@ -18,17 +18,27 @@
         <item name="android:splitMotionEvents">false</item>
         <item name="dividerColor">@color/color_divider</item>
 
+        <item name="bottomSheetDialogTheme">@style/CustomBottomSheetDialog</item>
+
+
     </style>
 
-    <style name="AppTheme" parent="BaseAppTheme" />
+    <style name="AppTheme" parent="BaseAppTheme" >
+        <item name="android:textColorPrimary">@color/colorPrimary</item>
+        <item name="iconTintColor">@color/colorPrimary</item>
+        <item name="cardBackgroundColor">#f3f3f3</item>
+    </style>
+
 
     <style name="ActionBarPopupThemeOverlay" parent="ThemeOverlay.AppCompat.DayNight" />
 
     <style name="AppTheme.Alert" parent="Theme.MaterialComponents.DayNight.Dialog.Alert">
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimary">@color/colorAccent</item>
         <item name="dividerColor">@color/color_divider</item>
     </style>
+
+
 
 </resources>

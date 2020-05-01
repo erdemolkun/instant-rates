@@ -26,6 +26,7 @@
 
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/line_chart"
+            android:background="?cardBackgroundColor"
             android:layout_width="match_parent"
             android:layout_height="@dimen/chart_height"
             android:layout_margin="4dp" />

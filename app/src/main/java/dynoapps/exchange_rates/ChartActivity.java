@@ -147,7 +147,6 @@ public class ChartActivity extends BaseActivity {
     private void initChart() {
 
         lineChart.getDescription().setEnabled(false);
-        lineChart.setBackgroundColor(ContextCompat.getColor(this, R.color.colorGraph));
 
         // add an empty data object
         lineChart.setData(new LineData());

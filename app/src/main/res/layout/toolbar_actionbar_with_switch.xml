@@ -15,26 +15,26 @@
   -->
 
 <androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
-                                   xmlns:app="http://schemas.android.com/apk/res-auto"
-                                   style="?actionbarHeaderStyle"
-                                   android:id="@+id/toolbar_actionbar"
-                                   android:layout_height="?actionBarSize"
-                                   android:layout_width="match_parent"
-                                   app:contentInsetStart="?actionBarInsetStart"
-                                   app:popupTheme="@style/ActionBarPopupThemeOverlay"
-                                   app:theme="?toolbarTheme"
-                                   app:titleTextAppearance="?toolbarTextAppearance">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/toolbar_actionbar"
+    style="?actionbarHeaderStyle"
+    android:layout_width="match_parent"
+    android:layout_height="?actionBarSize"
+    app:contentInsetStart="?actionBarInsetStart"
+    app:popupTheme="@style/ActionBarPopupThemeOverlay"
+    app:theme="?toolbarTheme"
+    app:titleTextAppearance="?toolbarTextAppearance">
 
     <androidx.appcompat.widget.SwitchCompat
-        android:checked="true"
         android:id="@+id/menu_switch"
-        android:layout_gravity="end"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_gravity="end"
         android:layout_marginStart="8dp"
-        android:layout_width="wrap_content"/>
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:checked="true" />
 
 
 </androidx.appcompat.widget.Toolbar>

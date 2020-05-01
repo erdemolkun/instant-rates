@@ -50,6 +50,7 @@ public class AlarmsActivity extends BaseActivity {
         alarmRepository = App.getInstance().provideAlarmsRepository();
         setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
         getActionBarToolbar().setNavigationOnClickListener(v -> finish());
+        getActionBarToolbar().setTitle(R.string.alarms);
 
         rvAlarms.setLayoutManager(new LinearLayoutManager(this));
         rvAlarms.setItemAnimator(new SlideInItemAnimator());

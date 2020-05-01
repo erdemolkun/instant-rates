@@ -4,7 +4,6 @@
     <color name="colorPrimaryDark">#111111</color>
     <color name="colorAccent">#FFB300</color>
 
-    <color name="colorGraph">@color/color_material_grey_50</color>
     <color name="colorEnpara">#aa51a0</color><!--170, 81, 160-->
     <color name="colorYorumlar">#f1c15a</color>
     <color name="colorDolarTlKur">#76ff03</color>
@@ -22,6 +21,6 @@
 
     <color name="color_material_grey_50">#ff444444</color>
 
-    <color name="color_divider">#88000000</color>
+    <color name="color_divider">#88ffffff</color>
 
 </resources>

@@ -47,6 +47,8 @@
         app:elevation="6dp"
         app:pressedTranslationZ="12dp"
         android:layout_alignParentRight="true"
+        android:tint="@color/white"
+        app:tint="?iconTintColor"
         android:layout_alignParentBottom="true"
         android:src="@drawable/ic_add_alarm_white_24dp"
         android:layout_height="wrap_content"/>

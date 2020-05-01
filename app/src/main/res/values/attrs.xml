@@ -9,6 +9,7 @@
         <attr name="toolbarTheme" format="reference"/>
         <attr name="toolbarTextAppearance" format="reference"/>
         <attr name="dividerColor" format="reference"/>
+        <attr name="iconTintColor" format="reference"/>
 
     </declare-styleable>
 
