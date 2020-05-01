@@ -2,16 +2,16 @@
 
     <style name="AppTheme" parent="BaseAppTheme">
         <item name="iconTintColor">@color/white</item>
+        <item name="cardBackgroundColor">#5f5f5f</item>
     </style>
 
 
     <style name="AppTheme.Alert" parent="Theme.MaterialComponents.DayNight.Dialog.Alert">
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimary">@color/colorOrange</item>
+        <item name="colorAccent">@color/colorOrange</item>
         <item name="dividerColor">@color/color_divider</item>
         <item name="iconTintColor">@color/white</item>
-        <item name="cardBackgroundColor">#5f5f5f</item>
     </style>
 
 </resources>

@@ -30,6 +30,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.Nullable;
@@ -53,6 +54,7 @@ import dynoapps.exchange_rates.model.rates.YorumlarRate;
 import dynoapps.exchange_rates.time.TimeIntervalManager;
 import dynoapps.exchange_rates.util.RateUtils;
 import dynoapps.exchange_rates.util.ViewUtils;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 /**
  * Copyright 2016 Erdem OLKUN
@@ -140,7 +142,7 @@ public class ChartActivity extends BaseActivity {
         swipeRefreshLayout.setProgressViewOffset(true, top + progressBarStartMargin, top + progressBarEndMargin);
         swipeRefreshLayout.setOnRefreshListener(() -> {
             ProvidersManager.getInstance().triggerUpdate();
-            mainHandler().postDelayed(() -> swipeRefreshLayout.setRefreshing(false), 1000);
+            AndroidSchedulers.mainThread().scheduleDirect(() -> swipeRefreshLayout.setRefreshing(false), 1, TimeUnit.SECONDS);
         });
     }
 

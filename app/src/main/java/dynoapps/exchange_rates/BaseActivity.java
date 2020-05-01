@@ -6,8 +6,6 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.LayoutRes;
@@ -24,22 +22,16 @@ import dynoapps.exchange_rates.util.L;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
-
-    private Handler handler;
     private Toolbar mActionBarToolbar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        if (BuildConfig.DEBUG) {
+            //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        }
         super.onCreate(savedInstanceState);
         setContentView(getLayoutId());
         ButterKnife.bind(this);
-    }
-
-    protected Handler mainHandler() {
-        if (handler == null) {
-            handler = new Handler(Looper.getMainLooper());
-        }
-        return handler;
     }
 
     protected Toolbar getActionBarToolbar() {

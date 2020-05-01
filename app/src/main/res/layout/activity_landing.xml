@@ -25,8 +25,9 @@
                 android:paddingTop="12dp"
                 android:paddingEnd="16dp"
                 android:paddingRight="16dp"
+                android:textStyle="bold"
                 android:paddingBottom="8dp"
-                android:textSize="14sp"
+                android:textSize="15sp"
                 tools:text="@string/interval_hint" />
 
             <HorizontalScrollView
@@ -173,7 +174,7 @@
         android:tint="@color/white"
         app:backgroundTint="@color/colorPrimary"
         app:fabSize="normal"
-        app:tint="@android:color/white"
-        app:layout_anchor="@id/bottomAppBar" />
+        app:layout_anchor="@id/bottomAppBar"
+        app:tint="@android:color/white" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

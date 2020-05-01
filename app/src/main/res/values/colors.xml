@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#607D8B</color>
     <color name="colorPrimaryDark">#455A64</color>
-    <color name="colorAccent">#FFB300</color>
+    <color name="colorAccent">@color/colorOrange</color>
 
     <color name="colorEnpara">#aa51a0</color><!--170, 81, 160-->
     <color name="colorYorumlar">#f1c15a</color>
@@ -22,5 +22,7 @@
     <color name="color_material_grey_50">#fffafafa</color>
 
     <color name="color_divider">#88000000</color>
+
+    <color name="colorOrange">#FFB300</color>
 
 </resources>

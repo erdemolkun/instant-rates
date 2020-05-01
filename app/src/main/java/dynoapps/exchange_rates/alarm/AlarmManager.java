@@ -4,6 +4,8 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextUtils;
@@ -22,6 +24,8 @@ import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 import dynoapps.exchange_rates.App;
 import dynoapps.exchange_rates.R;
 import dynoapps.exchange_rates.SourcesManager;
@@ -135,7 +139,11 @@ public class AlarmManager {
         });
         spn_sources.setSelection(selected_source_index);
 
-        final AlertDialog alertDialog = new AlertDialog.Builder(context, R.style.AppTheme_Alert).setIcon(R.drawable.ic_orco_512).
+        Drawable drawableIcon = ContextCompat.getDrawable(context,R.drawable.ic_store_icon_24dp);
+        if (drawableIcon!=null) {
+            DrawableCompat.setTint(drawableIcon, ContextCompat.getColor(context, R.color.colorAccent));
+        }
+        final AlertDialog alertDialog = new AlertDialog.Builder(context, R.style.AppTheme_Alert).setIcon(drawableIcon).
                 setTitle(R.string.add_alarm)
                 .setView(v)
                 .setNegativeButton(R.string.dismiss, null)
