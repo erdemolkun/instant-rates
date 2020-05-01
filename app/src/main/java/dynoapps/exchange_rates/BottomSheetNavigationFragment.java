@@ -16,30 +16,29 @@ import butterknife.ButterKnife;
 import dynoapps.exchange_rates.alarm.AlarmsActivity;
 import dynoapps.exchange_rates.model.rates.IRate;
 import dynoapps.exchange_rates.util.AppUtils;
-import dynoapps.exchange_rates.util.ViewUtils;
 
 public class BottomSheetNavigationFragment extends BottomSheetDialogFragment {
 
     @BindView(R.id.v_drawer_item_usd)
     TextView tvDrawerItemUsd;
+
     @BindView(R.id.v_drawer_item_eur)
     TextView tvDrawerItemEur;
+
     @BindView(R.id.v_drawer_item_eur_usd)
     TextView tvDrawerItemEurUsd;
+
     @BindView(R.id.v_drawer_item_ons)
     TextView tvDrawerItemOns;
+
     @BindView(R.id.v_drawer_item_alarms)
     TextView tvDrawerItemAlarms;
+
     @BindView(R.id.v_navdrawer_version)
     TextView tvVersion;
 
     public static BottomSheetNavigationFragment newInstance() {
-
-        Bundle args = new Bundle();
-
-        BottomSheetNavigationFragment fragment = new BottomSheetNavigationFragment();
-        fragment.setArguments(args);
-        return fragment;
+        return new BottomSheetNavigationFragment();
     }
 
     @Override
@@ -48,30 +47,22 @@ public class BottomSheetNavigationFragment extends BottomSheetDialogFragment {
         ButterKnife.bind(this, view);
         tvVersion.setText(getString(R.string.version_placeholder, AppUtils.getPlainVersion()));
         tvDrawerItemUsd.setOnClickListener(v -> {
-            Intent i = new Intent(getContext(), ChartActivity.class);
-            i.putExtra(ChartActivity.EXTRA_RATE_TYPE, IRate.USD);
-            startActivity(i);
+            startChart(IRate.USD);
             dismiss();
         });
 
         tvDrawerItemEur.setOnClickListener(v -> {
-            Intent i = new Intent(getContext(), ChartActivity.class);
-            i.putExtra(ChartActivity.EXTRA_RATE_TYPE, IRate.EUR);
-            startActivity(i);
+            startChart(IRate.EUR);
             dismiss();
         });
 
         tvDrawerItemEurUsd.setOnClickListener(v -> {
-            Intent i = new Intent(getContext(), ChartActivity.class);
-            i.putExtra(ChartActivity.EXTRA_RATE_TYPE, IRate.EUR_USD);
-            startActivity(i);
+            startChart(IRate.EUR_USD);
             dismiss();
         });
 
         tvDrawerItemOns.setOnClickListener(v -> {
-            Intent i = new Intent(getContext(), ChartActivity.class);
-            i.putExtra(ChartActivity.EXTRA_RATE_TYPE, IRate.ONS);
-            startActivity(i);
+            startChart(IRate.ONS);
             dismiss();
         });
 
@@ -80,11 +71,12 @@ public class BottomSheetNavigationFragment extends BottomSheetDialogFragment {
             startActivity(i);
             dismiss();
         });
-        ViewUtils.tintDrawable(tvDrawerItemUsd, R.color.colorPrimary);
-        ViewUtils.tintDrawable(tvDrawerItemEur, R.color.colorPrimary);
-        ViewUtils.tintDrawable(tvDrawerItemEurUsd, R.color.colorPrimary);
-        ViewUtils.tintDrawable(tvDrawerItemOns, R.color.colorPrimary);
-        ViewUtils.tintDrawable(tvDrawerItemAlarms, R.color.colorPrimary);
+    }
+
+    private void startChart(@IRate.RateDef int rate) {
+        Intent i = new Intent(getContext(), ChartActivity.class);
+        i.putExtra(ChartActivity.EXTRA_RATE_TYPE, rate);
+        startActivity(i);
     }
 
     @Nullable

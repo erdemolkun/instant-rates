@@ -53,11 +53,10 @@
             <TextView
                 android:id="@+id/v_navdrawer_version"
                 android:layout_width="wrap_content"
-                android:textColor="?android:textColorPrimary"
                 android:layout_height="wrap_content"
+                android:textColor="?android:textColorPrimary"
                 android:textSize="13sp"
-                tools:text="v0.0.1" />
-
+                tools:text="v0.4.7" />
 
         </LinearLayout>
 
@@ -70,74 +69,81 @@
         android:background="@color/colorPrimary" />
 
 
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/v_drawer_header"
-        android:orientation="vertical"
-        android:paddingTop="4dp">
+        android:layout_below="@+id/v_drawer_header">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:padding="6dp"
-            android:text="@string/graph_types"
-            android:textSize="14sp" />
-
-        <TextView
-            android:id="@+id/v_drawer_item_usd"
-            style="@style/side_item_style"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_dollar"
-            android:text="USD" />
+            android:orientation="vertical"
+            android:paddingTop="4dp">
 
-        <TextView
-            android:id="@+id/v_drawer_item_eur"
-            style="@style/side_item_style"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_euro"
-            android:text="EURO" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:padding="6dp"
+                android:text="@string/graph_types"
+                android:textSize="14sp" />
 
-        <TextView
-            android:id="@+id/v_drawer_item_eur_usd"
-            style="@style/side_item_style"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_exchange_eur_usd"
-            android:text="EURO / USD" />
+            <TextView
+                android:id="@+id/v_drawer_item_usd"
+                style="@style/side_item_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_dollar"
+                android:text="USD" />
 
-        <TextView
-            android:id="@+id/v_drawer_item_ons"
-            style="@style/side_item_style"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_gold"
-            android:text="ONS" />
+            <TextView
+                android:id="@+id/v_drawer_item_eur"
+                style="@style/side_item_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_euro"
+                android:text="EURO" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="?colorPrimary" />
+            <TextView
+                android:id="@+id/v_drawer_item_eur_usd"
+                style="@style/side_item_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_exchange_eur_usd"
+                android:text="EURO / USD" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:padding="6dp"
-            android:text="@string/others"
-            android:textSize="14sp" />
+            <TextView
+                android:id="@+id/v_drawer_item_ons"
+                style="@style/side_item_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_gold"
+                android:text="ONS" />
 
-        <TextView
-            android:id="@+id/v_drawer_item_alarms"
-            style="@style/side_item_style"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_add_alarm_white_24dp"
-            android:text="@string/alarms" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="?colorPrimary" />
 
-    </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:padding="6dp"
+                android:text="@string/others"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/v_drawer_item_alarms"
+                style="@style/side_item_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_add_alarm_white_24dp"
+                android:text="@string/alarms" />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
 
 </RelativeLayout>
