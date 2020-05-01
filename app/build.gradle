@@ -130,7 +130,7 @@ android {
         disable 'Instantiatable'
     }
 
-        // Add this block and enable/disable the parameters as follows
+    // Add this block and enable/disable the parameters as follows
     bundle {
         density {
             // Different APKs are generated for devices with different screen densities; true by default.
@@ -156,7 +156,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.8.1'
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'com.squareup.retrofit2:converter-gson:2.8.1'
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.5.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.6.0'
 
 
     // reactiveX
@@ -190,16 +190,13 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
-
     testImplementation 'junit:junit:4.13'
-
 
     androidTestImplementation 'androidx.annotation:annotation:1.1.0'
     androidTestImplementation 'androidx.test:runner:1.3.0-beta01'
     androidTestImplementation 'androidx.test:rules:1.3.0-beta01'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0-beta01'
     androidTestImplementation 'org.hamcrest:hamcrest-library:2.2'
-
 
 }
 
