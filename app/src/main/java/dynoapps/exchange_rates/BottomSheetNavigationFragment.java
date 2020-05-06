@@ -1,7 +1,9 @@
 package dynoapps.exchange_rates;
 
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -71,6 +73,18 @@ public class BottomSheetNavigationFragment extends BottomSheetDialogFragment {
             startActivity(i);
             dismiss();
         });
+
+    }
+
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        Dialog dialog =super.onCreateDialog(savedInstanceState);;
+        dialog.setOnShowListener(__ -> {
+            View sheet = dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+            BottomSheetBehavior.from(sheet).setState(BottomSheetBehavior.STATE_EXPANDED);
+        });
+        return dialog;
     }
 
     private void startChart(@IRate.RateDef int rate) {
