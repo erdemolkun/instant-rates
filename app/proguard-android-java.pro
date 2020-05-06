@@ -1,17 +1,10 @@
-# This is a configuration file for ProGuard.
-# http://proguard.sourceforge.net/index.html#manual/usage.html
--dontusemixedcaseclassnames
--dontskipnonpubliclibraryclasses
--verbose
--dontpreverify
--allowaccessmodification
--repackageclasses ''
 
 # Note that you cannot just include these flags in your own
 # configuration file; if you are including this file, optimization
 # will be turned off. You'll need to either edit this file, or
 # duplicate the contents of this file and remove the include of this
 # file from your project's proguard.config path property.
+-repackageclasses ''
 
 -keep public class * extends android.app.Activity
 -keep public class * extends android.app.Application
@@ -20,7 +13,6 @@
 -keep public class * extends android.content.ContentProvider
 -keep public class * extends android.app.backup.BackupAgent
 -keep public class * extends android.preference.Preference
--keep public class * extends android.support.v4.app.Fragment
 -keep public class * extends androidx.fragment.app.Fragment
 -keep public class * extends android.app.Fragment
 
@@ -28,11 +20,6 @@
 -keepclasseswithmembernames class * {
     native <methods>;
 }
-
--keep public class * extends android.view.View {
-    public <init>(android.content.Context, android.util.AttributeSet);
-}
-
 -keepclasseswithmembers class * {
     public <init>(android.content.Context, android.util.AttributeSet);
 }

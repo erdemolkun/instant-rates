@@ -11,9 +11,10 @@ buildscript {
         jcenter()
         mavenCentral()
         maven { url "https://jitpack.io" }
-
     }
 }
+
+apply plugin: 'com.getkeepsafe.dexcount'
 
 // set flag whether we are on a build server
 def isCi = "true" == System.getenv("CI")
@@ -104,7 +105,8 @@ android {
             minifyEnabled false
         }
         production {
-            proguardFiles "proguard-android-java.pro"
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
+                    'proguard-android-java.pro'
             signingConfig signingConfigs.release
             minifyEnabled true
             shrinkResources true
