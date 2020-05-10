@@ -84,7 +84,7 @@ public class ProvidersManager {
     }
 
     public Disposable registerIntervalUpdates() {
-        return TimeIntervalManager.getIntervalUpdates().observeOn(AndroidSchedulers.mainThread()).subscribe(isImmediate -> {
+        return TimeIntervalManager.getIntervalUpdates().distinctUntilChanged().observeOn(AndroidSchedulers.mainThread()).subscribe(isImmediate -> {
             TimeIntervalManager.setAlarmMode(false);
             for (BasePoolingProvider provider : ProvidersManager.getInstance().getProviders()) {
                 provider.refreshIntervals(isImmediate);
@@ -92,7 +92,7 @@ public class ProvidersManager {
         }, th -> L.e("RatePollingService", th.getLocalizedMessage()));
     }
 
-    public void initOrRefresh() {
+    public void initAndStartSources() {
         alarmsRepository = App.getInstance().provideAlarmsRepository();
         if (providers == null) {
             providers = new ArrayList<>();

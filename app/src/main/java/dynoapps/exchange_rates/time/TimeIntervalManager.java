@@ -2,8 +2,6 @@ package dynoapps.exchange_rates.time;
 
 import android.app.Activity;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
@@ -22,13 +20,13 @@ public final class TimeIntervalManager {
 
     private static final int DEFAULT_INTERVAL_INDEX = 2;
     private static final int INTERVAL_SERVICE_INDEX = 4;
-    private static long pref_interval_milis = Prefs.getInterval(App.context());
+    private static final long PREF_INTERVAL_MILIS = Prefs.getInterval(App.context());
     private static ArrayList<TimeInterval> intervals;
     private static Integer selected_interval_index_user = getSelectedIndexViaPrefs();
     private static boolean isAlarmMode = false;
     private static int user_selected_item_index = -1;
 
-    private static PublishSubject<Boolean> intervalUpdates = PublishSubject.create();
+    private static final PublishSubject<Boolean> intervalUpdates = PublishSubject.create();
 
     private static boolean isAlarmMode() {
         return isAlarmMode;
@@ -38,7 +36,7 @@ public final class TimeIntervalManager {
         TimeIntervalManager.isAlarmMode = enabled;
     }
 
-    public static void updateIntervalsToUIMode(){
+    public static void updateIntervalsToUIMode() {
         intervalUpdates.onNext(true);
     }
 
@@ -88,7 +86,9 @@ public final class TimeIntervalManager {
         builder.setNegativeButton(R.string.dismiss, null);
 
         AlertDialog dialog = builder.create();
-        dialog.getWindow().setWindowAnimations(R.style.DialogAnimationFade);
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setWindowAnimations(R.style.DialogAnimationFade);
+        }
         dialog.show();
     }
 
@@ -119,11 +119,7 @@ public final class TimeIntervalManager {
 
 
     public static void updateUserInvertalSelection(int index) {
-        if (CollectionUtils.size(getDefaultIntervals()) > index) {
-            selected_interval_index_user = index;
-        } else {
-            selected_interval_index_user = CollectionUtils.size(getDefaultIntervals());
-        }
+        selected_interval_index_user = Math.min(CollectionUtils.size(getDefaultIntervals()), index);
         Prefs.saveInterval(App.context(), getDefaultIntervals().get(selected_interval_index_user).to(TimeUnit.MILLISECONDS));
     }
 
@@ -132,10 +128,10 @@ public final class TimeIntervalManager {
      */
     public static long getPollingInterval() {
         if (!isAlarmMode() && selected_interval_index_user < 0) {
-            if (pref_interval_milis < 0) {
+            if (PREF_INTERVAL_MILIS < 0) {
                 return getDefaultIntervals().get(DEFAULT_INTERVAL_INDEX).to(TimeUnit.MILLISECONDS);
             } else {
-                return pref_interval_milis;
+                return PREF_INTERVAL_MILIS;
             }
         } else {
             return getDefaultIntervals().get(getSelectedIndex()).to(TimeUnit.MILLISECONDS);

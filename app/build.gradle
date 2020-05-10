@@ -174,7 +174,6 @@ dependencies {
     implementation 'com.jakewharton:butterknife:10.2.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.1'
 
-    implementation 'org.greenrobot:eventbus:3.2.0'
     implementation 'org.jsoup:jsoup:1.13.1'
     implementation 'com.github.PhilJay:MPAndroidChart:3.1.0'
     implementation 'com.github.orhanobut:logger:2.2.0'

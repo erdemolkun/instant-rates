@@ -20,6 +20,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 import androidx.interpolator.view.animation.LinearOutSlowInInterpolator;
 import butterknife.BindView;
@@ -37,6 +38,7 @@ import dynoapps.exchange_rates.model.rates.IRate;
 import dynoapps.exchange_rates.provider.BasePoolingProvider;
 import dynoapps.exchange_rates.service.RatePollingService;
 import dynoapps.exchange_rates.time.TimeIntervalManager;
+import dynoapps.exchange_rates.util.L;
 import dynoapps.exchange_rates.util.RateUtils;
 import dynoapps.exchange_rates.util.ServiceUtils;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -111,6 +113,7 @@ public class LandingActivity extends BaseServiceActivity {
                 }));
 
     }
+
 
     private void setUpBottomAppBar() {
 
@@ -238,6 +241,14 @@ public class LandingActivity extends BaseServiceActivity {
                         provider.stopIfHasAlarm();
                     }
                 }
+            }
+        } else {
+            if (!alarmsRepository.hasAnyActive()) {
+                L.i(RatePollingService.class.getSimpleName(), "Service Stopped");
+                ProvidersManager.getInstance().stopAll();
+            } else {
+                Intent intent = new Intent(this, RatePollingService.class);
+                ContextCompat.startForegroundService(this, intent);
             }
         }
         super.onDestroy();

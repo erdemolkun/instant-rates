@@ -7,22 +7,15 @@ import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import dynoapps.exchange_rates.LandingActivity;
 import dynoapps.exchange_rates.ProvidersManager;
 import dynoapps.exchange_rates.R;
-import dynoapps.exchange_rates.SourcesManager;
 import dynoapps.exchange_rates.notification.NotificationHelper;
-import dynoapps.exchange_rates.time.TimeIntervalManager;
 import dynoapps.exchange_rates.util.L;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
 
 /**
  * Created by Erdem OLKUN , 05/12/2016
@@ -34,7 +27,7 @@ public class RatePollingService extends IntentService {
 
     private static final int FOREGROUND_ID = 1001;
 
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     public RatePollingService() {
         super("RatePollingService");
@@ -58,21 +51,19 @@ public class RatePollingService extends IntentService {
     @Override
     public void onCreate() {
         super.onCreate();
+        showForegroundNotification();
         L.i(RatePollingService.class.getSimpleName(), "Service onCreate");
-        EventBus.getDefault().register(this);
-        ProvidersManager.getInstance().initOrRefresh();
-        Disposable disposable = ProvidersManager.getInstance().registerIntervalUpdates();
-        compositeDisposable.add(disposable);
-        compositeDisposable.add(SourcesManager.getSourceUpdates().observeOn(AndroidSchedulers.mainThread()).subscribe(__ -> {
-            TimeIntervalManager.setAlarmMode(false);
-            ProvidersManager.getInstance().refreshSources();
+        compositeDisposable.add(ServiceStopActionReceiver.getStopSubject().observeOn(AndroidSchedulers.mainThread()).subscribe(aBoolean -> {
+            if (isOreoAndAbove()) {
+                stopForeground(STOP_FOREGROUND_REMOVE);
+            }
+            stopSelf();
         }));
     }
 
     private boolean isOreoAndAbove() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.O;
     }
-
 
     @Override
     public void onDestroy() {
@@ -85,17 +76,9 @@ public class RatePollingService extends IntentService {
         super.onDestroy();
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(ServiceStopActionReceiver.StopAction stopAction) {
-        if (isOreoAndAbove()) {
-            stopForeground(STOP_FOREGROUND_REMOVE);
-        }
-        stopSelf();
-    }
-
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        showForegroundNotification();
+        ProvidersManager.getInstance().initAndStartSources();
         return START_STICKY;
     }
 

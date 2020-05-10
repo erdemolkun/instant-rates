@@ -1,6 +1,7 @@
 package dynoapps.exchange_rates;
 
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 
@@ -11,7 +12,9 @@ import com.orhanobut.logger.PrettyFormatStrategy;
 
 import androidx.annotation.NonNull;
 import dynoapps.exchange_rates.alarm.AlarmsRepository;
+import dynoapps.exchange_rates.time.TimeIntervalManager;
 import dynoapps.exchange_rates.util.L;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.plugins.RxJavaPlugins;
 
 
@@ -35,10 +38,18 @@ public class App extends Application {
         return AlarmsRepository.getInstance(getApplicationContext());
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void onCreate() {
         super.onCreate();
         appInstance = this;
+        SourcesManager.update();
+        ProvidersManager.getInstance().initAndStartSources();
+        ProvidersManager.getInstance().registerIntervalUpdates();
+        SourcesManager.getSourceUpdates().observeOn(AndroidSchedulers.mainThread()).subscribe(__ -> {
+            TimeIntervalManager.setAlarmMode(false);
+            ProvidersManager.getInstance().refreshSources();
+        });
 
         RxJavaPlugins.setErrorHandler(throwable -> L.e("App", throwable.getLocalizedMessage()));
 

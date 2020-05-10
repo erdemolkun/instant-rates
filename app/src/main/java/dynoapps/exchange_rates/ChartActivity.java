@@ -20,10 +20,6 @@ import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.IDataSet;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -55,6 +51,7 @@ import dynoapps.exchange_rates.time.TimeIntervalManager;
 import dynoapps.exchange_rates.util.RateUtils;
 import dynoapps.exchange_rates.util.ViewUtils;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * Copyright 2016 Erdem OLKUN
@@ -86,6 +83,8 @@ public class ChartActivity extends BaseActivity {
     int rateType = IRate.USD;
     private long startMilis;
     private int chart_text_color;
+
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     private long getVisibleTimeInMilis() {
         return TimeIntervalManager.getPollingInterval() * DATA_COUNT;
@@ -144,6 +143,18 @@ public class ChartActivity extends BaseActivity {
             ProvidersManager.getInstance().triggerUpdate();
             AndroidSchedulers.mainThread().scheduleDirect(() -> swipeRefreshLayout.setRefreshing(false), 1, TimeUnit.SECONDS);
         });
+
+        compositeDisposable.add(ProvidersManager.getInstance().getRatesEventPublishSubject()
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(ratesEvent -> {
+                    List<BaseRate> rates = ratesEvent.rates;
+                    update(rates, ratesEvent.source_type, ratesEvent.fetch_time);
+                }));
+    }
+
+    @Override
+    protected void onDestroy() {
+        compositeDisposable.dispose();
+        super.onDestroy();
     }
 
     private void initChart() {
@@ -218,13 +229,6 @@ public class ChartActivity extends BaseActivity {
 
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (!EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().register(this);
-        }
-    }
 
     private synchronized void update(List<BaseRate> rates, int source_type, long fetch_time_millis) {
 
@@ -252,12 +256,6 @@ public class ChartActivity extends BaseActivity {
                 addEntry(((ParaGarantiRate) rate).val_real_avg, chart_index, fetch_time_millis);
             }
         }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(RatesEvent ratesEvent) {
-        List<BaseRate> rates = ratesEvent.rates;
-        update(rates, ratesEvent.source_type, ratesEvent.fetch_time);
     }
 
     @Override
@@ -354,12 +352,6 @@ public class ChartActivity extends BaseActivity {
         set.setValueTextSize(16f);
         set.setDrawValues(false);
         return set;
-    }
-
-    @Override
-    protected void onDestroy() {
-        EventBus.getDefault().unregister(this);
-        super.onDestroy();
     }
 
     @Override
