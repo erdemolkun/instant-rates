@@ -23,6 +23,8 @@ import io.reactivex.disposables.CompositeDisposable;
 
 public class RatePollingService extends IntentService {
 
+    private static final String TAG = "RatePollingService";
+
     private final IBinder mBinder = new SimpleBinder();
 
     private static final int FOREGROUND_ID = 1001;
@@ -52,8 +54,9 @@ public class RatePollingService extends IntentService {
     public void onCreate() {
         super.onCreate();
         showForegroundNotification();
-        L.i(RatePollingService.class.getSimpleName(), "Service onCreate");
+        L.i(TAG, "Service onCreate");
         compositeDisposable.add(ServiceStopActionReceiver.getStopSubject().observeOn(AndroidSchedulers.mainThread()).subscribe(aBoolean -> {
+            ProvidersManager.getInstance().stopAll();
             if (isOreoAndAbove()) {
                 stopForeground(STOP_FOREGROUND_REMOVE);
             }
@@ -67,11 +70,10 @@ public class RatePollingService extends IntentService {
 
     @Override
     public void onDestroy() {
+        L.i(TAG, "onDestroy");
         if (isOreoAndAbove()) {
             stopForeground(STOP_FOREGROUND_REMOVE);
         }
-        L.i(RatePollingService.class.getSimpleName(), "Service Stopped");
-        ProvidersManager.getInstance().stopAll();
         compositeDisposable.clear();
         super.onDestroy();
     }

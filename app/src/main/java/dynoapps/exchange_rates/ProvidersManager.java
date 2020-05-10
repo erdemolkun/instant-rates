@@ -45,12 +45,14 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.subjects.PublishSubject;
 
 public class ProvidersManager {
+    private static final String TAG = "ProvidersManager";
+
     List<BasePoolingProvider<?>> providers;
     private AlarmsRepository alarmsRepository;
-    private static Formatter formatter2 = new Formatter(3, 0);
-    private static Formatter formatter5 = new Formatter(5, 1);
+    private static final Formatter formatter2 = new Formatter(3, 0);
+    private static final Formatter formatter5 = new Formatter(5, 1);
 
-    private PublishSubject<RatesEvent> ratesEventPublishSubject = PublishSubject.create();
+    private final PublishSubject<RatesEvent> ratesEventPublishSubject = PublishSubject.create();
 
     private static ProvidersManager instance;
 
@@ -168,6 +170,7 @@ public class ProvidersManager {
     }
 
     public void stopAll() {
+        L.i(TAG, "stopAll");
         if (providers != null) {
             for (IPollingSource iPollingSource : providers) {
                 iPollingSource.stop();

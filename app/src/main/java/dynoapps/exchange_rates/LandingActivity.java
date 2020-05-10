@@ -38,7 +38,6 @@ import dynoapps.exchange_rates.model.rates.IRate;
 import dynoapps.exchange_rates.provider.BasePoolingProvider;
 import dynoapps.exchange_rates.service.RatePollingService;
 import dynoapps.exchange_rates.time.TimeIntervalManager;
-import dynoapps.exchange_rates.util.L;
 import dynoapps.exchange_rates.util.RateUtils;
 import dynoapps.exchange_rates.util.ServiceUtils;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -233,6 +232,7 @@ public class LandingActivity extends BaseServiceActivity {
         if (ServiceUtils.isMyServiceRunning(this, RatePollingService.class)) {
             if (!alarmsRepository.hasAnyActive()) {
                 stopService(new Intent(this, RatePollingService.class));
+                ProvidersManager.getInstance().stopAll();
             } else {
                 TimeIntervalManager.setAlarmMode(true);
                 for (CurrencySource source : SourcesManager.getCurrencySources()) {
@@ -244,7 +244,6 @@ public class LandingActivity extends BaseServiceActivity {
             }
         } else {
             if (!alarmsRepository.hasAnyActive()) {
-                L.i(RatePollingService.class.getSimpleName(), "Service Stopped");
                 ProvidersManager.getInstance().stopAll();
             } else {
                 Intent intent = new Intent(this, RatePollingService.class);
@@ -295,6 +294,14 @@ public class LandingActivity extends BaseServiceActivity {
 
     private void updateHint() {
         tvIntervalHint.setText(getString(R.string.interval_hint, TimeIntervalManager.getSelectionStr()));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (ServiceUtils.isMyServiceRunning(this, RatePollingService.class)) {
+            stopService(new Intent(this, RatePollingService.class));
+        }
     }
 
     @Override
