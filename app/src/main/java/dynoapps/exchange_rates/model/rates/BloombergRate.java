@@ -18,9 +18,9 @@ public class BloombergRate extends AvgRate implements IConvertable {
             case "EURUSD Curncy":
                 rateType = EUR_USD;
                 break;
-            /*case "XAU Curncy":
+            case "XAU Curncy":
                 rateType = ONS;
-                break;*/
+                break;
         }
         this.rateType = rateType;
     }
@@ -28,7 +28,7 @@ public class BloombergRate extends AvgRate implements IConvertable {
     @Override
     public void setRealValues() {
         if (rateType == UNKNOWN) return;
-        avg_val = avg_val.replace(',', '.');
+        avg_val = avg_val.replace(".", "").replace(',', '.');
         val_real_avg = Float.parseFloat(avg_val);
     }
 }

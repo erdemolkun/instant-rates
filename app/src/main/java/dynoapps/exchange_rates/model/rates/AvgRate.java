@@ -12,6 +12,14 @@ public abstract class AvgRate extends BaseRate {
     public float getValue(int value_type) {
         return val_real_avg;
     }
+
+    @Override
+    public String toString() {
+        return "AvgRate{" +
+                "avg_val='" + avg_val + '\'' +
+                ", val_real_avg=" + val_real_avg +
+                '}';
+    }
 }
 
 

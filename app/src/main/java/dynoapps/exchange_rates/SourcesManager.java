@@ -192,7 +192,7 @@ public class SourcesManager {
         int[] paragarantiSupported = {IRate.USD, IRate.EUR, IRate.EUR_USD};
         int[] enparaSupported = {IRate.USD, IRate.EUR, IRate.EUR_USD, IRate.ONS_TRY};
         int[] yapikrediSupported = {IRate.USD, IRate.EUR, IRate.ONS_TRY};
-        int[] bloombergSupported = {IRate.USD, IRate.EUR, IRate.EUR_USD};
+        int[] bloombergSupported = {IRate.USD, IRate.EUR, IRate.EUR_USD,IRate.ONS};
         currencySources = new ArrayList<>();
         currencySources.add(new CurrencySource("Altın.in", CurrencyType.ALTININ, color(R.color.colorYorumlar), true, altinInSupported));
         currencySources.add(new CurrencySource("Enpara", CurrencyType.ENPARA, color(R.color.colorEnpara), false, enparaSupported));
