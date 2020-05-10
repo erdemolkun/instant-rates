@@ -1,0 +1,45 @@
+.DS_Store
+/captures
+
+.idea/
+*.iml
+
+# Built application files
+*.apk
+*.ap_
+
+# Files for the Dalvik VM
+*.dex
+
+# Java class files
+*.class
+
+# Generated files
+bin/
+gen/
+
+# Gradle files
+.gradle/
+**/build/
+/local.properties
+/gradle.properties
+
+# Local configuration file (sdk path, etc)
+local.properties
+
+bin
+gen
+build
+out
+
+target
+pom.xml.*
+release.properties
+gradle.properties
+
+.idea
+*.ipr
+*.iws
+classes
+dexlib/*.jar
+
