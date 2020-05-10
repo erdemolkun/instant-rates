@@ -186,7 +186,7 @@ dependencies {
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0-rc01'
     annotationProcessor 'androidx.room:room-compiler:2.2.5'
 
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.2'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.3'
 
     androidTestImplementation('tools.fastlane:screengrab:2.0.0', {
         exclude group: 'com.android.support', module: 'support-annotations'
