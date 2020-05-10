@@ -2,6 +2,9 @@ version: 2.0
 
 jobs:
   build:
+    branches:
+      ignore:
+        - gh-pages
     working_directory: ~/code
     docker:
       - image: circleci/android:api-29
