@@ -66,14 +66,14 @@ class AlarmsAdapter extends UpdatableAdapter<List<Alarm>, AlarmsActivity.AlarmVi
     @Override
     public void onBindViewHolder(final AlarmsActivity.AlarmViewHolder holder, int position) {
         final Alarm alarm = alarms.get(position);
-        holder.ivType.setRotation(alarm.is_above ? 90 : 270);
-        holder.ivType.setColorFilter(ContextCompat.getColor(App.context(), alarm.is_above ?
+        holder.ivType.setRotation(alarm.isAbove ? 90 : 270);
+        holder.ivType.setColorFilter(ContextCompat.getColor(App.context(), alarm.isAbove ?
                 android.R.color.holo_green_light :
                 android.R.color.holo_red_light));
-        holder.tvTypeHint.setText(alarm.is_above ? R.string.if_above : R.string.if_below);
-        holder.tvValue.setText(RateUtils.valueToUI(alarm.val, alarm.rate_type));
-        holder.ivRateType.setImageResource(RateUtils.getRateIcon(alarm.rate_type));
-        CurrencySource source = SourcesManager.getSource(alarm.source_type);
+        holder.tvTypeHint.setText(alarm.isAbove ? R.string.if_above : R.string.if_below);
+        holder.tvValue.setText(RateUtils.valueToUI(alarm.val, alarm.rateType));
+        holder.ivRateType.setImageResource(RateUtils.getRateIcon(alarm.rateType));
+        CurrencySource source = SourcesManager.getSource(alarm.sourceType);
         if (source != null) {
             holder.tvSource.setText(source.getName());
             holder.tvSource.setTextColor(source.getColor());
@@ -88,9 +88,9 @@ class AlarmsAdapter extends UpdatableAdapter<List<Alarm>, AlarmsActivity.AlarmVi
             notifyItemRemoved(pos);
             alarmRepository.deleteAlarm(alarm, null);
         });
-        holder.swAlarm.setChecked(alarm.is_enabled);
+        holder.swAlarm.setChecked(alarm.isEnabled);
         holder.swAlarm.setOnCheckedChangeListener((CompoundButton.OnCheckedChangeListener) (compoundButton, b) -> {
-            alarm.is_enabled = b;
+            alarm.isEnabled = b;
             alarmRepository.updateAlarm(alarm, null);
         });
     }

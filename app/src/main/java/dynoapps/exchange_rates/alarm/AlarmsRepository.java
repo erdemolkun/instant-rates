@@ -27,8 +27,8 @@ public class AlarmsRepository implements AlarmsDataSource {
     /**
      * This variable has package local visibility so it can be accessed from tests.
      */
-    Map<Long, Alarm> mCachedAlarms;
-    private AlarmsDataSource localAlarmsDataSource;
+    Map<Long, Alarm> cachedAlarms;
+    private final AlarmsDataSource localAlarmsDataSource;
     private Boolean alarmEnabled = null;
 
 
@@ -46,13 +46,13 @@ public class AlarmsRepository implements AlarmsDataSource {
     @Override
     public void getAlarms(final AlarmsLoadCallback callback) {
         // Respond immediately with cache if available and not dirty
-        if (mCachedAlarms != null && !mCacheIsDirty) {
-            callback.onAlarmsLoaded(new ArrayList<>(mCachedAlarms.values()));
+        if (cachedAlarms != null && !mCacheIsDirty) {
+            callback.onAlarmsLoaded(new ArrayList<>(cachedAlarms.values()));
             return;
         }
         localAlarmsDataSource.getAlarms(alarms -> {
             refreshCache(alarms);
-            callback.onAlarmsLoaded(new ArrayList<>(mCachedAlarms.values()));
+            callback.onAlarmsLoaded(new ArrayList<>(cachedAlarms.values()));
         });
     }
 
@@ -60,10 +60,10 @@ public class AlarmsRepository implements AlarmsDataSource {
     public void saveAlarm(@NonNull Alarm alarm, final AlarmUpdateInsertCallback alarmUpdateInsertCallback) {
         localAlarmsDataSource.saveAlarm(alarm, alarm1 -> {
             // Do in memory cache update to keep the app UI up to date
-            if (mCachedAlarms == null) {
-                mCachedAlarms = new LinkedHashMap<>();
+            if (cachedAlarms == null) {
+                cachedAlarms = new LinkedHashMap<>();
             }
-            mCachedAlarms.put(alarm1.id, alarm1);
+            cachedAlarms.put(alarm1.id, alarm1);
             if (alarmUpdateInsertCallback != null) {
                 alarmUpdateInsertCallback.onAlarmUpdate(alarm1);
             }
@@ -73,7 +73,7 @@ public class AlarmsRepository implements AlarmsDataSource {
     @Override
     public void deleteAlarm(@NonNull Alarm alarm, final AlarmUpdateInsertCallback alarmUpdateInsertCallback) {
         localAlarmsDataSource.deleteAlarm(alarm, alarm1 -> {
-            mCachedAlarms.remove(alarm1.id);
+            cachedAlarms.remove(alarm1.id);
             if (alarmUpdateInsertCallback != null) {
                 alarmUpdateInsertCallback.onAlarmUpdate(alarm1);
             }
@@ -84,10 +84,10 @@ public class AlarmsRepository implements AlarmsDataSource {
     public void updateAlarm(@NonNull Alarm alarm, final AlarmUpdateInsertCallback alarmUpdateInsertCallback) {
         localAlarmsDataSource.updateAlarm(alarm, alarm1 -> {
             // Do in memory cache update to keep the app UI up to date
-            if (mCachedAlarms == null) {
-                mCachedAlarms = new LinkedHashMap<>();
+            if (cachedAlarms == null) {
+                cachedAlarms = new LinkedHashMap<>();
             }
-            mCachedAlarms.put(alarm1.id, alarm1);
+            cachedAlarms.put(alarm1.id, alarm1);
             if (alarmUpdateInsertCallback != null) {
                 alarmUpdateInsertCallback.onAlarmUpdate(alarm1);
             }
@@ -100,12 +100,12 @@ public class AlarmsRepository implements AlarmsDataSource {
     }
 
     private void refreshCache(List<Alarm> alarms) {
-        if (mCachedAlarms == null) {
-            mCachedAlarms = new LinkedHashMap<>();
+        if (cachedAlarms == null) {
+            cachedAlarms = new LinkedHashMap<>();
         }
-        mCachedAlarms.clear();
+        cachedAlarms.clear();
         for (Alarm alarm : alarms) {
-            mCachedAlarms.put(alarm.id, alarm);
+            cachedAlarms.put(alarm.id, alarm);
         }
         mCacheIsDirty = false;
     }
@@ -121,13 +121,13 @@ public class AlarmsRepository implements AlarmsDataSource {
     }
 
     public boolean hasAnyActive() {
-        if (mCachedAlarms == null) return false;
+
         if (!isEnabled()) return false;
-        if (mCachedAlarms.size() < 1) return false; // TODO
-        for (Alarm alarm : mCachedAlarms.values()) {
-            if (alarm.is_enabled) {
+        if (cachedAlarms == null || cachedAlarms.size() < 1) return false;
+        for (Alarm alarm : cachedAlarms.values()) {
+            if (alarm.isEnabled) {
                 for (CurrencySource source : SourcesManager.getCurrencySources()) {
-                    if (source.isEnabled() && source.getType() == alarm.source_type) {
+                    if (source.isEnabled() && source.getType() == alarm.sourceType) {
                         return true;
                     }
                 }

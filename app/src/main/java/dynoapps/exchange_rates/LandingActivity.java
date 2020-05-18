@@ -66,6 +66,13 @@ public class LandingActivity extends BaseServiceActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SourcesManager.update();
+        ProvidersManager.getInstance().initAndStartSources();
+        ProvidersManager.getInstance().registerIntervalUpdates();
+        compositeDisposable.add(SourcesManager.getSourceUpdates().observeOn(AndroidSchedulers.mainThread()).subscribe(__ -> {
+            TimeIntervalManager.setAlarmMode(false);
+            ProvidersManager.getInstance().startOrStopSources();
+        }));
         alarmsRepository = App.getInstance().provideAlarmsRepository();
 
         setUpBottomAppBar();

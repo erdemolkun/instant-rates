@@ -43,13 +43,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         appInstance = this;
-        SourcesManager.update();
-        ProvidersManager.getInstance().initAndStartSources();
-        ProvidersManager.getInstance().registerIntervalUpdates();
-        SourcesManager.getSourceUpdates().observeOn(AndroidSchedulers.mainThread()).subscribe(__ -> {
-            TimeIntervalManager.setAlarmMode(false);
-            ProvidersManager.getInstance().refreshSources();
-        });
+
 
         RxJavaPlugins.setErrorHandler(throwable -> L.e("App", throwable.getLocalizedMessage()));
 

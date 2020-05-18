@@ -4,7 +4,6 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -158,9 +157,9 @@ public class AlarmManager {
                     if (val != null) {
                         Alarm alarm = new Alarm();
                         alarm.val = val;
-                        alarm.is_above = rgAlarm.getCheckedRadioButtonId() == R.id.rb_above;
-                        alarm.source_type = ((CurrencySource) spn_sources.getSelectedItem()).getType();
-                        alarm.rate_type = ((RateValuePair) spn_rate_types.getSelectedItem()).rate_type;
+                        alarm.isAbove = rgAlarm.getCheckedRadioButtonId() == R.id.rb_above;
+                        alarm.sourceType = ((CurrencySource) spn_sources.getSelectedItem()).getType();
+                        alarm.rateType = ((RateValuePair) spn_rate_types.getSelectedItem()).rate_type;
                         alarm.value_type = valueType;
                         App.getInstance().provideAlarmsRepository().saveAlarm(alarm, alarmUpdateInsertCallback);
                     }

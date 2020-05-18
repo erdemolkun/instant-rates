@@ -160,7 +160,7 @@ public class ProvidersManager {
         }
 
         SourcesManager.updateProviders(providers);
-        refreshSources();
+        startOrStopSources();
     }
 
     private void onProviderResult(List<? extends BaseRate> rates, int sourceType) {
@@ -182,7 +182,7 @@ public class ProvidersManager {
         return providers;
     }
 
-    public void refreshSources() {
+    public void startOrStopSources() {
         ArrayList<CurrencySource> currencySources = SourcesManager.getCurrencySources();
         for (CurrencySource currencySource : currencySources) {
             IPollingSource iPollingSource = currencySource.getPollingSource();
@@ -207,10 +207,10 @@ public class ProvidersManager {
             Iterator<Alarm> iterator = alarms.iterator();
             while (iterator.hasNext()) {
                 Alarm alarm = iterator.next();
-                if (alarm.source_type != source_type || !alarm.is_enabled) continue;
-                BaseRate baseRateCurrent = RateUtils.getRate(rates, alarm.rate_type);
+                if (alarm.sourceType != source_type || !alarm.isEnabled) continue;
+                BaseRate baseRateCurrent = RateUtils.getRate(rates, alarm.rateType);
                 RatesEvent ratesEvent = RatesHolder.getInstance().getLatestEvent(source_type);
-                BaseRate baseRateOld = ratesEvent != null ? RateUtils.getRate(ratesEvent.rates, alarm.rate_type) : null;
+                BaseRate baseRateOld = ratesEvent != null ? RateUtils.getRate(ratesEvent.rates, alarm.rateType) : null;
 
                 if (baseRateCurrent == null || baseRateOld == null) continue;
                 float val_current = 0.0f;
@@ -227,16 +227,16 @@ public class ProvidersManager {
                         val_old = ((BuySellRate) baseRateOld).value_sell_real;
                     }
                 }
-                String val = alarm.rate_type == IRate.ONS ? formatter2.format(alarm.val) : formatter5.format(alarm.val);
-                if (alarm.is_above && val_current > alarm.val && val_old <= alarm.val) {
+                String val = alarm.rateType == IRate.ONS ? formatter2.format(alarm.val) : formatter5.format(alarm.val);
+                if (alarm.isAbove && val_current > alarm.val && val_old <= alarm.val) {
                     iterator.remove();
                     alarmsRepository.deleteAlarm(alarm, null);
-                    NotificationHelper.showAlarmNotification(App.context(), App.context().getString(R.string.is_above_val, SourcesManager.getSourceName(alarm.source_type), RateUtils.rateName(alarm.rate_type),
+                    NotificationHelper.showAlarmNotification(App.context(), App.context().getString(R.string.is_above_val, SourcesManager.getSourceName(alarm.sourceType), RateUtils.rateName(alarm.rateType),
                             val), "increasing", Alarm.getPushId(alarm));
-                } else if (!alarm.is_above && val_current < alarm.val && val_old >= alarm.val) {
+                } else if (!alarm.isAbove && val_current < alarm.val && val_old >= alarm.val) {
                     iterator.remove();
                     alarmsRepository.deleteAlarm(alarm, null);
-                    NotificationHelper.showAlarmNotification(App.context(), App.context().getString(R.string.is_below_value, SourcesManager.getSourceName(alarm.source_type), RateUtils.rateName(alarm.rate_type),
+                    NotificationHelper.showAlarmNotification(App.context(), App.context().getString(R.string.is_below_value, SourcesManager.getSourceName(alarm.sourceType), RateUtils.rateName(alarm.rateType),
                             val), "decreasing", Alarm.getPushId(alarm));
                 }
             }

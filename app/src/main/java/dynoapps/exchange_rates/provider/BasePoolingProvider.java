@@ -186,7 +186,7 @@ public abstract class BasePoolingProvider<T> implements IPollingSource, PoolingR
         alarmsRepository.getAlarms(alarms -> {
             boolean contains = false;
             for (Alarm alarm : alarms) {
-                if (alarm.source_type == getSourceType() && alarm.is_enabled) {
+                if (alarm.sourceType == getSourceType() && alarm.isEnabled) {
                     contains = true;
                     break;
                 }

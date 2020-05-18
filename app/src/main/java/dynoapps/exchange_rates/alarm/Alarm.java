@@ -25,21 +25,17 @@ public class Alarm implements Serializable {
      * The name of the ID column.
      */
     public static final String COLUMN_ID = BaseColumns._ID;
-    public static Comparator<Alarm> COMPARATOR = new Comparator<Alarm>() {
+    public static Comparator<Alarm> COMPARATOR = (first, second) -> {
 
-        @Override
-        public int compare(Alarm first, Alarm second) {
+        int i = compare(first.sourceType, second.sourceType);
+        if (i != 0) return i;
 
-            int i = Alarm.compare(first.source_type, second.source_type);
-            if (i != 0) return i;
+        i = compare(first.rateType, second.rateType);
+        if (i != 0) return i;
 
-            i = Alarm.compare(first.rate_type, second.rate_type);
-            if (i != 0) return i;
+        i = compare(first.val, second.val);
+        return i;
 
-            i = Alarm.compare(first.val, second.val);
-            return i;
-
-        }
     };
     /**
      * The unique ID of the alarm.
@@ -50,26 +46,26 @@ public class Alarm implements Serializable {
     @ColumnInfo(name = "value")
     public Float val;
     @ColumnInfo(name = "is_above")
-    public boolean is_above = false;
+    public boolean isAbove = false;
     @ColumnInfo(name = "is_enabled")
-    public boolean is_enabled = true;
+    public boolean isEnabled = true;
     /**
      * {@link dynoapps.exchange_rates.model.rates.IRate}
      */
     @ColumnInfo(name = "rate_type")
-    public int rate_type;
+    public int rateType;
     /**
      * {@link dynoapps.exchange_rates.data.CurrencyType}
      */
     @ColumnInfo(name = "source_type")
-    public int source_type;
+    public int sourceType;
     /**
      * {@link dynoapps.exchange_rates.interfaces.ValueType}
      */
     public int value_type = ValueType.NONE;
 
     public static int getPushId(Alarm alarm) {
-        return alarm.rate_type * 100 + alarm.source_type;
+        return alarm.rateType * 100 + alarm.sourceType;
     }
 
     private static int compare(int x, int y) {
