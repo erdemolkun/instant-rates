@@ -1,23 +1,18 @@
 package dynoapps.exchange_rates.data;
 
 import androidx.annotation.ColorInt;
-import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-import dynoapps.exchange_rates.App;
-import dynoapps.exchange_rates.provider.IPollingSource;
 
 /**
  * Created by erdemmac on 01/12/2016.
  */
 
 public class CurrencySource {
-    private IPollingSource iPollingSource;
-    private String name;
+    private final String name;
     private boolean enabled;
-    private int type;
-    private int color;
-    private int[] supported_rates = new int[0];
+    private final int type;
+    private final int color;
+    private final int[] supported_rates;
     private int chartIndex = 0;
 
     public CurrencySource(String name, int type, @ColorInt int colorInt, boolean enabled, int[] supported_rates) {
@@ -66,13 +61,6 @@ public class CurrencySource {
         return getName();
     }
 
-    public IPollingSource getPollingSource() {
-        return iPollingSource;
-    }
-
-    public void setPollingSource(IPollingSource iPollingSource) {
-        this.iPollingSource = iPollingSource;
-    }
 
     public boolean isAvgType() {
         return type == CurrencyType.ALTININ || type == CurrencyType.PARAGARANTI ||

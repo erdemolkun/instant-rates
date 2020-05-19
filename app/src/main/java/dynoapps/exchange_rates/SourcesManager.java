@@ -7,9 +7,11 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import dynoapps.exchange_rates.data.CurrencySource;
@@ -34,14 +36,14 @@ import io.reactivex.subjects.PublishSubject;
 
 public class SourcesManager {
 
+    private static final AtomicBoolean isInitialized = new AtomicBoolean(false);
+
     private static ArrayList<CurrencySource> currencySources = null;
-    // Boolean array for initial enabled items
-    private static boolean[] temp_data_source_states;
 
-    private static PublishSubject<Boolean> sourceUpdates = PublishSubject.create();
+    private static final PublishSubject<Boolean> sourceUpdates = PublishSubject.create();
 
-    private static void init() {
-        if (CollectionUtils.size(currencySources) > 0) return; // Already initialized
+    public static void init() {
+        if (isInitialized.get()) return;// Already initialized
         initDataSourceSelections();
     }
 
@@ -49,41 +51,41 @@ public class SourcesManager {
         return sourceUpdates;
     }
 
-    public static void updateProviders(List<BasePoolingProvider<?>> providers) {
-
-        for (CurrencySource source : getCurrencySources()) {
-            switch (source.getType()) {
-                case CurrencyType.PARAGARANTI:
-                    source.setPollingSource(CollectionUtils.getInstance(providers, ParaGarantiRateProvider.class));
-                    break;
-                case CurrencyType.ALTININ:
-                    source.setPollingSource(CollectionUtils.getInstance(providers, YorumlarRateProvider.class));
-                    break;
-                case CurrencyType.ENPARA:
-                    source.setPollingSource(CollectionUtils.getInstance(providers, EnparaRateProvider.class));
-                    break;
-                case CurrencyType.BIGPARA:
-                    source.setPollingSource(CollectionUtils.getInstance(providers, BigparaRateProvider.class));
-                    break;
-                case CurrencyType.TLKUR:
-                    source.setPollingSource(CollectionUtils.getInstance(providers, DolarTlKurRateProvider.class));
-                    break;
-                case CurrencyType.YAPIKREDI:
-                    source.setPollingSource(CollectionUtils.getInstance(providers, YapıKrediRateProvider.class));
-                    break;
-                case CurrencyType.YAHOO:
-                    source.setPollingSource(CollectionUtils.getInstance(providers, YahooRateProvider.class));
-                    break;
-                case CurrencyType.BLOOMBERGHT:
-                    source.setPollingSource(CollectionUtils.getInstance(providers, BloombergRateProvider.class));
-                    break;
-            }
+    @Nullable
+    public static BasePoolingProvider<?> getProviderForSource(List<BasePoolingProvider<?>> providers, CurrencySource source) {
+        BasePoolingProvider<?> provider = null;
+        switch (source.getType()) {
+            case CurrencyType.PARAGARANTI:
+                provider = CollectionUtils.getInstance(providers, ParaGarantiRateProvider.class);
+                break;
+            case CurrencyType.ALTININ:
+                provider = CollectionUtils.getInstance(providers, YorumlarRateProvider.class);
+                break;
+            case CurrencyType.ENPARA:
+                provider = CollectionUtils.getInstance(providers, EnparaRateProvider.class);
+                break;
+            case CurrencyType.BIGPARA:
+                provider = CollectionUtils.getInstance(providers, BigparaRateProvider.class);
+                break;
+            case CurrencyType.TLKUR:
+                provider = CollectionUtils.getInstance(providers, DolarTlKurRateProvider.class);
+                break;
+            case CurrencyType.YAPIKREDI:
+                provider = CollectionUtils.getInstance(providers, YapıKrediRateProvider.class);
+                break;
+            case CurrencyType.YAHOO:
+                provider = CollectionUtils.getInstance(providers, YahooRateProvider.class);
+                break;
+            case CurrencyType.BLOOMBERGHT:
+                provider = CollectionUtils.getInstance(providers, BloombergRateProvider.class);
+                break;
         }
+        return provider;
     }
 
     public static void selectSources(final Activity activity) {
         final ArrayList<CurrencySource> currencySources = getCurrencySources();
-        temp_data_source_states = new boolean[currencySources.size()];
+        final boolean[] temp_data_source_states = new boolean[currencySources.size()];
         for (int i = 0; i < temp_data_source_states.length; i++) {
             temp_data_source_states[i] = currencySources.get(i).isEnabled();
         }
@@ -160,7 +162,7 @@ public class SourcesManager {
     }
 
     public static ArrayList<CurrencySource> getCurrencySources() {
-        if (currencySources == null) {
+        if (!isInitialized.get()) {
             init();
         }
         return currencySources;
@@ -180,19 +182,12 @@ public class SourcesManager {
 
     private static void initDataSourceSelections() {
 
-        if (currencySources != null) {
-            return;
-        }
-        /*
-         * Initialize once.
-         **/
-
         int[] only_usd_try = {IRate.USD};
         int[] altinInSupported = {IRate.USD, IRate.EUR, IRate.EUR_USD, IRate.ONS};
         int[] paragarantiSupported = {IRate.USD, IRate.EUR, IRate.EUR_USD};
         int[] enparaSupported = {IRate.USD, IRate.EUR, IRate.EUR_USD, IRate.ONS_TRY};
         int[] yapikrediSupported = {IRate.USD, IRate.EUR, IRate.ONS_TRY};
-        int[] bloombergSupported = {IRate.USD, IRate.EUR, IRate.EUR_USD,IRate.ONS};
+        int[] bloombergSupported = {IRate.USD, IRate.EUR, IRate.EUR_USD, IRate.ONS};
         currencySources = new ArrayList<>();
         currencySources.add(new CurrencySource("Altın.in", CurrencyType.ALTININ, color(R.color.colorYorumlar), true, altinInSupported));
         currencySources.add(new CurrencySource("Enpara", CurrencyType.ENPARA, color(R.color.colorEnpara), false, enparaSupported));
@@ -208,11 +203,7 @@ public class SourcesManager {
             index += source.isAvgType() ? 1 : 2;
         }
         updateSourceStatesFromPrefs();
-    }
-
-    public static void update() {
-        initDataSourceSelections();
-        updateSourceStatesFromPrefs();
+        isInitialized.set(true);
     }
 
     private static void updateSourceStatesFromPrefs() {

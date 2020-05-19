@@ -118,14 +118,14 @@ public class ChartActivity extends BaseActivity {
             if (currencySource != null && currencySource.isEnabled()) {
                 RatesEvent ratesEvent = RatesHolder.getInstance().getLatestEvent(currencySource.getType());
                 if (ratesEvent == null) continue;
-                if (ratesEvent.fetch_time < startMilis) {
-                    startMilis = ratesEvent.fetch_time;
+                if (ratesEvent.fetchTime < startMilis) {
+                    startMilis = ratesEvent.fetchTime;
                 }
                 cachedEvents.add(ratesEvent);
             }
         }
         for (RatesEvent<BaseRate> ratesEvent : cachedEvents) {
-            update(ratesEvent.rates, ratesEvent.source_type, ratesEvent.fetch_time);
+            update(ratesEvent.rates, ratesEvent.sourceType, ratesEvent.fetchTime);
         }
 
         swipeRefreshLayout.setColorSchemeResources(
@@ -147,7 +147,7 @@ public class ChartActivity extends BaseActivity {
         compositeDisposable.add(ProvidersManager.getInstance().getRatesEventPublishSubject()
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(ratesEvent -> {
                     List<BaseRate> rates = ratesEvent.rates;
-                    update(rates, ratesEvent.source_type, ratesEvent.fetch_time);
+                    update(rates, ratesEvent.sourceType, ratesEvent.fetchTime);
                 }));
     }
 

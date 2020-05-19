@@ -66,9 +66,9 @@ public class LandingActivity extends BaseServiceActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SourcesManager.update();
-        ProvidersManager.getInstance().initAndStartSources();
-        ProvidersManager.getInstance().registerIntervalUpdates();
+
+        ProvidersManager.getInstance().startSources();
+        compositeDisposable.add(ProvidersManager.getInstance().registerIntervalUpdates());
         compositeDisposable.add(SourcesManager.getSourceUpdates().observeOn(AndroidSchedulers.mainThread()).subscribe(__ -> {
             TimeIntervalManager.setAlarmMode(false);
             ProvidersManager.getInstance().startOrStopSources();
@@ -91,7 +91,7 @@ public class LandingActivity extends BaseServiceActivity {
             if (currencySource != null && currencySource.isEnabled()) {
                 RatesEvent ratesEvent = RatesHolder.getInstance().getLatestEvent(currencySource.getType());
                 if (ratesEvent != null) {
-                    updateCards(ratesEvent.rates, ratesEvent.source_type, false);
+                    updateCards(ratesEvent.rates, ratesEvent.sourceType, false);
                 }
             }
         }
@@ -115,7 +115,7 @@ public class LandingActivity extends BaseServiceActivity {
         compositeDisposable.add(ProvidersManager.getInstance().getRatesEventPublishSubject()
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(ratesEvent -> {
                     List<BaseRate> rates = ratesEvent.rates;
-                    updateCards(rates, ratesEvent.source_type, true);
+                    updateCards(rates, ratesEvent.sourceType, true);
                 }));
 
     }
@@ -242,8 +242,8 @@ public class LandingActivity extends BaseServiceActivity {
                 ProvidersManager.getInstance().stopAll();
             } else {
                 TimeIntervalManager.setAlarmMode(true);
-                for (CurrencySource source : SourcesManager.getCurrencySources()) {
-                    BasePoolingProvider<?> provider = (BasePoolingProvider<?>) source.getPollingSource();
+
+                for (BasePoolingProvider<?> provider : ProvidersManager.getInstance().providers) {
                     if (provider != null) {
                         provider.stopIfHasAlarm();
                     }

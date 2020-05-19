@@ -6,7 +6,7 @@ package dynoapps.exchange_rates.provider;
 
 public interface IPollingSource {
 
-    void one_shot();
+    void oneShot();
 
     void start();
 
@@ -15,7 +15,7 @@ public interface IPollingSource {
     void cancel();
 
     interface SourceCallback<T> {
-        void onResult(T value);
+        void onResult(T value,int type);
 
         void onError();
     }

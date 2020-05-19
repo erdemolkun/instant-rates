@@ -68,7 +68,7 @@ public abstract class BasePoolingProvider<T> implements IPollingSource, PoolingR
     }
 
     @Override
-    public void one_shot() {
+    public void oneShot() {
         run(true);
     }
 
@@ -170,7 +170,7 @@ public abstract class BasePoolingProvider<T> implements IPollingSource, PoolingR
         successCount++;
         if (!isWorking.get()) return;
         if (callback != null) {
-            callback.onResult(value);
+            callback.onResult(value,getSourceType());
         }
     }
 

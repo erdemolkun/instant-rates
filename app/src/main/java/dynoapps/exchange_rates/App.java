@@ -12,9 +12,7 @@ import com.orhanobut.logger.PrettyFormatStrategy;
 
 import androidx.annotation.NonNull;
 import dynoapps.exchange_rates.alarm.AlarmsRepository;
-import dynoapps.exchange_rates.time.TimeIntervalManager;
 import dynoapps.exchange_rates.util.L;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.plugins.RxJavaPlugins;
 
 
@@ -43,7 +41,6 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         appInstance = this;
-
 
         RxJavaPlugins.setErrorHandler(throwable -> L.e("App", throwable.getLocalizedMessage()));
 

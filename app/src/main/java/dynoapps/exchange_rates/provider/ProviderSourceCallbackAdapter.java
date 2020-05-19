@@ -9,7 +9,7 @@ package dynoapps.exchange_rates.provider;
  */
 public class ProviderSourceCallbackAdapter<T> implements IPollingSource.SourceCallback<T> {
     @Override
-    public void onResult(T value) {
+    public void onResult(T value,int type) {
 
     }
 

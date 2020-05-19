@@ -10,13 +10,13 @@ import dynoapps.exchange_rates.model.rates.BaseRate;
 
 public class RatesEvent<T extends BaseRate> {
 
-    public int source_type;
-    public long fetch_time;
+    public int sourceType;
+    public long fetchTime;
     public List<T> rates;
 
     public RatesEvent(List<T> rates, int sourceType, long fetchTime) {
         this.rates = rates;
-        this.source_type = sourceType;
-        this.fetch_time = fetchTime;
+        this.sourceType = sourceType;
+        this.fetchTime = fetchTime;
     }
 }

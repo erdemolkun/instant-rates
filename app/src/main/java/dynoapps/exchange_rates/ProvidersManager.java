@@ -3,11 +3,11 @@ package dynoapps.exchange_rates;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import dynoapps.exchange_rates.alarm.Alarm;
 import dynoapps.exchange_rates.alarm.AlarmsRepository;
 import dynoapps.exchange_rates.data.CurrencySource;
-import dynoapps.exchange_rates.data.CurrencyType;
 import dynoapps.exchange_rates.data.RatesHolder;
 import dynoapps.exchange_rates.event.RatesEvent;
 import dynoapps.exchange_rates.interfaces.ValueType;
@@ -47,6 +47,8 @@ import io.reactivex.subjects.PublishSubject;
 public class ProvidersManager {
     private static final String TAG = "ProvidersManager";
 
+    private final AtomicBoolean initialized = new AtomicBoolean(false);
+
     List<BasePoolingProvider<?>> providers;
     private AlarmsRepository alarmsRepository;
     private static final Formatter formatter2 = new Formatter(3, 0);
@@ -80,7 +82,10 @@ public class ProvidersManager {
         TimeIntervalManager.setAlarmMode(false);
         for (CurrencySource currencySource : SourcesManager.getCurrencySources()) {
             if (currencySource.isEnabled()) {
-                currencySource.getPollingSource().one_shot();
+                BasePoolingProvider<?> provider = SourcesManager.getProviderForSource(providers, currencySource);
+                if (provider != null) {
+                    provider.oneShot();
+                }
             }
         }
     }
@@ -88,78 +93,77 @@ public class ProvidersManager {
     public Disposable registerIntervalUpdates() {
         return TimeIntervalManager.getIntervalUpdates().distinctUntilChanged().observeOn(AndroidSchedulers.mainThread()).subscribe(isImmediate -> {
             TimeIntervalManager.setAlarmMode(false);
-            for (BasePoolingProvider provider : ProvidersManager.getInstance().getProviders()) {
+            for (BasePoolingProvider<?> provider : ProvidersManager.getInstance().getProviders()) {
                 provider.refreshIntervals(isImmediate);
             }
         }, th -> L.e("RatePollingService", th.getLocalizedMessage()));
     }
 
-    public void initAndStartSources() {
-        alarmsRepository = App.getInstance().provideAlarmsRepository();
-        if (providers == null) {
-            providers = new ArrayList<>();
-        }
-        if (providers.size() > 0) {
-            for (BasePoolingProvider<?> provider : providers) {
-                provider.stop();
+
+    private void init() {
+        if (initialized.get()) return;
+        providers = new ArrayList<>();
+
+        providers.add(new EnparaRateProvider(new ProviderSourceCallbackAdapter<List<EnparaRate>>() {
+            @Override
+            public void onResult(List<EnparaRate> rates, int type) {
+                onProviderResult(rates, type);
             }
-        } else {
-            providers.add(new YorumlarRateProvider(new ProviderSourceCallbackAdapter<List<YorumlarRate>>() {
-                @Override
-                public void onResult(List<YorumlarRate> rates) {
-                    onProviderResult(rates, CurrencyType.ALTININ);
-                }
-            }));
-            providers.add(new EnparaRateProvider(new ProviderSourceCallbackAdapter<List<EnparaRate>>() {
-                @Override
-                public void onResult(List<EnparaRate> rates) {
-                    onProviderResult(rates, CurrencyType.ENPARA);
-                }
-            }));
+        }));
 
-            providers.add(new BigparaRateProvider(new ProviderSourceCallbackAdapter<List<BigparaRate>>() {
-                @Override
-                public void onResult(List<BigparaRate> rates) {
-                    onProviderResult(rates, CurrencyType.BIGPARA);
-                }
-            }));
+        providers.add(new YorumlarRateProvider(new ProviderSourceCallbackAdapter<List<YorumlarRate>>() {
+            @Override
+            public void onResult(List<YorumlarRate> rates, int type) {
+                onProviderResult(rates, type);
+            }
+        }));
 
-            providers.add(new DolarTlKurRateProvider(new ProviderSourceCallbackAdapter<List<DolarTlKurRate>>() {
-                @Override
-                public void onResult(List<DolarTlKurRate> rates) {
-                    onProviderResult(rates, CurrencyType.TLKUR);
-                }
-            }));
+        providers.add(new BigparaRateProvider(new ProviderSourceCallbackAdapter<List<BigparaRate>>() {
+            @Override
+            public void onResult(List<BigparaRate> rates, int type) {
+                onProviderResult(rates, type);
+            }
+        }));
 
-            providers.add(new YapıKrediRateProvider(new ProviderSourceCallbackAdapter<List<YapıKrediRate>>() {
-                @Override
-                public void onResult(List<YapıKrediRate> rates) {
-                    onProviderResult(rates, CurrencyType.YAPIKREDI);
-                }
-            }));
-            providers.add(new YahooRateProvider(new ProviderSourceCallbackAdapter<List<YahooRate>>() {
-                @Override
-                public void onResult(List<YahooRate> rates) {
-                    onProviderResult(rates, CurrencyType.YAHOO);
-                }
-            }));
+        providers.add(new DolarTlKurRateProvider(new ProviderSourceCallbackAdapter<List<DolarTlKurRate>>() {
+            @Override
+            public void onResult(List<DolarTlKurRate> rates, int type) {
+                onProviderResult(rates, type);
+            }
+        }));
 
-            providers.add(new ParaGarantiRateProvider(new ProviderSourceCallbackAdapter<List<ParaGarantiRate>>() {
-                @Override
-                public void onResult(List<ParaGarantiRate> rates) {
-                    onProviderResult(rates, CurrencyType.PARAGARANTI);
-                }
-            }));
+        providers.add(new YapıKrediRateProvider(new ProviderSourceCallbackAdapter<List<YapıKrediRate>>() {
+            @Override
+            public void onResult(List<YapıKrediRate> rates, int type) {
+                onProviderResult(rates, type);
+            }
+        }));
+        providers.add(new YahooRateProvider(new ProviderSourceCallbackAdapter<List<YahooRate>>() {
+            @Override
+            public void onResult(List<YahooRate> rates, int type) {
+                onProviderResult(rates, type);
+            }
+        }));
 
-            providers.add(new BloombergRateProvider(new ProviderSourceCallbackAdapter<List<BloombergRate>>() {
-                @Override
-                public void onResult(List<BloombergRate> rates) {
-                    onProviderResult(rates, CurrencyType.BLOOMBERGHT);
-                }
-            }));
-        }
+        providers.add(new ParaGarantiRateProvider(new ProviderSourceCallbackAdapter<List<ParaGarantiRate>>() {
+            @Override
+            public void onResult(List<ParaGarantiRate> rates, int type) {
+                onProviderResult(rates, type);
+            }
+        }));
 
-        SourcesManager.updateProviders(providers);
+        providers.add(new BloombergRateProvider(new ProviderSourceCallbackAdapter<List<BloombergRate>>() {
+            @Override
+            public void onResult(List<BloombergRate> rates, int type) {
+                onProviderResult(rates, type);
+            }
+        }));
+        initialized.set(true);
+    }
+
+    public void startSources() {
+        alarmsRepository = App.getInstance().provideAlarmsRepository();
+        init();
         startOrStopSources();
     }
 
@@ -183,10 +187,10 @@ public class ProvidersManager {
     }
 
     public void startOrStopSources() {
-        ArrayList<CurrencySource> currencySources = SourcesManager.getCurrencySources();
+        List<CurrencySource> currencySources = SourcesManager.getCurrencySources();
         for (CurrencySource currencySource : currencySources) {
-            IPollingSource iPollingSource = currencySource.getPollingSource();
-            if (iPollingSource == null) return;
+            IPollingSource iPollingSource = SourcesManager.getProviderForSource(providers, currencySource);
+            if (iPollingSource == null) continue;
             if (currencySource.isEnabled()) {
                 iPollingSource.start();
             } else {
@@ -195,21 +199,21 @@ public class ProvidersManager {
         }
     }
 
-    private <T extends BaseRate> void updateAlarmsAndCheck(final List<T> rates, final int source_type) {
+    private <T extends BaseRate> void updateAlarmsAndCheck(final List<T> rates, final int sourceType) {
         if (CollectionUtils.isNullOrEmpty(rates)) return;
-        alarmsRepository.getAlarms(alarms -> checkAlarms(rates, source_type, alarms));
+        alarmsRepository.getAlarms(alarms -> checkAlarms(rates, sourceType, alarms));
     }
 
-    private <T extends BaseRate> void checkAlarms(List<T> rates, int source_type, List<Alarm> alarms) {
+    private <T extends BaseRate> void checkAlarms(List<T> rates, int sourceType, List<Alarm> alarms) {
         if (CollectionUtils.isNullOrEmpty(rates)) return;
         try {
 
             Iterator<Alarm> iterator = alarms.iterator();
             while (iterator.hasNext()) {
                 Alarm alarm = iterator.next();
-                if (alarm.sourceType != source_type || !alarm.isEnabled) continue;
+                if (alarm.sourceType != sourceType || !alarm.isEnabled) continue;
                 BaseRate baseRateCurrent = RateUtils.getRate(rates, alarm.rateType);
-                RatesEvent ratesEvent = RatesHolder.getInstance().getLatestEvent(source_type);
+                RatesEvent ratesEvent = RatesHolder.getInstance().getLatestEvent(sourceType);
                 BaseRate baseRateOld = ratesEvent != null ? RateUtils.getRate(ratesEvent.rates, alarm.rateType) : null;
 
                 if (baseRateCurrent == null || baseRateOld == null) continue;

@@ -80,7 +80,7 @@ public class RatePollingService extends IntentService {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        ProvidersManager.getInstance().initAndStartSources();
+        ProvidersManager.getInstance().startSources();
         return START_STICKY;
     }
 
