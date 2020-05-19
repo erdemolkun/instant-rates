@@ -38,7 +38,12 @@ public class AlarmsRepository implements AlarmsDataSource {
 
     public static AlarmsRepository getInstance(@NonNull Context context) {
         if (INSTANCE == null) {
-            INSTANCE = new AlarmsRepository(new LocalAlarmsDataSource(context));
+            synchronized (AlarmsRepository.class) {
+                if (INSTANCE == null) {
+                    INSTANCE = new AlarmsRepository(new LocalAlarmsDataSource(context));
+                }
+            }
+
         }
         return INSTANCE;
     }
@@ -82,14 +87,14 @@ public class AlarmsRepository implements AlarmsDataSource {
 
     @Override
     public void updateAlarm(@NonNull Alarm alarm, final AlarmUpdateInsertCallback alarmUpdateInsertCallback) {
-        localAlarmsDataSource.updateAlarm(alarm, alarm1 -> {
+        localAlarmsDataSource.updateAlarm(alarm, updatedAlarm -> {
             // Do in memory cache update to keep the app UI up to date
             if (cachedAlarms == null) {
                 cachedAlarms = new LinkedHashMap<>();
             }
-            cachedAlarms.put(alarm1.id, alarm1);
+            cachedAlarms.put(updatedAlarm.id, updatedAlarm);
             if (alarmUpdateInsertCallback != null) {
-                alarmUpdateInsertCallback.onAlarmUpdate(alarm1);
+                alarmUpdateInsertCallback.onAlarmUpdate(updatedAlarm);
             }
         });
     }

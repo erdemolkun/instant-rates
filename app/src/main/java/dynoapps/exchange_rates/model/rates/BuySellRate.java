@@ -39,10 +39,10 @@ public abstract class BuySellRate extends BaseRate {
 
 
     @Override
-    public float getValue(int value_type) {
-        if (value_type == ValueType.BUY) {
+    public float getValue(int valueType) {
+        if (valueType == ValueType.BUY) {
             return value_buy_real;
-        } else if (value_type == ValueType.SELL) {
+        } else if (valueType == ValueType.SELL) {
             return value_sell_real;
         }
         return 0.0f;

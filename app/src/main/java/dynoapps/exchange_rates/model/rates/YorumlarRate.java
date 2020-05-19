@@ -8,7 +8,7 @@ import androidx.annotation.NonNull;
  * Created by erdemmac on 24/11/2016.
  */
 
-public class YorumlarRate extends AvgRate implements IConvertable {
+public class YorumlarRate extends AvgRate {
 
     public String time;
 

@@ -20,11 +20,11 @@ public final class TimeIntervalManager {
 
     private static final int DEFAULT_INTERVAL_INDEX = 2;
     private static final int INTERVAL_SERVICE_INDEX = 4;
-    private static final long PREF_INTERVAL_MILIS = Prefs.getInterval(App.context());
+    private static final long PREF_INTERVAL_MILLIS = Prefs.getInterval(App.context());
     private static ArrayList<TimeInterval> intervals;
-    private static Integer selected_interval_index_user = getSelectedIndexViaPrefs();
+    private static Integer selectedIntervalIndexUser = getSelectedIndexViaPrefs();
     private static boolean isAlarmMode = false;
-    private static int user_selected_item_index = -1;
+    private static int userSelectedItemIndex = -1;
 
     private static final PublishSubject<Boolean> intervalUpdates = PublishSubject.create();
 
@@ -34,6 +34,7 @@ public final class TimeIntervalManager {
 
     public static void setAlarmMode(boolean enabled) {
         TimeIntervalManager.isAlarmMode = enabled;
+        TimeIntervalManager.updateIntervalsToUIMode();// Intervals should be updated on ui mode.
     }
 
     public static void updateIntervalsToUIMode() {
@@ -65,20 +66,20 @@ public final class TimeIntervalManager {
     public static void selectInterval(final Activity activity) {
 
         final ArrayList<TimeInterval> timeIntervals = TimeIntervalManager.getDefaultIntervals();
-        user_selected_item_index = TimeIntervalManager.getSelectedIndex();
+        userSelectedItemIndex = TimeIntervalManager.getSelectedIndex();
         String[] time_values = new String[CollectionUtils.size(timeIntervals)];
         for (int i = 0; i < time_values.length; i++) {
             time_values[i] = timeIntervals.get(i).toString();
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(activity, R.style.AppTheme_Alert);
 
-        builder.setSingleChoiceItems(time_values, user_selected_item_index, (dialogInterface, i) -> user_selected_item_index = i);
+        builder.setSingleChoiceItems(time_values, userSelectedItemIndex, (dialogInterface, i) -> userSelectedItemIndex = i);
 
         builder.setCancelable(true);
         builder.setTitle(R.string.select_time_interval);
         builder.setPositiveButton(R.string.apply, (dialog, which) -> {
-            if (user_selected_item_index != TimeIntervalManager.getSelectedIndex()) {
-                TimeIntervalManager.updateUserInvertalSelection(user_selected_item_index);
+            if (userSelectedItemIndex != TimeIntervalManager.getSelectedIndex()) {
+                TimeIntervalManager.updateUserInvertalSelection(userSelectedItemIndex);
                 intervalUpdates.onNext(false);
             }
         });
@@ -108,30 +109,30 @@ public final class TimeIntervalManager {
 
     private static int getSelectedIndex() {
         if (!isAlarmMode()) {
-            if (selected_interval_index_user < 0) {
+            if (selectedIntervalIndexUser < 0) {
                 return DEFAULT_INTERVAL_INDEX;
             }
-            return selected_interval_index_user;
+            return selectedIntervalIndexUser;
         } else {
-            return selected_interval_index_user > INTERVAL_SERVICE_INDEX ? selected_interval_index_user : INTERVAL_SERVICE_INDEX;
+            return selectedIntervalIndexUser > INTERVAL_SERVICE_INDEX ? selectedIntervalIndexUser : INTERVAL_SERVICE_INDEX;
         }
     }
 
 
     public static void updateUserInvertalSelection(int index) {
-        selected_interval_index_user = Math.min(CollectionUtils.size(getDefaultIntervals()), index);
-        Prefs.saveInterval(App.context(), getDefaultIntervals().get(selected_interval_index_user).to(TimeUnit.MILLISECONDS));
+        selectedIntervalIndexUser = Math.min(CollectionUtils.size(getDefaultIntervals()), index);
+        Prefs.saveInterval(App.context(), getDefaultIntervals().get(selectedIntervalIndexUser).to(TimeUnit.MILLISECONDS));
     }
 
     /**
      * Returns time interval for polling in  {@link TimeUnit#MILLISECONDS} milliseconds
      */
     public static long getPollingInterval() {
-        if (!isAlarmMode() && selected_interval_index_user < 0) {
-            if (PREF_INTERVAL_MILIS < 0) {
+        if (!isAlarmMode() && selectedIntervalIndexUser < 0) {
+            if (PREF_INTERVAL_MILLIS < 0) {
                 return getDefaultIntervals().get(DEFAULT_INTERVAL_INDEX).to(TimeUnit.MILLISECONDS);
             } else {
-                return PREF_INTERVAL_MILIS;
+                return PREF_INTERVAL_MILLIS;
             }
         } else {
             return getDefaultIntervals().get(getSelectedIndex()).to(TimeUnit.MILLISECONDS);

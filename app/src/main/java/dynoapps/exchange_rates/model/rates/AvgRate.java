@@ -9,7 +9,7 @@ public abstract class AvgRate extends BaseRate {
     public float val_real_avg;
 
     @Override
-    public float getValue(int value_type) {
+    public float getValue(int valueType) {
         return val_real_avg;
     }
 

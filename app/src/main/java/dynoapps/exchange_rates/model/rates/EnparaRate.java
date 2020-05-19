@@ -5,15 +5,15 @@ package dynoapps.exchange_rates.model.rates;
  */
 
 public class EnparaRate extends BuySellRate {
+
     @Override
     public void toRateType() {
         int rateType = UNKNOWN;
         String plain_type = type.replace("\n", "");
         plain_type = plain_type.toLowerCase();
-         if (plain_type.contains("parite")) {
+        if (plain_type.contains("parite")) {
             rateType = EUR_USD;
-        }
-        else if (plain_type.contains("usd")) {
+        } else if (plain_type.contains("usd")) {
             rateType = USD;
         } else if (plain_type.contains("eur")) {
             rateType = EUR;
@@ -31,5 +31,4 @@ public class EnparaRate extends BuySellRate {
         val = value_buy.replace(" TL", "").replace(",", ".").trim();
         value_buy_real = Float.valueOf(val);
     }
-
 }

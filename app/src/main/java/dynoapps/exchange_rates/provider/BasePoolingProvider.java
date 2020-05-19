@@ -12,7 +12,6 @@ import dynoapps.exchange_rates.SourcesManager;
 import dynoapps.exchange_rates.alarm.Alarm;
 import dynoapps.exchange_rates.alarm.AlarmsRepository;
 import dynoapps.exchange_rates.data.CurrencySource;
-import dynoapps.exchange_rates.interfaces.PoolingRunnable;
 import dynoapps.exchange_rates.time.TimeIntervalManager;
 import dynoapps.exchange_rates.util.L;
 import io.reactivex.Observable;
@@ -24,22 +23,22 @@ import io.reactivex.schedulers.Schedulers;
  * Created by erdemmac on 25/11/2016.
  */
 
-public abstract class BasePoolingProvider<T> implements IPollingSource, PoolingRunnable, Runnable {
+public abstract class BasePoolingProvider<T> implements IPollingSource, Runnable {
 
     private static final int NEXT_FETCH_ON_ERROR = 4000;
 
     private static final int MESSAGE_WHAT_FETCH = 1;
-    private CompositeDisposable disposables = new CompositeDisposable();
-    private SourceCallback<T> callback;
-    private AlarmsRepository alarmsRepository;
+    private final CompositeDisposable disposables = new CompositeDisposable();
+    private final SourceCallback<T> callback;
+    private final AlarmsRepository alarmsRepository;
 
     private int errorCount = 0;
     private int successCount = 0;
 
-    private AtomicBoolean isWorking = new AtomicBoolean(false); // Indicates if a job currently running
-    private AtomicBoolean isStarted = new AtomicBoolean(false); // Indicates if a job currently running
+    private final AtomicBoolean isWorking = new AtomicBoolean(false); // Indicates if a job currently running
+    private final AtomicBoolean isStarted = new AtomicBoolean(false); // Indicates if a job currently started
 
-    private CurrencySource currencySource;
+    private final CurrencySource currencySource;
     private Handler handler;
     private long last_call_start_millis = -1;
     private int average_duration = 0;
@@ -69,7 +68,7 @@ public abstract class BasePoolingProvider<T> implements IPollingSource, PoolingR
 
     @Override
     public void oneShot() {
-        run(true);
+        job(true);
     }
 
     private boolean isEnabled() {
@@ -134,12 +133,13 @@ public abstract class BasePoolingProvider<T> implements IPollingSource, PoolingR
         postWork(interval_value);
     }
 
-    public void refreshIntervals(boolean immediate_shot) {
+    @Override
+    public void refreshIntervals(boolean immediateShort) {
         cancelWorks();
         if (!isEnabled()) {
             return;
         }
-        postWork(immediate_shot ? 0 : TimeIntervalManager.getPollingInterval());
+        postWork(immediateShort ? 0 : TimeIntervalManager.getPollingInterval());
     }
 
     private void cancelWorks() {
@@ -170,7 +170,7 @@ public abstract class BasePoolingProvider<T> implements IPollingSource, PoolingR
         successCount++;
         if (!isWorking.get()) return;
         if (callback != null) {
-            callback.onResult(value,getSourceType());
+            callback.onResult(value, getSourceType());
         }
     }
 
@@ -182,7 +182,8 @@ public abstract class BasePoolingProvider<T> implements IPollingSource, PoolingR
         }
     }
 
-    public void stopIfHasAlarm() {
+    @Override
+    public void stopNonAlarmSources() {
         alarmsRepository.getAlarms(alarms -> {
             boolean contains = false;
             for (Alarm alarm : alarms) {
@@ -198,26 +199,22 @@ public abstract class BasePoolingProvider<T> implements IPollingSource, PoolingR
 
     }
 
-    private void job(final boolean singRun) {
+    private void job(final boolean singleRun) {
 
         disposables.add(Observable.defer(this::getObservable)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(rates -> {
                             notifyValue(rates);
-                            if (!singRun)
+                            if (!singleRun)
                                 fetchAgain(false);
                         }
                         , th -> {
                             notifyError();
-                            if (!singRun)
+                            if (!singleRun)
                                 fetchAgain(true);
                         }));
 
     }
 
-    @Override
-    public void run(boolean singleRun) {
-        job(singleRun);
-    }
 }

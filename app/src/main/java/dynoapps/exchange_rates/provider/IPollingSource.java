@@ -14,8 +14,12 @@ public interface IPollingSource {
 
     void cancel();
 
+    void refreshIntervals(boolean isImmediate);
+
+    void stopNonAlarmSources();
+
     interface SourceCallback<T> {
-        void onResult(T value,int type);
+        void onResult(T value, int type);
 
         void onError();
     }

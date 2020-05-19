@@ -23,6 +23,7 @@ import dynoapps.exchange_rates.provider.BigparaRateProvider;
 import dynoapps.exchange_rates.provider.BloombergRateProvider;
 import dynoapps.exchange_rates.provider.DolarTlKurRateProvider;
 import dynoapps.exchange_rates.provider.EnparaRateProvider;
+import dynoapps.exchange_rates.provider.IPollingSource;
 import dynoapps.exchange_rates.provider.ParaGarantiRateProvider;
 import dynoapps.exchange_rates.provider.YahooRateProvider;
 import dynoapps.exchange_rates.provider.YapıKrediRateProvider;
@@ -52,35 +53,35 @@ public class SourcesManager {
     }
 
     @Nullable
-    public static BasePoolingProvider<?> getProviderForSource(List<BasePoolingProvider<?>> providers, CurrencySource source) {
-        BasePoolingProvider<?> provider = null;
+    public static IPollingSource getProviderForSource(List<IPollingSource> providers, CurrencySource source) {
+        IPollingSource pollingSource = null;
         switch (source.getType()) {
             case CurrencyType.PARAGARANTI:
-                provider = CollectionUtils.getInstance(providers, ParaGarantiRateProvider.class);
+                pollingSource = CollectionUtils.getInstance(providers, ParaGarantiRateProvider.class);
                 break;
             case CurrencyType.ALTININ:
-                provider = CollectionUtils.getInstance(providers, YorumlarRateProvider.class);
+                pollingSource = CollectionUtils.getInstance(providers, YorumlarRateProvider.class);
                 break;
             case CurrencyType.ENPARA:
-                provider = CollectionUtils.getInstance(providers, EnparaRateProvider.class);
+                pollingSource = CollectionUtils.getInstance(providers, EnparaRateProvider.class);
                 break;
             case CurrencyType.BIGPARA:
-                provider = CollectionUtils.getInstance(providers, BigparaRateProvider.class);
+                pollingSource = CollectionUtils.getInstance(providers, BigparaRateProvider.class);
                 break;
             case CurrencyType.TLKUR:
-                provider = CollectionUtils.getInstance(providers, DolarTlKurRateProvider.class);
+                pollingSource = CollectionUtils.getInstance(providers, DolarTlKurRateProvider.class);
                 break;
             case CurrencyType.YAPIKREDI:
-                provider = CollectionUtils.getInstance(providers, YapıKrediRateProvider.class);
+                pollingSource = CollectionUtils.getInstance(providers, YapıKrediRateProvider.class);
                 break;
             case CurrencyType.YAHOO:
-                provider = CollectionUtils.getInstance(providers, YahooRateProvider.class);
+                pollingSource = CollectionUtils.getInstance(providers, YahooRateProvider.class);
                 break;
             case CurrencyType.BLOOMBERGHT:
-                provider = CollectionUtils.getInstance(providers, BloombergRateProvider.class);
+                pollingSource = CollectionUtils.getInstance(providers, BloombergRateProvider.class);
                 break;
         }
-        return provider;
+        return pollingSource;
     }
 
     public static void selectSources(final Activity activity) {

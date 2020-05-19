@@ -35,7 +35,7 @@ import dynoapps.exchange_rates.model.rates.AvgRate;
 import dynoapps.exchange_rates.model.rates.BaseRate;
 import dynoapps.exchange_rates.model.rates.BuySellRate;
 import dynoapps.exchange_rates.model.rates.IRate;
-import dynoapps.exchange_rates.provider.BasePoolingProvider;
+import dynoapps.exchange_rates.provider.IPollingSource;
 import dynoapps.exchange_rates.service.RatePollingService;
 import dynoapps.exchange_rates.time.TimeIntervalManager;
 import dynoapps.exchange_rates.util.RateUtils;
@@ -70,7 +70,6 @@ public class LandingActivity extends BaseServiceActivity {
         ProvidersManager.getInstance().startSources();
         compositeDisposable.add(ProvidersManager.getInstance().registerIntervalUpdates());
         compositeDisposable.add(SourcesManager.getSourceUpdates().observeOn(AndroidSchedulers.mainThread()).subscribe(__ -> {
-            TimeIntervalManager.setAlarmMode(false);
             ProvidersManager.getInstance().startOrStopSources();
         }));
         alarmsRepository = App.getInstance().provideAlarmsRepository();
@@ -79,7 +78,6 @@ public class LandingActivity extends BaseServiceActivity {
 
         vFab.setOnClickListener(v -> AlarmManager.addAlarmDialog(this));
 
-        TimeIntervalManager.setAlarmMode(false);
         setUpRateCardViews();
         refreshCardItemViews();
 
@@ -105,7 +103,10 @@ public class LandingActivity extends BaseServiceActivity {
 
         updateHint();
 
-        Disposable disposable = TimeIntervalManager.getIntervalUpdates().observeOn(AndroidSchedulers.mainThread()).subscribe(__ -> updateHint());
+        Disposable disposable = TimeIntervalManager.getIntervalUpdates()
+                .distinctUntilChanged()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(__ -> updateHint());
         compositeDisposable.add(disposable);
 
         compositeDisposable.add(SourcesManager.getSourceUpdates().observeOn(AndroidSchedulers.mainThread()).subscribe(__ -> {
@@ -243,9 +244,9 @@ public class LandingActivity extends BaseServiceActivity {
             } else {
                 TimeIntervalManager.setAlarmMode(true);
 
-                for (BasePoolingProvider<?> provider : ProvidersManager.getInstance().providers) {
-                    if (provider != null) {
-                        provider.stopIfHasAlarm();
+                for (IPollingSource iPollingSource : ProvidersManager.getInstance().getPollingSources()) {
+                    if (iPollingSource != null) {
+                        iPollingSource.stopNonAlarmSources();
                     }
                 }
             }

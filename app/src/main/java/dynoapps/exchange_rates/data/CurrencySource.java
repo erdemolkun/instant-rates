@@ -12,15 +12,15 @@ public class CurrencySource {
     private boolean enabled;
     private final int type;
     private final int color;
-    private final int[] supported_rates;
+    private final int[] supportedRates;
     private int chartIndex = 0;
 
-    public CurrencySource(String name, int type, @ColorInt int colorInt, boolean enabled, int[] supported_rates) {
+    public CurrencySource(String name, int type, @ColorInt int colorInt, boolean enabled, int[] supportedRates) {
         this.name = name;
         this.type = type;
         this.enabled = enabled;
         this.color = colorInt;
-        this.supported_rates = supported_rates;
+        this.supportedRates = supportedRates;
     }
 
     public int getChartIndex() {
@@ -32,7 +32,7 @@ public class CurrencySource {
     }
 
     public int[] getSupportedRates() {
-        return supported_rates;
+        return supportedRates;
     }
 
     public int getColor() {
@@ -68,9 +68,9 @@ public class CurrencySource {
     }
 
     public boolean isRateSupported(int rateType) {
-        if (supported_rates == null) return true;
-        if (supported_rates.length <= 0) return true;
-        for (int i : supported_rates) {
+        if (supportedRates == null) return true;
+        if (supportedRates.length <= 0) return true;
+        for (int i : supportedRates) {
             if (rateType == i) {
                 return true;
             }

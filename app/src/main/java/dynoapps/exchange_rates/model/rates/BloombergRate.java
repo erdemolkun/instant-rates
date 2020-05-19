@@ -2,7 +2,7 @@ package dynoapps.exchange_rates.model.rates;
 
 import android.text.TextUtils;
 
-public class BloombergRate extends AvgRate implements IConvertable {
+public class BloombergRate extends AvgRate {
 
     @Override
     public void toRateType() {

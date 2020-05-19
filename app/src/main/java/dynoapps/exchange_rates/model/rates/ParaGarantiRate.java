@@ -9,7 +9,7 @@ import dynoapps.exchange_rates.util.RateUtils;
  * Created by erdemmac on 24/11/2016.
  */
 
-public class ParaGarantiRate extends AvgRate implements IConvertable {
+public class ParaGarantiRate extends AvgRate {
 
     public String symbol;
     public String last;

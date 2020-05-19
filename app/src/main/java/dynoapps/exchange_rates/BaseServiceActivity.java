@@ -13,9 +13,12 @@ public abstract class BaseServiceActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
         TimeIntervalManager.setAlarmMode(false);
-        TimeIntervalManager.updateIntervalsToUIMode();// Intervals should be updated on ui mode.
     }
 
     @Override

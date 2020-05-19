@@ -21,7 +21,7 @@ public interface IRate {
     @RateDef
     int getRateType();
 
-    float getValue(int value_type);
+    float getValue(int valueType);
 
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({
