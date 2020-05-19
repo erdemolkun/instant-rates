@@ -13,6 +13,7 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 import io.reactivex.Flowable;
+import io.reactivex.Single;
 
 /**
  * Data access object for Alarm.
@@ -27,7 +28,7 @@ public interface AlarmDao {
      * @return The row ID of the newly inserted alarm.
      */
     @Insert
-    long insert(Alarm alarm);
+    Single<Long> insert(Alarm alarm);
 
     /**
      * Inserts multiple alarms into the database
@@ -52,7 +53,7 @@ public interface AlarmDao {
      * @return A {@link Cursor} of all the cheeses in the table.
      */
     @Query("SELECT * FROM " + Alarm.TABLE_NAME)
-    List<Alarm> list();
+    Single<List<Alarm>> list();
 
 
     /**
@@ -62,7 +63,7 @@ public interface AlarmDao {
      * @return A number of alarms deleted. This should always be {@code 1}.
      */
     @Query("DELETE FROM " + Alarm.TABLE_NAME + " WHERE " + Alarm.COLUMN_ID + " = :id")
-    int deleteById(long id);
+    Single<Integer> deleteById(long id);
 
     /**
      * Update the alarm. The alarm is identified by the row ID.
@@ -71,6 +72,6 @@ public interface AlarmDao {
      * @return A number of alarms updated. This should always be {@code 1}.
      */
     @Update
-    int update(Alarm alarm);
+    Single<Integer> update(Alarm alarm);
 
 }

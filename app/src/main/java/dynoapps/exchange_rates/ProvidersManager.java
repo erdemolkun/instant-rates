@@ -224,8 +224,8 @@ public class ProvidersManager {
                         val_current = baseRateCurrent.getValue(alarm.value_type);
                         val_old = baseRateOld.getValue(alarm.value_type);
                     } else {
-                        val_current = ((BuySellRate) baseRateCurrent).value_sell_real;
-                        val_old = ((BuySellRate) baseRateOld).value_sell_real;
+                        val_current = ((BuySellRate) baseRateCurrent).valueSellReal;
+                        val_old = ((BuySellRate) baseRateOld).valueSellReal;
                     }
                 }
                 String val = alarm.rateType == IRate.ONS ? formatter2.format(alarm.val) : formatter5.format(alarm.val);

@@ -42,8 +42,8 @@ public class YapıKrediRateProvider extends BasePoolingProvider<List<YapıKrediR
                             Elements innerElements = element.select("td");
                             YapıKrediRate rate = new YapıKrediRate();
                             if (innerElements.size() > 3) {
-                                rate.value_sell = innerElements.get(2).text();
-                                rate.value_buy = innerElements.get(3).text();
+                                rate.valueSell = innerElements.get(2).text();
+                                rate.valueBuy = innerElements.get(3).text();
                                 rate.type = innerElements.get(0).text();
                                 rate.toRateType();
                                 rate.setRealValues();

@@ -25,10 +25,10 @@ public class EnparaRate extends BuySellRate {
 
     @Override
     public void setRealValues() {
-        String val = value_sell.replace(" TL", "").replace(",", ".").trim();
-        value_sell_real = Float.valueOf(val);
+        String val = valueSell.replace(" TL", "").replace(",", ".").trim();
+        valueSellReal = Float.valueOf(val);
 
-        val = value_buy.replace(" TL", "").replace(",", ".").trim();
-        value_buy_real = Float.valueOf(val);
+        val = valueBuy.replace(" TL", "").replace(",", ".").trim();
+        valueBuyReal = Float.valueOf(val);
     }
 }

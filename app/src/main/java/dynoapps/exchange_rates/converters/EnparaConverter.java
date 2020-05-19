@@ -61,8 +61,8 @@ public class EnparaConverter implements Converter<ResponseBody, List<BaseRate>> 
         EnparaRate rate = new EnparaRate();
         if (divElements.size() > 2) {
             rate.type = divElements.get(0).text();
-            rate.value_buy = divElements.get(1).text();
-            rate.value_sell = divElements.get(2).text();
+            rate.valueBuy = divElements.get(1).text();
+            rate.valueSell = divElements.get(2).text();
         }
         return rate;
     }

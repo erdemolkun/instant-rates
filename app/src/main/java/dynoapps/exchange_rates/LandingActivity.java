@@ -160,8 +160,8 @@ public class LandingActivity extends BaseServiceActivity {
                     }
                 }
                 if (!foundCard && isEnabled) {
-                    if (dataSource.isRateSupported(parent.rate_type)) {
-                        if (dataSource.isAvgType()) {
+                    if (dataSource.isRateSupported(parent.rateType)) {
+                        if (SourcesManager.isAvgType(dataSource.getType())) {
                             addCardToParent(parent, ValueType.AVG, dataSource.getType());
                         } else {
                             addCardToParent(parent, ValueType.BUY, dataSource.getType());
@@ -173,26 +173,26 @@ public class LandingActivity extends BaseServiceActivity {
         }
     }
 
-    private void addCardToParent(final CardViewItemParent parent, final int value_type, final int source_type) {
+    private void addCardToParent(final CardViewItemParent parent, final int valueType, final int sourceType) {
         LayoutInflater.from(this).inflate(R.layout.layout_simple_rate_card, parent.me, true);
         View v = parent.me.getChildAt(parent.me.getChildCount() - 1);
         v.setOnClickListener(view -> {
             Intent i = new Intent(LandingActivity.this, ChartActivity.class);
-            i.putExtra(ChartActivity.EXTRA_RATE_TYPE, parent.rate_type);
+            i.putExtra(ChartActivity.EXTRA_RATE_TYPE, parent.rateType);
             startActivity(i);
         });
         v.setOnLongClickListener(view -> {
-            RatesEvent ratesEvent = RatesHolder.getInstance().getLatestEvent(source_type);
-            BaseRate rate = ratesEvent != null ? RateUtils.getRate(ratesEvent.rates, parent.rate_type) : null;
+            RatesEvent ratesEvent = RatesHolder.getInstance().getLatestEvent(sourceType);
+            BaseRate rate = ratesEvent != null ? RateUtils.getRate(ratesEvent.rates, parent.rateType) : null;
             if (rate != null) {
-                AlarmManager.addAlarmDialog(LandingActivity.this, source_type, rate.getRateType(), value_type, rate.getValue(value_type), null);
+                AlarmManager.addAlarmDialog(LandingActivity.this, sourceType, rate.getRateType(), valueType, rate.getValue(valueType), null);
             } else {
-                AlarmManager.addAlarmDialog(LandingActivity.this, source_type, parent.rate_type, value_type, null, null);
+                AlarmManager.addAlarmDialog(LandingActivity.this, sourceType, parent.rateType, valueType, null, null);
             }
             return true;
         });
-        CardViewItem item = new CardViewItem(v, source_type, value_type);
-        item.tvType.setText(SourcesManager.getSourceName(source_type, value_type));
+        CardViewItem item = new CardViewItem(v, sourceType, valueType);
+        item.tvType.setText(SourcesManager.getSourceName(sourceType, valueType));
         parent.items.add(item);
     }
 
@@ -202,14 +202,14 @@ public class LandingActivity extends BaseServiceActivity {
         //#
         CardViewItemParent parentUsd = new CardViewItemParent();
         parentUsd.me = findViewById(R.id.v_card_holder_usd);
-        parentUsd.rate_type = IRate.USD;
+        parentUsd.rateType = IRate.USD;
 
 
         parentItems.add(parentUsd);
 
         //#
         CardViewItemParent parentEur = new CardViewItemParent();
-        parentEur.rate_type = IRate.EUR;
+        parentEur.rateType = IRate.EUR;
         parentEur.me = findViewById(R.id.v_card_holder_eur);
 
 
@@ -217,14 +217,14 @@ public class LandingActivity extends BaseServiceActivity {
 
         //#
         CardViewItemParent parentParity = new CardViewItemParent();
-        parentParity.rate_type = IRate.EUR_USD;
+        parentParity.rateType = IRate.EUR_USD;
         parentParity.me = findViewById(R.id.v_card_holder_parity);
 
         parentItems.add(parentParity);
 
         //#
         CardViewItemParent parentOns = new CardViewItemParent();
-        parentOns.rate_type = IRate.ONS;
+        parentOns.rateType = IRate.ONS;
         parentOns.me = findViewById(R.id.v_card_holder_ons);
 
         parentItems.add(parentOns);
@@ -265,14 +265,14 @@ public class LandingActivity extends BaseServiceActivity {
         for (CardViewItemParent parent : parentItems) {
             for (CardViewItem item : parent.items) {
                 if (item.source_type == source_type) {
-                    BaseRate baseRate = RateUtils.getRate(rates, parent.rate_type);
+                    BaseRate baseRate = RateUtils.getRate(rates, parent.rateType);
                     if (baseRate != null) {
                         String val = "";
                         if (baseRate instanceof BuySellRate) {
                             if (item.value_type == ValueType.SELL) {
-                                val = baseRate.getFormatted(((BuySellRate) baseRate).value_sell_real);
+                                val = baseRate.getFormatted(((BuySellRate) baseRate).valueSellReal);
                             } else if (item.value_type == ValueType.BUY) {
-                                val = baseRate.getFormatted(((BuySellRate) baseRate).value_buy_real);
+                                val = baseRate.getFormatted(((BuySellRate) baseRate).valueBuyReal);
                             }
                         } else if (baseRate instanceof AvgRate) {
                             val = baseRate.getFormatted(((AvgRate) baseRate).val_real_avg);
@@ -336,7 +336,7 @@ public class LandingActivity extends BaseServiceActivity {
         /**
          * Refers to {@link IRate#getRateType()}
          **/
-        int rate_type;
+        int rateType;
 
         List<CardViewItem> items = new ArrayList<>();
 
@@ -347,7 +347,7 @@ public class LandingActivity extends BaseServiceActivity {
             for (CardViewItem item : items) {
                 itemsToString.append("\n").append(item.toString());
             }
-            return itemsToString + "\nType : " + rate_type;
+            return itemsToString + "\nType : " + rateType;
         }
     }
 

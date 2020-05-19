@@ -18,7 +18,6 @@ import dynoapps.exchange_rates.data.CurrencySource;
 import dynoapps.exchange_rates.data.CurrencyType;
 import dynoapps.exchange_rates.interfaces.ValueType;
 import dynoapps.exchange_rates.model.rates.IRate;
-import dynoapps.exchange_rates.provider.BasePoolingProvider;
 import dynoapps.exchange_rates.provider.BigparaRateProvider;
 import dynoapps.exchange_rates.provider.BloombergRateProvider;
 import dynoapps.exchange_rates.provider.DolarTlKurRateProvider;
@@ -201,26 +200,26 @@ public class SourcesManager {
         int index = 0;
         for (CurrencySource source : currencySources) {
             source.setChartIndex(index);
-            index += source.isAvgType() ? 1 : 2;
+            index += isAvgType(source.getType()) ? 1 : 2;
         }
         updateSourceStatesFromPrefs();
         isInitialized.set(true);
     }
 
     private static void updateSourceStatesFromPrefs() {
-        String sources = Prefs.getSources();
-        if (!TextUtils.isEmpty(sources)) {
-            String[] splits = sources.split(";");
-            for (CurrencySource currencySource : getCurrencySources()) {
+        String prefSources = Prefs.getSources();
+        if (!TextUtils.isEmpty(prefSources)) {
+            String[] splits = prefSources.split(";");
+            for (CurrencySource currencySource : currencySources) {
                 currencySource.setEnabled(false);
             }
             for (String str : splits) {
                 if (TextUtils.isEmpty(str)) continue;
-                int source_type_temp;
+                int sourceTypeTemp;
                 try {
-                    source_type_temp = Integer.parseInt(str);
-                    for (CurrencySource currencySource : getCurrencySources()) {
-                        if (currencySource.getType() == source_type_temp) {
+                    sourceTypeTemp = Integer.parseInt(str);
+                    for (CurrencySource currencySource : currencySources) {
+                        if (currencySource.getType() == sourceTypeTemp) {
                             currencySource.setEnabled(true);
                         }
                     }
@@ -228,5 +227,10 @@ public class SourcesManager {
                 }
             }
         }
+    }
+
+    public static boolean isAvgType(int type) {
+        return type == CurrencyType.ALTININ || type == CurrencyType.PARAGARANTI ||
+                type == CurrencyType.TLKUR || type == CurrencyType.YAHOO | type == CurrencyType.BLOOMBERGHT;
     }
 }

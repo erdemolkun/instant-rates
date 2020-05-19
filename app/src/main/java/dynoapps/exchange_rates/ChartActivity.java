@@ -202,7 +202,7 @@ public class ChartActivity extends BaseActivity {
         LineData data = lineChart.getData();
         ArrayList<CurrencySource> sources = SourcesManager.getCurrencySources();
         for (CurrencySource source : sources) {
-            if (source.isAvgType()) {
+            if (SourcesManager.isAvgType(source.getType())) {
                 data.addDataSet(createDataSet(source.getColor(), source.getName()));
             } else {
                 data.addDataSet(createDataSet(source.getColor(), source.getName() + " " + getString(R.string.sell)));
@@ -226,9 +226,7 @@ public class ChartActivity extends BaseActivity {
         lineChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
         lineChart.getXAxis().setTextColor(chart_text_color);
         lineChart.getAxisRight().setTextColor(chart_text_color);
-
     }
-
 
     private synchronized void update(List<BaseRate> rates, int source_type, long fetch_time_millis) {
 
@@ -240,16 +238,16 @@ public class ChartActivity extends BaseActivity {
             if (rate instanceof YorumlarRate) {
                 addEntry(((YorumlarRate) rate).val_real_avg, chart_index, fetch_time_millis);
             } else if (rate instanceof EnparaRate) {
-                addEntry(((EnparaRate) rate).value_sell_real, chart_index, fetch_time_millis);
-                addEntry(((EnparaRate) rate).value_buy_real, chart_index + 1, fetch_time_millis);
+                addEntry(((EnparaRate) rate).valueSellReal, chart_index, fetch_time_millis);
+                addEntry(((EnparaRate) rate).valueBuyReal, chart_index + 1, fetch_time_millis);
             } else if (rate instanceof BigparaRate) {
-                addEntry(((BuySellRate) rate).value_sell_real, chart_index, fetch_time_millis);
-                addEntry(((BuySellRate) rate).value_buy_real, chart_index + 1, fetch_time_millis);
+                addEntry(((BuySellRate) rate).valueSellReal, chart_index, fetch_time_millis);
+                addEntry(((BuySellRate) rate).valueBuyReal, chart_index + 1, fetch_time_millis);
             } else if (rate instanceof DolarTlKurRate) {
                 addEntry(((DolarTlKurRate) rate).val_real_avg, chart_index, fetch_time_millis);
             } else if (rate instanceof YapıKrediRate) {
-                addEntry(((YapıKrediRate) rate).value_sell_real, chart_index, fetch_time_millis);
-                addEntry(((YapıKrediRate) rate).value_buy_real, chart_index + 1, fetch_time_millis);
+                addEntry(((YapıKrediRate) rate).valueSellReal, chart_index, fetch_time_millis);
+                addEntry(((YapıKrediRate) rate).valueBuyReal, chart_index + 1, fetch_time_millis);
             } else if (rate instanceof YahooRate) {
                 addEntry(((YahooRate) rate).val_real_avg, chart_index, fetch_time_millis);
             } else if (rate instanceof ParaGarantiRate) {
@@ -332,7 +330,6 @@ public class ChartActivity extends BaseActivity {
 
     private LineDataSet createDataSet(@ColorInt int color, String name) {
 
-
         LineDataSet set = new LineDataSet(null, name);
         set.setCubicIntensity(0.1f);
         set.setDrawCircleHole(false);
@@ -362,8 +359,8 @@ public class ChartActivity extends BaseActivity {
     @SuppressLint("ViewConstructor")
     static class CustomMarkerView extends MarkerView {
 
-        private TextView tvMarker;
-        private int rateType;
+        private final TextView tvMarker;
+        private final int rateType;
 
         public CustomMarkerView(Context context, int layoutResource, int rateType) {
             super(context, layoutResource);

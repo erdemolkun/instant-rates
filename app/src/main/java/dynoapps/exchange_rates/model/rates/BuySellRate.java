@@ -8,8 +8,8 @@ import dynoapps.exchange_rates.interfaces.ValueType;
  */
 
 public abstract class BuySellRate extends BaseRate {
-    public Float value_sell_real, value_buy_real;
-    public String value_sell, value_buy;
+    public Float valueSellReal, valueBuyReal;
+    public String valueSell, valueBuy;
 
 
     @Override
@@ -30,20 +30,20 @@ public abstract class BuySellRate extends BaseRate {
 
     @Override
     public void setRealValues() {
-        String val = value_sell.replace(" TL", "").replace(",", ".").trim();
-        value_sell_real = Float.valueOf(val);
+        String val = valueSell.replace(" TL", "").replace(",", ".").trim();
+        valueSellReal = Float.valueOf(val);
 
-        val = value_buy.replace(" TL", "").replace(",", ".").trim();
-        value_buy_real = Float.valueOf(val);
+        val = valueBuy.replace(" TL", "").replace(",", ".").trim();
+        valueBuyReal = Float.valueOf(val);
     }
 
 
     @Override
     public float getValue(int valueType) {
         if (valueType == ValueType.BUY) {
-            return value_buy_real;
+            return valueBuyReal;
         } else if (valueType == ValueType.SELL) {
-            return value_sell_real;
+            return valueSellReal;
         }
         return 0.0f;
     }
@@ -51,6 +51,6 @@ public abstract class BuySellRate extends BaseRate {
     @Override
     @NonNull
     public String toString() {
-        return type.split("_")[0] + " -> " + value_sell_real + " : " + value_buy_real;
+        return type.split("_")[0] + " -> " + valueSellReal + " : " + valueBuyReal;
     }
 }

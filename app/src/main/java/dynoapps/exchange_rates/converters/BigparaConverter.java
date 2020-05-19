@@ -42,8 +42,8 @@ public class BigparaConverter implements Converter<ResponseBody, List<BaseRate>>
         String val_sell = elements.get(2).select(".value").text();
 
         BuySellRate buySellRate = new BigparaRate();
-        buySellRate.value_sell = val_sell;
-        buySellRate.value_buy = val_buy;
+        buySellRate.valueSell = val_sell;
+        buySellRate.valueBuy = val_buy;
         buySellRate.type = elements.get(0).text();
         buySellRate.toRateType();
         buySellRate.setRealValues();

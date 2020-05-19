@@ -73,7 +73,6 @@ public class BottomSheetNavigationFragment extends BottomSheetDialogFragment {
             startActivity(i);
             dismiss();
         });
-
     }
 
     @NonNull

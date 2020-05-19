@@ -1,12 +1,12 @@
 package dynoapps.exchange_rates.alarm;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
-
-import java.util.List;
 
 import androidx.annotation.NonNull;
 import dynoapps.exchange_rates.AppDatabase;
-import dynoapps.exchange_rates.AppExecutors;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by erdemmac on 19/07/2017.
@@ -14,48 +14,48 @@ import dynoapps.exchange_rates.AppExecutors;
 
 public class LocalAlarmsDataSource implements AlarmsDataSource {
 
-    private AppExecutors appExecutors;
-
-    private AlarmDao alarmDao;
+    private final AlarmDao alarmDao;
 
     public LocalAlarmsDataSource(@NonNull Context context) {
-        appExecutors = new AppExecutors();
         alarmDao = AppDatabase.getInstance(context.getApplicationContext()).alarm();
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void getAlarms(final AlarmsLoadCallback alarmsLoadCallback) {
-        appExecutors.diskIO().execute(() -> {
-            final List<Alarm> alarms = alarmDao.list();
+        alarmDao.list().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe((alarms, throwable) -> {
             if (alarmsLoadCallback != null) {
-                appExecutors.mainThread().execute(() -> alarmsLoadCallback.onAlarmsLoaded(alarms));
+                alarmsLoadCallback.onAlarmsLoaded(alarms);
             }
         });
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void saveAlarm(@NonNull final Alarm alarm, final AlarmUpdateInsertCallback alarmUpdateInsertCallback) {
-        appExecutors.diskIO().execute(() -> {
-            alarm.id = alarmDao.insert(alarm);
-            appExecutors.mainThread().execute(() -> alarmUpdateInsertCallback.onAlarmUpdate(alarm));
-        });
+        alarmDao.insert(alarm).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe((aLong, throwable) -> {
+                    alarm.id = aLong;
+                    alarmUpdateInsertCallback.onAlarmUpdate(alarm);
+                });
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void deleteAlarm(@NonNull final Alarm alarm, final AlarmUpdateInsertCallback alarmUpdateInsertCallback) {
-        appExecutors.diskIO().execute(() -> {
-            alarmDao.deleteById(alarm.id);
-            appExecutors.mainThread().execute(() -> alarmUpdateInsertCallback.onAlarmUpdate(alarm));
-
-        });
+        alarmDao.deleteById(alarm.id).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe((integer, throwable) -> {
+                    alarmUpdateInsertCallback.onAlarmUpdate(alarm);
+                });
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void updateAlarm(@NonNull final Alarm alarm, final AlarmUpdateInsertCallback alarmUpdateInsertCallback) {
-        appExecutors.diskIO().execute(() -> {
-            alarmDao.update(alarm);
-            appExecutors.mainThread().execute(() -> alarmUpdateInsertCallback.onAlarmUpdate(alarm));
-        });
+        alarmDao.update(alarm).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe((integer, throwable) -> {
+                    alarmUpdateInsertCallback.onAlarmUpdate(alarm);
+                });
     }
 
     @Override

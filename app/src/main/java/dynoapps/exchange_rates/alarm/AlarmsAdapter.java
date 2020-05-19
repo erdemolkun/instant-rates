@@ -24,7 +24,7 @@ import dynoapps.exchange_rates.util.RateUtils;
 
 class AlarmsAdapter extends UpdatableAdapter<List<Alarm>, AlarmsActivity.AlarmViewHolder> {
     private List<Alarm> alarms;
-    private AlarmsRepository alarmRepository;
+    private final AlarmsRepository alarmRepository;
 
     AlarmsAdapter(AlarmsRepository alarmsRepository, ArrayList<Alarm> alarms) {
         this.alarmRepository = alarmsRepository;

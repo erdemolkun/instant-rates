@@ -7,6 +7,7 @@ import java.text.DecimalFormatSymbols;
 import java.util.List;
 
 import androidx.annotation.DrawableRes;
+import androidx.annotation.Nullable;
 import dynoapps.exchange_rates.App;
 import dynoapps.exchange_rates.R;
 import dynoapps.exchange_rates.model.rates.BaseRate;
@@ -17,8 +18,8 @@ import dynoapps.exchange_rates.model.rates.IRate;
  */
 
 public class RateUtils {
-    private static Formatter formatter2 = new Formatter(2, 0);
-    private static Formatter formatter5 = new Formatter(5, 2);
+    private static final Formatter formatter2 = new Formatter(2, 0);
+    private static final Formatter formatter5 = new Formatter(5, 2);
 
     public static <T extends BaseRate> T getRate(List<T> rates, @IRate.RateDef int rateType) {
         if (rates == null) return null;
@@ -78,6 +79,7 @@ public class RateUtils {
         return -1;
     }
 
+    @Nullable
     public static Float toFloat(String str) {
         if (TextUtils.isEmpty(str)) return null;
         str = str.trim();
@@ -92,8 +94,7 @@ public class RateUtils {
                 DecimalFormat format = new DecimalFormat("###,###,###,##0.#####");
                 format.setDecimalFormatSymbols(symbols);
                 return format.parse(str).floatValue();
-
-            } catch (Exception ex) {
+            } catch (Exception ignored) {
 
             }
         }
