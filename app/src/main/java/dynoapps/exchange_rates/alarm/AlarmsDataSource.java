@@ -4,6 +4,7 @@ package dynoapps.exchange_rates.alarm;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import io.reactivex.Single;
 
 /**
  * Created by erdemmac on 19/07/2017.
@@ -15,9 +16,9 @@ public interface AlarmsDataSource {
 
     void saveAlarm(@NonNull Alarm alarm, AlarmUpdateInsertCallback alarmUpdateInsertCallback);
 
-    void deleteAlarm(@NonNull Alarm alarm, AlarmUpdateInsertCallback alarmUpdateInsertCallback);
+    Single<Alarm> deleteAlarm(@NonNull Alarm alarm);
 
-    void updateAlarm(@NonNull Alarm alarm, AlarmUpdateInsertCallback alarmUpdateInsertCallback);
+    Single<Alarm> updateAlarm(@NonNull Alarm alarm);
 
     void refreshAlarms();
 

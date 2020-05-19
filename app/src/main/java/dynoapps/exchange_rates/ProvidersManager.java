@@ -41,6 +41,7 @@ import dynoapps.exchange_rates.util.L;
 import dynoapps.exchange_rates.util.RateUtils;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
 
 public class ProvidersManager {
@@ -231,12 +232,12 @@ public class ProvidersManager {
                 String val = alarm.rateType == IRate.ONS ? formatter2.format(alarm.val) : formatter5.format(alarm.val);
                 if (alarm.isAbove && val_current > alarm.val && val_old <= alarm.val) {
                     iterator.remove();
-                    alarmsRepository.deleteAlarm(alarm, null);
+                    alarmsRepository.deleteAlarm(alarm).subscribeOn(Schedulers.io()).subscribe();
                     NotificationHelper.showAlarmNotification(App.context(), App.context().getString(R.string.is_above_val, SourcesManager.getSourceName(alarm.sourceType), RateUtils.rateName(alarm.rateType),
                             val), "increasing", Alarm.getPushId(alarm));
                 } else if (!alarm.isAbove && val_current < alarm.val && val_old >= alarm.val) {
                     iterator.remove();
-                    alarmsRepository.deleteAlarm(alarm, null);
+                    alarmsRepository.deleteAlarm(alarm).subscribeOn(Schedulers.io()).subscribe();
                     NotificationHelper.showAlarmNotification(App.context(), App.context().getString(R.string.is_below_value, SourcesManager.getSourceName(alarm.sourceType), RateUtils.rateName(alarm.rateType),
                             val), "decreasing", Alarm.getPushId(alarm));
                 }

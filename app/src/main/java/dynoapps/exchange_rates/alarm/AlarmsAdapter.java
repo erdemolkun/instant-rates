@@ -3,7 +3,6 @@ package dynoapps.exchange_rates.alarm;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +16,7 @@ import dynoapps.exchange_rates.data.CurrencySource;
 import dynoapps.exchange_rates.ui.widget.recyclerview.UpdatableAdapter;
 import dynoapps.exchange_rates.util.CollectionUtils;
 import dynoapps.exchange_rates.util.RateUtils;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by erdemmac on 14/12/2016.
@@ -86,12 +86,12 @@ class AlarmsAdapter extends UpdatableAdapter<List<Alarm>, AlarmsActivity.AlarmVi
             int pos = holder.getAdapterPosition();
             AlarmsAdapter.this.alarms.remove(pos);
             notifyItemRemoved(pos);
-            alarmRepository.deleteAlarm(alarm, null);
+            alarmRepository.deleteAlarm(alarm).subscribeOn(Schedulers.io()).subscribe();
         });
         holder.swAlarm.setChecked(alarm.isEnabled);
-        holder.swAlarm.setOnCheckedChangeListener((CompoundButton.OnCheckedChangeListener) (compoundButton, b) -> {
+        holder.swAlarm.setOnCheckedChangeListener((compoundButton, b) -> {
             alarm.isEnabled = b;
-            alarmRepository.updateAlarm(alarm, null);
+            alarmRepository.updateAlarm(alarm).subscribeOn(Schedulers.io()).subscribe();
         });
     }
 

@@ -5,6 +5,7 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 import dynoapps.exchange_rates.AppDatabase;
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
@@ -42,20 +43,13 @@ public class LocalAlarmsDataSource implements AlarmsDataSource {
 
     @SuppressLint("CheckResult")
     @Override
-    public void deleteAlarm(@NonNull final Alarm alarm, final AlarmUpdateInsertCallback alarmUpdateInsertCallback) {
-        alarmDao.deleteById(alarm.id).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe((integer, throwable) -> {
-                    alarmUpdateInsertCallback.onAlarmUpdate(alarm);
-                });
+    public Single<Alarm> deleteAlarm(@NonNull final Alarm alarm) {
+        return alarmDao.deleteById(alarm.id).map(integer -> alarm);
     }
 
-    @SuppressLint("CheckResult")
     @Override
-    public void updateAlarm(@NonNull final Alarm alarm, final AlarmUpdateInsertCallback alarmUpdateInsertCallback) {
-        alarmDao.update(alarm).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe((integer, throwable) -> {
-                    alarmUpdateInsertCallback.onAlarmUpdate(alarm);
-                });
+    public Single<Alarm> updateAlarm(@NonNull final Alarm alarm) {
+        return alarmDao.update(alarm).map(integer -> alarm);
     }
 
     @Override

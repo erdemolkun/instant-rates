@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import dynoapps.exchange_rates.Prefs;
 import dynoapps.exchange_rates.SourcesManager;
 import dynoapps.exchange_rates.data.CurrencySource;
+import io.reactivex.Single;
 
 /**
  * Created by erdemmac on 19/07/2017.
@@ -43,7 +44,6 @@ public class AlarmsRepository implements AlarmsDataSource {
                     INSTANCE = new AlarmsRepository(new LocalAlarmsDataSource(context));
                 }
             }
-
         }
         return INSTANCE;
     }
@@ -76,26 +76,21 @@ public class AlarmsRepository implements AlarmsDataSource {
     }
 
     @Override
-    public void deleteAlarm(@NonNull Alarm alarm, final AlarmUpdateInsertCallback alarmUpdateInsertCallback) {
-        localAlarmsDataSource.deleteAlarm(alarm, alarm1 -> {
+    public Single<Alarm> deleteAlarm(@NonNull Alarm alarm) {
+        return localAlarmsDataSource.deleteAlarm(alarm).doAfterSuccess(alarm1 -> {
             cachedAlarms.remove(alarm1.id);
-            if (alarmUpdateInsertCallback != null) {
-                alarmUpdateInsertCallback.onAlarmUpdate(alarm1);
-            }
         });
     }
 
     @Override
-    public void updateAlarm(@NonNull Alarm alarm, final AlarmUpdateInsertCallback alarmUpdateInsertCallback) {
-        localAlarmsDataSource.updateAlarm(alarm, updatedAlarm -> {
+    public Single<Alarm> updateAlarm(@NonNull Alarm alarm) {
+
+        return localAlarmsDataSource.updateAlarm(alarm).doAfterSuccess(updatedAlarm -> {
             // Do in memory cache update to keep the app UI up to date
             if (cachedAlarms == null) {
                 cachedAlarms = new LinkedHashMap<>();
             }
             cachedAlarms.put(updatedAlarm.id, updatedAlarm);
-            if (alarmUpdateInsertCallback != null) {
-                alarmUpdateInsertCallback.onAlarmUpdate(updatedAlarm);
-            }
         });
     }
 
