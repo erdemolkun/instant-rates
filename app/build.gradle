@@ -176,7 +176,6 @@ dependencies {
 
     implementation 'org.jsoup:jsoup:1.13.1'
     implementation 'com.github.PhilJay:MPAndroidChart:3.1.0'
-    implementation 'com.github.orhanobut:logger:2.2.0'
     implementation 'androidx.appcompat:appcompat:1.2.0-rc01'
 
     implementation 'androidx.room:room-runtime:2.2.5'

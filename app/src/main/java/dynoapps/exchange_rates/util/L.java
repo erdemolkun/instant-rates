@@ -1,9 +1,7 @@
 package dynoapps.exchange_rates.util;
 
 
-import android.text.TextUtils;
-
-import com.orhanobut.logger.Logger;
+import android.util.Log;
 
 
 /**
@@ -26,51 +24,23 @@ public class L {
         return LOG_PREFIX + str;
     }
 
-    /**
-     * Don't use this when obfuscating class names!
-     */
-    public static String makeLogTag(Class cls) {
-        return makeLogTag(cls.getSimpleName());
-    }
-
-    public static void d(String tag, String msg) {
-        Logger.t(makeLogTag(tag)).d(msg);
-    }
-
-    public static void v(String tag, String msg) {
-        Logger.t(makeLogTag(tag)).v(msg);
-    }
-
     public static void e(String tag, String msg) {
-        Logger.t(makeLogTag(tag)).e(msg);
+        Log.e(makeLogTag(tag), msg);
     }
 
     public static void e(String tag, Throwable th) {
-        Logger.e(th, tag);
+        Log.e(tag, "", th);
     }
 
     public static void i(String tag, String msg) {
-        Logger.t(makeLogTag(tag)).i(msg);
-    }
-
-    public static void wtf(String tag, String msg) {
-        Logger.t(makeLogTag(tag)).wtf(msg);
-    }
-
-    public static void json(String tag, String json) {
-        if (TextUtils.isEmpty(json)) return;
-        if (json.length() < MAX_CHAR_LENGTH) {
-            Logger.t(tag).json(json);
-        } else {
-            v(tag, json.substring(0, MAX_CHAR_LENGTH));
-        }
+        Log.i(makeLogTag(tag), msg);
     }
 
     public static void ex(Exception ex) {
-        Logger.t(TAG).e(ex, "");
+        Log.e(TAG, "", ex);
     }
 
     public static void ex(Exception ex, String message) {
-        Logger.t(TAG).e(ex, message);
+        Log.e(TAG, message, ex);
     }
 }
