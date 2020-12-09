@@ -228,6 +228,15 @@ public class LandingActivity extends BaseServiceActivity {
         parentOns.me = findViewById(R.id.v_card_holder_ons);
 
         parentItems.add(parentOns);
+
+        //#
+        CardViewItemParent parentOnsTry = new CardViewItemParent();
+        parentOnsTry.rateType = IRate.ONS_TRY;
+        parentOnsTry.me = findViewById(R.id.v_card_holder_ons_try);
+
+        parentItems.add(parentOnsTry);
+
+
     }
 
     @Override

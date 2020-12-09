@@ -61,9 +61,9 @@ public class YahooConverter implements Converter<ResponseBody, List<BaseRate>> {
     public static final class Factory extends Converter.Factory {
 
         @Override
-        public Converter<ResponseBody, ?> responseBodyConverter(Type type,
-                                                                Annotation[] annotations,
-                                                                Retrofit retrofit) {
+        public Converter<ResponseBody, ?> responseBodyConverter(@NonNull Type type,
+                                                                @NonNull Annotation[] annotations,
+                                                                @NonNull Retrofit retrofit) {
             return INSTANCE;
         }
 

@@ -52,7 +52,7 @@
                         android:layout_margin="6dp"
                         android:padding="4dp"
                         android:src="@drawable/ic_dollar"
-                        android:tint="?android:textColorPrimary" />
+                        app:tint="?android:textColorPrimary" />
 
                 </LinearLayout>
 
@@ -82,12 +82,40 @@
                         android:layout_margin="6dp"
                         android:padding="4dp"
                         android:src="@drawable/ic_euro"
-                        android:tint="?android:textColorPrimary" />
+                        app:tint="?android:textColorPrimary" />
 
 
                 </LinearLayout>
 
 
+            </HorizontalScrollView>
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none">
+
+
+                <LinearLayout
+                    android:id="@+id/v_card_holder_ons_try"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:clipToPadding="false"
+                    android:orientation="horizontal"
+                    android:padding="4dp">
+
+                    <ImageView
+                        android:layout_width="@dimen/landing_card_icon_width"
+                        android:layout_height="@dimen/landing_card_icon_width"
+                        android:layout_gravity="center_vertical"
+                        android:layout_margin="6dp"
+                        android:src="@drawable/ic_gold"
+                        app:tint="?android:textColorPrimary" />
+
+
+                </LinearLayout>
             </HorizontalScrollView>
 
             <HorizontalScrollView
@@ -112,7 +140,7 @@
                         android:layout_gravity="center_vertical"
                         android:layout_margin="6dp"
                         android:src="@drawable/ic_exchange_eur_usd"
-                        android:tint="?android:textColorPrimary" />
+                        app:tint="?android:textColorPrimary" />
 
 
                 </LinearLayout>
@@ -142,12 +170,13 @@
                         android:layout_gravity="center_vertical"
                         android:layout_margin="6dp"
                         android:src="@drawable/ic_gold"
-                        android:tint="?android:textColorPrimary" />
+                        app:tint="?android:textColorPrimary" />
 
 
                 </LinearLayout>
 
             </HorizontalScrollView>
+
 
         </LinearLayout>
 
