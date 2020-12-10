@@ -25,7 +25,6 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning"
-        tools:replace="android:appComponentFactory"
         tools:targetApi="p">
 
         <receiver

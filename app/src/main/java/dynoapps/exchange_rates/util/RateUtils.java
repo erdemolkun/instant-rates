@@ -44,7 +44,7 @@ public class RateUtils {
     }
 
     public static String formatValue(float val, int rateType) {
-        if (rateType == IRate.ONS) {
+        if (rateType == IRate.ONS || rateType == IRate.ONS_TRY) {
             return formatter2.format(val);
         } else {
             return formatter5.format(val);
