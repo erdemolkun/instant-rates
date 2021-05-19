@@ -5,9 +5,12 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.transition.TransitionManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,6 +20,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -40,8 +44,10 @@ import dynoapps.exchange_rates.service.RatePollingService;
 import dynoapps.exchange_rates.time.TimeIntervalManager;
 import dynoapps.exchange_rates.util.RateUtils;
 import dynoapps.exchange_rates.util.ServiceUtils;
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.subjects.PublishSubject;
 
 /**
  * Created by erdemmac on 06/12/2016.
@@ -63,6 +69,12 @@ public class LandingActivity extends BaseServiceActivity {
     AlarmsRepository alarmsRepository;
     List<CardViewItemParent> parentItems = new ArrayList<>();
 
+
+    PublishSubject<Long> timeSubject = PublishSubject.create();
+
+    int counter = 0;
+
+    @SuppressLint("CheckResult")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +92,26 @@ public class LandingActivity extends BaseServiceActivity {
 
         setUpRateCardViews();
         refreshCardItemViews();
+
+
+        long start = SystemClock.elapsedRealtime();
+
+        compositeDisposable.add(Observable.interval(100, 5000, TimeUnit.MILLISECONDS)
+                .doOnNext(aLong -> counter++)
+                //.filter(aLong -> !(counter>2 && counter<10))
+                .doOnNext(aLong -> Log.i("TAG_ME", "interval triggered at " + (SystemClock.elapsedRealtime() - start) + "ms"))
+                .subscribe(time -> {
+                    timeSubject.onNext(time);
+                }));
+
+
+        timeSubject.throttleLatest(10000, TimeUnit.MILLISECONDS,true).subscribe(t -> {
+            Log.i("TAG_ME", "throttleLatest triggered at " + (SystemClock.elapsedRealtime() - start) + "ms");
+        });
+
+        timeSubject.throttleLast(10000, TimeUnit.MILLISECONDS).subscribe(t -> {
+            Log.i("TAG_ME", "throttleLast triggered at " + (SystemClock.elapsedRealtime() - start) + "ms");
+        });
 
         /*
          * Update with cached rates.
