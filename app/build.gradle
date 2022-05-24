@@ -100,11 +100,6 @@ android {
         }
     }
 
-    dexOptions {
-        // Don't pre-dex on CI
-        preDexLibraries !isCi
-    }
-
 
     // Add this block and enable/disable the parameters as follows
     bundle {

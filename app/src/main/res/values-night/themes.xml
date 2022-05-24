@@ -10,7 +10,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorPrimary">@color/colorOrange</item>
         <item name="colorAccent">@color/colorOrange</item>
-        <item name="dividerColor">@color/color_divider</item>
+        <item name="ratesDividerColor">@color/color_divider</item>
         <item name="iconTintColor">@color/white</item>
     </style>
 

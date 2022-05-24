@@ -16,7 +16,7 @@
         <item name="android:windowFullscreen">false</item>
         <item name="android:navigationBarColor">@color/colorPrimary</item>
         <item name="android:splitMotionEvents">false</item>
-        <item name="dividerColor">@color/color_divider</item>
+        <item name="ratesDividerColor">@color/color_divider</item>
 
         <item name="bottomSheetDialogTheme">@style/CustomBottomSheetDialog</item>
 
@@ -36,7 +36,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="colorPrimary">@color/colorAccent</item>
-        <item name="dividerColor">@color/color_divider</item>
+        <item name="ratesDividerColor">@color/color_divider</item>
     </style>
 
 
