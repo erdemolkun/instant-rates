@@ -28,4 +28,4 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: App bundle
-        path: app/build/outputs/bundle/
+        path: app/build/outputs/bundle/release/*.aab
