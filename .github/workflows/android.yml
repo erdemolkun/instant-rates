@@ -23,4 +23,9 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
-      run: ./gradlew assembleDebug
+      run: ./gradlew app:bundleProduction --no-daemon
+    - name: Upload app bundle to artifacts.
+      uses: actions/upload-artifact@v3
+      with:
+        name: App bundle
+        path: app/build/outputs/bundle/
