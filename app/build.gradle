@@ -18,7 +18,7 @@ buildscript {
 def isCi = "true" == System.getenv("CI")
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
     signingConfigs {
         debug {
             keyAlias 'androiddebugkey'
@@ -78,7 +78,7 @@ android {
     defaultConfig {
         applicationId "dynoapps.exchange_rates"
         minSdkVersion 23
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode getBuildVersionCode()
         versionName getBuildVersionName()
         setProperty("archivesBaseName", versionName)
