@@ -1,10 +1,16 @@
 name: Android CI
 
-on: [push]
+defaults:
+  run:
+    shell: bash
+on:
+  push:
+    branches: [ develop , master , 'FEAT/**' , 'FIX/**']
+  pull_request:
+    branches: [ develop , master ]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
