@@ -35,6 +35,7 @@
             android:name=".ChartActivity"
             android:configChanges="orientation|screenSize|locale"
             android:label="@string/graphic"
+            android:exported="false"
             android:screenOrientation="fullUser"
             android:theme="@style/AppTheme">
 
@@ -44,12 +45,14 @@
             android:name=".alarm.AlarmsActivity"
             android:configChanges="orientation|screenSize|locale"
             android:label="@string/alarms"
+            android:exported="false"
             android:screenOrientation="fullUser"
             android:theme="@style/AppTheme">
 
         </activity>
 
         <activity
+            android:exported="true"
             android:name=".LandingActivity"
             android:configChanges="orientation|screenSize|locale"
             android:launchMode="singleTask"
