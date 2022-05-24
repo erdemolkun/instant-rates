@@ -7,7 +7,7 @@ jobs:
         - gh-pages
     working_directory: ~/code
     docker:
-      - image: circleci/android:api-31
+      - image: cimg/android:2022.04
     environment:
       JVM_OPTS: -Xmx3072m -Djava.util.concurrent.ForkJoinPool.common.parallelism=2
       TERM: dumb
