@@ -42,8 +42,8 @@ jobs:
           destination: aabs
 
       - store_artifacts:
-          path: app/build/reports
-          destination: reports
+          path: app/build/outputs/logs
+          destination: logs
 
       - store_test_results:
           path: app/build/test-results
