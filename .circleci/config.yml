@@ -38,7 +38,7 @@ jobs:
             ./gradlew app:bundleProduction --no-daemon;
 
       - store_artifacts:
-          path: app/build/outputs/bundle
+          path: app/build/outputs/bundle/aab/production
           destination: aabs
 
       - store_artifacts:
