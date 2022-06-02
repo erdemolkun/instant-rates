@@ -34,7 +34,7 @@ jobs:
           command: echo $RELEASE_PATH_ENCODED | base64 -d
       - run:
           name: Print release one
-          command: echo RELEASE_PASSWORD | base64 -d
+          command: echo RELEASE_PASSWORD
       - restore_cache:
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
       - run:
