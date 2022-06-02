@@ -22,12 +22,6 @@ jobs:
       - run:
           name: Create release.jks
           command: echo $RELEASE_PATH_ENCODED | base64 -d > release.jks
-      - run:
-          name: Print release.jks
-          command: echo $RELEASE_PATH_ENCODED | base64 -d
-      - run:
-          name: Print release one
-          command: echo $RELEASE_PASSWORD
       - restore_cache:
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
       - run:
@@ -45,7 +39,7 @@ jobs:
 
       - store_artifacts:
           path: app/build/outputs/bundle
-          destination: aab
+          destination: aabs
 
       - store_artifacts:
           path: app/build/reports
