@@ -39,11 +39,11 @@ jobs:
 
       - store_artifacts:
           path: app/build/outputs/bundle
-          destination: aab
+          destination: bundle
 
       - store_artifacts:
           path: app/build/outputs/logs
-          destination: txt
+          destination: text
 
       - store_test_results:
           path: app/build/test-results
