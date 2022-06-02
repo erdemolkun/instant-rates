@@ -17,7 +17,7 @@ public class EnparaRate extends BuySellRate {
             rateType = USD;
         } else if (plain_type.contains("eur")) {
             rateType = EUR;
-        } else if (plain_type.contains("altın (gram)")) {
+        } else if (plain_type.contains("(gram)")) {
             rateType = ONS_TRY;
         }
         this.rateType = rateType;
@@ -25,10 +25,10 @@ public class EnparaRate extends BuySellRate {
 
     @Override
     public void setRealValues() {
-        String val = valueSell.replace(" TL", "").replace(",", ".").trim();
+        String val = valueSell.replace(" TL", "").replace(".", "").replace(",", ".").trim();
         valueSellReal = Float.valueOf(val);
 
-        val = valueBuy.replace(" TL", "").replace(",", ".").trim();
+        val = valueBuy.replace(" TL", "").replace(".", "").replace(",", ".").trim();
         valueBuyReal = Float.valueOf(val);
     }
 }

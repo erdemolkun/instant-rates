@@ -16,7 +16,7 @@ public interface EnparaService {
     @Headers({
             "Content-Type:text/html; charset=utf-8"
     })
-    @GET("doviz-kur-bilgileri/doviz-altin-kurlari.aspx")
+    @GET("hesaplar/doviz-ve-altin-kurlari")
     Observable<List<EnparaRate>> rates();
 
 }
