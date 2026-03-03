@@ -13,7 +13,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
-import butterknife.ButterKnife;
 import dynoapps.exchange_rates.util.L;
 
 /**
@@ -31,7 +30,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
         super.onCreate(savedInstanceState);
         setContentView(getLayoutId());
-        ButterKnife.bind(this);
     }
 
     protected Toolbar getActionBarToolbar() {

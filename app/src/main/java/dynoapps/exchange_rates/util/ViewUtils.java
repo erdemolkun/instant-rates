@@ -2,12 +2,10 @@ package dynoapps.exchange_rates.util;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.content.res.TypedArray;
 import android.util.TypedValue;
 import android.view.View;
 
 import dynoapps.exchange_rates.App;
-import dynoapps.exchange_rates.R;
 
 
 /**
@@ -15,7 +13,6 @@ import dynoapps.exchange_rates.R;
  */
 public class ViewUtils {
 
-    private static final int[] RES_IDS_ACTION_BAR_SIZE = {R.attr.actionBarSize};
 
     public static void visibility(View v, boolean isVisible) {
         if (v == null) return;
@@ -41,23 +38,13 @@ public class ViewUtils {
         return dpToPx(dp, context.getResources());
     }
 
-    /**
-     * Calculates the Action Bar height in pixels.
-     */
-    public static int calculateActionBarSize(Context context) {
-        if (context == null) {
-            return 0;
+    public static int getActionBarHeight(Context context) {
+        TypedValue tv = new TypedValue();
+        if (context.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+            return TypedValue.complexToDimensionPixelSize(tv.data, context.getResources().getDisplayMetrics());
         }
-
-        Resources.Theme curTheme = context.getTheme();
-        if (curTheme == null) {
-            return 0;
-        }
-
-        TypedArray attr = curTheme.obtainStyledAttributes(RES_IDS_ACTION_BAR_SIZE);
-
-        float size = attr.getDimension(0, 0);
-        attr.recycle();
-        return (int) size;
+        return 0; // Default or fallback logic
     }
+
+
 }
