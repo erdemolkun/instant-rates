@@ -25,7 +25,7 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew app:bundleProduction --no-daemon
     - name: Upload app bundle to artifacts.
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: App bundle
         path: app/build/outputs/bundle/release/*.aab
