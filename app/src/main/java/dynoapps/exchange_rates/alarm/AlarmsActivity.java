@@ -15,8 +15,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import dynoapps.exchange_rates.App;
 import dynoapps.exchange_rates.BaseActivity;
 import dynoapps.exchange_rates.R;
@@ -29,13 +27,10 @@ import dynoapps.exchange_rates.util.ViewUtils;
 
 public class AlarmsActivity extends BaseActivity {
 
-    @BindView(R.id.rv_alarms)
     RecyclerView rvAlarms;
 
-    @BindView(R.id.tv_no_alarm)
     TextView tvNoAlarm;
 
-    @BindView(R.id.fab_add_alarm)
     FloatingActionButton fabAddAlarm;
 
     SwitchCompat swAlarmState;
@@ -47,6 +42,10 @@ public class AlarmsActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        rvAlarms = findViewById(R.id.rv_alarms);
+        tvNoAlarm = findViewById(R.id.tv_no_alarm);
+        fabAddAlarm = findViewById(R.id.fab_add_alarm);
+
         alarmRepository = App.getInstance().provideAlarmsRepository();
         setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
         getActionBarToolbar().setNavigationOnClickListener(v -> finish());
@@ -112,30 +111,29 @@ public class AlarmsActivity extends BaseActivity {
 
 
     static class AlarmViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.iv_alarm_type)
         ImageView ivType;
 
-        @BindView(R.id.tv_alarm_type_hint)
         TextView tvTypeHint;
 
-        @BindView(R.id.tv_alarm_val)
         TextView tvValue;
 
-        @BindView(R.id.iv_alarm_rate_type)
         ImageView ivRateType;
 
-        @BindView(R.id.tv_alarm_source)
         TextView tvSource;
 
-        @BindView(R.id.v_alarm_close)
         View vClose;
 
-        @BindView(R.id.sw_alarm)
         SwitchCompat swAlarm;
 
         AlarmViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
+            ivType = itemView.findViewById(R.id.iv_alarm_type);
+            tvTypeHint = itemView.findViewById(R.id.tv_alarm_type_hint);
+            tvValue = itemView.findViewById(R.id.tv_alarm_val);
+            ivRateType = itemView.findViewById(R.id.iv_alarm_rate_type);
+            tvSource = itemView.findViewById(R.id.tv_alarm_source);
+            vClose = itemView.findViewById(R.id.v_alarm_close);
+            swAlarm = itemView.findViewById(R.id.sw_alarm);
         }
     }
 }

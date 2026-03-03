@@ -27,8 +27,6 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 import androidx.interpolator.view.animation.LinearOutSlowInInterpolator;
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import dynoapps.exchange_rates.alarm.AlarmManager;
 import dynoapps.exchange_rates.alarm.AlarmsRepository;
 import dynoapps.exchange_rates.data.CurrencySource;
@@ -57,13 +55,10 @@ public class LandingActivity extends BaseServiceActivity {
 
     private static final String TAG_BOTTOM_SHEET = "TAG_BOTTOM_SHEET";
 
-    @BindView(R.id.v_fab_add_alarm)
     View vFab;
 
-    @BindView(R.id.tv_interval_hint)
     TextView tvIntervalHint;
 
-    @BindView(R.id.bottomAppBar)
     BottomAppBar bottomAppBar;
 
     AlarmsRepository alarmsRepository;
@@ -78,6 +73,9 @@ public class LandingActivity extends BaseServiceActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        vFab = findViewById(R.id.v_fab_add_alarm);
+        tvIntervalHint = findViewById(R.id.tv_interval_hint);
+        bottomAppBar = findViewById(R.id.bottomAppBar);
 
         ProvidersManager.getInstance().startSources();
         compositeDisposable.add(ProvidersManager.getInstance().registerIntervalUpdates());
@@ -394,10 +392,8 @@ public class LandingActivity extends BaseServiceActivity {
 
     static class CardViewItem {
 
-        @BindView(R.id.tv_type)
         TextView tvType;
 
-        @BindView(R.id.tv_rate_value)
         TextView tvValue;
 
         View card;
@@ -411,7 +407,8 @@ public class LandingActivity extends BaseServiceActivity {
             this.card = card;
             this.source_type = source_type;
             this.value_type = value_type;
-            ButterKnife.bind(this, card);
+            tvType = card.findViewById(R.id.tv_type);
+            tvValue = card.findViewById(R.id.tv_rate_value);
         }
     }
 }

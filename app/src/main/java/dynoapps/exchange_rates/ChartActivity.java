@@ -33,7 +33,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import butterknife.BindView;
 import dynoapps.exchange_rates.data.CurrencySource;
 import dynoapps.exchange_rates.data.RatesHolder;
 import dynoapps.exchange_rates.event.RatesEvent;
@@ -71,11 +70,8 @@ public class ChartActivity extends BaseActivity {
     public static final String EXTRA_RATE_TYPE = "EXTRA_RATE_TYPE";
     private static final float THRESHOLD_ERROR_USD_TRY = 0.2f;
     private static final int DATA_COUNT = 20;
-    @BindView(R.id.tv_chart_title)
     TextView tvTitle;
-    @BindView(R.id.line_chart)
     LineChart lineChart;
-    @BindView(R.id.swipe_to_refresh)
     SwipeRefreshLayout swipeRefreshLayout;
     SimpleDateFormat hourFormatter = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
     private
@@ -94,7 +90,9 @@ public class ChartActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         rateType = getIntent().getExtras().getInt(EXTRA_RATE_TYPE, rateType);
-
+        tvTitle = findViewById(R.id.tv_chart_title);
+        lineChart = findViewById(R.id.line_chart);
+        swipeRefreshLayout = findViewById(R.id.swipe_to_refresh);
         String title = getString(R.string.dollar_tl_graph);
         if (rateType == IRate.EUR) {
             title = getString(R.string.euro_tl_graph);
@@ -133,7 +131,7 @@ public class ChartActivity extends BaseActivity {
                 R.color.refresh_progress_2,
                 R.color.refresh_progress_3);
         swipeRefreshLayout.setEnabled(true);
-        int top = ViewUtils.calculateActionBarSize(this);
+        int top = ViewUtils.getActionBarHeight(this);
         int progressBarStartMargin = getResources().getDimensionPixelSize(
                 R.dimen.swipe_refresh_progress_bar_start_margin);
         int progressBarEndMargin = getResources().getDimensionPixelSize(

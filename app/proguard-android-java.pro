@@ -74,3 +74,7 @@
     @org.simpleframework.xml.* <fields>;
     @org.simpleframework.xml.* <init>(...);
 }
+
+
+-dontwarn com.google.re2j.Matcher
+-dontwarn com.google.re2j.Pattern
