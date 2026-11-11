@@ -11,7 +11,8 @@ import androidx.annotation.NonNull;
 import dynoapps.exchange_rates.Prefs;
 import dynoapps.exchange_rates.SourcesManager;
 import dynoapps.exchange_rates.data.CurrencySource;
-import io.reactivex.Single;
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Single;
 
 /**
  * Created by erdemmac on 19/07/2017.
@@ -19,7 +20,7 @@ import io.reactivex.Single;
 
 public class AlarmsRepository implements AlarmsDataSource {
 
-    private static AlarmsRepository INSTANCE = null;
+    private static volatile AlarmsRepository INSTANCE = null;
     /**
      * Marks the cache as invalid, to force an update the next time data is requested. This variable
      * has package local visibility so it can be accessed from tests.
@@ -77,21 +78,27 @@ public class AlarmsRepository implements AlarmsDataSource {
 
     @Override
     public Single<Alarm> deleteAlarm(@NonNull Alarm alarm) {
-        return localAlarmsDataSource.deleteAlarm(alarm).doAfterSuccess(alarm1 -> {
-            cachedAlarms.remove(alarm1.id);
-        });
+        // Hop to the main thread so the in-memory cache is only ever touched from there.
+        return localAlarmsDataSource.deleteAlarm(alarm)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doAfterSuccess(alarm1 -> {
+                    if (cachedAlarms != null) {
+                        cachedAlarms.remove(alarm1.id);
+                    }
+                });
     }
 
     @Override
     public Single<Alarm> updateAlarm(@NonNull Alarm alarm) {
-
-        return localAlarmsDataSource.updateAlarm(alarm).doAfterSuccess(updatedAlarm -> {
-            // Do in memory cache update to keep the app UI up to date
-            if (cachedAlarms == null) {
-                cachedAlarms = new LinkedHashMap<>();
-            }
-            cachedAlarms.put(updatedAlarm.id, updatedAlarm);
-        });
+        return localAlarmsDataSource.updateAlarm(alarm)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doAfterSuccess(updatedAlarm -> {
+                    // Do in memory cache update to keep the app UI up to date
+                    if (cachedAlarms == null) {
+                        cachedAlarms = new LinkedHashMap<>();
+                    }
+                    cachedAlarms.put(updatedAlarm.id, updatedAlarm);
+                });
     }
 
     @Override

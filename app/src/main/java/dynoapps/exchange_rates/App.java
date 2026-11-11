@@ -8,7 +8,7 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 import dynoapps.exchange_rates.alarm.AlarmsRepository;
 import dynoapps.exchange_rates.util.L;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 
 /**
@@ -38,18 +38,7 @@ public class App extends Application {
         appInstance = this;
 
         RxJavaPlugins.setErrorHandler(throwable -> L.e("App", throwable.getLocalizedMessage()));
-    }
-
-    /**
-     * Enum used to identify the tracker that needs to be used for tracking.
-     * <p/>
-     * A single tracker is usually enough for most purposes. In case you do need multiple trackers,
-     * storing them all in Application object helps ensure that they are created only once per
-     * application instance.
-     */
-    public enum TrackerName {
-        APP_TRACKER, // Tracker used only in this app.
-        GLOBAL_TRACKER, // Tracker used by all the apps from a company. eg: roll-up tracking.
+        registerActivityLifecycleCallbacks(new AppVisibilityTracker());
     }
 
 

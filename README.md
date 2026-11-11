@@ -1,6 +1,6 @@
 # Instant-Rates
 
-[![Build Status](https://circleci.com/gh/erdemolkun/instant-rates/tree/develop.svg?style=svg&circle-token=d5a3f1af3682243f009a38be72ef8ff94a51a946)](https://circleci.com/gh/erdemolkun/instant-rates/tree/develop)
+[![Android CI](https://github.com/erdemolkun/instant-rates/actions/workflows/android.yml/badge.svg?branch=develop)](https://github.com/erdemolkun/instant-rates/actions/workflows/android.yml)
 
 Instant Rates is an android application showing instant rate values for usd,euro and ons values.
 

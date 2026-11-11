@@ -4,7 +4,7 @@ package dynoapps.exchange_rates.alarm;
 import java.util.List;
 
 import androidx.annotation.NonNull;
-import io.reactivex.Single;
+import io.reactivex.rxjava3.core.Single;
 
 /**
  * Created by erdemmac on 19/07/2017.

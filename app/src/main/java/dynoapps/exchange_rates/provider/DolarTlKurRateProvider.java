@@ -6,7 +6,7 @@ import dynoapps.exchange_rates.data.CurrencyType;
 import dynoapps.exchange_rates.model.rates.DolarTlKurRate;
 import dynoapps.exchange_rates.network.Api;
 import dynoapps.exchange_rates.network.DolarTlKurService;
-import io.reactivex.Observable;
+import io.reactivex.rxjava3.core.Observable;
 
 /**
  * Created by erdemmac on 25/11/2016.

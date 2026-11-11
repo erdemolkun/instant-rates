@@ -33,7 +33,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import butterknife.BindView;
 import dynoapps.exchange_rates.data.CurrencySource;
 import dynoapps.exchange_rates.data.RatesHolder;
 import dynoapps.exchange_rates.event.RatesEvent;
@@ -50,8 +49,8 @@ import dynoapps.exchange_rates.model.rates.YorumlarRate;
 import dynoapps.exchange_rates.time.TimeIntervalManager;
 import dynoapps.exchange_rates.util.RateUtils;
 import dynoapps.exchange_rates.util.ViewUtils;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 /**
  * Copyright 2016 Erdem OLKUN
@@ -71,11 +70,8 @@ public class ChartActivity extends BaseActivity {
     public static final String EXTRA_RATE_TYPE = "EXTRA_RATE_TYPE";
     private static final float THRESHOLD_ERROR_USD_TRY = 0.2f;
     private static final int DATA_COUNT = 20;
-    @BindView(R.id.tv_chart_title)
     TextView tvTitle;
-    @BindView(R.id.line_chart)
     LineChart lineChart;
-    @BindView(R.id.swipe_to_refresh)
     SwipeRefreshLayout swipeRefreshLayout;
     SimpleDateFormat hourFormatter = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
     private
@@ -93,6 +89,9 @@ public class ChartActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        tvTitle = findViewById(R.id.tv_chart_title);
+        lineChart = findViewById(R.id.line_chart);
+        swipeRefreshLayout = findViewById(R.id.swipe_to_refresh);
         rateType = getIntent().getExtras().getInt(EXTRA_RATE_TYPE, rateType);
 
         String title = getString(R.string.dollar_tl_graph);

@@ -4,7 +4,7 @@ package dynoapps.exchange_rates.network;
 import java.util.List;
 
 import dynoapps.exchange_rates.model.rates.BloombergRate;
-import io.reactivex.Observable;
+import io.reactivex.rxjava3.core.Observable;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 

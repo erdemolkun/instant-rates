@@ -10,7 +10,7 @@ import dynoapps.exchange_rates.App;
 import dynoapps.exchange_rates.Prefs;
 import dynoapps.exchange_rates.R;
 import dynoapps.exchange_rates.util.CollectionUtils;
-import io.reactivex.subjects.PublishSubject;
+import io.reactivex.rxjava3.subjects.PublishSubject;
 
 /**
  * Created by erdemmac on 03/12/2016.

@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import dynoapps.exchange_rates.time.TimeIntervalManager;
-import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 public abstract class BaseServiceActivity extends BaseActivity {
 

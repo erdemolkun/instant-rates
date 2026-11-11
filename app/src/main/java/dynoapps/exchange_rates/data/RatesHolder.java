@@ -26,45 +26,43 @@ public class RatesHolder {
 
     private static final int MAX_RATES_COUNT = 10;
 
-    private static RatesHolder instance;
-    private SparseArray<List<RatesEvent>> rateEventsSparse;
+    private static volatile RatesHolder instance;
+    private final SparseArray<List<RatesEvent>> rateEventsSparse = new SparseArray<>();
 
     public static RatesHolder getInstance() {
-        if (instance == null)
-            instance = new RatesHolder();
+        if (instance == null) {
+            synchronized (RatesHolder.class) {
+                if (instance == null) {
+                    instance = new RatesHolder();
+                }
+            }
+        }
         return instance;
     }
 
-    public RatesEvent getLatestEvent(int source_type) {
-        if (rateEventsSparse != null && rateEventsSparse.get(source_type, null) != null) {
-            List<RatesEvent> events = rateEventsSparse.get(source_type);
-            return events.get(events.size() - 1);
-        }
-        return null;
-    }
-
-    public <T extends BaseRate> void addRate(List<T> rates, long fetchTime, int type) {
-        if (rateEventsSparse == null) {
-            rateEventsSparse = new SparseArray<>();
-        }
-        RatesEvent ratesEvent = new RatesEvent<>(rates, type, fetchTime);
-        List<RatesEvent> ratesEvents = rateEventsSparse.get(type);
-        if (ratesEvents == null) ratesEvents = new ArrayList<>();
-        ratesEvents.add(ratesEvent);
-        if (ratesEvents.size() > MAX_RATES_COUNT) {
-            ratesEvents.remove(0);
-        }
-        rateEventsSparse.put(type, ratesEvents);
+    public synchronized RatesEvent getLatestEvent(int source_type) {
+        List<RatesEvent> events = rateEventsSparse.get(source_type);
+        if (events == null || events.isEmpty()) return null;
+        return events.get(events.size() - 1);
     }
 
     public <T extends BaseRate> void addRate(List<T> rates, int type) {
-        if (rateEventsSparse == null) {
-            rateEventsSparse = new SparseArray<>();
-        }
-        RatesEvent ratesEvent = new RatesEvent<>(rates, type, System.currentTimeMillis());
+        addRate(rates, System.currentTimeMillis(), type);
+    }
+
+    /**
+     * Stores a fetch result, keeping only the latest {@link #MAX_RATES_COUNT} events per source so
+     * a long-running polling service does not grow without bound.
+     */
+    public synchronized <T extends BaseRate> void addRate(List<T> rates, long fetchTime, int type) {
         List<RatesEvent> ratesEvents = rateEventsSparse.get(type);
-        if (ratesEvents == null) ratesEvents = new ArrayList<>();
-        ratesEvents.add(ratesEvent);
-        rateEventsSparse.put(type, ratesEvents);
+        if (ratesEvents == null) {
+            ratesEvents = new ArrayList<>();
+            rateEventsSparse.put(type, ratesEvents);
+        }
+        ratesEvents.add(new RatesEvent<>(rates, type, fetchTime));
+        while (ratesEvents.size() > MAX_RATES_COUNT) {
+            ratesEvents.remove(0);
+        }
     }
 }

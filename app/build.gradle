@@ -1,24 +1,14 @@
-apply plugin: 'com.android.application'
-
-repositories {
-    maven { url "https://jitpack.io" }
-    mavenCentral()
-}
-
-
-buildscript {
-    repositories {
-        mavenCentral()
-        maven { url "https://jitpack.io" }
-        gradlePluginPortal()
-    }
+plugins {
+    alias(libs.plugins.android.application)
 }
 
 // set flag whether we are on a build server
 def isCi = "true" == System.getenv("CI")
 
 android {
-    compileSdkVersion 31
+    namespace 'dynoapps.exchange_rates'
+    compileSdk libs.versions.compileSdk.get().toInteger()
+
     signingConfigs {
         debug {
             keyAlias 'androiddebugkey'
@@ -27,29 +17,31 @@ android {
             storePassword 'android'
         }
         release {
+            def ciKeystore = file("${project.rootDir}/release.jks")
             if (isCi) {
-                storeFile file("${project.rootDir}/release.jks")
-                storePassword = System.getenv("RELEASE_STORE_PASSWORD")
-                keyAlias = System.getenv("RELEASE_ALIAS")
-                keyPassword = System.getenv("RELEASE_PASSWORD")
-                //keyAlias 'androiddebugkey'
-                //keyPassword 'android'
-                //storeFile file("${project.rootDir}/signing/debug.keystore")
-                //storePassword 'android'
+                // CI writes release.jks from a secret before building. Without it the
+                // production bundle is built unsigned instead of failing the build.
+                if (ciKeystore.exists()) {
+                    storeFile ciKeystore
+                    storePassword System.getenv("RELEASE_STORE_PASSWORD")
+                    keyAlias System.getenv("RELEASE_ALIAS")
+                    keyPassword System.getenv("RELEASE_PASSWORD")
+                } else {
+                    println 'release.jks is missing; production build will be unsigned'
+                }
             } else {
                 Properties propsSigning = new Properties()
-                def signingPropsFile = rootProject.file("${project.rootDir}/signing/release.signing.properties")
+                def signingPropsFile = rootProject.file("signing/release.signing.properties")
                 if (signingPropsFile.canRead()) {
-                    propsSigning.load(new FileInputStream(signingPropsFile))
-                    if (propsSigning != null &&
-                            propsSigning.containsKey('STORE_FILE') &&
+                    signingPropsFile.withInputStream { propsSigning.load(it) }
+                    if (propsSigning.containsKey('STORE_FILE') &&
                             propsSigning.containsKey('STORE_PASSWORD') &&
                             propsSigning.containsKey('KEY_ALIAS') &&
                             propsSigning.containsKey('KEY_PASSWORD')) {
-                        storeFile = file(propsSigning['STORE_FILE'])
-                        storePassword = propsSigning['STORE_PASSWORD']
-                        keyAlias = propsSigning['KEY_ALIAS']
-                        keyPassword = propsSigning['KEY_PASSWORD']
+                        storeFile file(propsSigning['STORE_FILE'])
+                        storePassword propsSigning['STORE_PASSWORD']
+                        keyAlias propsSigning['KEY_ALIAS']
+                        keyPassword propsSigning['KEY_PASSWORD']
                     } else {
                         println 'release.signing.properties file found but some entries are missing'
                     }
@@ -60,30 +52,33 @@ android {
         }
     }
 
-
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-    packagingOptions {
-        jniLibs {
-            excludes += ['META-INF/proguard/*']
-        }
-        resources {
-            excludes += ['META-INF/DEPENDENCIES', 'META-INF/LICENSE', 'META-INF/LICENSE.txt', 'META-INF/license.txt', 'META-INF/NOTICE', 'META-INF/NOTICE.txt', 'META-INF/notice.txt', 'META-INF/ASL2.0', 'META-INF/proguard/androidx-annotations.pro', 'META-INF/*.version', 'META-INF/proguard/*', '/*.properties', 'fabric/*.properties', 'META-INF/*.properties']
-        }
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
+    buildFeatures {
+        buildConfig true
+    }
+
+    packaging {
+        resources {
+            excludes += ['META-INF/DEPENDENCIES', 'META-INF/LICENSE', 'META-INF/LICENSE.txt',
+                         'META-INF/license.txt', 'META-INF/NOTICE', 'META-INF/NOTICE.txt',
+                         'META-INF/notice.txt', 'META-INF/ASL2.0', 'META-INF/*.version',
+                         'META-INF/proguard/*', '/*.properties', 'META-INF/*.properties']
+        }
+    }
 
     defaultConfig {
         applicationId "dynoapps.exchange_rates"
-        minSdkVersion 23
-        targetSdkVersion 31
+        minSdk libs.versions.minSdk.get().toInteger()
+        targetSdk libs.versions.targetSdk.get().toInteger()
         versionCode getBuildVersionCode()
         versionName getBuildVersionName()
-        setProperty("archivesBaseName", versionName)
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+
     buildTypes {
         debug {
             versionNameSuffix ' Debug'
@@ -94,85 +89,69 @@ android {
         production {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
                     'proguard-android-java.pro'
-            signingConfig signingConfigs.release
+            signingConfig = (signingConfigs.release.storeFile != null) ? signingConfigs.release : null
             minifyEnabled true
             shrinkResources true
         }
     }
 
-
-    // Add this block and enable/disable the parameters as follows
     bundle {
         density {
-            // Different APKs are generated for devices with different screen densities; true by default.
             enableSplit true
         }
         abi {
-            // Different APKs are generated for devices with different CPU architectures; true by default.
             enableSplit true
         }
         language {
-            // This is disabled so that the App Bundle does NOT split the APK for each language.
-            // We're gonna use the same APK for all languages.
             enableSplit true
         }
     }
+
     lint {
         checkDependencies true
         checkReleaseBuilds false
-        disable 'StringFormatMatches', 'Instantiatable'
+        disable += ['StringFormatMatches', 'Instantiatable']
         ignoreTestSources true
     }
-    namespace 'dynoapps.exchange_rates'
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+}
+
+base {
+    archivesName = android.defaultConfig.versionName
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'com.google.android.material:material:1.6.1'
+    implementation libs.androidx.activity
+    implementation libs.androidx.annotation
+    implementation libs.androidx.appcompat
+    implementation libs.androidx.cardview
+    implementation libs.androidx.core
+    implementation libs.androidx.recyclerview
+    implementation libs.androidx.swiperefreshlayout
+    implementation libs.material
 
-    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-    implementation 'com.google.code.gson:gson:2.9.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
-    implementation 'com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.2'
+    implementation libs.okhttp
+    implementation libs.retrofit
+    implementation libs.retrofit.adapter.rxjava3
 
-    // reactiveX
-    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
-    // Because RxAndroid releases are few and far between, it is recommended you also
-    // explicitly depend on RxJava's latest version for bug fixes and new features.
-    implementation 'io.reactivex.rxjava2:rxjava:2.2.21'
+    implementation libs.rxjava
+    implementation libs.rxandroid
 
-    // retrofit
-    implementation 'com.jakewharton.retrofit:retrofit2-rxjava2-adapter:1.0.0'
+    implementation libs.jsoup
+    implementation libs.mpandroidchart
 
-    implementation 'com.jakewharton:butterknife:10.2.3'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.3'
+    implementation libs.androidx.room.runtime
+    implementation libs.androidx.room.rxjava3
+    annotationProcessor libs.androidx.room.compiler
 
-    implementation 'org.jsoup:jsoup:1.13.1'
-    implementation 'com.github.PhilJay:MPAndroidChart:3.1.0'
-    implementation 'androidx.appcompat:appcompat:1.4.1'
+    debugImplementation libs.leakcanary
 
-    implementation 'androidx.room:room-runtime:2.4.2'
-    implementation 'androidx.room:room-rxjava2:2.4.2'
-    annotationProcessor 'androidx.room:room-compiler:2.4.2'
+    testImplementation libs.junit
 
-    implementation 'androidx.lifecycle:lifecycle-runtime:2.4.1'
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01'
-
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.8.1'
-
-    androidTestImplementation('tools.fastlane:screengrab:2.0.0', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-
-    testImplementation 'junit:junit:4.13.2'
-
-    androidTestImplementation 'androidx.test:runner:1.4.0'
-    androidTestImplementation 'androidx.test:rules:1.4.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
-    androidTestImplementation 'org.hamcrest:hamcrest-library:2.2'
-
+    androidTestImplementation libs.androidx.test.runner
 }
 
 def getPropertiesFile() {

@@ -1,11 +1,13 @@
 package dynoapps.exchange_rates.notification;
 
+import android.Manifest;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.media.AudioAttributes;
 import android.media.RingtoneManager;
@@ -70,12 +72,17 @@ public class NotificationHelper {
     }
 
     public static void showAlarmNotification(@NonNull Context context, String message, String category, int id) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                && ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
+                != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
 
         NotificationHelper.createAlarmChannelIfNotExists(context);
         Intent pushIntent = new Intent(context, LandingActivity.class);
         pushIntent.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,
-                pushIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                pushIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context, NotificationHelper.CHANNEL_ID_ALARM)

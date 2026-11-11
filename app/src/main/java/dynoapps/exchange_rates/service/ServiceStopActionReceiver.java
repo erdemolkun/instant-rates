@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import dynoapps.exchange_rates.util.L;
-import io.reactivex.subjects.PublishSubject;
+import io.reactivex.rxjava3.subjects.PublishSubject;
 
 public class ServiceStopActionReceiver extends BroadcastReceiver {
     private static final PublishSubject<Boolean> stopSubject = PublishSubject.create();

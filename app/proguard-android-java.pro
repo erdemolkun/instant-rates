@@ -52,25 +52,17 @@
 -keepattributes *Annotation*
 -renamesourcefileattribute SourceFile
 
-# Dagger
 -dontwarn com.google.errorprone.annotations.*
-
-# For kotlin-reflect
 -dontwarn org.jetbrains.annotations.**
--keep class kotlin.Metadata { *; }
+
+# Retrofit service interfaces return RxJava 3 types. R8 full mode (default since AGP 8) strips
+# generic signatures of classes it doesn't see as kept, which breaks Retrofit's call adapter lookup.
+-keepattributes Signature, InnerClasses, EnclosingMethod
+-keep,allowobfuscation,allowshrinking class io.reactivex.rxjava3.core.Flowable
+-keep,allowobfuscation,allowshrinking class io.reactivex.rxjava3.core.Maybe
+-keep,allowobfuscation,allowshrinking class io.reactivex.rxjava3.core.Observable
+-keep,allowobfuscation,allowshrinking class io.reactivex.rxjava3.core.Single
+-keep,allowobfuscation,allowshrinking interface dynoapps.exchange_rates.network.**
 
 
 -keep class com.github.mikephil.charting.** { *; }
-
-# Simple-Xml Proguard Config
-# NOTE: You should also include the Android Proguard config found with the build tools:
-# $ANDROID_HOME/tools/proguard/proguard-android.txt
-
-# Keep public classes and methods.
--dontwarn com.bea.xml.stream.**
--dontwarn org.simpleframework.xml.stream.**
--keep class org.simpleframework.xml.**{ *; }
--keepclassmembers,allowobfuscation class * {
-    @org.simpleframework.xml.* <fields>;
-    @org.simpleframework.xml.* <init>(...);
-}

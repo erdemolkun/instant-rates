@@ -3,11 +3,14 @@ package dynoapps.exchange_rates.alarm;
 import android.annotation.SuppressLint;
 import android.content.Context;
 
+import java.util.ArrayList;
+
 import androidx.annotation.NonNull;
 import dynoapps.exchange_rates.AppDatabase;
-import io.reactivex.Single;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
+import dynoapps.exchange_rates.util.L;
+import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 /**
  * Created by erdemmac on 19/07/2017.
@@ -25,8 +28,11 @@ public class LocalAlarmsDataSource implements AlarmsDataSource {
     @Override
     public void getAlarms(final AlarmsLoadCallback alarmsLoadCallback) {
         alarmDao.list().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe((alarms, throwable) -> {
+            if (throwable != null) {
+                L.ex(new Exception(throwable), "Loading alarms failed");
+            }
             if (alarmsLoadCallback != null) {
-                alarmsLoadCallback.onAlarmsLoaded(alarms);
+                alarmsLoadCallback.onAlarmsLoaded(alarms != null ? alarms : new ArrayList<>());
             }
         });
     }
@@ -36,8 +42,14 @@ public class LocalAlarmsDataSource implements AlarmsDataSource {
     public void saveAlarm(@NonNull final Alarm alarm, final AlarmUpdateInsertCallback alarmUpdateInsertCallback) {
         alarmDao.insert(alarm).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe((aLong, throwable) -> {
+                    if (throwable != null || aLong == null) {
+                        L.ex(new Exception(throwable), "Saving alarm failed");
+                        return;
+                    }
                     alarm.id = aLong;
-                    alarmUpdateInsertCallback.onAlarmUpdate(alarm);
+                    if (alarmUpdateInsertCallback != null) {
+                        alarmUpdateInsertCallback.onAlarmUpdate(alarm);
+                    }
                 });
     }
 

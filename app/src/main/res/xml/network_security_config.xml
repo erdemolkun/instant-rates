@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Cleartext HTTP is only allowed for the rate sources that still don't serve HTTPS.
+  Everything else must use TLS.
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false" />
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">bigpara.com</domain>
+        <domain includeSubdomains="true">tlkur.com</domain>
+        <domain includeSubdomains="true">yahoo.com</domain>
+    </domain-config>
+</network-security-config>

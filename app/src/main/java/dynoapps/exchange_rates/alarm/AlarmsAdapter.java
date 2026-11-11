@@ -16,7 +16,7 @@ import dynoapps.exchange_rates.data.CurrencySource;
 import dynoapps.exchange_rates.ui.widget.recyclerview.UpdatableAdapter;
 import dynoapps.exchange_rates.util.CollectionUtils;
 import dynoapps.exchange_rates.util.RateUtils;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 /**
  * Created by erdemmac on 14/12/2016.

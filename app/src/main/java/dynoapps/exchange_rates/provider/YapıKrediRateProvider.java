@@ -11,7 +11,7 @@ import java.util.concurrent.Callable;
 
 import dynoapps.exchange_rates.data.CurrencyType;
 import dynoapps.exchange_rates.model.rates.YapıKrediRate;
-import io.reactivex.Observable;
+import io.reactivex.rxjava3.core.Observable;
 
 /**
  * Created by erdemmac on 25/11/2016.

@@ -5,12 +5,13 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.transition.TransitionManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,15 +21,14 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 import androidx.interpolator.view.animation.LinearOutSlowInInterpolator;
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import dynoapps.exchange_rates.alarm.AlarmManager;
 import dynoapps.exchange_rates.alarm.AlarmsRepository;
 import dynoapps.exchange_rates.data.CurrencySource;
@@ -39,15 +39,10 @@ import dynoapps.exchange_rates.model.rates.AvgRate;
 import dynoapps.exchange_rates.model.rates.BaseRate;
 import dynoapps.exchange_rates.model.rates.BuySellRate;
 import dynoapps.exchange_rates.model.rates.IRate;
-import dynoapps.exchange_rates.provider.IPollingSource;
-import dynoapps.exchange_rates.service.RatePollingService;
 import dynoapps.exchange_rates.time.TimeIntervalManager;
 import dynoapps.exchange_rates.util.RateUtils;
-import dynoapps.exchange_rates.util.ServiceUtils;
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.subjects.PublishSubject;
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.disposables.Disposable;
 
 /**
  * Created by erdemmac on 06/12/2016.
@@ -57,27 +52,28 @@ public class LandingActivity extends BaseServiceActivity {
 
     private static final String TAG_BOTTOM_SHEET = "TAG_BOTTOM_SHEET";
 
-    @BindView(R.id.v_fab_add_alarm)
     View vFab;
 
-    @BindView(R.id.tv_interval_hint)
     TextView tvIntervalHint;
 
-    @BindView(R.id.bottomAppBar)
     BottomAppBar bottomAppBar;
 
     AlarmsRepository alarmsRepository;
     List<CardViewItemParent> parentItems = new ArrayList<>();
 
+    private final ActivityResultLauncher<String> notificationPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), granted -> {
+                // Alarm notifications are simply not shown when the permission is denied.
+            });
 
-    PublishSubject<Long> timeSubject = PublishSubject.create();
-
-    int counter = 0;
 
     @SuppressLint("CheckResult")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        vFab = findViewById(R.id.v_fab_add_alarm);
+        tvIntervalHint = findViewById(R.id.tv_interval_hint);
+        bottomAppBar = findViewById(R.id.bottomAppBar);
 
         ProvidersManager.getInstance().startSources();
         compositeDisposable.add(ProvidersManager.getInstance().registerIntervalUpdates());
@@ -87,31 +83,13 @@ public class LandingActivity extends BaseServiceActivity {
         alarmsRepository = App.getInstance().provideAlarmsRepository();
 
         setUpBottomAppBar();
+        requestNotificationPermissionIfNeeded();
 
         vFab.setOnClickListener(v -> AlarmManager.addAlarmDialog(this));
 
         setUpRateCardViews();
         refreshCardItemViews();
 
-
-        long start = SystemClock.elapsedRealtime();
-
-        compositeDisposable.add(Observable.interval(100, 5000, TimeUnit.MILLISECONDS)
-                .doOnNext(aLong -> counter++)
-                //.filter(aLong -> !(counter>2 && counter<10))
-                .doOnNext(aLong -> Log.i("TAG_ME", "interval triggered at " + (SystemClock.elapsedRealtime() - start) + "ms"))
-                .subscribe(time -> {
-                    timeSubject.onNext(time);
-                }));
-
-
-        timeSubject.throttleLatest(10000, TimeUnit.MILLISECONDS,true).subscribe(t -> {
-            Log.i("TAG_ME", "throttleLatest triggered at " + (SystemClock.elapsedRealtime() - start) + "ms");
-        });
-
-        timeSubject.throttleLast(10000, TimeUnit.MILLISECONDS).subscribe(t -> {
-            Log.i("TAG_ME", "throttleLast triggered at " + (SystemClock.elapsedRealtime() - start) + "ms");
-        });
 
         /*
          * Update with cached rates.
@@ -276,32 +254,6 @@ public class LandingActivity extends BaseServiceActivity {
         return R.layout.activity_landing;
     }
 
-    @Override
-    protected void onDestroy() {
-        if (ServiceUtils.isMyServiceRunning(this, RatePollingService.class)) {
-            if (!alarmsRepository.hasAnyActive()) {
-                stopService(new Intent(this, RatePollingService.class));
-                ProvidersManager.getInstance().stopAll();
-            } else {
-                TimeIntervalManager.setAlarmMode(true);
-
-                for (IPollingSource iPollingSource : ProvidersManager.getInstance().getPollingSources()) {
-                    if (iPollingSource != null) {
-                        iPollingSource.stopNonAlarmSources();
-                    }
-                }
-            }
-        } else {
-            if (!alarmsRepository.hasAnyActive()) {
-                ProvidersManager.getInstance().stopAll();
-            } else {
-                Intent intent = new Intent(this, RatePollingService.class);
-                ContextCompat.startForegroundService(this, intent);
-            }
-        }
-        super.onDestroy();
-    }
-
     private void updateCards(List<BaseRate> rates, int source_type, boolean animated) {
         for (CardViewItemParent parent : parentItems) {
             for (CardViewItem item : parent.items) {
@@ -341,16 +293,19 @@ public class LandingActivity extends BaseServiceActivity {
         mAnimationSet.start();
     }
 
-    private void updateHint() {
-        tvIntervalHint.setText(getString(R.string.interval_hint, TimeIntervalManager.getSelectionStr()));
+    /**
+     * Alarm and background polling notifications need the runtime permission on Android 13+.
+     */
+    private void requestNotificationPermissionIfNeeded() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                && ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                != PackageManager.PERMISSION_GRANTED) {
+            notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+        }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (ServiceUtils.isMyServiceRunning(this, RatePollingService.class)) {
-            stopService(new Intent(this, RatePollingService.class));
-        }
+    private void updateHint() {
+        tvIntervalHint.setText(getString(R.string.interval_hint, TimeIntervalManager.getSelectionStr()));
     }
 
     @Override
@@ -394,10 +349,8 @@ public class LandingActivity extends BaseServiceActivity {
 
     static class CardViewItem {
 
-        @BindView(R.id.tv_type)
         TextView tvType;
 
-        @BindView(R.id.tv_rate_value)
         TextView tvValue;
 
         View card;
@@ -411,7 +364,8 @@ public class LandingActivity extends BaseServiceActivity {
             this.card = card;
             this.source_type = source_type;
             this.value_type = value_type;
-            ButterKnife.bind(this, card);
+            tvType = card.findViewById(R.id.tv_type);
+            tvValue = card.findViewById(R.id.tv_rate_value);
         }
     }
 }

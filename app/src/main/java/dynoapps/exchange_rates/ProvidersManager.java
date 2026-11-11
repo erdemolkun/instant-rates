@@ -39,10 +39,10 @@ import dynoapps.exchange_rates.util.CollectionUtils;
 import dynoapps.exchange_rates.util.Formatter;
 import dynoapps.exchange_rates.util.L;
 import dynoapps.exchange_rates.util.RateUtils;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subjects.PublishSubject;
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+import io.reactivex.rxjava3.subjects.PublishSubject;
 
 public class ProvidersManager {
     private static final String TAG = "ProvidersManager";
@@ -56,7 +56,7 @@ public class ProvidersManager {
 
     private final PublishSubject<RatesEvent> ratesEventPublishSubject = PublishSubject.create();
 
-    private static ProvidersManager instance;
+    private static volatile ProvidersManager instance;
 
 
     private ProvidersManager() {
@@ -94,7 +94,7 @@ public class ProvidersManager {
     }
 
     public Disposable registerIntervalUpdates() {
-        return TimeIntervalManager.getIntervalUpdates().distinctUntilChanged().observeOn(AndroidSchedulers.mainThread()).subscribe(isImmediate -> {
+        return TimeIntervalManager.getIntervalUpdates().observeOn(AndroidSchedulers.mainThread()).subscribe(isImmediate -> {
             for (IPollingSource iPollingSource : iPollingSources) {
                 iPollingSource.refreshIntervals(isImmediate);
             }
@@ -170,7 +170,10 @@ public class ProvidersManager {
     }
 
     private void onProviderResult(List<? extends BaseRate> rates, int sourceType) {
-        updateAlarmsAndCheck(rates, sourceType);
+        // Capture the previous rates before storing the new ones: alarms are loaded asynchronously
+        // when the cache is cold, and must compare against the old values, not the new ones.
+        RatesEvent previousEvent = RatesHolder.getInstance().getLatestEvent(sourceType);
+        updateAlarmsAndCheck(rates, previousEvent, sourceType);
         RatesHolder.getInstance().addRate(rates, sourceType);
         ratesEventPublishSubject.onNext(new RatesEvent<>(rates, sourceType, System.currentTimeMillis()));
     }
@@ -197,12 +200,12 @@ public class ProvidersManager {
         }
     }
 
-    private <T extends BaseRate> void updateAlarmsAndCheck(final List<T> rates, final int sourceType) {
-        if (CollectionUtils.isNullOrEmpty(rates)) return;
-        alarmsRepository.getAlarms(alarms -> checkAlarms(rates, sourceType, alarms));
+    private <T extends BaseRate> void updateAlarmsAndCheck(final List<T> rates, final RatesEvent previousEvent, final int sourceType) {
+        if (CollectionUtils.isNullOrEmpty(rates) || previousEvent == null) return;
+        alarmsRepository.getAlarms(alarms -> checkAlarms(rates, previousEvent, sourceType, alarms));
     }
 
-    private <T extends BaseRate> void checkAlarms(List<T> rates, int sourceType, List<Alarm> alarms) {
+    private <T extends BaseRate> void checkAlarms(List<T> rates, RatesEvent previousEvent, int sourceType, List<Alarm> alarms) {
         if (CollectionUtils.isNullOrEmpty(rates)) return;
         try {
 
@@ -211,8 +214,7 @@ public class ProvidersManager {
                 Alarm alarm = iterator.next();
                 if (alarm.sourceType != sourceType || !alarm.isEnabled) continue;
                 BaseRate baseRateCurrent = RateUtils.getRate(rates, alarm.rateType);
-                RatesEvent ratesEvent = RatesHolder.getInstance().getLatestEvent(sourceType);
-                BaseRate baseRateOld = ratesEvent != null ? RateUtils.getRate(ratesEvent.rates, alarm.rateType) : null;
+                BaseRate baseRateOld = RateUtils.getRate(previousEvent.rates, alarm.rateType);
 
                 if (baseRateCurrent == null || baseRateOld == null) continue;
                 float val_current = 0.0f;
@@ -232,12 +234,12 @@ public class ProvidersManager {
                 String val = alarm.rateType == IRate.ONS ? formatter2.format(alarm.val) : formatter5.format(alarm.val);
                 if (alarm.isAbove && val_current > alarm.val && val_old <= alarm.val) {
                     iterator.remove();
-                    alarmsRepository.deleteAlarm(alarm).subscribeOn(Schedulers.io()).subscribe();
+                    alarmsRepository.deleteAlarm(alarm).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(deleted -> { }, th -> L.e(TAG, "Deleting alarm failed: " + th));
                     NotificationHelper.showAlarmNotification(App.context(), App.context().getString(R.string.is_above_val, SourcesManager.getSourceName(alarm.sourceType), RateUtils.rateName(alarm.rateType),
                             val), "increasing", Alarm.getPushId(alarm));
                 } else if (!alarm.isAbove && val_current < alarm.val && val_old >= alarm.val) {
                     iterator.remove();
-                    alarmsRepository.deleteAlarm(alarm).subscribeOn(Schedulers.io()).subscribe();
+                    alarmsRepository.deleteAlarm(alarm).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(deleted -> { }, th -> L.e(TAG, "Deleting alarm failed: " + th));
                     NotificationHelper.showAlarmNotification(App.context(), App.context().getString(R.string.is_below_value, SourcesManager.getSourceName(alarm.sourceType), RateUtils.rateName(alarm.rateType),
                             val), "decreasing", Alarm.getPushId(alarm));
                 }

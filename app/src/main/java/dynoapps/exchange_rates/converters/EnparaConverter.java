@@ -50,20 +50,26 @@ public class EnparaConverter implements Converter<ResponseBody, List<BaseRate>> 
 
         final Elements shotElements = Jsoup.parse(responseBody, HOST).getElementsByClass("enpara-gold-exchange-rates__table-item");
         for (Element element : shotElements) {
-            BaseRate rate = parseRate(element);
-            rates.add(rate);
+            EnparaRate rate = parseRate(element);
+            if (rate != null) {
+                rates.add(rate);
+            }
         }
         return rates;
     }
 
+    /**
+     * @return the parsed rate, or {@code null} for rows that don't have type, buy and sell values.
+     */
     private EnparaRate parseRate(Element element) {
         final Elements divElements = element.select("div span");
-        EnparaRate rate = new EnparaRate();
-        if (divElements.size() > 2) {
-            rate.type = divElements.get(0).text();
-            rate.valueBuy = divElements.get(1).text();
-            rate.valueSell = divElements.get(2).text();
+        if (divElements.size() <= 2) {
+            return null;
         }
+        EnparaRate rate = new EnparaRate();
+        rate.type = divElements.get(0).text();
+        rate.valueBuy = divElements.get(1).text();
+        rate.valueSell = divElements.get(2).text();
         return rate;
     }
 

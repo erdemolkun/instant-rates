@@ -14,10 +14,10 @@ import dynoapps.exchange_rates.alarm.AlarmsRepository;
 import dynoapps.exchange_rates.data.CurrencySource;
 import dynoapps.exchange_rates.time.TimeIntervalManager;
 import dynoapps.exchange_rates.util.L;
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 /**
  * Created by erdemmac on 25/11/2016.
@@ -26,6 +26,7 @@ import io.reactivex.schedulers.Schedulers;
 public abstract class BasePoolingProvider<T> implements IPollingSource, Runnable {
 
     private static final int NEXT_FETCH_ON_ERROR = 4000;
+    private static final int MAX_FETCH_ON_ERROR = 60000;
 
     private static final int MESSAGE_WHAT_FETCH = 1;
     private final CompositeDisposable disposables = new CompositeDisposable();
@@ -121,20 +122,32 @@ public abstract class BasePoolingProvider<T> implements IPollingSource, Runnable
     }
 
     private void fetchAgain(boolean wasError) {
-        if (!isEnabled() && !isStarted.get()) return;
+        if (!isEnabled() || !isStarted.get()) return;
         long interval_value = TimeIntervalManager.getPollingInterval();
         if (wasError) {
-            /*
-             * Calculate error interval in logarithmic.
-             **/
-            float ratio = (errorCount / (float) (successCount <= 0 ? 1 : successCount));
-            interval_value = (int) (NEXT_FETCH_ON_ERROR + Math.log(ratio) * NEXT_FETCH_ON_ERROR);
+            interval_value = errorRetryDelay(errorCount, successCount);
         }
         postWork(interval_value);
     }
 
+    /**
+     * Delay before retrying after a failed fetch. Starts at {@link #NEXT_FETCH_ON_ERROR} and grows
+     * logarithmically with the share of failed fetches, capped at {@link #MAX_FETCH_ON_ERROR}.
+     * A previously healthy source never retries faster than the base delay.
+     */
+    static long errorRetryDelay(int errorCount, int successCount) {
+        float ratio = errorCount / (float) Math.max(1, successCount);
+        double growth = Math.max(0d, Math.log(Math.max(1f, ratio)));
+        long delay = (long) (NEXT_FETCH_ON_ERROR + growth * NEXT_FETCH_ON_ERROR);
+        return Math.min(delay, MAX_FETCH_ON_ERROR);
+    }
+
     @Override
     public void refreshIntervals(boolean immediateShort) {
+        if (!isStarted.get()) {
+            // Stopped providers (e.g. non-alarm sources in background) must stay stopped.
+            return;
+        }
         cancelWorks();
         if (!isEnabled()) {
             return;
@@ -150,7 +163,7 @@ public abstract class BasePoolingProvider<T> implements IPollingSource, Runnable
 
     private void postWork(long delayed) {
         isWorking.set(true);
-        getHandler().sendEmptyMessageDelayed(1, delayed);
+        getHandler().sendEmptyMessageDelayed(MESSAGE_WHAT_FETCH, delayed);
         L.i(BasePoolingProvider.class.getSimpleName(), "- postWork : " + delayed + " ms - " + this.getClass().getSimpleName());
     }
 

@@ -1,7 +1,7 @@
 package dynoapps.exchange_rates.network;
 
 
-import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
 
 import java.util.concurrent.TimeUnit;
 
@@ -37,7 +37,7 @@ public class Api {
                     .client(client)
                     .baseUrl("https://realtime.paragaranti.com/")
                     .addConverterFactory(new ParagarantiConverter.Factory())
-                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                    .addCallAdapterFactory(RxJava3CallAdapterFactory.createSynchronous())
                     .build();
         }
         return paraGarantiApi;
@@ -51,7 +51,7 @@ public class Api {
                     .client(client)
                     .baseUrl("https://yorum.altin.in/")
                     .addConverterFactory(new YorumlarConverter.Factory())
-                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                    .addCallAdapterFactory(RxJava3CallAdapterFactory.createSynchronous())
                     .build();
         }
         return yorumlarApi;
@@ -62,9 +62,9 @@ public class Api {
             final OkHttpClient client = builder().build();
             enparaApi = new Retrofit.Builder()
                     .client(client)
-                    .baseUrl("http://www.qnbfinansbank.enpara.com/")
+                    .baseUrl("https://www.qnbfinansbank.enpara.com/")
                     .addConverterFactory(new EnparaConverter.Factory())
-                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                    .addCallAdapterFactory(RxJava3CallAdapterFactory.createSynchronous())
                     .build();
         }
         return enparaApi;
@@ -77,7 +77,7 @@ public class Api {
                     .baseUrl("http://www.bigpara.com/")
                     .client(client)
                     .addConverterFactory(new BigparaConverter.Factory())
-                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                    .addCallAdapterFactory(RxJava3CallAdapterFactory.createSynchronous())
                     .build();
         }
         return bigparaApi;
@@ -86,9 +86,10 @@ public class Api {
     public static Retrofit getDolarTlKurApi() {
         if (dolarTlKurApi == null) {
             dolarTlKurApi = new Retrofit.Builder()
+                    .client(builder().build())
                     .baseUrl("http://dolar.tlkur.com/")
                     .addConverterFactory(new DolarTlKurAjaxConverter.Factory())
-                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                    .addCallAdapterFactory(RxJava3CallAdapterFactory.createSynchronous())
                     .build();
         }
         return dolarTlKurApi;
@@ -101,7 +102,7 @@ public class Api {
             yahooApi = new Retrofit.Builder().
                     client(client).
                     addConverterFactory(new YahooConverter.Factory()).
-                    addCallAdapterFactory(RxJava2CallAdapterFactory.create()).
+                    addCallAdapterFactory(RxJava3CallAdapterFactory.createSynchronous()).
                     baseUrl("http://finance.yahoo.com/").build();
         }
         return yahooApi;
@@ -110,13 +111,12 @@ public class Api {
 
     public static Retrofit getBloombergApi() {
         if (bloombergApi == null) {
-            final OkHttpClient client = new OkHttpClient.Builder()
-                    .build();
+            final OkHttpClient client = builder().build();
             bloombergApi = new Retrofit.Builder()
                     .client(client)
                     .baseUrl("https://www.bloomberght.com")
                     .addConverterFactory(new BloombergConverter.Factory())
-                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                    .addCallAdapterFactory(RxJava3CallAdapterFactory.createSynchronous())
                     .build();
         }
         return bloombergApi;
