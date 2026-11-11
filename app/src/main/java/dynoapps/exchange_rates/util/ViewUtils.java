@@ -15,7 +15,7 @@ import dynoapps.exchange_rates.R;
  */
 public class ViewUtils {
 
-    private static final int[] RES_IDS_ACTION_BAR_SIZE = {R.attr.actionBarSize};
+    private static final int[] RES_IDS_ACTION_BAR_SIZE = {androidx.appcompat.R.attr.actionBarSize};
 
     public static void visibility(View v, boolean isVisible) {
         if (v == null) return;
