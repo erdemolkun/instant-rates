@@ -47,6 +47,10 @@ class LandingActivity : BaseServiceActivity() {
         tvIntervalHint = findViewById(R.id.tv_interval_hint)
         bottomAppBar = findViewById(R.id.bottomAppBar)
 
+        // Load saved alarms now: going to the background only starts the polling service if the
+        // repository already knows there is an active alarm.
+        App.getInstance().provideAlarmsRepository().getAlarms { }
+
         ProvidersManager.startSources()
         compositeDisposable.add(ProvidersManager.registerIntervalUpdates())
         compositeDisposable.add(

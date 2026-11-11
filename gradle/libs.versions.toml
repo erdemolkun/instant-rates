@@ -27,6 +27,8 @@ rxjava = "3.1.10"
 
 junit = "4.13.2"
 androidxTestRunner = "1.6.2"
+androidxTestCore = "1.6.1"
+androidxTestExtJunit = "1.2.1"
 
 [libraries]
 androidx-activity = { module = "androidx.activity:activity", version.ref = "activity" }
@@ -52,6 +54,8 @@ rxjava = { module = "io.reactivex.rxjava3:rxjava", version.ref = "rxjava" }
 
 junit = { module = "junit:junit", version.ref = "junit" }
 androidx-test-runner = { module = "androidx.test:runner", version.ref = "androidxTestRunner" }
+androidx-test-core = { module = "androidx.test:core-ktx", version.ref = "androidxTestCore" }
+androidx-test-ext-junit = { module = "androidx.test.ext:junit-ktx", version.ref = "androidxTestExtJunit" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
