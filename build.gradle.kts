@@ -1,4 +1,4 @@
-// Top-level build file. Module configuration lives in app/build.gradle,
+// Top-level build file. Module configuration lives in app/build.gradle.kts,
 // dependency versions in gradle/libs.versions.toml.
 plugins {
     alias(libs.plugins.android.application) apply false

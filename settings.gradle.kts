@@ -19,4 +19,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "instant-rates"
-include ':app'
+include(":app")
