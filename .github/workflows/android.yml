@@ -30,8 +30,7 @@ jobs:
         run: ./gradlew testDebugUnitTest
 
       - name: Lint
-        # Reported but not yet blocking; make it blocking once the existing warnings are triaged.
-        continue-on-error: true
+        # Fails the build on lint errors; warnings are reported but don't block.
         run: ./gradlew lintDebug
 
       - name: Print lint report

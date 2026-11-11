@@ -47,7 +47,7 @@
             android:layout_width="24dp"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:tint="?colorPrimary"
+            app:tint="?colorPrimary"
             tools:src="@drawable/ic_dollar"/>
 
         <TextView
@@ -110,7 +110,7 @@
                 android:layout_width="wrap_content"
                 android:rotation="90"
                 android:src="@drawable/ic_arrow_back_black_24dp"
-                android:tint="@color/colorPrimary"/>
+                app:tint="@color/colorPrimary"/>
 
             <TextView
                 android:ellipsize="end"
