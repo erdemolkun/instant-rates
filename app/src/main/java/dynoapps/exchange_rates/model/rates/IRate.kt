@@ -10,14 +10,7 @@ interface IRate {
     fun getValue(valueType: Int): Float
 
     @Retention(AnnotationRetention.SOURCE)
-    @IntDef(
-        UNKNOWN.toLong(),
-        USD.toLong(),
-        EUR.toLong(),
-        ONS.toLong(),
-        ONS_TRY.toLong(),
-        EUR_USD.toLong(),
-    )
+    @IntDef(UNKNOWN, USD, EUR, ONS, ONS_TRY, EUR_USD)
     annotation class RateDef
 
     companion object {
