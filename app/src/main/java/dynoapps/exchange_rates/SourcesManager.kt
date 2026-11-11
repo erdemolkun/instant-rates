@@ -17,11 +17,11 @@ object SourcesManager {
     /** Emits whenever the user changes the enabled sources. */
     val sourceUpdates: PublishSubject<Boolean> = PublishSubject.create()
 
-    private val currencySources: List<CurrencySource> by lazy { createSources() }
+    private val sources: List<CurrencySource> by lazy { createSources() }
 
-    fun getCurrencySources(): List<CurrencySource> = currencySources
+    fun getCurrencySources(): List<CurrencySource> = sources
 
-    fun getSource(sourceType: Int): CurrencySource? = currencySources.firstOrNull { it.type == sourceType }
+    fun getSource(sourceType: Int): CurrencySource? = sources.firstOrNull { it.type == sourceType }
 
     fun getSourceName(type: Int): String = getSource(type)?.name.orEmpty()
 
@@ -41,7 +41,6 @@ object SourcesManager {
         type == CurrencyType.BLOOMBERGHT
 
     fun selectSources(activity: Activity) {
-        val sources = currencySources
         val checked = BooleanArray(sources.size) { sources[it].isEnabled }
         val names = Array(sources.size) { sources[it].name }
 
@@ -70,7 +69,7 @@ object SourcesManager {
     }
 
     private fun saveSources() {
-        Prefs.saveSources(currencySources.filter { it.isEnabled }.joinToString(separator = "") { "${it.type};" })
+        Prefs.saveSources(sources.filter { it.isEnabled }.joinToString(separator = "") { "${it.type};" })
     }
 
     private fun color(@ColorRes colorRes: Int): Int = ContextCompat.getColor(App.context(), colorRes)
