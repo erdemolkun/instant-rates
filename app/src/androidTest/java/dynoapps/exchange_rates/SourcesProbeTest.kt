@@ -9,10 +9,6 @@ import dynoapps.exchange_rates.model.rates.IRate
 import dynoapps.exchange_rates.provider.BasePoolingProvider
 import dynoapps.exchange_rates.provider.BigparaRateProvider
 import dynoapps.exchange_rates.provider.BloombergRateProvider
-import dynoapps.exchange_rates.provider.DolarTlKurRateProvider
-import dynoapps.exchange_rates.provider.EnparaRateProvider
-import dynoapps.exchange_rates.provider.ParaGarantiRateProvider
-import dynoapps.exchange_rates.provider.YahooRateProvider
 import dynoapps.exchange_rates.provider.YapıKrediRateProvider
 import dynoapps.exchange_rates.provider.YorumlarRateProvider
 import dynoapps.exchange_rates.util.RateUtils
@@ -33,12 +29,8 @@ class SourcesProbeTest {
         val ignore: (List<BaseRate>, Int) -> Unit = { _, _ -> }
         val providers: List<BasePoolingProvider<out BaseRate>> = listOf(
             YorumlarRateProvider(ignore),
-            EnparaRateProvider(ignore),
             BigparaRateProvider(ignore),
-            DolarTlKurRateProvider(ignore),
             YapıKrediRateProvider(ignore),
-            YahooRateProvider(ignore),
-            ParaGarantiRateProvider(ignore),
             BloombergRateProvider(ignore),
         )
 

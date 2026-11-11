@@ -27,7 +27,7 @@
             android:padding="4dp"
             android:textColor="?colorPrimary"
             android:textSize="15sp"
-            tools:text="Enpara" />
+            tools:text="Altın.in" />
 
         <TextView
             android:id="@+id/tv_rate_value"

@@ -34,11 +34,7 @@ object SourcesManager {
         return getSourceName(type) + postFix
     }
 
-    fun isAvgType(type: Int): Boolean = type == CurrencyType.ALTININ ||
-        type == CurrencyType.PARAGARANTI ||
-        type == CurrencyType.TLKUR ||
-        type == CurrencyType.YAHOO ||
-        type == CurrencyType.BLOOMBERGHT
+    fun isAvgType(type: Int): Boolean = type == CurrencyType.ALTININ || type == CurrencyType.BLOOMBERGHT
 
     fun selectSources(activity: Activity) {
         val checked = BooleanArray(sources.size) { sources[it].isEnabled }
@@ -77,19 +73,13 @@ object SourcesManager {
     private fun createSources(): List<CurrencySource> {
         val onlyUsdTry = intArrayOf(IRate.USD)
         val altinInSupported = intArrayOf(IRate.USD, IRate.EUR, IRate.EUR_USD, IRate.ONS)
-        val paragarantiSupported = intArrayOf(IRate.USD, IRate.EUR, IRate.EUR_USD)
-        val enparaSupported = intArrayOf(IRate.USD, IRate.EUR, IRate.EUR_USD, IRate.ONS_TRY)
         val yapikrediSupported = intArrayOf(IRate.USD, IRate.EUR, IRate.ONS_TRY)
         val bloombergSupported = intArrayOf(IRate.USD, IRate.EUR, IRate.EUR_USD, IRate.ONS)
 
         val sources = listOf(
             CurrencySource("Altın.in", CurrencyType.ALTININ, color(R.color.colorYorumlar), true, altinInSupported),
-            CurrencySource("Enpara", CurrencyType.ENPARA, color(R.color.colorEnpara), false, enparaSupported),
             CurrencySource("Bigpara", CurrencyType.BIGPARA, color(R.color.colorBigPara), false, onlyUsdTry),
-            CurrencySource("TlKur", CurrencyType.TLKUR, color(R.color.colorDolarTlKur), false, altinInSupported),
             CurrencySource("Yapı Kredi", CurrencyType.YAPIKREDI, color(R.color.colorYapiKredi), false, yapikrediSupported),
-            CurrencySource("Yahoo", CurrencyType.YAHOO, color(R.color.colorYahoo), false, altinInSupported),
-            CurrencySource("Paragaranti", CurrencyType.PARAGARANTI, color(R.color.colorParagaranti), false, paragarantiSupported),
             CurrencySource("Bloomberg HT", CurrencyType.BLOOMBERGHT, color(R.color.colorBloomberg), true, bloombergSupported),
         )
 
@@ -108,6 +98,9 @@ object SourcesManager {
         val saved = Prefs.getSources()
         if (saved.isNullOrEmpty()) return
         val enabledTypes = saved.split(";").mapNotNull { it.toIntOrNull() }.toSet()
+        // A saved selection made only of removed sources would leave nothing enabled: keep the
+        // defaults instead.
+        if (sources.none { it.type in enabledTypes }) return
         sources.forEach { it.isEnabled = it.type in enabledTypes }
     }
 }

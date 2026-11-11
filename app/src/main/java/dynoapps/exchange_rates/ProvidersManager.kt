@@ -11,11 +11,7 @@ import dynoapps.exchange_rates.model.rates.IRate
 import dynoapps.exchange_rates.notification.NotificationHelper
 import dynoapps.exchange_rates.provider.BigparaRateProvider
 import dynoapps.exchange_rates.provider.BloombergRateProvider
-import dynoapps.exchange_rates.provider.DolarTlKurRateProvider
-import dynoapps.exchange_rates.provider.EnparaRateProvider
 import dynoapps.exchange_rates.provider.IPollingSource
-import dynoapps.exchange_rates.provider.ParaGarantiRateProvider
-import dynoapps.exchange_rates.provider.YahooRateProvider
 import dynoapps.exchange_rates.provider.YapıKrediRateProvider
 import dynoapps.exchange_rates.provider.YorumlarRateProvider
 import dynoapps.exchange_rates.time.TimeIntervalManager
@@ -61,13 +57,9 @@ object ProvidersManager {
         if (pollingSources != null) return
         val onResult: (List<BaseRate>, Int) -> Unit = ::onProviderResult
         pollingSources = listOf(
-            EnparaRateProvider(onResult),
             YorumlarRateProvider(onResult),
             BigparaRateProvider(onResult),
-            DolarTlKurRateProvider(onResult),
             YapıKrediRateProvider(onResult),
-            YahooRateProvider(onResult),
-            ParaGarantiRateProvider(onResult),
             BloombergRateProvider(onResult),
         )
     }

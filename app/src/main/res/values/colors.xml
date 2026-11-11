@@ -3,21 +3,16 @@
     <color name="colorPrimary">#607D8B</color>
     <color name="colorPrimaryDark">#455A64</color>
     <color name="colorAccent">@color/colorOrange</color>
-
-    <color name="colorEnpara">#aa51a0</color><!--170, 81, 160-->
     <color name="colorYorumlar">#f1c15a</color>
-    <color name="colorDolarTlKur">#76ff03</color>
     <color name="colorBigPara">#f57c00</color>
     <color name="colorYapiKredi">#3F51B5</color>
-    <color name="colorYahoo">#47019a</color>
-    <color name="colorParagaranti">#2da6aa</color> <!--46 166 170-->
     <color name="colorBloomberg">#39466a</color><!--57 70 107-->
 
     <color name="white">#fff</color>
 
     <color name="refresh_progress_1">@color/colorPrimary</color>
     <color name="refresh_progress_2">@color/colorAccent</color>
-    <color name="refresh_progress_3">@color/colorYahoo</color>
+    <color name="refresh_progress_3">#47019a</color>
 
     <color name="color_material_grey_50">#fffafafa</color>
 
