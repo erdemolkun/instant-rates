@@ -1,5 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.kapt)
 }
 
 // set flag whether we are on a build server
@@ -119,6 +121,16 @@ android {
     }
 }
 
+kotlin {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
+    }
+}
+
+kapt {
+    correctErrorTypes true
+}
+
 base {
     archivesName = android.defaultConfig.versionName
 }
@@ -128,7 +140,7 @@ dependencies {
     implementation libs.androidx.annotation
     implementation libs.androidx.appcompat
     implementation libs.androidx.cardview
-    implementation libs.androidx.core
+    implementation libs.androidx.core.ktx
     implementation libs.androidx.recyclerview
     implementation libs.androidx.swiperefreshlayout
     implementation libs.material
@@ -145,7 +157,7 @@ dependencies {
 
     implementation libs.androidx.room.runtime
     implementation libs.androidx.room.rxjava3
-    annotationProcessor libs.androidx.room.compiler
+    kapt libs.androidx.room.compiler
 
     debugImplementation libs.leakcanary
 

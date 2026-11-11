@@ -1,5 +1,6 @@
 [versions]
 agp = "8.11.1"
+kotlin = "2.2.21"
 versionsPlugin = "0.52.0"
 
 compileSdk = "36"
@@ -32,7 +33,7 @@ androidx-activity = { module = "androidx.activity:activity", version.ref = "acti
 androidx-annotation = { module = "androidx.annotation:annotation", version.ref = "annotation" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 androidx-cardview = { module = "androidx.cardview:cardview", version.ref = "cardview" }
-androidx-core = { module = "androidx.core:core", version.ref = "core" }
+androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "core" }
 androidx-recyclerview = { module = "androidx.recyclerview:recyclerview", version.ref = "recyclerview" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 androidx-room-rxjava3 = { module = "androidx.room:room-rxjava3", version.ref = "room" }
@@ -54,4 +55,6 @@ androidx-test-runner = { module = "androidx.test:runner", version.ref = "android
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 versions = { id = "com.github.ben-manes.versions", version.ref = "versionsPlugin" }
