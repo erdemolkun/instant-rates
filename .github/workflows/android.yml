@@ -34,6 +34,10 @@ jobs:
         continue-on-error: true
         run: ./gradlew lintDebug
 
+      - name: Print lint report
+        if: always()
+        run: cat app/build/intermediates/lint_intermediate_text_report/debug/lintReportDebug/lint-results-debug.txt || true
+
       - name: Assemble debug APK
         run: ./gradlew assembleDebug
 
