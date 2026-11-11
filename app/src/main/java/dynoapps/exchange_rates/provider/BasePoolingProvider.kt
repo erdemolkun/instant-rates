@@ -2,6 +2,7 @@ package dynoapps.exchange_rates.provider
 
 import android.os.Handler
 import android.os.Looper
+import androidx.annotation.VisibleForTesting
 import dynoapps.exchange_rates.App
 import dynoapps.exchange_rates.SourcesManager
 import dynoapps.exchange_rates.model.rates.BaseRate
@@ -38,6 +39,10 @@ abstract class BasePoolingProvider<T : BaseRate>(
     private val tag: String = javaClass.simpleName
 
     protected abstract fun getObservable(): Observable<List<T>>
+
+    /** Fetches once on the calling thread. Used by device tests to check each source. */
+    @VisibleForTesting
+    fun fetchBlocking(): List<T> = getObservable().blockingFirst()
 
     private val isEnabled: Boolean
         get() = SourcesManager.getSource(sourceType)?.isEnabled == true
