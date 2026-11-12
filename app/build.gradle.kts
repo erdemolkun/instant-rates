@@ -171,10 +171,8 @@ dependencies {
 
     implementation(libs.okhttp)
     implementation(libs.retrofit)
-    implementation(libs.retrofit.adapter.rxjava3)
 
-    implementation(libs.rxjava)
-    implementation(libs.rxandroid)
+    implementation(libs.kotlinx.coroutines.android)
 
     implementation(libs.timber)
 
@@ -183,7 +181,6 @@ dependencies {
     implementation(libs.mpandroidchart.compose)
 
     implementation(libs.androidx.room.runtime)
-    implementation(libs.androidx.room.rxjava3)
     ksp(libs.androidx.room.compiler)
 
     debugImplementation(libs.leakcanary)

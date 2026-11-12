@@ -1,16 +1,16 @@
 package dynoapps.exchange_rates.alarm
 
-import io.reactivex.rxjava3.core.Single
-
 interface AlarmsDataSource {
 
-    fun getAlarms(callback: (List<Alarm>) -> Unit)
+    /** All alarms; empty if they can't be loaded. */
+    suspend fun getAlarms(): List<Alarm>
 
-    fun saveAlarm(alarm: Alarm, callback: ((Alarm) -> Unit)?)
+    /** Stores [alarm] and returns it with its new ID. */
+    suspend fun saveAlarm(alarm: Alarm): Alarm
 
-    fun deleteAlarm(alarm: Alarm): Single<Alarm>
+    suspend fun deleteAlarm(alarm: Alarm): Alarm
 
-    fun updateAlarm(alarm: Alarm): Single<Alarm>
+    suspend fun updateAlarm(alarm: Alarm): Alarm
 
     fun refreshAlarms()
 }

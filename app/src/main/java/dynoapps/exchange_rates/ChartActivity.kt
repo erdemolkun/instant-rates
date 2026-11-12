@@ -5,15 +5,14 @@ import androidx.activity.viewModels
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import dynoapps.exchange_rates.model.rates.IRate
 import dynoapps.exchange_rates.time.TimeIntervalManager
 import dynoapps.exchange_rates.ui.compose.setRatesContent
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import java.util.concurrent.TimeUnit
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 /** Live line chart of one rate type across all sources. */
 class ChartActivity : BaseActivity() {
@@ -26,7 +25,6 @@ class ChartActivity : BaseActivity() {
         }
     }
 
-    private val compositeDisposable = CompositeDisposable()
     private var isRefreshing by mutableStateOf(false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,19 +50,14 @@ class ChartActivity : BaseActivity() {
         }
     }
 
-    override fun onDestroy() {
-        compositeDisposable.dispose()
-        super.onDestroy()
-    }
-
     /** Asks every source for new rates; the indicator shows for a second. */
     private fun refresh() {
         ProvidersManager.triggerUpdate()
         isRefreshing = true
-        compositeDisposable.add(
-            Completable.timer(1, TimeUnit.SECONDS, AndroidSchedulers.mainThread())
-                .subscribe { isRefreshing = false }
-        )
+        lifecycleScope.launch {
+            delay(1_000)
+            isRefreshing = false
+        }
     }
 
     companion object {

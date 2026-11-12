@@ -8,7 +8,6 @@ import dynoapps.exchange_rates.converters.YorumlarConverter
 import okhttp3.OkHttpClient
 import retrofit2.Converter
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import java.util.concurrent.TimeUnit
 
 object Api {
@@ -40,10 +39,9 @@ object Api {
         Retrofit.Builder()
             .client(client)
             .baseUrl(baseUrl)
+            // The services are suspend functions: Retrofit runs each call, including the
+            // conversion, on OkHttp's threads, so they are safe to call from the main thread.
             .addConverterFactory(SingleConverterFactory(converter))
-            // Synchronous calls keep the previous RxJava 2 adapter behaviour; the providers
-            // subscribe on the IO scheduler themselves.
-            .addCallAdapterFactory(RxJava3CallAdapterFactory.createSynchronous())
             .build()
             .create(S::class.java)
 }

@@ -3,12 +3,12 @@ package dynoapps.exchange_rates.alarm
 import android.content.Context
 import dynoapps.exchange_rates.Prefs
 import dynoapps.exchange_rates.SourcesManager
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Single
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 /**
  * Alarms with an in-memory cache in front of [LocalAlarmsDataSource]. The cache is only touched
- * from the main thread.
+ * from the main thread: every method switches to it, so they can be called from any thread.
  */
 class AlarmsRepository private constructor(
     private val localAlarmsDataSource: AlarmsDataSource,
@@ -18,35 +18,25 @@ class AlarmsRepository private constructor(
     private var cachedAlarms: MutableMap<Long, Alarm>? = null
     private var alarmEnabled: Boolean? = null
 
-    override fun getAlarms(callback: (List<Alarm>) -> Unit) {
-        // Respond immediately with the cache if available and not dirty.
+    // Main.immediate doesn't suspend when already on the main thread, so a cache hit returns
+    // without waiting for the next main looper message.
+    override suspend fun getAlarms(): List<Alarm> = withContext(Dispatchers.Main.immediate) {
         val cached = cachedAlarms
-        if (cached != null && !cacheIsDirty) {
-            callback(ArrayList(cached.values))
-            return
-        }
-        localAlarmsDataSource.getAlarms { alarms ->
-            refreshCache(alarms)
-            callback(ArrayList(cache().values))
-        }
+        if (cached == null || cacheIsDirty) refreshCache(localAlarmsDataSource.getAlarms())
+        ArrayList(cache().values)
     }
 
-    override fun saveAlarm(alarm: Alarm, callback: ((Alarm) -> Unit)?) {
-        localAlarmsDataSource.saveAlarm(alarm) { saved ->
-            cache()[saved.id] = saved
-            callback?.invoke(saved)
-        }
+    override suspend fun saveAlarm(alarm: Alarm): Alarm = withContext(Dispatchers.Main.immediate) {
+        localAlarmsDataSource.saveAlarm(alarm).also { saved -> cache()[saved.id] = saved }
     }
 
-    override fun deleteAlarm(alarm: Alarm): Single<Alarm> =
-        localAlarmsDataSource.deleteAlarm(alarm)
-            .observeOn(AndroidSchedulers.mainThread())
-            .doAfterSuccess { deleted -> cachedAlarms?.remove(deleted.id) }
+    override suspend fun deleteAlarm(alarm: Alarm): Alarm = withContext(Dispatchers.Main.immediate) {
+        localAlarmsDataSource.deleteAlarm(alarm).also { deleted -> cachedAlarms?.remove(deleted.id) }
+    }
 
-    override fun updateAlarm(alarm: Alarm): Single<Alarm> =
-        localAlarmsDataSource.updateAlarm(alarm)
-            .observeOn(AndroidSchedulers.mainThread())
-            .doAfterSuccess { updated -> cache()[updated.id] = updated }
+    override suspend fun updateAlarm(alarm: Alarm): Alarm = withContext(Dispatchers.Main.immediate) {
+        localAlarmsDataSource.updateAlarm(alarm).also { updated -> cache()[updated.id] = updated }
+    }
 
     override fun refreshAlarms() {
         cacheIsDirty = true

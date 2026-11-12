@@ -2,7 +2,7 @@
 #
 # No keep rules are needed: AAPT2 keeps the manifest components, the default file keeps native
 # methods, enum values()/valueOf() and Parcelable CREATORs, and the libraries bundle their own
-# rules (Retrofit's keep the service interfaces, their RxJava return types and generic signatures).
+# rules (Retrofit's keep the service interfaces, suspend functions and generic signatures).
 # Add a rule here only for a class that is looked up by reflection.
 
 -repackageclasses ''

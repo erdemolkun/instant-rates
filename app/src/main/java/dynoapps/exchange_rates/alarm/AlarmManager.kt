@@ -2,12 +2,14 @@ package dynoapps.exchange_rates.alarm
 
 import androidx.activity.ComponentActivity
 import dynoapps.exchange_rates.App
+import dynoapps.exchange_rates.AppScope
 import dynoapps.exchange_rates.SourcesManager
 import dynoapps.exchange_rates.interfaces.ValueType
 import dynoapps.exchange_rates.ui.compose.showComposeDialog
 
 /** The "add alarm" dialog. */
 object AlarmManager {
+    private const val TAG = "AlarmManager"
 
     /**
      * Shows the dialog, preselecting [sourceType], [rateType] and [defaultValue] when given.
@@ -35,7 +37,11 @@ object AlarmManager {
                         this.rateType = selectedRateType
                         value_type = valueType
                     }
-                    App.getInstance().provideAlarmsRepository().saveAlarm(alarm, onSaved)
+                    // In the app scope, so the write finishes even if the screen is closed.
+                    AppScope.launch(TAG, "Saving alarm failed") {
+                        val saved = App.getInstance().provideAlarmsRepository().saveAlarm(alarm)
+                        onSaved?.invoke(saved)
+                    }
                     dismiss()
                 },
                 onDismiss = dismiss,

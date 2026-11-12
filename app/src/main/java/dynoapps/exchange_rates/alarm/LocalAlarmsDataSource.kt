@@ -1,42 +1,39 @@
 package dynoapps.exchange_rates.alarm
 
-import android.annotation.SuppressLint
 import android.content.Context
 import dynoapps.exchange_rates.AppDatabase
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlin.coroutines.cancellation.CancellationException
 import timber.log.Timber
 
+/** Alarms in the Room database. Room runs the suspend queries on its own threads. */
 class LocalAlarmsDataSource(context: Context) : AlarmsDataSource {
 
     private val alarmDao: AlarmDao = AppDatabase.getInstance(context.applicationContext).alarm()
 
-    @SuppressLint("CheckResult")
-    override fun getAlarms(callback: (List<Alarm>) -> Unit) {
-        alarmDao.list()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ alarms -> callback(alarms) }, { throwable ->
-                Timber.tag(TAG).e(throwable, "Loading alarms failed")
-                callback(emptyList())
-            })
+    override suspend fun getAlarms(): List<Alarm> =
+        try {
+            alarmDao.list()
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Timber.tag(TAG).e(e, "Loading alarms failed")
+            emptyList()
+        }
+
+    override suspend fun saveAlarm(alarm: Alarm): Alarm {
+        alarm.id = alarmDao.insert(alarm)
+        return alarm
     }
 
-    @SuppressLint("CheckResult")
-    override fun saveAlarm(alarm: Alarm, callback: ((Alarm) -> Unit)?) {
-        alarmDao.insert(alarm)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ id ->
-                alarm.id = id
-                callback?.invoke(alarm)
-            }, { throwable -> Timber.tag(TAG).e(throwable, "Saving alarm failed") })
+    override suspend fun deleteAlarm(alarm: Alarm): Alarm {
+        alarmDao.deleteById(alarm.id)
+        return alarm
     }
 
-    override fun deleteAlarm(alarm: Alarm): Single<Alarm> = alarmDao.deleteById(alarm.id).map { alarm }
-
-    override fun updateAlarm(alarm: Alarm): Single<Alarm> = alarmDao.update(alarm).map { alarm }
+    override suspend fun updateAlarm(alarm: Alarm): Alarm {
+        alarmDao.update(alarm)
+        return alarm
+    }
 
     override fun refreshAlarms() {
         // Not required: AlarmsRepository decides when to reload from this data source.

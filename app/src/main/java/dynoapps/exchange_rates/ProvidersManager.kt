@@ -17,10 +17,9 @@ import dynoapps.exchange_rates.provider.YorumlarRateProvider
 import dynoapps.exchange_rates.time.TimeIntervalManager
 import dynoapps.exchange_rates.util.Formatter
 import dynoapps.exchange_rates.util.RateUtils
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.disposables.Disposable
-import io.reactivex.rxjava3.schedulers.Schedulers
-import io.reactivex.rxjava3.subjects.PublishSubject
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import timber.log.Timber
 
 /** Owns the rate providers, publishes their results and fires price alarms. */
@@ -31,8 +30,10 @@ object ProvidersManager {
     private val formatter2 = Formatter(3, 0)
     private val formatter5 = Formatter(5, 1)
 
+    private val _ratesEvents = MutableSharedFlow<RatesEvent<*>>(extraBufferCapacity = 16)
+
     /** Emits every successful fetch from any provider. */
-    val ratesEventPublishSubject: PublishSubject<RatesEvent<*>> = PublishSubject.create()
+    val ratesEvents: SharedFlow<RatesEvent<*>> = _ratesEvents.asSharedFlow()
 
     /** Null until [startSources] is first called. */
     var pollingSources: List<IPollingSource>? = null
@@ -47,12 +48,10 @@ object ProvidersManager {
             .forEach { providerFor(it.type)?.oneShot() }
     }
 
-    fun registerIntervalUpdates(): Disposable =
-        TimeIntervalManager.intervalUpdates
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ isImmediate ->
-                pollingSources?.forEach { it.refreshIntervals(isImmediate) }
-            }, { th -> Timber.tag(TAG).e(th, "Interval updates failed") })
+    /** Re-applies the polling interval; see [TimeIntervalManager.intervalUpdates]. */
+    fun refreshIntervals(immediateShort: Boolean) {
+        pollingSources?.forEach { it.refreshIntervals(immediateShort) }
+    }
 
     private fun init() {
         if (pollingSources != null) return
@@ -76,7 +75,7 @@ object ProvidersManager {
         val previousEvent = RatesHolder.getLatestEvent(sourceType)
         updateAlarmsAndCheck(rates, previousEvent, sourceType)
         RatesHolder.addRate(rates, sourceType)
-        ratesEventPublishSubject.onNext(RatesEvent(rates, sourceType, System.currentTimeMillis()))
+        _ratesEvents.tryEmit(RatesEvent(rates, sourceType, System.currentTimeMillis()))
     }
 
     fun stopAll() {
@@ -93,7 +92,10 @@ object ProvidersManager {
 
     private fun updateAlarmsAndCheck(rates: List<BaseRate>, previousEvent: RatesEvent<*>?, sourceType: Int) {
         if (rates.isEmpty() || previousEvent == null) return
-        App.getInstance().provideAlarmsRepository().getAlarms { alarms ->
+        // Runs synchronously up to the first suspension: when the alarms are cached, they are
+        // checked before the new rates are stored.
+        AppScope.launch(TAG, "Checking alarms failed") {
+            val alarms = App.getInstance().provideAlarmsRepository().getAlarms()
             checkAlarms(rates, previousEvent, sourceType, alarms)
         }
     }
@@ -118,10 +120,7 @@ object ProvidersManager {
             val crossedBelow = !alarm.isAbove && valueCurrent < alarmValue && valueOld >= alarmValue
             if (!crossedAbove && !crossedBelow) continue
 
-            repository.deleteAlarm(alarm)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ }, { th -> Timber.tag(TAG).e(th, "Deleting alarm failed") })
+            AppScope.launch(TAG, "Deleting alarm failed") { repository.deleteAlarm(alarm) }
 
             val formattedValue = if (alarm.rateType == IRate.ONS) {
                 formatter2.format(alarmValue)

@@ -5,6 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dynoapps.exchange_rates.data.RatesHolder
 import dynoapps.exchange_rates.interfaces.ValueType
 import dynoapps.exchange_rates.model.rates.AvgRate
@@ -13,8 +14,7 @@ import dynoapps.exchange_rates.model.rates.BuySellRate
 import dynoapps.exchange_rates.model.rates.IRate
 import dynoapps.exchange_rates.time.TimeIntervalManager
 import dynoapps.exchange_rates.util.RateUtils
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.disposables.CompositeDisposable
+import kotlinx.coroutines.launch
 
 /** One card on the main screen: a source's buy, sell or average value for a rate type. */
 data class RateCardState(
@@ -40,8 +40,6 @@ data class RateRowState(
  */
 class LandingViewModel : ViewModel() {
 
-    private val disposables = CompositeDisposable()
-
     /** The latest rates per source type. */
     private val latestRates = HashMap<Int, List<BaseRate>>()
 
@@ -55,10 +53,9 @@ class LandingViewModel : ViewModel() {
     init {
         // Load saved alarms now: going to the background only starts the polling service if the
         // repository already knows there is an active alarm.
-        App.getInstance().provideAlarmsRepository().getAlarms { }
+        viewModelScope.launch { App.getInstance().provideAlarmsRepository().getAlarms() }
 
         ProvidersManager.startSources()
-        disposables.add(ProvidersManager.registerIntervalUpdates())
 
         // Show the cached rates until the next fetch arrives.
         for (source in SourcesManager.getCurrencySources()) {
@@ -66,27 +63,25 @@ class LandingViewModel : ViewModel() {
         }
         rows = buildRows()
 
-        disposables.add(
-            SourcesManager.sourceUpdates.observeOn(AndroidSchedulers.mainThread()).subscribe {
+        // viewModelScope runs on the main thread, as the providers and screen state expect.
+        viewModelScope.launch {
+            SourcesManager.sourceUpdates.collect {
                 ProvidersManager.startOrStopSources()
                 rows = buildRows()
             }
-        )
-        disposables.add(
-            TimeIntervalManager.intervalUpdates.observeOn(AndroidSchedulers.mainThread()).subscribe {
+        }
+        viewModelScope.launch {
+            TimeIntervalManager.intervalUpdates.collect { immediateShort ->
+                ProvidersManager.refreshIntervals(immediateShort)
                 intervalSelection = TimeIntervalManager.getSelectionStr()
             }
-        )
-        disposables.add(
-            ProvidersManager.ratesEventPublishSubject.observeOn(AndroidSchedulers.mainThread()).subscribe { event ->
+        }
+        viewModelScope.launch {
+            ProvidersManager.ratesEvents.collect { event ->
                 latestRates[event.sourceType] = event.rates
                 rows = buildRows()
             }
-        )
-    }
-
-    override fun onCleared() {
-        disposables.dispose()
+        }
     }
 
     private fun buildRows(): List<RateRowState> = ROWS.map { (rateType, icon, insetIcon) ->

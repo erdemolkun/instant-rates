@@ -6,10 +6,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import dynoapps.exchange_rates.AppScope
 import dynoapps.exchange_rates.SourcesManager
 import dynoapps.exchange_rates.util.RateUtils
-import io.reactivex.rxjava3.schedulers.Schedulers
-import timber.log.Timber
+import kotlinx.coroutines.launch
 
 /** One alarm as the alarms screen shows it. */
 data class AlarmItemState(
@@ -41,7 +42,7 @@ class AlarmsViewModel(private val repository: AlarmsRepository) : ViewModel() {
 
     init {
         repository.refreshAlarms()
-        repository.getAlarms { loaded -> alarms = loaded.sortedWith(Alarm.COMPARATOR) }
+        viewModelScope.launch { alarms = repository.getAlarms().sortedWith(Alarm.COMPARATOR) }
     }
 
     fun updateAlarmsEnabled(enabled: Boolean) {
@@ -58,16 +59,14 @@ class AlarmsViewModel(private val repository: AlarmsRepository) : ViewModel() {
         val alarm = alarms.firstOrNull { it.id == id } ?: return
         alarm.isEnabled = enabled
         alarms = alarms.toList()
-        // Not disposed with the screen, so leaving right away doesn't cancel the write.
-        repository.updateAlarm(alarm).subscribeOn(Schedulers.io())
-            .subscribe({ }, { Timber.tag(TAG).e(it, "Updating alarm failed") })
+        // In the app scope, so leaving the screen right away doesn't cancel the write.
+        AppScope.launch(TAG, "Updating alarm failed") { repository.updateAlarm(alarm) }
     }
 
     fun deleteAlarm(id: Long) {
         val alarm = alarms.firstOrNull { it.id == id } ?: return
         alarms = alarms - alarm
-        repository.deleteAlarm(alarm).subscribeOn(Schedulers.io())
-            .subscribe({ }, { Timber.tag(TAG).e(it, "Deleting alarm failed") })
+        AppScope.launch(TAG, "Deleting alarm failed") { repository.deleteAlarm(alarm) }
     }
 
     private fun toItemState(alarm: Alarm): AlarmItemState {

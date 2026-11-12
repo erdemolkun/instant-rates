@@ -7,12 +7,16 @@ import dynoapps.exchange_rates.App
 import dynoapps.exchange_rates.SourcesManager
 import dynoapps.exchange_rates.model.rates.BaseRate
 import dynoapps.exchange_rates.time.TimeIntervalManager
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.schedulers.Schedulers
+import dynoapps.exchange_rates.AppScope
 import java.util.concurrent.atomic.AtomicBoolean
+import kotlin.coroutines.cancellation.CancellationException
 import kotlin.math.ln
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancelChildren
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 
 /**
@@ -23,7 +27,8 @@ abstract class BasePoolingProvider<T : BaseRate>(
     private val onResult: (rates: List<T>, sourceType: Int) -> Unit,
 ) : IPollingSource {
 
-    private val disposables = CompositeDisposable()
+    /** Runs the fetches on the main thread; [cancel] cancels the running ones. */
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private val handler = Handler(Looper.getMainLooper())
     private val fetchRunnable = Runnable { job(singleRun = false) }
 
@@ -39,11 +44,12 @@ abstract class BasePoolingProvider<T : BaseRate>(
     /** Log tag: the concrete provider's class name. */
     private val tag: String = javaClass.simpleName
 
-    protected abstract fun getObservable(): Observable<List<T>>
+    /** Fetches the rates once. Main-safe. */
+    protected abstract suspend fun fetch(): List<T>
 
-    /** Fetches once on the calling thread. Used by device tests to check each source. */
+    /** Fetches once, blocking the calling thread. Used by device tests to check each source. */
     @VisibleForTesting
-    fun fetchBlocking(): List<T> = getObservable().blockingFirst()
+    fun fetchBlocking(): List<T> = runBlocking { fetch() }
 
     private val isEnabled: Boolean
         get() = SourcesManager.getSource(sourceType)?.isEnabled == true
@@ -53,7 +59,7 @@ abstract class BasePoolingProvider<T : BaseRate>(
     }
 
     override fun cancel() {
-        disposables.clear()
+        scope.coroutineContext.cancelChildren()
     }
 
     override fun start() {
@@ -106,7 +112,8 @@ abstract class BasePoolingProvider<T : BaseRate>(
     }
 
     override fun stopNonAlarmSources() {
-        App.getInstance().provideAlarmsRepository().getAlarms { alarms ->
+        AppScope.launch(tag, "Loading alarms failed") {
+            val alarms = App.getInstance().provideAlarmsRepository().getAlarms()
             if (alarms.none { it.sourceType == sourceType && it.isEnabled }) {
                 stop()
             }
@@ -114,19 +121,20 @@ abstract class BasePoolingProvider<T : BaseRate>(
     }
 
     private fun job(singleRun: Boolean) {
-        disposables.add(
-            Observable.defer { getObservable() }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ rates ->
-                    notifyValue(rates)
-                    if (!singleRun) fetchAgain(wasError = false)
-                }, { throwable ->
-                    errorCount++
-                    Timber.tag(tag).e("Fetch failed: $throwable")
-                    if (!singleRun) fetchAgain(wasError = true)
-                })
-        )
+        scope.launch {
+            val rates = try {
+                fetch()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                errorCount++
+                Timber.tag(tag).e("Fetch failed: $e")
+                if (!singleRun) fetchAgain(wasError = true)
+                return@launch
+            }
+            notifyValue(rates)
+            if (!singleRun) fetchAgain(wasError = false)
+        }
     }
 
     companion object {

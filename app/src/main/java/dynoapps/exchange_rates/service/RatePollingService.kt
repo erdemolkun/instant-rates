@@ -12,8 +12,9 @@ import dynoapps.exchange_rates.LandingActivity
 import dynoapps.exchange_rates.ProvidersManager
 import dynoapps.exchange_rates.R
 import dynoapps.exchange_rates.notification.NotificationHelper
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.disposables.CompositeDisposable
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 /**
@@ -22,18 +23,14 @@ import timber.log.Timber
  */
 class RatePollingService : Service() {
 
-    private val compositeDisposable = CompositeDisposable()
+    private val scope = MainScope()
 
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onCreate() {
         super.onCreate()
         Timber.tag(TAG).i("onCreate")
-        compositeDisposable.add(
-            ServiceStopActionReceiver.stopSubject
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { stopPolling() }
-        )
+        scope.launch { ServiceStopActionReceiver.stopRequests.collect { stopPolling() } }
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -52,7 +49,7 @@ class RatePollingService : Service() {
     override fun onDestroy() {
         Timber.tag(TAG).i("onDestroy")
         ServiceCompat.stopForeground(this, ServiceCompat.STOP_FOREGROUND_REMOVE)
-        compositeDisposable.clear()
+        scope.cancel()
         super.onDestroy()
     }
 

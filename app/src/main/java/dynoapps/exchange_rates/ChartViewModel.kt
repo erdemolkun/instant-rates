@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
@@ -17,9 +18,8 @@ import dynoapps.exchange_rates.model.rates.BuySellRate
 import dynoapps.exchange_rates.model.rates.IRate
 import dynoapps.exchange_rates.time.TimeIntervalManager
 import dynoapps.exchange_rates.util.RateUtils
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlin.math.abs
+import kotlinx.coroutines.launch
 
 /**
  * The live chart data of one rate type across all sources: one data set per average source, two
@@ -32,8 +32,6 @@ class ChartViewModel(
     sellLabel: String,
     buyLabel: String,
 ) : ViewModel() {
-
-    private val disposables = CompositeDisposable()
 
     /** Changed in place; [version] tells the chart when. */
     val lineData = LineData()
@@ -70,15 +68,9 @@ class ChartViewModel(
         cachedEvents.minOfOrNull { it.fetchTime }?.let { startMillis = minOf(startMillis, it) }
         cachedEvents.forEach { add(it.rates, it.sourceType, it.fetchTime) }
 
-        disposables.add(
-            ProvidersManager.ratesEventPublishSubject
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { event -> add(event.rates, event.sourceType, event.fetchTime) }
-        )
-    }
-
-    override fun onCleared() {
-        disposables.dispose()
+        viewModelScope.launch {
+            ProvidersManager.ratesEvents.collect { event -> add(event.rates, event.sourceType, event.fetchTime) }
+        }
     }
 
     private fun add(rates: List<BaseRate>, sourceType: Int, fetchTimeMillis: Long) {

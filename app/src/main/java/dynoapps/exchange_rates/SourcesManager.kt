@@ -10,13 +10,17 @@ import dynoapps.exchange_rates.interfaces.ValueType
 import dynoapps.exchange_rates.model.rates.IRate
 import dynoapps.exchange_rates.ui.compose.MultiChoiceDialog
 import dynoapps.exchange_rates.ui.compose.showComposeDialog
-import io.reactivex.rxjava3.subjects.PublishSubject
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 
 /** The rate sources the app knows about and which of them the user enabled. */
 object SourcesManager {
 
+    private val _sourceUpdates = MutableSharedFlow<Unit>(extraBufferCapacity = 8)
+
     /** Emits whenever the user changes the enabled sources. */
-    val sourceUpdates: PublishSubject<Boolean> = PublishSubject.create()
+    val sourceUpdates: SharedFlow<Unit> = _sourceUpdates.asSharedFlow()
 
     private val sources: List<CurrencySource> by lazy { createSources() }
 
@@ -51,7 +55,7 @@ object SourcesManager {
                         Toast.makeText(activity, R.string.select_at_least_one_source, Toast.LENGTH_SHORT).show()
                     } else {
                         sources.forEachIndexed { index, source -> source.isEnabled = checked[index] }
-                        sourceUpdates.onNext(true)
+                        _sourceUpdates.tryEmit(Unit)
                         saveSources()
                         dismiss()
                     }

@@ -6,8 +6,10 @@ import dynoapps.exchange_rates.Prefs
 import dynoapps.exchange_rates.R
 import dynoapps.exchange_rates.ui.compose.SingleChoiceDialog
 import dynoapps.exchange_rates.ui.compose.showComposeDialog
-import io.reactivex.rxjava3.subjects.PublishSubject
 import java.util.concurrent.TimeUnit
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 
 /**
  * The polling interval: the one the user picked while the UI is visible, and a slower one (at
@@ -33,11 +35,14 @@ object TimeIntervalManager {
 
     private var isAlarmMode = false
 
+    // Like the RxJava PublishSubject it replaces: no replay, and nothing is kept without collectors.
+    private val _intervalUpdates = MutableSharedFlow<Boolean>(extraBufferCapacity = 8)
+
     /**
      * Emits when the polling interval should be re-applied. The value is true when providers
      * should fetch immediately.
      */
-    val intervalUpdates: PublishSubject<Boolean> = PublishSubject.create()
+    val intervalUpdates: SharedFlow<Boolean> = _intervalUpdates.asSharedFlow()
 
     fun setAlarmMode(enabled: Boolean) {
         isAlarmMode = enabled
@@ -45,7 +50,7 @@ object TimeIntervalManager {
     }
 
     fun updateIntervalsToUIMode() {
-        intervalUpdates.onNext(true)
+        _intervalUpdates.tryEmit(true)
     }
 
     fun getSelectionStr(): String = intervals[getSelectedIndex()].toString()
@@ -61,7 +66,7 @@ object TimeIntervalManager {
                 onConfirm = { selected ->
                     if (selected != getSelectedIndex()) {
                         updateUserIntervalSelection(selected)
-                        intervalUpdates.onNext(false)
+                        _intervalUpdates.tryEmit(false)
                     }
                     dismiss()
                 },
