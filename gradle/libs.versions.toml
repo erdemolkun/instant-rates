@@ -1,6 +1,6 @@
 [versions]
-agp = "8.11.1"
-kotlin = "2.2.21"
+agp = "9.5.1"
+ksp = "2.3.13"
 versionsPlugin = "0.52.0"
 
 compileSdk = "36"
@@ -59,6 +59,5 @@ androidx-test-ext-junit = { module = "androidx.test.ext:junit-ktx", version.ref 
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 versions = { id = "com.github.ben-manes.versions", version.ref = "versionsPlugin" }

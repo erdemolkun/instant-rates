@@ -20,7 +20,7 @@ class Alarm : Serializable {
 
     @ColumnInfo(name = "value")
     @JvmField
-    var `val`: Float? = null
+    var value: Float? = null
 
     @ColumnInfo(name = "is_above")
     @JvmField
@@ -50,7 +50,7 @@ class Alarm : Serializable {
 
         @JvmField
         val COMPARATOR: Comparator<Alarm> = compareBy<Alarm>({ it.sourceType }, { it.rateType })
-            .thenBy { it.`val` ?: 0f }
+            .thenBy { it.value ?: 0f }
 
         fun getPushId(alarm: Alarm): Int = alarm.rateType * 100 + alarm.sourceType
     }

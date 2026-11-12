@@ -106,7 +106,7 @@ object ProvidersManager {
         val repository = App.getInstance().provideAlarmsRepository()
         for (alarm in alarms) {
             if (alarm.sourceType != sourceType || !alarm.isEnabled) continue
-            val alarmValue = alarm.`val` ?: continue
+            val alarmValue = alarm.value ?: continue
             val current = RateUtils.getRate(rates, alarm.rateType) ?: continue
             val old = RateUtils.getRate(previousEvent.rates, alarm.rateType) ?: continue
 

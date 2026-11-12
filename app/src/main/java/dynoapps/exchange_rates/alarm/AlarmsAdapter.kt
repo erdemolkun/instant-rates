@@ -53,7 +53,7 @@ internal class AlarmsAdapter(
             )
         )
         holder.tvTypeHint.setText(if (alarm.isAbove) R.string.if_above else R.string.if_below)
-        holder.tvValue.text = RateUtils.valueToUI(alarm.`val`, alarm.rateType)
+        holder.tvValue.text = RateUtils.valueToUI(alarm.value, alarm.rateType)
         holder.ivRateType.setImageResource(RateUtils.getRateIcon(alarm.rateType))
 
         val source = SourcesManager.getSource(alarm.sourceType)

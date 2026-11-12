@@ -101,7 +101,7 @@ object AlarmManager {
                     return@setOnClickListener
                 }
                 val alarm = Alarm().apply {
-                    `val` = value
+                    this.value = value
                     isAbove = rgAlarm.checkedRadioButtonId == R.id.rb_above
                     this.sourceType = source.type
                     this.rateType = pair.rateType

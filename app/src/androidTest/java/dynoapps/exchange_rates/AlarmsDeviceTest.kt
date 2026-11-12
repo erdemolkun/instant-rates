@@ -33,7 +33,7 @@ class AlarmsDeviceTest {
         alarm.id = dao.insert(alarm).blockingGet()
 
         val stored = dao.list().blockingGet().single { it.id == alarm.id }
-        assertEquals(alarm.`val`, stored.`val`)
+        assertEquals(alarm.value, stored.value)
         assertEquals(alarm.isAbove, stored.isAbove)
         assertEquals(alarm.sourceType, stored.sourceType)
         assertEquals(alarm.rateType, stored.rateType)
@@ -75,7 +75,7 @@ class AlarmsDeviceTest {
 
     /** An alarm that never fires: USD/TRY below 1 on Altın.in, a source enabled by default. */
     private fun testAlarm() = Alarm().apply {
-        `val` = 1f
+        value = 1f
         isAbove = false
         sourceType = CurrencyType.ALTININ
         rateType = IRate.USD
