@@ -21,7 +21,7 @@ swiperefreshlayout = "1.2.0"
 
 jsoup = "1.24.1"
 leakcanary = "2.14"
-mpandroidchart = "v3.1.0"
+mpandroidchart = "v4.0.1"
 okhttp = "5.5.1"
 retrofit = "3.0.0"
 rxandroid = "3.0.2"
@@ -53,7 +53,7 @@ material = { module = "com.google.android.material:material", version.ref = "mat
 
 jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoup" }
 leakcanary = { module = "com.squareup.leakcanary:leakcanary-android", version.ref = "leakcanary" }
-mpandroidchart = { module = "com.github.PhilJay:MPAndroidChart", version.ref = "mpandroidchart" }
+mpandroidchart = { module = "com.github.PhilJay.MPAndroidChart:MPChartLib", version.ref = "mpandroidchart" }
 okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 retrofit-adapter-rxjava3 = { module = "com.squareup.retrofit2:adapter-rxjava3", version.ref = "retrofit" }

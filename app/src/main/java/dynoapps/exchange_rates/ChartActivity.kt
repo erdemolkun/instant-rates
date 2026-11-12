@@ -18,7 +18,7 @@ import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
-import com.github.mikephil.charting.formatter.ValueFormatter
+import com.github.mikephil.charting.formatter.IAxisValueFormatter
 import com.github.mikephil.charting.highlight.Highlight
 import dynoapps.exchange_rates.data.RatesHolder
 import dynoapps.exchange_rates.model.rates.AvgRate
@@ -43,6 +43,9 @@ import kotlin.math.abs
 class ChartActivity : BaseActivity() {
 
     private lateinit var lineChart: LineChart
+
+    /** The chart's data: one data set per average source, two (sell, buy) per buy/sell source. */
+    private val lineData = LineData()
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private val hourFormatter = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
     private val compositeDisposable = CompositeDisposable()
@@ -123,37 +126,34 @@ class ChartActivity : BaseActivity() {
 
     private fun initChart() {
         lineChart.description.isEnabled = false
-        lineChart.data = LineData()
-        lineChart.xAxis.setDrawGridLines(false)
-        lineChart.axisRight.setDrawGridLines(true)
-        lineChart.xAxis.setLabelCount(4)
+        lineChart.data = lineData
+        lineChart.xAxis.isDrawGridLinesEnabled = false
+        lineChart.axisRight.isDrawGridLinesEnabled = true
+        lineChart.xAxis.labelCount = 4
         lineChart.axisLeft.isEnabled = false
-        lineChart.xAxis.valueFormatter = object : ValueFormatter() {
-            override fun getFormattedValue(value: Float): String {
-                val offset = value.toInt()
-                if (offset <= 0) return ""
+        lineChart.xAxis.valueFormatter = IAxisValueFormatter { value, _ ->
+            val offset = value.toInt()
+            if (offset <= 0) {
+                ""
+            } else {
                 val calendar = Calendar.getInstance()
                 calendar.add(Calendar.MILLISECOND, offset)
-                return hourFormatter.format(calendar.time)
+                hourFormatter.format(calendar.time)
             }
         }
-        lineChart.axisRight.valueFormatter = object : ValueFormatter() {
-            override fun getFormattedValue(value: Float): String = RateUtils.valueToUI(value, rateType)
-        }
-        lineChart.setScaleEnabled(false)
+        lineChart.axisRight.valueFormatter = IAxisValueFormatter { value, _ -> RateUtils.valueToUI(value, rateType) }
+        lineChart.isScaleEnabled = false
         lineChart.extraBottomOffset = 12f
         lineChart.extraTopOffset = 12f
-        lineChart.setPinchZoom(false)
+        lineChart.isPinchZoomEnabled = false
 
-        // One data set per average source and two (sell, buy) per buy/sell source, in the order
-        // of CurrencySource.chartIndex.
-        val data = lineChart.data
+        // Data sets are added in the order of CurrencySource.chartIndex.
         for (source in SourcesManager.getCurrencySources()) {
             if (SourcesManager.isAvgType(source.type)) {
-                data.addDataSet(createDataSet(source.color, source.name))
+                lineData.addDataSet(createDataSet(source.color, source.name))
             } else {
-                data.addDataSet(createDataSet(source.color, source.name + " " + getString(R.string.sell)))
-                data.addDataSet(createDataSet(source.color, source.name + " " + getString(R.string.buy)))
+                lineData.addDataSet(createDataSet(source.color, source.name + " " + getString(R.string.sell)))
+                lineData.addDataSet(createDataSet(source.color, source.name + " " + getString(R.string.buy)))
             }
         }
 
@@ -172,7 +172,7 @@ class ChartActivity : BaseActivity() {
         lineChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
         lineChart.xAxis.textColor = chartTextColor
         lineChart.axisRight.textColor = chartTextColor
-        lineChart.invalidate()
+        lineChart.notifyDataSetChanged()
     }
 
     private fun update(rates: List<BaseRate>, sourceType: Int, fetchTimeMillis: Long) {
@@ -225,12 +225,10 @@ class ChartActivity : BaseActivity() {
     }
 
     private fun clearChart() {
-        val data = lineChart.data
-        for (i in 0 until data.dataSetCount) {
-            data.getDataSetByIndex(i).clear()
+        for (i in 0 until lineData.dataSetCount) {
+            lineData.getDataSetByIndex(i)?.clear()
         }
         lineChart.xAxis.resetAxisMaximum()
-        lineChart.invalidate()
         lineChart.notifyDataSetChanged()
         startMillis = System.currentTimeMillis()
         lineChart.moveViewToX(0f)
@@ -239,41 +237,39 @@ class ChartActivity : BaseActivity() {
     private fun addEntry(value: Float, chartIndex: Int, millis: Long) {
         // Values this small are parse errors, not rates.
         if (value < THRESHOLD_ERROR_USD_TRY) return
-        val data = lineChart.data
+        val dataSet = lineData.getDataSetByIndex(chartIndex) ?: return
         val newX = (millis - startMillis).toFloat()
-        data.addEntry(Entry(newX, value), chartIndex)
-        data.notifyDataChanged()
+        lineData.addEntry(Entry(newX, value), chartIndex)
 
-        val dataSet = data.getDataSetByIndex(chartIndex)
         if (abs(dataSet.xMin - dataSet.xMax) > visibleTimeInMillis * 3 && dataSet.entryCount > DATA_COUNT) {
             dataSet.removeEntry(0)
         }
 
+        // Refreshes the data and redraws.
         lineChart.notifyDataSetChanged()
         lineChart.setVisibleXRangeMaximum(visibleTimeInMillis.toFloat())
         when {
             lineChart.xAxis.axisMaximum <= newX -> lineChart.moveViewToX(newX)
             lineChart.visibleXRange < newX -> lineChart.moveViewToX(newX + lineChart.visibleXRange)
-            else -> lineChart.invalidate()
         }
     }
 
-    private fun createDataSet(@ColorInt color: Int, name: String): LineDataSet =
-        LineDataSet(null, name).apply {
+    private fun createDataSet(@ColorInt color: Int, name: String): LineDataSet<Nothing?> =
+        LineDataSet(mutableListOf<Entry<Nothing?>>(), name).apply {
             cubicIntensity = 0.1f
-            setDrawCircleHole(false)
-            setCircleColor(color)
+            isDrawCircleHoleEnabled = false
+            circleColor = color
             lineWidth = 2f
             circleRadius = 2.5f
-            setDrawCircles(true)
-            highLightColor = Color.rgb(155, 155, 155)
+            isDrawCirclesEnabled = true
+            highlightColor = Color.rgb(155, 155, 155)
             axisDependency = YAxis.AxisDependency.LEFT
             this.color = color
             fillAlpha = (256 * 0.3f).toInt()
             fillColor = color
             valueTextColor = color
             valueTextSize = 16f
-            setDrawValues(false)
+            isDrawValuesEnabled = false
         }
 
     @SuppressLint("ViewConstructor")
@@ -282,8 +278,8 @@ class ChartActivity : BaseActivity() {
 
         private val tvMarker: TextView = findViewById(R.id.tv_marker)
 
-        override fun refreshContent(e: Entry?, highlight: Highlight?) {
-            tvMarker.text = e?.let { RateUtils.valueToUI(it.y, rateType) }.orEmpty()
+        override fun refreshContent(e: Entry<*>, highlight: Highlight) {
+            tvMarker.text = RateUtils.valueToUI(e.y, rateType)
             super.refreshContent(e, highlight)
         }
     }

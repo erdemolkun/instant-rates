@@ -13,7 +13,7 @@ dependencyResolutionManagement {
         mavenCentral()
         maven {
             url = uri("https://jitpack.io")
-            content { includeGroup("com.github.PhilJay") }
+            content { includeGroup("com.github.PhilJay.MPAndroidChart") }
         }
     }
 }
