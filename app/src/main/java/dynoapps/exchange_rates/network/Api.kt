@@ -24,7 +24,7 @@ object Api {
     }
 
     val bigparaService: BigparaService by lazy {
-        create("http://www.bigpara.com/", BigparaConverter)
+        create("https://api-bigpara.hurriyet.com.tr/", BigparaConverter)
     }
 
     val bloombergService: BloombergService by lazy {

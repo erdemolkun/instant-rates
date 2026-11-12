@@ -1,6 +1,6 @@
 # Plan: fix the Bigpara, Yapı Kredi and Bloomberg HT parsers
 
-Status: proposal · Researched 2026-11-12
+Status: Bigpara fixed; Yapı Kredi and Bloomberg HT pending · Researched 2026-11-12
 
 Three of the app's four rate sources return nothing. Altın.in is the only one that works. This
 document describes why each one fails today and plans a fix for each. It also covers changes shared
@@ -52,7 +52,12 @@ browser user agent or cookies are needed today.
    mapped Alış → `valueSell`. **Decision needed:** map Alış → `valueBuy` for every source (my
    recommendation, matching how the sites label it), unless the Yapı Kredi swap was intentional.
 
-## Bigpara
+## Bigpara — done
+
+> Implemented: `BigparaConverter` reads the JSON API (fixture test in `BigparaConverterTest`), the
+> cleartext exception is gone, and `org.json` is a test dependency (shared step 3). Shared step 1 is
+> applied to Bigpara only: its converter throws when nothing is recognised. Step 5 (more rates) is
+> still open; the provider requests `USDTRY` only. Probe: `Bigpara OK USD=50.2516/50.2639`.
 
 **Findings**
 

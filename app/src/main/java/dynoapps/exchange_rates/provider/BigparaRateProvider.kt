@@ -10,5 +10,11 @@ class BigparaRateProvider(onResult: (List<BigparaRate>, Int) -> Unit) :
 
     override val sourceType: Int = CurrencyType.BIGPARA
 
-    override fun getObservable(): Observable<List<BigparaRate>> = Api.bigparaService.rates()
+    override fun getObservable(): Observable<List<BigparaRate>> = Api.bigparaService.rates(SYMBOLS)
+
+    private companion object {
+        // Only the rates Bigpara is listed for in SourcesManager. The converter also knows EURTRY,
+        // EURUSD, XAUUSD and GLDGR.
+        const val SYMBOLS = "USDTRY"
+    }
 }

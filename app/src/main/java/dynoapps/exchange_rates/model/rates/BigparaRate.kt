@@ -1,15 +1,19 @@
 package dynoapps.exchange_rates.model.rates
 
+/** A Bigpara rate. [type] is the API's symbol code, such as "USDTRY". */
 class BigparaRate : BuySellRate() {
 
     override fun toRateType() {
-        val plainType = type.orEmpty().lowercase()
-        rateType = when {
-            plainType.contains("dolar") -> IRate.USD
-            plainType.contains("euro") -> IRate.EUR
-            plainType.contains("altın") -> IRate.ONS_TRY
-            plainType.contains("parite") -> IRate.EUR_USD
+        rateType = when (type) {
+            "USDTRY" -> IRate.USD
+            "EURTRY" -> IRate.EUR
+            "EURUSD" -> IRate.EUR_USD
+            "XAUUSD" -> IRate.ONS
+            "GLDGR" -> IRate.ONS_TRY
             else -> IRate.UNKNOWN
         }
     }
+
+    /** The API returns numbers, which the converter stores directly; there is no text to parse. */
+    override fun setRealValues() = Unit
 }

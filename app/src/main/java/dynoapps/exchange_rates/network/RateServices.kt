@@ -9,9 +9,9 @@ import retrofit2.http.Headers
 import retrofit2.http.Query
 
 interface BigparaService {
-    @Headers("Content-Type:text/html; charset=utf-8")
-    @GET("doviz/dolar/")
-    fun rates(): Observable<List<BigparaRate>>
+    /** [symbols] is a comma-separated list of Bigpara symbol codes, such as "USDTRY,EURTRY". */
+    @GET("api/trade/current")
+    fun rates(@Query("Symbols") symbols: String): Observable<List<BigparaRate>>
 }
 
 interface BloombergService {

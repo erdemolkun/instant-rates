@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  Cleartext HTTP is only allowed for Bigpara, the one rate source still fetched over HTTP.
-  Everything else must use TLS.
--->
+<!-- Every rate source uses TLS; cleartext HTTP is not allowed. -->
 <network-security-config>
     <base-config cleartextTrafficPermitted="false" />
-    <domain-config cleartextTrafficPermitted="true">
-        <domain includeSubdomains="true">bigpara.com</domain>
-    </domain-config>
 </network-security-config>

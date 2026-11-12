@@ -190,6 +190,8 @@ dependencies {
     debugImplementation(libs.leakcanary)
 
     testImplementation(libs.junit)
+    // org.json ships with Android; JVM unit tests need a real implementation of it.
+    testImplementation(libs.org.json)
 
     androidTestImplementation(libs.androidx.test.runner)
     androidTestImplementation(libs.androidx.test.core)
