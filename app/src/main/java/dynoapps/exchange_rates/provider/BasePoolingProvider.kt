@@ -7,13 +7,13 @@ import dynoapps.exchange_rates.App
 import dynoapps.exchange_rates.SourcesManager
 import dynoapps.exchange_rates.model.rates.BaseRate
 import dynoapps.exchange_rates.time.TimeIntervalManager
-import dynoapps.exchange_rates.util.L
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.math.ln
+import timber.log.Timber
 
 /**
  * Polls one rate source on the main looper at the interval chosen in [TimeIntervalManager] and
@@ -36,6 +36,7 @@ abstract class BasePoolingProvider<T : BaseRate>(
     /** True between [start] and [stop]. */
     private val isStarted = AtomicBoolean(false)
 
+    /** Log tag: the concrete provider's class name. */
     private val tag: String = javaClass.simpleName
 
     protected abstract fun getObservable(): Observable<List<T>>
@@ -57,13 +58,13 @@ abstract class BasePoolingProvider<T : BaseRate>(
 
     override fun start() {
         if (!isEnabled || isWorking.get() || isStarted.get()) return
-        L.i(TAG, "$tag Started")
+        Timber.tag(tag).i("Started")
         postWork(0)
         isStarted.set(true)
     }
 
     override fun stop() {
-        L.i(TAG, "$tag Stopped")
+        Timber.tag(tag).i("Stopped")
         cancelWorks()
         isStarted.set(false)
     }
@@ -95,7 +96,7 @@ abstract class BasePoolingProvider<T : BaseRate>(
     private fun postWork(delayMillis: Long) {
         isWorking.set(true)
         handler.postDelayed(fetchRunnable, delayMillis)
-        L.i(TAG, "- postWork : $delayMillis ms - $tag")
+        Timber.tag(tag).i("postWork: $delayMillis ms")
     }
 
     private fun notifyValue(rates: List<T>) {
@@ -122,14 +123,13 @@ abstract class BasePoolingProvider<T : BaseRate>(
                     if (!singleRun) fetchAgain(wasError = false)
                 }, { throwable ->
                     errorCount++
-                    L.e(TAG, "$tag fetch failed: $throwable")
+                    Timber.tag(tag).e("Fetch failed: $throwable")
                     if (!singleRun) fetchAgain(wasError = true)
                 })
         )
     }
 
     companion object {
-        private const val TAG = "BasePoolingProvider"
         private const val NEXT_FETCH_ON_ERROR = 4000L
         private const val MAX_FETCH_ON_ERROR = 60000L
 

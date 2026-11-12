@@ -12,9 +12,9 @@ import dynoapps.exchange_rates.LandingActivity
 import dynoapps.exchange_rates.ProvidersManager
 import dynoapps.exchange_rates.R
 import dynoapps.exchange_rates.notification.NotificationHelper
-import dynoapps.exchange_rates.util.L
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
+import timber.log.Timber
 
 /**
  * Foreground service that keeps the rate providers polling while the UI is closed so that price
@@ -28,7 +28,7 @@ class RatePollingService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        L.i(TAG, "Service onCreate")
+        Timber.tag(TAG).i("onCreate")
         compositeDisposable.add(
             ServiceStopActionReceiver.stopSubject
                 .observeOn(AndroidSchedulers.mainThread())
@@ -45,12 +45,12 @@ class RatePollingService : Service() {
 
     /** Called on Android 15+ once the daily time limit for dataSync foreground services is used up. */
     override fun onTimeout(startId: Int, fgsType: Int) {
-        L.i(TAG, "Foreground service timed out")
+        Timber.tag(TAG).i("Foreground service timed out")
         stopPolling()
     }
 
     override fun onDestroy() {
-        L.i(TAG, "onDestroy")
+        Timber.tag(TAG).i("onDestroy")
         ServiceCompat.stopForeground(this, ServiceCompat.STOP_FOREGROUND_REMOVE)
         compositeDisposable.clear()
         super.onDestroy()

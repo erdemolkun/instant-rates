@@ -7,9 +7,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import dynoapps.exchange_rates.SourcesManager
-import dynoapps.exchange_rates.util.L
 import dynoapps.exchange_rates.util.RateUtils
 import io.reactivex.rxjava3.schedulers.Schedulers
+import timber.log.Timber
 
 /** One alarm as the alarms screen shows it. */
 data class AlarmItemState(
@@ -60,14 +60,14 @@ class AlarmsViewModel(private val repository: AlarmsRepository) : ViewModel() {
         alarms = alarms.toList()
         // Not disposed with the screen, so leaving right away doesn't cancel the write.
         repository.updateAlarm(alarm).subscribeOn(Schedulers.io())
-            .subscribe({ }, { L.ex(it, "Updating alarm failed") })
+            .subscribe({ }, { Timber.tag(TAG).e(it, "Updating alarm failed") })
     }
 
     fun deleteAlarm(id: Long) {
         val alarm = alarms.firstOrNull { it.id == id } ?: return
         alarms = alarms - alarm
         repository.deleteAlarm(alarm).subscribeOn(Schedulers.io())
-            .subscribe({ }, { L.ex(it, "Deleting alarm failed") })
+            .subscribe({ }, { Timber.tag(TAG).e(it, "Deleting alarm failed") })
     }
 
     private fun toItemState(alarm: Alarm): AlarmItemState {
@@ -81,5 +81,9 @@ class AlarmsViewModel(private val repository: AlarmsRepository) : ViewModel() {
             sourceColor = source?.color,
             isEnabled = alarm.isEnabled,
         )
+    }
+
+    private companion object {
+        const val TAG = "AlarmsViewModel"
     }
 }

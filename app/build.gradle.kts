@@ -176,6 +176,8 @@ dependencies {
     implementation(libs.rxjava)
     implementation(libs.rxandroid)
 
+    implementation(libs.timber)
+
     implementation(libs.jsoup)
     implementation(libs.mpandroidchart)
     implementation(libs.mpandroidchart.compose)

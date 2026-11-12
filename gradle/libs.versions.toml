@@ -21,6 +21,7 @@ okhttp = "5.5.1"
 retrofit = "3.0.0"
 rxandroid = "3.0.2"
 rxjava = "3.1.12"
+timber = "5.0.1"
 
 junit = "4.13.2"
 orgJson = "20260814"
@@ -52,6 +53,7 @@ retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit
 retrofit-adapter-rxjava3 = { module = "com.squareup.retrofit2:adapter-rxjava3", version.ref = "retrofit" }
 rxandroid = { module = "io.reactivex.rxjava3:rxandroid", version.ref = "rxandroid" }
 rxjava = { module = "io.reactivex.rxjava3:rxjava", version.ref = "rxjava" }
+timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 
 junit = { module = "junit:junit", version.ref = "junit" }
 org-json = { module = "org.json:json", version.ref = "orgJson" }

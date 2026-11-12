@@ -3,10 +3,10 @@ package dynoapps.exchange_rates.alarm
 import android.annotation.SuppressLint
 import android.content.Context
 import dynoapps.exchange_rates.AppDatabase
-import dynoapps.exchange_rates.util.L
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
+import timber.log.Timber
 
 class LocalAlarmsDataSource(context: Context) : AlarmsDataSource {
 
@@ -18,7 +18,7 @@ class LocalAlarmsDataSource(context: Context) : AlarmsDataSource {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ alarms -> callback(alarms) }, { throwable ->
-                L.ex(throwable, "Loading alarms failed")
+                Timber.tag(TAG).e(throwable, "Loading alarms failed")
                 callback(emptyList())
             })
     }
@@ -31,7 +31,7 @@ class LocalAlarmsDataSource(context: Context) : AlarmsDataSource {
             .subscribe({ id ->
                 alarm.id = id
                 callback?.invoke(alarm)
-            }, { throwable -> L.ex(throwable, "Saving alarm failed") })
+            }, { throwable -> Timber.tag(TAG).e(throwable, "Saving alarm failed") })
     }
 
     override fun deleteAlarm(alarm: Alarm): Single<Alarm> = alarmDao.deleteById(alarm.id).map { alarm }
@@ -40,5 +40,9 @@ class LocalAlarmsDataSource(context: Context) : AlarmsDataSource {
 
     override fun refreshAlarms() {
         // Not required: AlarmsRepository decides when to reload from this data source.
+    }
+
+    private companion object {
+        const val TAG = "LocalAlarmsDataSource"
     }
 }

@@ -8,7 +8,7 @@ import android.os.Bundle
 import androidx.core.content.ContextCompat
 import dynoapps.exchange_rates.service.RatePollingService
 import dynoapps.exchange_rates.time.TimeIntervalManager
-import dynoapps.exchange_rates.util.L
+import timber.log.Timber
 
 /**
  * Tracks whether any activity of the app is visible and switches rate polling between UI mode and
@@ -55,7 +55,7 @@ internal class AppVisibilityTracker : Application.ActivityLifecycleCallbacks {
         } catch (e: IllegalStateException) {
             // ForegroundServiceStartNotAllowedException on Android 12+ if the system no longer
             // considers the app as leaving a visible state. Alarms then only fire while open.
-            L.ex(e, TAG)
+            Timber.tag(TAG).e(e, "Starting the polling service failed")
             ProvidersManager.stopAll()
         }
     }

@@ -16,16 +16,17 @@ import dynoapps.exchange_rates.provider.YapıKrediRateProvider
 import dynoapps.exchange_rates.provider.YorumlarRateProvider
 import dynoapps.exchange_rates.time.TimeIntervalManager
 import dynoapps.exchange_rates.util.Formatter
-import dynoapps.exchange_rates.util.L
 import dynoapps.exchange_rates.util.RateUtils
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.PublishSubject
+import timber.log.Timber
 
 /** Owns the rate providers, publishes their results and fires price alarms. */
 object ProvidersManager {
     private const val TAG = "ProvidersManager"
+
 
     private val formatter2 = Formatter(3, 0)
     private val formatter5 = Formatter(5, 1)
@@ -51,7 +52,7 @@ object ProvidersManager {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ isImmediate ->
                 pollingSources?.forEach { it.refreshIntervals(isImmediate) }
-            }, { th -> L.e(TAG, th.localizedMessage) })
+            }, { th -> Timber.tag(TAG).e(th, "Interval updates failed") })
 
     private fun init() {
         if (pollingSources != null) return
@@ -79,7 +80,7 @@ object ProvidersManager {
     }
 
     fun stopAll() {
-        L.i(TAG, "stopAll")
+        Timber.tag(TAG).i("stopAll")
         pollingSources?.forEach { it.stop() }
     }
 
@@ -120,7 +121,7 @@ object ProvidersManager {
             repository.deleteAlarm(alarm)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ }, { th -> L.e(TAG, "Deleting alarm failed: $th") })
+                .subscribe({ }, { th -> Timber.tag(TAG).e(th, "Deleting alarm failed") })
 
             val formattedValue = if (alarm.rateType == IRate.ONS) {
                 formatter2.format(alarmValue)
