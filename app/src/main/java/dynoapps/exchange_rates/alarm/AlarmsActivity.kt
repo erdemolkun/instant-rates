@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.widget.TextView
 import androidx.appcompat.widget.SwitchCompat
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -11,7 +12,6 @@ import dynoapps.exchange_rates.App
 import dynoapps.exchange_rates.BaseActivity
 import dynoapps.exchange_rates.R
 import dynoapps.exchange_rates.ui.SlideInItemAnimator
-import dynoapps.exchange_rates.util.ViewUtils
 
 class AlarmsActivity : BaseActivity() {
 
@@ -53,7 +53,7 @@ class AlarmsActivity : BaseActivity() {
     }
 
     private fun updateEmptyState() {
-        ViewUtils.visibility(tvNoAlarm, adapter.itemCount <= 0)
+        tvNoAlarm.isVisible = adapter.itemCount <= 0
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

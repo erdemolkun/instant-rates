@@ -18,6 +18,8 @@
     <string name="sell">Satış</string>
     <string name="buy">Alış</string>
     <string name="select_at_least_one_source">En az bir kaynak seçmelisiniz</string>
+    <string name="no_provider_found">Desteklenen kaynak bulunamadı, değiştirmek için %1$s simgesine tıklayın</string>
+    <string name="no_provider_found_settings">Ayarlar</string>
     <string name="remove">Kaldır</string>
     <string name="remove_source_approve">Seçili kaynağı kaldır?</string>
     <string name="interval_hint"> • Veri yenileme sıklığı <b>%s</b></string>

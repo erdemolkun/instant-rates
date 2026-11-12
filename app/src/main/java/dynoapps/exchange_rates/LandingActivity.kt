@@ -7,6 +7,13 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.TextPaint
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
+import android.text.style.DynamicDrawableSpan
+import android.text.style.ImageSpan
 import android.transition.TransitionManager
 import android.view.LayoutInflater
 import android.view.Menu
@@ -15,7 +22,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.IdRes
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
+import androidx.core.view.isVisible
+import androidx.core.view.marginEnd
+import androidx.core.view.marginStart
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.interpolator.view.animation.LinearOutSlowInInterpolator
 import com.google.android.material.bottomappbar.BottomAppBar
@@ -102,13 +115,16 @@ class LandingActivity : BaseServiceActivity() {
         else -> false
     }
 
-    /** Shows the cards of enabled sources, adding cards for newly enabled ones. */
+    /**
+     * Shows the cards of enabled sources, adding cards for newly enabled ones, and a "no provider
+     * found" label in rows that no enabled source provides.
+     */
     private fun refreshCardItemViews() {
         for (source in SourcesManager.getCurrencySources()) {
             for (parent in parentItems) {
                 TransitionManager.beginDelayedTransition(parent.container)
                 val cards = parent.items.filter { it.sourceType == source.type }
-                cards.forEach { it.card.visibility = if (source.isEnabled) View.VISIBLE else View.GONE }
+                cards.forEach { it.card.isVisible = source.isEnabled }
                 if (cards.isEmpty() && source.isEnabled && source.isRateSupported(parent.rateType)) {
                     if (SourcesManager.isAvgType(source.type)) {
                         addCardToParent(parent, ValueType.AVG, source.type)
@@ -118,6 +134,9 @@ class LandingActivity : BaseServiceActivity() {
                     }
                 }
             }
+        }
+        for (parent in parentItems) {
+            parent.noProviderView.isVisible = parent.items.none { it.card.isVisible }
         }
     }
 
@@ -144,11 +163,80 @@ class LandingActivity : BaseServiceActivity() {
     }
 
     private fun setUpRateCardViews() {
-        parentItems += CardViewItemParent(findViewById(R.id.v_card_holder_usd), IRate.USD)
-        parentItems += CardViewItemParent(findViewById(R.id.v_card_holder_eur), IRate.EUR)
-        parentItems += CardViewItemParent(findViewById(R.id.v_card_holder_parity), IRate.EUR_USD)
-        parentItems += CardViewItemParent(findViewById(R.id.v_card_holder_ons), IRate.ONS)
-        parentItems += CardViewItemParent(findViewById(R.id.v_card_holder_ons_try), IRate.ONS_TRY)
+        parentItems += createParent(R.id.v_card_holder_usd, IRate.USD)
+        parentItems += createParent(R.id.v_card_holder_eur, IRate.EUR)
+        parentItems += createParent(R.id.v_card_holder_parity, IRate.EUR_USD)
+        parentItems += createParent(R.id.v_card_holder_ons, IRate.ONS)
+        parentItems += createParent(R.id.v_card_holder_ons_try, IRate.ONS_TRY)
+    }
+
+    private fun createParent(@IdRes containerId: Int, @IRate.RateDef rateType: Int): CardViewItemParent {
+        val container: ViewGroup = findViewById(containerId)
+        val noProviderView =
+            LayoutInflater.from(this).inflate(R.layout.layout_no_provider, container, false) as TextView
+        setNoProviderText(noProviderView)
+        noProviderView.movementMethod = LinkMovementMethod.getInstance()
+        // Right after the row's icon; rate cards are appended after it.
+        container.addView(noProviderView, 1)
+        limitToVisibleWidth(noProviderView, container)
+        return CardViewItemParent(container, rateType, noProviderView)
+    }
+
+    /**
+     * "No supported provider found, click ⚙ to change", with the bottom bar's settings icon in the text.
+     * Clicking the icon opens the source selection. Screen readers read the word "Settings" instead.
+     */
+    private fun setNoProviderText(label: TextView) {
+        val template = getString(R.string.no_provider_found)
+        val start = template.indexOf(PLACEHOLDER)
+        label.contentDescription = template.replaceFirst(PLACEHOLDER, getString(R.string.no_provider_found_settings))
+        // Screen readers can't reach the icon link, so the label itself opens the source selection.
+        ViewCompat.replaceAccessibilityAction(
+            label,
+            AccessibilityNodeInfoCompat.AccessibilityActionCompat.ACTION_CLICK,
+            getString(R.string.select_sources),
+        ) { _, _ ->
+            SourcesManager.selectSources(this)
+            true
+        }
+        val icon = ContextCompat.getDrawable(this, R.drawable.ic_settings_white_24dp)?.mutate()
+        if (start < 0 || icon == null) {
+            label.text = label.contentDescription
+            return
+        }
+        val size = (label.textSize * 1.3f).toInt()
+        icon.setBounds(0, 0, size, size)
+        icon.setTint(label.currentTextColor)
+        val alignment = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            DynamicDrawableSpan.ALIGN_CENTER
+        } else {
+            DynamicDrawableSpan.ALIGN_BOTTOM
+        }
+        val settingsLink = object : ClickableSpan() {
+            override fun onClick(widget: View) = SourcesManager.selectSources(this@LandingActivity)
+
+            // The icon is the link; no underline or link colour.
+            override fun updateDrawState(ds: TextPaint) = Unit
+        }
+        label.text = SpannableString(template.replaceFirst(PLACEHOLDER, ICON_CHAR)).apply {
+            setSpan(ImageSpan(icon, alignment), start, start + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            setSpan(settingsLink, start, start + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
+    }
+
+    /**
+     * Rows scroll horizontally, so [label] would get unlimited width and run off the screen. Limits
+     * it to the row's visible width, updated when that changes (on rotation), so the text wraps.
+     */
+    private fun limitToVisibleWidth(label: TextView, container: ViewGroup) {
+        val scrollView = container.parent as View
+        scrollView.addOnLayoutChangeListener { _, left, _, right, _, _, _, _, _ ->
+            val icon = container.getChildAt(0)
+            val usedWidth = icon.right + icon.marginEnd + label.marginStart + label.marginEnd + container.paddingEnd
+            val maxWidth = (right - left - usedWidth).coerceAtLeast(0)
+            // Changing the width requests a layout, which can't happen during this one.
+            if (label.maxWidth != maxWidth) label.post { label.maxWidth = maxWidth }
+        }
     }
 
     private fun updateCards(rates: List<BaseRate>, sourceType: Int, animated: Boolean) {
@@ -205,8 +293,19 @@ class LandingActivity : BaseServiceActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
         handleMenuItem(item.itemId) || super.onOptionsItemSelected(item)
 
+    private companion object {
+        const val PLACEHOLDER = "%1\$s"
+
+        // Object replacement character: the place an ImageSpan draws its image.
+        const val ICON_CHAR = "\uFFFC"
+    }
+
     /** The card container for one rate type (USD, EUR, ...). */
-    private class CardViewItemParent(val container: ViewGroup, @IRate.RateDef val rateType: Int) {
+    private class CardViewItemParent(
+        val container: ViewGroup,
+        @IRate.RateDef val rateType: Int,
+        val noProviderView: View,
+    ) {
         val items = ArrayList<CardViewItem>()
     }
 
