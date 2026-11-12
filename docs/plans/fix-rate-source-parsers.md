@@ -1,6 +1,6 @@
 # Plan: fix the Bigpara, Yapı Kredi and Bloomberg HT parsers
 
-Status: Bigpara fixed; Yapı Kredi and Bloomberg HT pending · Researched 2026-11-12
+Status: Bigpara and Bloomberg HT fixed; Yapı Kredi pending · Researched 2026-11-12
 
 Three of the app's four rate sources return nothing. Altın.in is the only one that works. This
 document describes why each one fails today and plans a fix for each. It also covers changes shared
@@ -136,7 +136,18 @@ Polling it every 3–10 s is wasteful and could get the app rate-limited. Consid
 for this source (for example 60 s) in `BasePoolingProvider`. The bank's spread is about 1 TL, so
 `valueBuy` and `valueSell` differ visibly from the market sources. That's expected.
 
-## Bloomberg HT
+## Bloomberg HT — done
+
+> Implemented: `BloombergConverter` reads `/finance-slider-data` (fixture test in
+> `BloombergConverterTest`) and throws when nothing is recognised. `RateUtils.parseTurkish` (shared
+> step 2) now exists, but only Bloomberg uses it so far. Probe: `Bloomberg HT OK USD=50.2582,
+> EUR=55.9087, ONS=3950.86, EUR_USD=1.1099`.
+>
+> No lighter endpoint exists: the site's scripts only call `/finance-slider-data`, and live updates
+> go over a websocket on another host (`nc.domer.tr`). The data is also not real-time. Prices were
+> about 4 minutes old, and the response is cached (`cache-control: max-age=30`). At a 10 s interval
+> most fetches download the same ~100 KB again, which makes the slower minimum interval (risk
+> option 2 below) more worthwhile.
 
 **Findings**
 

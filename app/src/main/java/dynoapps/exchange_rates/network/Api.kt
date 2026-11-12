@@ -28,7 +28,7 @@ object Api {
     }
 
     val bloombergService: BloombergService by lazy {
-        create("https://www.bloomberght.com", BloombergConverter)
+        create("https://www.bloomberght.com/", BloombergConverter)
     }
 
     private inline fun <reified S> create(baseUrl: String, converter: Converter<okhttp3.ResponseBody, *>): S =

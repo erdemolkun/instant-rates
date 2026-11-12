@@ -25,6 +25,13 @@ object RateUtils {
         }
     }
 
+    /**
+     * Parses a Turkish-formatted number such as "3.946,41", where "." groups thousands and "," is the
+     * decimal separator. Returns null when [text] isn't a number.
+     */
+    fun parseTurkish(text: String?): Float? =
+        text?.trim()?.replace(".", "")?.replace(',', '.')?.toFloatOrNull()
+
     fun formatValue(value: Float, rateType: Int): String =
         if (rateType == IRate.ONS || rateType == IRate.ONS_TRY) {
             formatter2.format(value)

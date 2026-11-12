@@ -10,11 +10,5 @@ class BloombergRateProvider(onResult: (List<BloombergRate>, Int) -> Unit) :
 
     override val sourceType: Int = CurrencyType.BLOOMBERGHT
 
-    override fun getObservable(): Observable<List<BloombergRate>> =
-        Api.bloombergService.rates().map { rates ->
-            rates.onEach {
-                it.toRateType()
-                it.setRealValues()
-            }
-        }
+    override fun getObservable(): Observable<List<BloombergRate>> = Api.bloombergService.rates()
 }

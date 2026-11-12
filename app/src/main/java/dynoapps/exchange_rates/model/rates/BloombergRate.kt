@@ -1,21 +1,18 @@
 package dynoapps.exchange_rates.model.rates
 
+/** A Bloomberg HT rate. [type] is the site's slug, such as "dolar". */
 class BloombergRate : AvgRate() {
 
     override fun toRateType() {
         rateType = when (type) {
-            "USDTRY Curncy" -> IRate.USD
-            "EURTRY Curncy" -> IRate.EUR
-            "EURUSD Curncy" -> IRate.EUR_USD
-            "XAU Curncy" -> IRate.ONS
+            "dolar" -> IRate.USD
+            "euro" -> IRate.EUR
+            "eur-usd" -> IRate.EUR_USD
+            "altin-ons" -> IRate.ONS
             else -> IRate.UNKNOWN
         }
     }
 
-    override fun setRealValues() {
-        if (rateType == IRate.UNKNOWN) return
-        val value = avg_val.orEmpty().replace(".", "").replace(',', '.')
-        avg_val = value
-        val_real_avg = value.toFloat()
-    }
+    /** The converter parses the price itself, so it can skip items whose price is malformed. */
+    override fun setRealValues() = Unit
 }

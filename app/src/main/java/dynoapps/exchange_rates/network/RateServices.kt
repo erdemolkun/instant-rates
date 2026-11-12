@@ -15,8 +15,8 @@ interface BigparaService {
 }
 
 interface BloombergService {
-    @Headers("Content-Type:text/html; charset=utf-8")
-    @GET("/")
+    /** The JSON behind the site's market slider: USD, EUR, EUR/USD and gold, among others. */
+    @GET("finance-slider-data")
     fun rates(): Observable<List<BloombergRate>>
 }
 
