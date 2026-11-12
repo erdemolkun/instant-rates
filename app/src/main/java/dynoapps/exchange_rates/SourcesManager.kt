@@ -1,14 +1,15 @@
 package dynoapps.exchange_rates
 
-import android.app.Activity
 import android.widget.Toast
+import androidx.activity.ComponentActivity
 import androidx.annotation.ColorRes
-import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import dynoapps.exchange_rates.data.CurrencySource
 import dynoapps.exchange_rates.data.CurrencyType
 import dynoapps.exchange_rates.interfaces.ValueType
 import dynoapps.exchange_rates.model.rates.IRate
+import dynoapps.exchange_rates.ui.compose.MultiChoiceDialog
+import dynoapps.exchange_rates.ui.compose.showComposeDialog
 import io.reactivex.rxjava3.subjects.PublishSubject
 
 /** The rate sources the app knows about and which of them the user enabled. */
@@ -36,32 +37,28 @@ object SourcesManager {
 
     fun isAvgType(type: Int): Boolean = type == CurrencyType.ALTININ || type == CurrencyType.BLOOMBERGHT
 
-    fun selectSources(activity: Activity) {
-        val checked = BooleanArray(sources.size) { sources[it].isEnabled }
-        val names = Array(sources.size) { sources[it].name }
-
-        val dialog = AlertDialog.Builder(activity, R.style.AppTheme_Alert)
-            .setMultiChoiceItems(names, checked) { _, which, isChecked -> checked[which] = isChecked }
-            .setCancelable(true)
-            .setTitle(R.string.select_sources)
-            .setPositiveButton(R.string.apply, null)
-            .setNegativeButton(R.string.dismiss, null)
-            .create()
-        dialog.setOnShowListener {
-            // Handle the click ourselves so the dialog stays open when nothing is selected.
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
-                if (checked.none { it }) {
-                    Toast.makeText(activity, R.string.select_at_least_one_source, Toast.LENGTH_SHORT).show()
-                } else {
-                    sources.forEachIndexed { index, source -> source.isEnabled = checked[index] }
-                    sourceUpdates.onNext(true)
-                    saveSources()
-                    dialog.dismiss()
-                }
-            }
+    fun selectSources(activity: ComponentActivity) {
+        activity.showComposeDialog { dismiss ->
+            MultiChoiceDialog(
+                title = activity.getString(R.string.select_sources),
+                items = sources.map { it.name },
+                initialChecked = sources.map { it.isEnabled },
+                confirmText = activity.getString(R.string.apply),
+                dismissText = activity.getString(R.string.dismiss),
+                onConfirm = { checked ->
+                    // Keep the dialog open when nothing is selected.
+                    if (checked.none { it }) {
+                        Toast.makeText(activity, R.string.select_at_least_one_source, Toast.LENGTH_SHORT).show()
+                    } else {
+                        sources.forEachIndexed { index, source -> source.isEnabled = checked[index] }
+                        sourceUpdates.onNext(true)
+                        saveSources()
+                        dismiss()
+                    }
+                },
+                onDismiss = dismiss,
+            )
         }
-        dialog.window?.setWindowAnimations(R.style.DialogAnimationFade)
-        dialog.show()
     }
 
     private fun saveSources() {

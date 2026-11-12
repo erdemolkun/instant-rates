@@ -1,13 +1,15 @@
 [versions]
 agp = "9.5.1"
+kotlin = "2.4.21"
 ksp = "2.3.13"
 versionsPlugin = "0.52.0"
 
-compileSdk = "36"
+compileSdk = "37"
 targetSdk = "36"
 minSdk = "23"
 
 activity = "1.10.1"
+composeBom = "2026.09.00"
 annotation = "1.9.1"
 appcompat = "1.7.1"
 cardview = "1.0.0"
@@ -32,6 +34,11 @@ androidxTestExtJunit = "1.2.1"
 
 [libraries]
 androidx-activity = { module = "androidx.activity:activity", version.ref = "activity" }
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity" }
+androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
+androidx-compose-material3 = { module = "androidx.compose.material3:material3" }
+androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
+androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
 androidx-annotation = { module = "androidx.annotation:annotation", version.ref = "annotation" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 androidx-cardview = { module = "androidx.cardview:cardview", version.ref = "cardview" }
@@ -59,5 +66,6 @@ androidx-test-ext-junit = { module = "androidx.test.ext:junit-ktx", version.ref 
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 versions = { id = "com.github.ben-manes.versions", version.ref = "versionsPlugin" }

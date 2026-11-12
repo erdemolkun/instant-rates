@@ -1,10 +1,11 @@
 package dynoapps.exchange_rates.time
 
-import android.app.Activity
-import androidx.appcompat.app.AlertDialog
+import androidx.activity.ComponentActivity
 import dynoapps.exchange_rates.App
 import dynoapps.exchange_rates.Prefs
 import dynoapps.exchange_rates.R
+import dynoapps.exchange_rates.ui.compose.SingleChoiceDialog
+import dynoapps.exchange_rates.ui.compose.showComposeDialog
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.util.concurrent.TimeUnit
 
@@ -49,23 +50,24 @@ object TimeIntervalManager {
 
     fun getSelectionStr(): String = intervals[getSelectedIndex()].toString()
 
-    fun selectInterval(activity: Activity) {
-        var userSelectedIndex = getSelectedIndex()
-        val names = intervals.map { it.toString() }.toTypedArray()
-        val dialog = AlertDialog.Builder(activity, R.style.AppTheme_Alert)
-            .setSingleChoiceItems(names, userSelectedIndex) { _, which -> userSelectedIndex = which }
-            .setCancelable(true)
-            .setTitle(R.string.select_time_interval)
-            .setPositiveButton(R.string.apply) { _, _ ->
-                if (userSelectedIndex != getSelectedIndex()) {
-                    updateUserIntervalSelection(userSelectedIndex)
-                    intervalUpdates.onNext(false)
-                }
-            }
-            .setNegativeButton(R.string.dismiss, null)
-            .create()
-        dialog.window?.setWindowAnimations(R.style.DialogAnimationFade)
-        dialog.show()
+    fun selectInterval(activity: ComponentActivity) {
+        activity.showComposeDialog { dismiss ->
+            SingleChoiceDialog(
+                title = activity.getString(R.string.select_time_interval),
+                items = intervals.map { it.toString() },
+                initialSelection = getSelectedIndex(),
+                confirmText = activity.getString(R.string.apply),
+                dismissText = activity.getString(R.string.dismiss),
+                onConfirm = { selected ->
+                    if (selected != getSelectedIndex()) {
+                        updateUserIntervalSelection(selected)
+                        intervalUpdates.onNext(false)
+                    }
+                    dismiss()
+                },
+                onDismiss = dismiss,
+            )
+        }
     }
 
     private fun selectedIndexFromPrefs(): Int {

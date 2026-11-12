@@ -8,7 +8,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
 import androidx.annotation.ColorInt
-import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.github.mikephil.charting.charts.LineChart
@@ -27,6 +26,8 @@ import dynoapps.exchange_rates.model.rates.BaseRate
 import dynoapps.exchange_rates.model.rates.BuySellRate
 import dynoapps.exchange_rates.model.rates.IRate
 import dynoapps.exchange_rates.time.TimeIntervalManager
+import dynoapps.exchange_rates.ui.compose.ConfirmDialog
+import dynoapps.exchange_rates.ui.compose.showComposeDialog
 import dynoapps.exchange_rates.util.RateUtils
 import dynoapps.exchange_rates.util.ViewUtils
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -208,23 +209,31 @@ class ChartActivity : BaseActivity() {
     }
 
     private fun confirmClearChart() {
-        AlertDialog.Builder(this, R.style.AppTheme_Alert)
-            .setCancelable(true)
-            .setTitle(R.string.refresh)
-            .setMessage(R.string.clear_sure_message)
-            .setPositiveButton(R.string.sure) { _, _ ->
-                val data = lineChart.data
-                for (i in 0 until data.dataSetCount) {
-                    data.getDataSetByIndex(i).clear()
-                }
-                lineChart.xAxis.resetAxisMaximum()
-                lineChart.invalidate()
-                lineChart.notifyDataSetChanged()
-                startMillis = System.currentTimeMillis()
-                lineChart.moveViewToX(0f)
-            }
-            .setNegativeButton(R.string.ignore, null)
-            .show()
+        showComposeDialog { dismiss ->
+            ConfirmDialog(
+                title = getString(R.string.refresh),
+                message = getString(R.string.clear_sure_message),
+                confirmText = getString(R.string.sure),
+                dismissText = getString(R.string.ignore),
+                onConfirm = {
+                    clearChart()
+                    dismiss()
+                },
+                onDismiss = dismiss,
+            )
+        }
+    }
+
+    private fun clearChart() {
+        val data = lineChart.data
+        for (i in 0 until data.dataSetCount) {
+            data.getDataSetByIndex(i).clear()
+        }
+        lineChart.xAxis.resetAxisMaximum()
+        lineChart.invalidate()
+        lineChart.notifyDataSetChanged()
+        startMillis = System.currentTimeMillis()
+        lineChart.moveViewToX(0f)
     }
 
     private fun addEntry(value: Float, chartIndex: Int, millis: Long) {

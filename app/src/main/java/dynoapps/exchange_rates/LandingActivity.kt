@@ -87,11 +87,7 @@ class LandingActivity : BaseServiceActivity() {
     private fun setUpBottomAppBar() {
         setSupportActionBar(bottomAppBar)
         bottomAppBar.setOnMenuItemClickListener { item -> handleMenuItem(item.itemId) }
-        bottomAppBar.setNavigationOnClickListener {
-            if (supportFragmentManager.findFragmentByTag(TAG_BOTTOM_SHEET) == null) {
-                BottomSheetNavigationFragment.newInstance().show(supportFragmentManager, TAG_BOTTOM_SHEET)
-            }
-        }
+        bottomAppBar.setNavigationOnClickListener { showNavigationSheet() }
     }
 
     private fun handleMenuItem(itemId: Int): Boolean = when (itemId) {
@@ -218,9 +214,5 @@ class LandingActivity : BaseServiceActivity() {
     private class CardViewItem(val card: View, val sourceType: Int, val valueType: Int) {
         val tvType: TextView = card.findViewById(R.id.tv_type)
         val tvValue: TextView = card.findViewById(R.id.tv_rate_value)
-    }
-
-    private companion object {
-        const val TAG_BOTTOM_SHEET = "TAG_BOTTOM_SHEET"
     }
 }
