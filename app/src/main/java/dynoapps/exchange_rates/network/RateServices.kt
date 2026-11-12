@@ -2,6 +2,7 @@ package dynoapps.exchange_rates.network
 
 import dynoapps.exchange_rates.model.rates.BigparaRate
 import dynoapps.exchange_rates.model.rates.BloombergRate
+import dynoapps.exchange_rates.model.rates.YapıKrediRate
 import dynoapps.exchange_rates.model.rates.YorumlarRate
 import io.reactivex.rxjava3.core.Observable
 import retrofit2.http.GET
@@ -18,6 +19,11 @@ interface BloombergService {
     /** The JSON behind the site's market slider: USD, EUR, EUR/USD and gold, among others. */
     @GET("finance-slider-data")
     fun rates(): Observable<List<BloombergRate>>
+}
+
+interface YapiKrediService {
+    @GET("yatirimci-kosesi/doviz-kurlari/")
+    fun rates(): Observable<List<YapıKrediRate>>
 }
 
 interface YorumlarService {

@@ -13,7 +13,4 @@ class BigparaRate : BuySellRate() {
             else -> IRate.UNKNOWN
         }
     }
-
-    /** The API returns numbers, which the converter stores directly; there is no text to parse. */
-    override fun setRealValues() = Unit
 }

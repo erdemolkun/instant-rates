@@ -1,6 +1,6 @@
 # Plan: fix the Bigpara, Yapı Kredi and Bloomberg HT parsers
 
-Status: Bigpara and Bloomberg HT fixed; Yapı Kredi pending · Researched 2026-11-12
+Status: all three sources fixed (Bigpara, Bloomberg HT, Yapı Kredi) · Researched 2026-11-12
 
 Three of the app's four rate sources return nothing. Altın.in is the only one that works. This
 document describes why each one fails today and plans a fix for each. It also covers changes shared
@@ -95,7 +95,14 @@ browser user agent or cookies are needed today.
 **Risks:** this is an undocumented internal API used by Bigpara's own site. It could change or
 start requiring a key without notice. The probe in CI will catch that.
 
-## Yapı Kredi
+## Yapı Kredi — done
+
+> Implemented: `YapiKrediConverter` parses the table at `/yatirimci-kosesi/doviz-kurlari/` through a
+> Retrofit `YapiKrediService` (fixture test in `YapiKrediConverterTest`), skips bad rows, and throws
+> when nothing is recognised. Alış now maps to `valueBuy` (shared step 5): the 2016 mapping was the
+> odd one out, since Enpara and Bigpara both stored the lower Alış price as buy. `BuySellRate` lost its
+> unused text fields and `parse()`. Probe: `Yapı Kredi OK ONS_TRY=6272.03/6470.89, USD=49.71/50.71,
+> EUR=55.18/56.29`. The minimum polling interval (risk below) is still open.
 
 **Findings**
 
@@ -208,8 +215,7 @@ Like Bigpara's, this is an undocumented endpoint behind the site's own UI.
 
 ## Open questions
 
-- Buy/sell orientation for Yapı Kredi (shared step 5): fix the swap, or was it deliberate?
 - Should Bigpara support EUR, EUR/USD and ONS (Bigpara step 5), or stay USD-only?
-- Is Bloomberg's bandwidth cost acceptable, or should it get a slower interval or lose ONS?
-- Should Yapı Kredi and Bloomberg be disabled by default until fixed? Bloomberg is enabled by
-  default today and currently shows empty cards on the main screen.
+- Should Bloomberg HT and Yapı Kredi get a minimum polling interval (for example 60 s)? Bloomberg
+  downloads about 100 KB per fetch and Yapı Kredi about 68 KB, and neither updates faster than every
+  few minutes.

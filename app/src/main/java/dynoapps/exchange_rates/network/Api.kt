@@ -3,6 +3,7 @@ package dynoapps.exchange_rates.network
 import dynoapps.exchange_rates.converters.BigparaConverter
 import dynoapps.exchange_rates.converters.BloombergConverter
 import dynoapps.exchange_rates.converters.SingleConverterFactory
+import dynoapps.exchange_rates.converters.YapiKrediConverter
 import dynoapps.exchange_rates.converters.YorumlarConverter
 import okhttp3.OkHttpClient
 import retrofit2.Converter
@@ -29,6 +30,10 @@ object Api {
 
     val bloombergService: BloombergService by lazy {
         create("https://www.bloomberght.com/", BloombergConverter)
+    }
+
+    val yapiKrediService: YapiKrediService by lazy {
+        create("https://www.yapikredi.com.tr/", YapiKrediConverter)
     }
 
     private inline fun <reified S> create(baseUrl: String, converter: Converter<okhttp3.ResponseBody, *>): S =
