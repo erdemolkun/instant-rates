@@ -1,32 +1,11 @@
 <resources>
 
-
-    <!-- Base application theme. -->
-    <style name="BaseAppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-
-        <item name="actionBarIconColor">@color/white</item>
-        <item name="actionBarInsetStart">@dimen/keyline_2</item>
-        <item name="actionbarHeaderStyle">@style/HeaderBar</item>
-        <item name="toolbarTheme">@style/ActionBarThemeOverlay</item>
-        <item name="toolbarTextAppearance">@style/ActionBar.TitleText</item>
-        <item name="android:windowFullscreen">false</item>
-        <item name="android:splitMotionEvents">false</item>
-
-
+    <!--
+      Window theme only: every screen is Compose and styled by RatesTheme. The background shows
+      while an activity starts.
+    -->
+    <style name="AppTheme" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/window_background</item>
     </style>
-
-    <style name="AppTheme" parent="BaseAppTheme" >
-        <item name="android:textColorPrimary">@color/colorPrimary</item>
-        <item name="iconTintColor">@color/colorPrimary</item>
-        <item name="cardBackgroundColor">#f3f3f3</item>
-    </style>
-
-
-    <style name="ActionBarPopupThemeOverlay" parent="ThemeOverlay.AppCompat.DayNight" />
-
 
 </resources>

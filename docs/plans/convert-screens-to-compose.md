@@ -1,10 +1,20 @@
 # Plan: convert all screens to Jetpack Compose
 
-Status: proposal · Written 2026-11-12
+Status: done · Written and carried out 2026-11-12
 
 The app is a hybrid. Every dialog and the navigation sheet are already Compose, but the three
 screens are still XML layouts driven by activities. This plan converts those screens one at a time,
 then removes the View-based code and libraries left behind.
+
+## Outcome
+
+All three screens are Compose, and the app has no XML layouts left. Decisions taken: Material 3
+components (the bottom bar's FAB floats above the bar with no notch), a ViewModel per screen
+reading the RxJava streams, one activity per screen as before, and the hidden clear-chart
+action dropped. The chart went one step further than step 3: it uses MPAndroidChart's
+`MPChartCompose` `LineChart` with a composable marker, and its data lives in `ChartViewModel`.
+AppCompat, Material Components, CardView, RecyclerView and SwipeRefreshLayout are removed; the
+window theme is the platform's Material theme.
 
 ## Scope
 

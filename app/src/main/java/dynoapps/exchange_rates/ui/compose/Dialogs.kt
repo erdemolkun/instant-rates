@@ -102,25 +102,6 @@ fun SingleChoiceDialog(
     )
 }
 
-/** A dialog asking the user to confirm an action. */
-@Composable
-fun ConfirmDialog(
-    title: String,
-    message: String,
-    confirmText: String,
-    dismissText: String,
-    onConfirm: () -> Unit,
-    onDismiss: () -> Unit,
-) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text(title) },
-        text = { Text(message) },
-        confirmButton = { TextButton(onClick = onConfirm) { Text(confirmText) } },
-        dismissButton = { TextButton(onClick = onDismiss) { Text(dismissText) } },
-    )
-}
-
 @Composable
 private fun ChoiceRow(text: String, modifier: Modifier, control: @Composable () -> Unit) {
     Row(
@@ -159,19 +140,6 @@ private fun SingleChoiceDialogPreview() = RatesTheme {
         initialSelection = 2,
         confirmText = "Apply",
         dismissText = "Dismiss",
-        onConfirm = {},
-        onDismiss = {},
-    )
-}
-
-@Preview
-@Composable
-private fun ConfirmDialogPreview() = RatesTheme {
-    ConfirmDialog(
-        title = "Refresh",
-        message = "The chart will be cleared. Are you sure?",
-        confirmText = "Sure",
-        dismissText = "Ignore",
         onConfirm = {},
         onDismiss = {},
     )

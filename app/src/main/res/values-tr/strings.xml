@@ -3,16 +3,12 @@
     <string name="open">Aç</string>
     <string name="close">Kapat</string>
     <string name="dismiss">Kapat</string>
-    <string name="ignore">Vazgeç</string>
     <string name="apply">Uygula</string>
     <string name="select_sources">Kaynakları Seç</string>
-    <string name="refresh">Yenile</string>
     <string name="sources">Kaynaklar</string>
-    <string name="sure">Eminim</string>
     <string name="dollar_tl_graph">Dolar / TL Grafiği</string>
     <string name="euro_tl_graph">Avro / TL Grafiği</string>
     <string name="euro_usd_graph">Avro / Dolar Grafiği</string>
-    <string name="clear_sure_message">Yenilemek istediğinize emin misiniz? Varolan veriler silinecek.</string>
     <string name="time_interval">Zaman Aralığı</string>
     <string name="select_time_interval">Güncelleme Sıklığını Seçiniz</string>
     <string name="sell">Satış</string>
@@ -21,6 +17,8 @@
     <string name="no_provider_found">Desteklenen kaynak bulunamadı, değiştirmek için %1$s simgesine tıklayın</string>
     <string name="no_provider_found_settings">Ayarlar</string>
     <string name="remove">Kaldır</string>
+    <string name="back">Geri</string>
+    <string name="menu">Menü</string>
     <string name="remove_source_approve">Seçili kaynağı kaldır?</string>
     <string name="interval_hint"> • Veri yenileme sıklığı <b>%s</b></string>
     <string name="add_alarm">Alarm Ekle</string>

@@ -11,13 +11,8 @@ minSdk = "23"
 activity = "1.13.0"
 composeBom = "2026.09.00"
 annotation = "1.11.0"
-appcompat = "1.8.0"
-cardview = "1.0.0"
 core = "1.19.1"
-material = "1.14.0"
-recyclerview = "1.4.0"
 room = "2.8.5"
-swiperefreshlayout = "1.2.0"
 
 jsoup = "1.24.1"
 leakcanary = "2.14"
@@ -40,20 +35,18 @@ androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = 
 androidx-compose-material3 = { module = "androidx.compose.material3:material3" }
 androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
+androidx-compose-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4" }
+androidx-compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
 androidx-annotation = { module = "androidx.annotation:annotation", version.ref = "annotation" }
-androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
-androidx-cardview = { module = "androidx.cardview:cardview", version.ref = "cardview" }
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "core" }
-androidx-recyclerview = { module = "androidx.recyclerview:recyclerview", version.ref = "recyclerview" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 androidx-room-rxjava3 = { module = "androidx.room:room-rxjava3", version.ref = "room" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
-androidx-swiperefreshlayout = { module = "androidx.swiperefreshlayout:swiperefreshlayout", version.ref = "swiperefreshlayout" }
-material = { module = "com.google.android.material:material", version.ref = "material" }
 
 jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoup" }
 leakcanary = { module = "com.squareup.leakcanary:leakcanary-android", version.ref = "leakcanary" }
 mpandroidchart = { module = "com.github.PhilJay.MPAndroidChart:MPChartLib", version.ref = "mpandroidchart" }
+mpandroidchart-compose = { module = "com.github.PhilJay.MPAndroidChart:MPChartCompose", version.ref = "mpandroidchart" }
 okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 retrofit-adapter-rxjava3 = { module = "com.squareup.retrofit2:adapter-rxjava3", version.ref = "retrofit" }

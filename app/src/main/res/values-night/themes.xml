@@ -1,8 +1,7 @@
 <resources>
 
-    <style name="AppTheme" parent="BaseAppTheme">
-        <item name="iconTintColor">@color/white</item>
-        <item name="cardBackgroundColor">#5f5f5f</item>
+    <style name="AppTheme" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@color/window_background</item>
     </style>
 
 </resources>

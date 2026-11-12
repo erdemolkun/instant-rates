@@ -5,18 +5,40 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import dynoapps.exchange_rates.R
 
+/** App colours that have no Material 3 role. */
+@Immutable
+data class RatesColors(
+    /** Top and bottom app bars. */
+    val bar: Color,
+    val onBar: Color,
+    /** Rate cards, alarm cards and the chart background. */
+    val card: Color,
+    /** Source names on rate cards. */
+    val cardTitle: Color,
+)
+
+private val LocalRatesColors = staticCompositionLocalOf {
+    RatesColors(bar = Color.Unspecified, onBar = Color.Unspecified, card = Color.Unspecified, cardTitle = Color.Unspecified)
+}
+
 /**
  * Material 3 theme for the Compose UI, matching the View theme: the accent colour for actions
- * and selection controls, the primary colour (white at night) for icons, and neutral surfaces
- * instead of Material 3's purple-tinted defaults.
+ * and selection controls, the primary colour (white at night) for icons and secondary text, and
+ * neutral surfaces instead of Material 3's purple-tinted defaults.
  */
 @Composable
 fun RatesTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
     val accent = colorResource(R.color.colorAccent)
+    // colorPrimary has a night variant (#222222), so it also serves as the dark bar colour.
+    val primary = colorResource(R.color.colorPrimary)
     val colorScheme = if (darkTheme) {
         darkColorScheme(
             primary = accent,
@@ -40,7 +62,7 @@ fun RatesTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable 
         lightColorScheme(
             primary = accent,
             onPrimary = Color.Black,
-            secondary = colorResource(R.color.colorPrimary),
+            secondary = primary,
             onSecondary = Color.White,
             background = Color.White,
             onBackground = Color(0xFF1C1C1C),
@@ -56,5 +78,21 @@ fun RatesTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable 
             outlineVariant = Color(0xFFBDBDBD),
         )
     }
-    MaterialTheme(colorScheme = colorScheme, content = content)
+    val ratesColors = RatesColors(
+        bar = primary,
+        onBar = Color.White,
+        card = colorResource(R.color.card_background),
+        cardTitle = primary,
+    )
+    CompositionLocalProvider(LocalRatesColors provides ratesColors) {
+        MaterialTheme(colorScheme = colorScheme, content = content)
+    }
+}
+
+/** Access to the app colours of [RatesTheme], next to [MaterialTheme]. */
+object RatesTheme {
+    val colors: RatesColors
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalRatesColors.current
 }

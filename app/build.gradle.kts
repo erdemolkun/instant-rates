@@ -165,13 +165,9 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.ui.tooling.preview)
     debugImplementation(libs.androidx.compose.ui.tooling)
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
     implementation(libs.androidx.annotation)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.androidx.cardview)
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.recyclerview)
-    implementation(libs.androidx.swiperefreshlayout)
-    implementation(libs.material)
 
     implementation(libs.okhttp)
     implementation(libs.retrofit)
@@ -182,6 +178,7 @@ dependencies {
 
     implementation(libs.jsoup)
     implementation(libs.mpandroidchart)
+    implementation(libs.mpandroidchart.compose)
 
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.rxjava3)
@@ -196,4 +193,6 @@ dependencies {
     androidTestImplementation(libs.androidx.test.runner)
     androidTestImplementation(libs.androidx.test.core)
     androidTestImplementation(libs.androidx.test.ext.junit)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
 }

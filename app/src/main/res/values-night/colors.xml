@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#222222</color>
-    <color name="colorPrimaryDark">#111111</color>
     <color name="colorAccent">#FFB300</color>
     <color name="colorYorumlar">#f1c15a</color>
     <color name="colorBigPara">#f57c00</color>
     <color name="colorYapiKredi">#3F51B5</color>
     <color name="colorBloomberg">#39466a</color><!--57 70 107-->
 
-    <color name="white">#fff</color>
-
-    <color name="refresh_progress_1">@color/colorPrimary</color>
-    <color name="refresh_progress_2">@color/colorAccent</color>
-    <color name="refresh_progress_3">#47019a</color>
-
-    <color name="color_material_grey_50">#ff444444</color>
-
-
+    <color name="card_background">#5f5f5f</color>
+    <color name="window_background">#121212</color>
 </resources>
