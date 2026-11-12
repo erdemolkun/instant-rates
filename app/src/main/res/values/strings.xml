@@ -20,6 +20,11 @@
     <string name="no_provider_found_settings">Settings</string>
     <string name="remove">Remove</string>
     <string name="back">Back</string>
+    <string name="ok">OK</string>
+    <string name="theme">Theme</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="theme_system">System default</string>
     <string name="menu">Menu</string>
     <string name="remove_source_approve">Remove selected source?</string>
     <string name="interval_hint"> • Data update interval <b>%s</b></string>

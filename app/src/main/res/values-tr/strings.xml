@@ -18,6 +18,11 @@
     <string name="no_provider_found_settings">Ayarlar</string>
     <string name="remove">Kaldır</string>
     <string name="back">Geri</string>
+    <string name="ok">Tamam</string>
+    <string name="theme">Tema</string>
+    <string name="theme_light">Açık</string>
+    <string name="theme_dark">Koyu</string>
+    <string name="theme_system">Sistem varsayılanı</string>
     <string name="menu">Menü</string>
     <string name="remove_source_approve">Seçili kaynağı kaldır?</string>
     <string name="interval_hint"> • Veri yenileme sıklığı <b>%s</b></string>

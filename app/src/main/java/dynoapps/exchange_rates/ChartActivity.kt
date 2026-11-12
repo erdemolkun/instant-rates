@@ -1,7 +1,6 @@
 package dynoapps.exchange_rates
 
 import android.os.Bundle
-import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -10,7 +9,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import dynoapps.exchange_rates.model.rates.IRate
 import dynoapps.exchange_rates.time.TimeIntervalManager
-import dynoapps.exchange_rates.ui.compose.RatesTheme
+import dynoapps.exchange_rates.ui.compose.setRatesContent
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -40,18 +39,16 @@ class ChartActivity : BaseActivity() {
                 else -> R.string.dollar_tl_graph
             }
         )
-        setContent {
-            RatesTheme {
-                ChartScreen(
-                    title = title,
-                    isRefreshing = isRefreshing,
-                    onRefresh = ::refresh,
-                    onBack = ::finish,
-                    onIntervalClick = { TimeIntervalManager.selectInterval(this) },
-                    onSourcesClick = { SourcesManager.selectSources(this) },
-                    chart = { modifier -> RateChart(viewModel, contentDescription = title, modifier = modifier) },
-                )
-            }
+        setRatesContent {
+            ChartScreen(
+                title = title,
+                isRefreshing = isRefreshing,
+                onRefresh = ::refresh,
+                onBack = ::finish,
+                onIntervalClick = { TimeIntervalManager.selectInterval(this) },
+                onSourcesClick = { SourcesManager.selectSources(this) },
+                chart = { modifier -> RateChart(viewModel, contentDescription = title, modifier = modifier) },
+            )
         }
     }
 

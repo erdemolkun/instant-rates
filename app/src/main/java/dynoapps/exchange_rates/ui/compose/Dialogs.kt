@@ -102,6 +102,43 @@ fun SingleChoiceDialog(
     )
 }
 
+/**
+ * A dialog with a radio button per item whose choice takes effect at once: tapping an item calls
+ * [onSelect], and the caller passes the new [selected] index back. The single [confirmText] button,
+ * like tapping outside the dialog, just closes it.
+ */
+@Composable
+fun InstantChoiceDialog(
+    title: String,
+    items: List<String>,
+    selected: Int,
+    confirmText: String,
+    onSelect: (index: Int) -> Unit,
+    onDismiss: () -> Unit,
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(title) },
+        text = {
+            Column(Modifier.selectableGroup().verticalScroll(rememberScrollState())) {
+                items.forEachIndexed { index, item ->
+                    ChoiceRow(
+                        text = item,
+                        modifier = Modifier.selectable(
+                            selected = index == selected,
+                            role = Role.RadioButton,
+                            onClick = { onSelect(index) },
+                        ),
+                    ) {
+                        RadioButton(selected = index == selected, onClick = null)
+                    }
+                }
+            }
+        },
+        confirmButton = { TextButton(onClick = onDismiss) { Text(confirmText) } },
+    )
+}
+
 @Composable
 private fun ChoiceRow(text: String, modifier: Modifier, control: @Composable () -> Unit) {
     Row(

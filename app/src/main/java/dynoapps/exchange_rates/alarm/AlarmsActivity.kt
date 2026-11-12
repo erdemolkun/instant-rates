@@ -1,13 +1,12 @@
 package dynoapps.exchange_rates.alarm
 
 import android.os.Bundle
-import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import dynoapps.exchange_rates.App
 import dynoapps.exchange_rates.BaseActivity
-import dynoapps.exchange_rates.ui.compose.RatesTheme
+import dynoapps.exchange_rates.ui.compose.setRatesContent
 
 class AlarmsActivity : BaseActivity() {
 
@@ -17,18 +16,16 @@ class AlarmsActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            RatesTheme {
-                AlarmsScreen(
-                    items = viewModel.items,
-                    alarmsEnabled = viewModel.alarmsEnabled,
-                    onAlarmsEnabledChange = viewModel::updateAlarmsEnabled,
-                    onAlarmEnabledChange = viewModel::setAlarmEnabled,
-                    onDelete = viewModel::deleteAlarm,
-                    onAdd = { AlarmManager.addAlarmDialog(this) { alarm -> viewModel.onAlarmAdded(alarm) } },
-                    onBack = ::finish,
-                )
-            }
+        setRatesContent {
+            AlarmsScreen(
+                items = viewModel.items,
+                alarmsEnabled = viewModel.alarmsEnabled,
+                onAlarmsEnabledChange = viewModel::updateAlarmsEnabled,
+                onAlarmEnabledChange = viewModel::setAlarmEnabled,
+                onDelete = viewModel::deleteAlarm,
+                onAdd = { AlarmManager.addAlarmDialog(this) { alarm -> viewModel.onAlarmAdded(alarm) } },
+                onBack = ::finish,
+            )
         }
     }
 }

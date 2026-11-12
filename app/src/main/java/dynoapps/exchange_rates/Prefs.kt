@@ -9,6 +9,7 @@ object Prefs {
     private const val SOURCES = "SOURCES"
     private const val INTERVAL = "INTERVAL"
     private const val ALARM_ENABLED = "ALARM_ENABLED"
+    private const val THEME_MODE = "THEME_MODE"
 
     // Same file as before; the framework PreferenceManager is deprecated but avoids a new dependency.
     @Suppress("DEPRECATION")
@@ -31,5 +32,12 @@ object Prefs {
 
     fun saveInterval(context: Context, interval: Long) {
         prefs(context).edit { putLong(INTERVAL, interval) }
+    }
+
+    /** The saved theme mode's name, or null if the user never chose one. */
+    fun getThemeMode(): String? = prefs().getString(THEME_MODE, null)
+
+    fun saveThemeMode(mode: String) {
+        prefs().edit { putString(THEME_MODE, mode) }
     }
 }

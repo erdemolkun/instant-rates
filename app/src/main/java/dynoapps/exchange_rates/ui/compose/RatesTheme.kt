@@ -1,6 +1,6 @@
 package dynoapps.exchange_rates.ui.compose
 
-import androidx.compose.foundation.isSystemInDarkTheme
+import android.content.res.Configuration
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
@@ -8,9 +8,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import dynoapps.exchange_rates.R
 
 /** App colours that have no Material 3 role. */
@@ -30,15 +32,16 @@ private val LocalRatesColors = staticCompositionLocalOf {
 }
 
 /**
- * Material 3 theme for the Compose UI, matching the View theme: the accent colour for actions
- * and selection controls, the primary colour (white at night) for icons and secondary text, and
- * neutral surfaces instead of Material 3's purple-tinted defaults.
+ * Material 3 theme for the Compose UI, dark or light as the user chose in [ThemeSettings]. Uses the
+ * accent colour for actions and selection controls, the primary colour (white at night) for icons
+ * and secondary text, and neutral surfaces instead of Material 3's purple-tinted defaults.
  */
 @Composable
-fun RatesTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
-    val accent = colorResource(R.color.colorAccent)
+fun RatesTheme(darkTheme: Boolean = isAppInDarkTheme(), content: @Composable () -> Unit) {
+    val colors = themedColors(darkTheme)
+    val accent = colors(R.color.colorAccent)
     // colorPrimary has a night variant (#222222), so it also serves as the dark bar colour.
-    val primary = colorResource(R.color.colorPrimary)
+    val primary = colors(R.color.colorPrimary)
     val colorScheme = if (darkTheme) {
         darkColorScheme(
             primary = accent,
@@ -81,7 +84,7 @@ fun RatesTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable 
     val ratesColors = RatesColors(
         bar = primary,
         onBar = Color.White,
-        card = colorResource(R.color.card_background),
+        card = colors(R.color.card_background),
         cardTitle = primary,
     )
     CompositionLocalProvider(LocalRatesColors provides ratesColors) {
@@ -95,4 +98,21 @@ object RatesTheme {
         @Composable
         @ReadOnlyComposable
         get() = LocalRatesColors.current
+}
+
+/**
+ * Reads colours from colors.xml in light or dark, whichever [darkTheme] asks for, rather than
+ * following the device setting as colorResource does.
+ */
+@Composable
+private fun themedColors(darkTheme: Boolean): (Int) -> Color {
+    val context = LocalContext.current
+    val baseConfiguration = LocalConfiguration.current
+    val themedContext = remember(context, baseConfiguration, darkTheme) {
+        val configuration = Configuration(baseConfiguration)
+        val night = if (darkTheme) Configuration.UI_MODE_NIGHT_YES else Configuration.UI_MODE_NIGHT_NO
+        configuration.uiMode = (configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK.inv()) or night
+        context.createConfigurationContext(configuration)
+    }
+    return { id -> Color(themedContext.getColor(id)) }
 }

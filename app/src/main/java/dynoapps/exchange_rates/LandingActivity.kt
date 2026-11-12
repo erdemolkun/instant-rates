@@ -5,14 +5,13 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import dynoapps.exchange_rates.alarm.AlarmManager
 import dynoapps.exchange_rates.data.RatesHolder
 import dynoapps.exchange_rates.time.TimeIntervalManager
-import dynoapps.exchange_rates.ui.compose.RatesTheme
+import dynoapps.exchange_rates.ui.compose.setRatesContent
 import dynoapps.exchange_rates.util.RateUtils
 
 class LandingActivity : BaseServiceActivity() {
@@ -25,19 +24,17 @@ class LandingActivity : BaseServiceActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            RatesTheme {
-                LandingScreen(
-                    rows = viewModel.rows,
-                    intervalSelection = viewModel.intervalSelection,
-                    onCardClick = ::openChart,
-                    onCardLongClick = ::offerAlarm,
-                    onMenuClick = ::showNavigationSheet,
-                    onIntervalClick = { TimeIntervalManager.selectInterval(this) },
-                    onSourcesClick = { SourcesManager.selectSources(this) },
-                    onAddAlarmClick = { AlarmManager.addAlarmDialog(this) },
-                )
-            }
+        setRatesContent {
+            LandingScreen(
+                rows = viewModel.rows,
+                intervalSelection = viewModel.intervalSelection,
+                onCardClick = ::openChart,
+                onCardLongClick = ::offerAlarm,
+                onMenuClick = ::showNavigationSheet,
+                onIntervalClick = { TimeIntervalManager.selectInterval(this) },
+                onSourcesClick = { SourcesManager.selectSources(this) },
+                onAddAlarmClick = { AlarmManager.addAlarmDialog(this) },
+            )
         }
         requestNotificationPermissionIfNeeded()
     }

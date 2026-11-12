@@ -50,6 +50,7 @@ fun ComponentActivity.showNavigationSheet() {
                 startActivity(Intent(this, ChartActivity::class.java).putExtra(ChartActivity.EXTRA_RATE_TYPE, rateType))
             },
             onAlarmsSelected = { startActivity(Intent(this, AlarmsActivity::class.java)) },
+            onThemeSelected = ::selectTheme,
             onDismiss = dismiss,
         )
     }
@@ -62,6 +63,7 @@ private fun NavigationBottomSheet(
     version: String,
     onChartSelected: (rateType: Int) -> Unit,
     onAlarmsSelected: () -> Unit,
+    onThemeSelected: () -> Unit,
     onDismiss: () -> Unit,
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -76,6 +78,7 @@ private fun NavigationBottomSheet(
             version = version,
             onChartSelected = { rateType -> navigate { onChartSelected(rateType) } },
             onAlarmsSelected = { navigate(onAlarmsSelected) },
+            onThemeSelected = { navigate(onThemeSelected) },
         )
     }
 }
@@ -85,6 +88,7 @@ private fun NavigationSheetContent(
     version: String,
     onChartSelected: (rateType: Int) -> Unit,
     onAlarmsSelected: () -> Unit,
+    onThemeSelected: () -> Unit,
 ) {
     Column(Modifier.verticalScroll(rememberScrollState())) {
         Row(
@@ -123,6 +127,7 @@ private fun NavigationSheetContent(
 
         SectionTitle(stringResource(R.string.others))
         NavigationItem(R.drawable.ic_add_alarm_white_24dp, stringResource(R.string.alarms), onAlarmsSelected)
+        NavigationItem(R.drawable.ic_theme_24dp, stringResource(R.string.theme), onThemeSelected)
     }
 }
 
@@ -154,5 +159,5 @@ private fun NavigationItem(@DrawableRes icon: Int, text: String, onClick: () -> 
 @Preview(showBackground = true)
 @Composable
 private fun NavigationSheetContentPreview() = RatesTheme {
-    NavigationSheetContent(version = "0.4.10", onChartSelected = {}, onAlarmsSelected = {})
+    NavigationSheetContent(version = "0.4.10", onChartSelected = {}, onAlarmsSelected = {}, onThemeSelected = {})
 }

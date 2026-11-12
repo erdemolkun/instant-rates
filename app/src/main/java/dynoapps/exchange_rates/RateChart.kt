@@ -12,7 +12,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -110,7 +109,7 @@ private fun ValueMarker(text: String) {
     Box(
         modifier = Modifier
             .defaultMinSize(minWidth = 64.dp, minHeight = 36.dp)
-            .background(colorResource(R.color.colorPrimary), RoundedCornerShape(4.dp))
+            .background(RatesTheme.colors.bar, RoundedCornerShape(4.dp))
             .padding(horizontal = 6.dp),
         contentAlignment = Alignment.Center,
     ) {
