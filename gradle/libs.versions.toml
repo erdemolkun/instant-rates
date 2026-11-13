@@ -1,0 +1,64 @@
+[versions]
+agp = "9.5.1"
+kotlin = "2.4.21"
+ksp = "2.3.13"
+versionsPlugin = "0.67.0"
+
+compileSdk = "37"
+targetSdk = "36"
+minSdk = "23"
+
+activity = "1.13.0"
+composeBom = "2026.09.00"
+annotation = "1.11.0"
+core = "1.19.1"
+coroutines = "1.10.2"
+room = "2.8.5"
+
+jsoup = "1.24.1"
+leakcanary = "2.14"
+mpandroidchart = "v4.0.1"
+okhttp = "5.5.1"
+retrofit = "3.0.0"
+timber = "5.0.1"
+
+junit = "4.13.2"
+orgJson = "20260814"
+androidxTestRunner = "1.7.0"
+androidxTestCore = "1.7.0"
+androidxTestExtJunit = "1.3.0"
+
+[libraries]
+androidx-activity = { module = "androidx.activity:activity", version.ref = "activity" }
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity" }
+androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
+androidx-compose-material3 = { module = "androidx.compose.material3:material3" }
+androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
+androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
+androidx-compose-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4" }
+androidx-compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
+androidx-annotation = { module = "androidx.annotation:annotation", version.ref = "annotation" }
+androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "core" }
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+
+kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
+jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoup" }
+leakcanary = { module = "com.squareup.leakcanary:leakcanary-android", version.ref = "leakcanary" }
+mpandroidchart = { module = "com.github.PhilJay.MPAndroidChart:MPChartLib", version.ref = "mpandroidchart" }
+mpandroidchart-compose = { module = "com.github.PhilJay.MPAndroidChart:MPChartCompose", version.ref = "mpandroidchart" }
+okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
+
+junit = { module = "junit:junit", version.ref = "junit" }
+org-json = { module = "org.json:json", version.ref = "orgJson" }
+androidx-test-runner = { module = "androidx.test:runner", version.ref = "androidxTestRunner" }
+androidx-test-core = { module = "androidx.test:core-ktx", version.ref = "androidxTestCore" }
+androidx-test-ext-junit = { module = "androidx.test.ext:junit-ktx", version.ref = "androidxTestExtJunit" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+versions = { id = "com.github.ben-manes.versions", version.ref = "versionsPlugin" }
